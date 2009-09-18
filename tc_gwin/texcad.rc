@@ -10,9 +10,10 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "standard_ids.h"
+#include <windows.h>
 
-#define VK_INSERT         0x2D
-#define VK_DELETE         0x2E
+//#define VK_INSERT         0x2D
+//#define VK_DELETE         0x2E
 #define VK_F12            0x7B
 
 /////////////////////////////////////////////////////////////////////////////
@@ -104,4 +105,4 @@ END
 //
 // Manifest resources
 //
-1                  RT_MANIFEST    "manifest.xml"
+1                  RT_MANIFEST    ".\\manifest.xml"

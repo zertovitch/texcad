@@ -3,17 +3,10 @@
 --          /    /___/  _\    /      /---/ /    /
 --         /    /___   /  \  /____  /   / /____/
 
-------------------------------------------
--- Incarnation as a Windows application --
-------------------------------------------
+----------------------------------------------------
+-- Incarnation of TeXCAD as a Windows application --
+----------------------------------------------------
 -- 17-Feb-2003, GdM
-
-with Ada.Calendar;                      use Ada.Calendar;
-with Ada.Command_Line;                  use Ada.Command_Line;
-with Ada.Exceptions;
-with Ada.Text_IO;                       use Ada.Text_IO;
-
-with GNAT.Traceback.Symbolic;
 
 with TC.GWin.MDI_Main;                  use TC.GWin.MDI_Main;
 with TC.GWin.Options;
@@ -24,6 +17,14 @@ with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with GWin_Util;                         use GWin_Util;
+
+with Ada.Calendar;                      use Ada.Calendar;
+with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Command_Line;                  use Ada.Command_Line;
+with Ada.Exceptions;
+with Ada.Text_IO;                       use Ada.Text_IO;
+
+with GNAT.Traceback.Symbolic;
 
 procedure TeXCAD is
 
@@ -106,10 +107,11 @@ procedure TeXCAD is
   uninst: constant GString:= "Uninstall TeXCAD";
 
 begin
-  if Argument_Count=1 and then Argument(1)="/UNINSTALL" then
+  if Argument_Count=1 and then To_Upper(Argument(1))="/UNINSTALL" then
     if Message_Box(
       uninst,
-      "This will clear all user-related options." &
+      "This will clear all user-related options stored" & NL &
+      "in the Windows Registry, for all users." &
       NL & "Continue ?", Yes_No_Box) = Yes
     then
       TC.GWin.Options.Clear;

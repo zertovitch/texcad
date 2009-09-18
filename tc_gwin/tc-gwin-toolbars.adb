@@ -7,9 +7,11 @@ pragma Elaborate(TC.Gwin); -- Windows_95 flag needed
 
 with Floating_toolbars;
 
+with Interfaces.C;
+
 package body TC.GWin.Toolbars is
 
-  use Floating_toolbars, GWindows.Image_Lists;
+  use Floating_toolbars, GWindows.Image_Lists, Interfaces.C;
 
   procedure Add_Button
     (Control     : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
@@ -27,6 +29,9 @@ package body TC.GWin.Toolbars is
     --    Maximum_Width(t, 150);
   end Add_Button;
 
+  TBSTYLE_FLAT : constant:= 16#800#;
+  sep_w: constant:= 8;
+
   procedure Add_Button
     (Control     : in out Floating_Toolbar;
      Image_Index : in     Natural;
@@ -41,37 +46,36 @@ package body TC.GWin.Toolbars is
     il    : in out GWindows.Image_Lists.Image_List_Type;
     parent: in out GWindows.Base.Base_Window_Type'Class)
   is
-    -- TBSTYLE_FLAT : constant:= 16#800#;
   begin
     GWindows.Common_Controls.Create (tb, parent, 0, 0, 0, 40);
     GWindows.Common_Controls.Dock (tb, GWindows.Base.At_Top);
 
     Create (il, "Toolbar_Bmp", 16);
     GWindows.Common_Controls.Set_Image_List (tb, il);
-    -- Set_Style(tb, TBSTYLE_FLAT);
+    GWindows.Common_Controls.Set_Style(tb, TBSTYLE_FLAT);
 
     GWindows.Common_Controls.Add_Button (tb,  0, ID_File_New);
     GWindows.Common_Controls.Add_Button (tb,  1, ID_File_Open);
     Add_Button (tb,  2, save);
 
-    GWindows.Common_Controls.Add_Separator(tb, 16);
+    GWindows.Common_Controls.Add_Separator(tb, sep_w);
 
     Add_Button (tb, 13, pick_obj);
     Add_Button (tb,  3, cut_clip);
     Add_Button (tb,  4, copy_clip);
     Add_Button (tb,  5, paste_clip);
 
-    GWindows.Common_Controls.Add_Separator(tb, 16);
+    GWindows.Common_Controls.Add_Separator(tb, sep_w);
 
     Add_Button (tb, 12, preview);
     Add_Button (tb,  9, zoom_plus);
     Add_Button (tb, 10, zoom_minus);
 
-    GWindows.Common_Controls.Add_Separator(tb, 16);
+    GWindows.Common_Controls.Add_Separator(tb, sep_w);
 
     Add_Button (tb, 15, pic_opt_dialog);
 
-    GWindows.Common_Controls.Add_Separator(tb, 16);
+    GWindows.Common_Controls.Add_Separator(tb, sep_w);
 
     GWindows.Common_Controls.Add_Button (tb, 14, ID_App_About); -- 7 = help
 
@@ -79,7 +83,7 @@ package body TC.GWin.Toolbars is
 
   procedure Reset_Drawing_toolbar(tb: in out Floating_toolbar) is
   begin
-    Set_Style(tb.bar, TBSTYLE_WRAPABLE);
+    Set_Style(tb.bar, TBSTYLE_WRAPABLE + TBSTYLE_FLAT);
     Dock(tb.bar, Gwindows.Base.At_Top);
     Create(tb.images, "Drawing_Toolbar_Bmp", 28);
     Set_Image_List(tb.bar, tb.images);
@@ -97,7 +101,7 @@ package body TC.GWin.Toolbars is
 
   procedure Reset_Line_toolbar(tb: in out Floating_toolbar) is
   begin
-    Set_Style(tb.bar, TBSTYLE_WRAPABLE);
+    Set_Style(tb.bar, TBSTYLE_WRAPABLE + TBSTYLE_FLAT);
     Dock(tb.bar, Gwindows.Base.At_Top);
     Create(tb.images, "Line_Toolbar_Bmp", 56);
     Set_Image_List(tb.bar, tb.images);
@@ -130,8 +134,8 @@ package body TC.GWin.Toolbars is
        TB_Line_settings => 56+6);
 
     max_height: constant array(Floating_toolbar_categ) of Integer:=
-      (TB_Drawing       => 322,
-       TB_Line_settings => 224);
+      (TB_Drawing       => 322+6,
+       TB_Line_settings => 224+8);
 
     title: constant array(Floating_toolbar_categ) of Message:=
       (TB_Drawing       => vtogdtb,

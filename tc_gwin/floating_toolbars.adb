@@ -15,7 +15,7 @@ package body Floating_toolbars is
      w: Integer;
    begin
      -- Windows' estimation for Toolbar's width can be...
-     w:= Integer'Max(tb.bar.mw,Width(tb.bar));   -- ...too narrow...
+     w:= Integer'Max(tb.bar.mw, Client_Area_Width(tb.bar));   -- ...too narrow...
       --     if tb.bar.w > tb.bar.mw then
       --       w:= Integer'Min(w,tb.bar.w);  -- ...or too wide.
       --     end if;
@@ -26,7 +26,10 @@ package body Floating_toolbars is
      h: Integer;
    begin
      -- Windows' estimation for Toolbar's width can be...
-     h:= Integer'Min(tb.bar.mh,Height(tb.bar));   -- ...too high
+     h:= Integer'Min(tb.bar.mh, Client_Area_Height(tb.bar));   -- ...too high
+     if Client_Area_Width(tb.bar) = tb.bar.mw then
+       h:= tb.bar.mh;
+     end if;
      return h;
    end Correct_bar_height;
 
@@ -34,10 +37,10 @@ package body Floating_toolbars is
   begin
     tb.window.geom.l:= Left(tb.window);
     tb.window.geom.t:= Top(tb.window);
-    tb.window.geom.w:= Width(tb.window);
-    tb.window.geom.h:= Height(tb.window);
+    tb.window.geom.w:= Client_Area_Width(tb.window);
+    tb.window.geom.h:= Client_Area_Height(tb.window);
     tb.bar.w:= Correct_bar_width(tb);
-    tb.bar.h:= Height(tb.bar);
+    tb.bar.h:= Client_Area_Height(tb.bar);
   end Memorize_dimensions;
 
   procedure Best_Size (Window : in out Floating_window) is
@@ -155,6 +158,12 @@ package body Floating_toolbars is
     Change_status(tb,ns);
   end Rotate_status;
 
+  procedure Neutral_resize(Window : in out Floating_window) is
+  -- Forces a smart resizing
+  begin
+    Size(Window, Width(Window), Height(Window));
+  end;
+
   ------------
   -- Create --
   ------------
@@ -240,6 +249,7 @@ package body Floating_toolbars is
     Control.Notify_change:= Notify;
     --
     Create_tool_window;
+    Neutral_resize(Control.window);
     --
     Control.status:= invisible;
     Change_status(Control, memo);
