@@ -87,9 +87,9 @@ BEGIN
             VALUE "CompanyName", "Free Software Foundation, Inc."
             VALUE "Authors", "Georg Horn, Jörn Winkelmann, Gautier de Montmollin"
             VALUE "FileDescription", "TeXCAD, a LaTeX {picture} drawing program"
-            VALUE "FileVersion", "Ver. 4.2, Ref. 099"
+            VALUE "FileVersion", "Ver. 4.2, Ref. 103"
             VALUE "InternalName", "TeXCAD"
-            VALUE "LegalCopyright", "© 2003..2007 Free Software Foundation"
+            VALUE "LegalCopyright", "© 2003..2009 Free Software Foundation"
             VALUE "OriginalFilename", "TeXCAD.exe"
             VALUE "ProductName", "TeXCAD"
             VALUE "ProductVersion", "4.2"
@@ -100,3 +100,8 @@ BEGIN
         VALUE "Translation",  1033,  1252
     END
 END
+
+//
+// Manifest resources
+//
+1                  RT_MANIFEST    "manifest.xml"

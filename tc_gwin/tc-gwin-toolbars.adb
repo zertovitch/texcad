@@ -125,10 +125,6 @@ package body TC.GWin.Toolbars is
     tbs   : in out Floating_toolbar_array;
     parent: in out GWindows.Base.Base_Window_Type'Class)
   is
-    reset_procs: constant array(Floating_toolbar_categ) of Bar_reset_proc:=
-      (TB_Drawing       => Reset_Drawing_toolbar'Access,
-       TB_Line_settings => Reset_Line_toolbar'Access);
-
     min_width: constant array(Floating_toolbar_categ) of Integer:=
       (TB_Drawing       => 28+6,
        TB_Line_settings => 56+6);
@@ -150,9 +146,12 @@ package body TC.GWin.Toolbars is
         min_width(cat),
         TC_FT_memo(cat).geom.h,
         max_height(cat),
-        reset_procs(cat),
         Notify_any_toolbar'Access
       );
+    end loop;
+    Reset_Drawing_toolbar(tbs(TB_Drawing));
+    Reset_Line_toolbar(tbs(TB_Line_settings));
+    for cat in tbs'Range loop
       Change_status(tbs(cat), TC_FT_memo(cat).stat);
     end loop;
   end Init_Floating_toolbars;
@@ -163,7 +162,7 @@ begin
   if Windows_95 then
     default_stat:= invisible; -- Button sizes are wrong (16x16)
   else
-    default_stat:= windowed;  -- Win 98, 2K, XP are OK
+    default_stat:= windowed;  -- Win 98, 2K, XP, Vista are OK
   end if;
 
   TC_FT_memo:=

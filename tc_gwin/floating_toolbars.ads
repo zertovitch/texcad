@@ -1,5 +1,3 @@
--- Created 6-Jan-2004
-
 with
   GWindows.Base,
   GWindows.Common_Controls,
@@ -27,6 +25,8 @@ package Floating_toolbars is
     belongs_to: p_Floating_toolbar;
   end record;
 
+  -- Overriden methods
+
   procedure On_Size (Window : in out Floating_window;
                      Width  : in     Integer;
                      Height : in     Integer);
@@ -34,6 +34,9 @@ package Floating_toolbars is
   procedure On_Move (Window : in out Floating_window;
                      Top    : in     Integer;
                      Left   : in     Integer);
+
+  procedure On_Close (Window    : in out Floating_window;
+                      Can_Close :    out Boolean);
 
   -- ***** GUI_toolbar: the "bare-bones" toolbar, in the GUI sense
 
@@ -49,8 +52,6 @@ package Floating_toolbars is
 
   -- ***** Floating_toolbar: the main structure
 
-  type Bar_reset_proc is access procedure(tb: in out Floating_toolbar);
-
   type Notify_status_changed_proc is access procedure(tb: in Floating_toolbar);
 
   type Floating_toolbar is record
@@ -61,7 +62,6 @@ package Floating_toolbars is
     parent       : GWindows.Base.Pointer_To_Base_Window_Class;
     title        : GWindows.GString_Unbounded;
     status       : Floating_TB_status:= invisible;
-    Reset_bar    : Bar_reset_proc:= null;
     Notify_change: Notify_status_changed_proc:= null;
   end record;
 
@@ -79,7 +79,6 @@ package Floating_toolbars is
     Min_Width  : in     Integer;
     Height     : in     Integer;
     Max_Height : in     Integer;
-    Reset      : in     Bar_reset_proc;
     Notify     : in     Notify_status_changed_proc);
 
 end Floating_toolbars;

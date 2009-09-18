@@ -92,7 +92,7 @@ procedure TeXCAD is
       ) is
       when Yes =>
         Start( To_URL_Encoding(
-          "mailto:gdm@dplanet.ch?Subject=Bug in " &
+          "mailto:" & TC.mail & "?Subject=Bug in " &
           pedigree & "&Body="  & report
           )
         );

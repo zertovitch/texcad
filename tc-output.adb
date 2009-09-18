@@ -1001,9 +1001,9 @@ package body TC.Output is
 
      Put_Line(
        tf,
-       "%TeXCAD Picture [" &
+       "%TeXCAD (" & web & ") Picture. File: [" &
        Short_name(displayed_name) &
-       "]. Options:"
+       "]. Options on following lines."
      );
      -- 8-Jul-2004: + file name
      Put_Line(tf,Img(cgrade)  & On_off(pic.opt.steigung) );

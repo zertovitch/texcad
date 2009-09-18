@@ -441,7 +441,7 @@ package body TC.GWin.MDI_Main is
       About,
       "Gautier de Montmollin: Ada-ptation, " &
       Msg(tc4) & ", " & Msg(Windoze_Version),
-      "http://sourceforge.net/users/gdemont/",
+      "http://sf.net/users/gdemont/",
       30, 135, Wmax, 16);
 
     Create_Label (About, Msg(Thanks), 10, 155, Wmax, 25);

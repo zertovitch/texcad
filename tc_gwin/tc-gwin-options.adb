@@ -67,7 +67,7 @@ package body TC.GWin.Options is
       when Registry_Error => raise Clear_failed;
     end Clear_for_one_user;
 
-    list: Key_Name_Array:= Get_Sub_Keys ("", HKEY_USERS);
+    list: constant Key_Name_Array:= Get_Sub_Keys ("", HKEY_USERS);
   begin
     for n in list'Range loop
       declare

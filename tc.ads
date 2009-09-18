@@ -17,8 +17,9 @@ package TC is
   use Ada.Strings.Unbounded;
 
   version   : constant String:= "4.2";
-  reference : constant String:= "20-Dec-2008 (102)";
+  reference : constant String:= "17-Sep-2009 (103)";
   web       : constant String:= "http://texcad.sf.net/";
+  mail      : constant String:= "gdemont@users.sourceforge.net";
 
   subtype Real is Long_Float;
   package REF is new Ada.Numerics.Generic_Elementary_Functions(Real);
