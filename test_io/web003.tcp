@@ -1,0 +1,11 @@
+\unitlength 1.5pt \linethickness{0.4pt  }
+\begin{picture}(80,80)(0,0)
+\put(60,77){\vector(1,0){7}}
+\put(60,85){$\theta^+$}
+\put(60,40){\line(1,5){10}}
+\put(60,40){\line(0,1){50}}
+\put(60,40){\oval(40,40)[l]}
+\put(60,20){\line(0,1){40}}
+\put(0,40){\vector(1,0){40}}
+\put(0,43){flow}
+\end{picture}

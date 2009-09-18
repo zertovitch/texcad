@@ -1,0 +1,32 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\off}
+%\snapping{\on}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{2}
+%\zoom{1.00}
+\unitlength 2.0pt
+\linethickness{0.4pt}
+\begin{picture}(144.00,72.00)
+\put(10.00,20.00){\line(1,0){50.00}}
+\put(30.00,20.00){\line(1,2){20.00}}
+\put(34.00,42.00){\makebox(0,0)[rc]{$u=1$}}
+\put(44.00,38.00){\makebox(0,0)[lc]{$u=0$}}
+\put(52.00,62.00){\makebox(0,0)[lb]{$s=1/2$}}
+\put(70.00,20.00){\makebox(0,0)[cc]{$x$}}
+\put(10.00,64.00){\makebox(0,0)[rc]{$t$}}
+\put(14.00,52.00){\vector(0,1){20.00}}
+\put(84.00,20.00){\line(1,0){50.00}}
+\put(104.00,20.00){\line(1,2){20.00}}
+\put(144.00,20.00){\makebox(0,0)[cc]{$x$}}
+\put(90.00,20.00){\line(1,1){28.00}}
+\put(118.00,48.00){\line(0,-1){28.00}}
+\put(124.00,20.00){\line(0,1){40.00}}
+\put(124.00,60.00){\line(-1,-1){40.00}}
+\put(96.00,20.00){\line(1,1){16.00}}
+\put(112.00,36.00){\line(0,-1){16.00}}
+\put(84.00,14.00){\makebox(0,0)[lt]{Caract\'eristiques}}
+\end{picture}

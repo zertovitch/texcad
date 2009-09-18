@@ -1,0 +1,39 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{8.0000}
+\unitlength 1.30mm
+\linethickness{1pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(86.00,37.00)
+(4,-2)
+\qbezier(25.00,0.00)(-8.00,12.00)(57.00,31.00)
+\bezier{15}(13.80,0.00)(13.80,5.00)(13.80,9.00)
+\bezier{50}(57.00,0.00)(57.00,16.00)(57.00,31.00)
+\put(38.00,28.00){$A_1^+$}
+\qbezier(57.00,31.00)(70.00,35.00)(80.00,37.00)
+\put(82.00,37.00){$\widetilde{A}_1^+$}
+\qbezier(25.00,0.00)(25.00,16.00)(80.00,28.00)
+\put(82.00,28.00){$\widetilde{B}_1^+$}
+\qbezier(38.00,0.00)(38.00,12.00)(80.00,21.00)
+\put(82.00,21.00){$\widetilde{B}_2^+$}
+\qbezier(51.00,0.00)(51.00,8.00)(80.00,14.00)
+\put(82.00,14.00){$\widetilde{B}_{n-1}^+$}
+\qbezier(64.00,0.00)(64.00,4.00)(80.00,7.00)
+\put(82.00,7.00){$\widetilde{B}_n^+$}
+\thinlines\put(10,0){\vector(0,1){40}}
+\put(10.00,0.00){\vector(1,0){76.00}}
+\put(13.00,-3.00){$\mu$}
+\put(25.00,-3.00){$\lambda_1$}
+\put(38.00,-3.00){$\lambda_2$}
+\put(49.00,-3.00){$\lambda_{n-1}$}
+\put(57.00,-3.00){$\nu$}
+\put(64.00,-3.00){$\lambda_n$}
+\put(85.00,-3.00){$\lambda$}
+\end{picture}

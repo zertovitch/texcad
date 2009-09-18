@@ -1,0 +1,27 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{3.3636}
+\unitlength  =  5.31 pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(20.90,16.40)
+\thicklines     
+  \put(-10,2.5){\line(1,-1){10}}\put(-10,2.5){\line(1,1){10}}
+\put(10.00,2.50){\line(-1,-1){10.00}}
+\put(10.00,2.50){\line(-1,1){10.00}}
+\put(-5.00,7.50){\line(0,-1){10.00}}
+\put(5.00,7.50){\line(0,-1){10.00}}
+\put(-5.00,0.00){\line(2,1){10.00}}
+%-
+\qbezier(-31.80,-2.50)(-12.60,12.20)(0.00,12.50)
+\qbezier(0.00,12.50)(14.20,12.80)(20.90,-2.50)
+\qbezier(-31.80,-2.50)(-16.50,15.80)(0.00,16.10)
+\qbezier(0.00,16.10)(16.00,16.40)(20.90,-2.50)
+\end{picture}

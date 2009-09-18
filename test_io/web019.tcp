@@ -1,0 +1,9 @@
+\begin{picture}(90,60)(-50,0)
+\multiput(0,0)(40,0){2}{\multiput(0,0)(0,40){2}{\circle*{3}}}
+\multiput(0,0)(40,0){2}{\line(0,1){40}}
+\multiput(0,0)(0,40){2}{\line(1,0){40}}
+\put( 0, 0){\line( 1,1){40}}
+\put( 0,30){\oval(40,60)[l]}
+\put( 0,40){\oval(80,40)[tr]}
+\put(-50, 0){\makebox(20,40){$K_4$:}}
+\end{picture}

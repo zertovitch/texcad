@@ -1,0 +1,61 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{90.5097}
+\unitlength 1.00in
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(4.50,5.75)(0.00,0.00)
+% Edit box 
+\put(1.00,4.50){\framebox(1.00,0.50)[]{Edit File}}
+% File.tex oval 
+\put(4.00,4.25){\oval(1.00,0.50)[]}
+\put(4.00,4.25){\makebox(0,0)[]{File.tex}}
+% line from Edit Box to File.tex oval 
+\put(2.00,4.75){\vector(4,-1){1.50}}
+%line from File.tex oval to Latex Box 
+\put(3.75,4.00){\vector(-4,-1){1.70}}
+%Latex Box 
+\put(1.00,3.25){\framebox(1.00,0.50)[]{\LaTeX }}
+% line from LaTeX Box to File.dvi oval 
+\put(2.00,3.20){\vector(4,-1){1.50}}
+%line from File.dvi oval to previewer Box 
+\put(3.75,2.50){\vector(-4,-1){1.70}}
+% Previewer Box 
+\put(1.00,1.75){\framebox(1.00,0.50)[]{Previewer}}
+% line from bottom of previewer box down, then left, then up, 
+% then right, then down 
+% down 
+\put(1.50,1.50){\vector(0,-1){1.00}}
+% left 
+\put(1.50,0.50){\vector(-1,0){1.25}}
+% up 
+\put(0.25,0.50){\vector(0,1){5.00}}
+%right 
+\put(0.25,5.50){\vector(1,0){1.00}}
+%down again 
+\put(1.25,5.50){\vector(0,-1){0.45}}
+% here is the start arrow 
+\put(1.60,5.75){Start Here}
+\put(1.50,5.75){\vector(0,-1){0.60}}
+% File.dvi oval 
+\put(4.00,2.75){\oval(1.00,0.50)[]}
+\put(4.00,2.75){\makebox(0,0)[]{File.dvi}}
+% line from File.dvi oval to dvips box 
+\put(4.00,2.50){\vector(0,-1){1.00}}
+% dvips box 
+\put(3.50,1.00){\framebox(1.00,0.50)[]{dvips}}
+% line from dvips box to printer Oval 
+\put(4.00,1.00){\vector(0,-1){0.25}}
+% word OR 
+\put(3.00,2.00){\makebox(0,0)[]{OR}}
+% Printer Oval 
+\put(4.00,0.50){\oval(1.00,0.50)[]}
+\put(4.00,0.50){\makebox(0,0)[]{Printer}}
+\end{picture}

@@ -1,0 +1,24 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{1.0000}
+\unitlength 1.00mm
+\linethickness{.5pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(101.50,100.00)
+(-5,0)
+\bezier{50}(0.00,0.00)(0.00,100.00)(100.00,0.00)
+\qbezier    (0,0)(30,80)(100,0)
+\qbezier[150](0,0)(60,60)(100,0)
+\qbezier[200](0,0)(90,40)(100,0)
+\qbezier     (0,0)(120,20)(100,0)
+\put(0.00,0.00){\circle*{3.00}}
+\put(100.00,0.00){\circle*{3.00}}
+\multiput(0,100)(30,-20){5}{\circle{2}}
+\end{picture}

@@ -1,0 +1,30 @@
+%\zoom{0.2}
+%\input ex_degen.epic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\unitlength}{0.00083333in}
+\renewcommand{\dashlinestretch}{30}
+%\begin{picture}(5000,1539)(0,-10)
+\begin{picture}(5000,2000)(0,-10)
+\drawline(237,1212)(1137,912)(1737,1212)(1737,312)
+\drawline(1737,312)(1737,312) \drawline(1137,12)(12,387)
+\drawline(135.329,377.513)(12.000,387.000)(116.355,320.592)
+\drawline(237,312)(237,1212)
+\drawline(237,1212)(837,1512)(1737,1212)
+\dashline{60.000}(237,312)(837,612)(1737,312)
+\dashline{60.000}(837,612)(837,1512)
+\drawline(1137,1212)(1137,1212) \drawline(1137,12)(1137,1212)
+\drawline(1167.000,1092.000)(1137.000,1212.000)(1107.000,1092.000)
+\drawline(1137,12)(1962,387)
+\drawline(1865.170,310.033)(1962.000,387.000)(1840.342,364.655)
+\put(1012,152){\makebox(0,0)[lb]{\smash{{{$1$}}}}}
+\put(337,887){\makebox(0,0)[lb]{\smash{{{$1$}}}}}
+\put(1587,837){\makebox(0,0)[lb]{\smash{{{1}}}}}
+\put(850,642){\makebox(0,0)[lb]{\smash{{{$\epsilon^2$}}}}}
+\put(2700,800){
+\begin{tabular}{l}
+$t=e_{000}+e_{011}+e_{101} \in k^{2\times 2\times 2}$ \\[0.5ex]
+$R(t) =3$,  aber \\[0.5ex] $\br(t)\le 2$, weil \\[0.7ex] $R(t
++\epsilon^2 e_{110})\le 2$
+\end{tabular}}
+\end{picture}
+\end{tabular}}

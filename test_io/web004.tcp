@@ -1,0 +1,26 @@
+ \unitlength 1mm
+ % an easy way to re-scale the whole picture : 
+ \linethickness{ 0.15mm }
+ % starts environment and set picture size : 
+ \begin{picture}(100,100)
+ % a vector starting from (0,0) with slope (1,0) and length 50mm : 
+ \put(0,0){\vector(1,0){50}}
+ % same as above, but horizontal. 
+ \put(0,0){\vector(0,1){50}} 
+ % a line with slope=4. 
+ \put(10,20){\line(1,4){5}} 
+ % an equation surrounded by a rectangular box : 
+ \put(20,30){\framebox(10,10){$\frac{x}{y}$}} 
+ % same as above, but w/o the surrounding box. 
+ \put(55,00){\makebox(0,0){$\vec{i}$}}
+ % a dashed box 
+ \put(60,5){\dashbox{5}(10,20){$\vec{j}$}} 
+ \put(0,0){\makebox(0,0)[tr]{0}}
+ % a circle, with center (30,30) and diameter=10mm 
+ \put(30,30){\circle{10}}
+ % a disk 
+ \put(10,30){\circle*{5}}
+ % a bezier spline 
+%
+ \qbezier(10,10)(20,0)(30,20) 
+ \end{picture} 

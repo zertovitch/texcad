@@ -1,0 +1,8 @@
+\setlength{\unitlength}{2mm}
+\begin{picture}(20,20)
+\linethickness{1pt}
+\put(2,2){\vector(0,1){15}}
+\put(2,2){\vector(1,0){30}}
+\put(0,5){\shortstack{y\\-\\A\\c\\h\\s\\e}}
+\put(25,0){x-Achse}
+\end{picture}

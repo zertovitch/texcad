@@ -1,0 +1,53 @@
+%TeXCAD Picture [Fig_TC42.tcp.$$$]. Options:
+%\grade{\on}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\on}
+%\pvinsert{\def\TC{{\TeX}CAD}}
+%\pvinsert{% Macros LaTeX pour les lettres IR, ZZ, etc.  -  G. de Montmollin}
+%\pvinsert{% Version 29.4.1997}
+%\pvinsert{%}
+%\pvinsert{\def\rfnt#1#2#3{\lower.05ex\hbox{{\rm #1\hskip-#3em #2}}}}
+%\pvinsert{%}
+%\pvinsert{\def\1I{\rfnt 1 l {.24}}}
+%\pvinsert{\def\IB{\rfnt I B {.18}}}
+%\pvinsert{\def\CC{\rfnt l C {.51}}}
+%\pvinsert{\def\ID{\rfnt I D {.18}}}
+%\pvinsert{\def\IE{\rfnt I E {.18}}}
+%\pvinsert{\def\IF{\rfnt I F {.18}}}
+%\pvinsert{\def\IH{\rfnt I H {.18}}}
+%\pvinsert{\def\II{\rfnt I I {.18}}}
+%\pvinsert{\def\IK{\rfnt I K {.18}}}
+%\pvinsert{\def\IL{\rfnt I L {.18}}}
+%\pvinsert{\def\IM{\rfnt I M {.18}}}
+%\pvinsert{\def\IN{\rfnt I N {.18}}}
+%\pvinsert{\def\CQ{\rfnt l O {.5}}}
+%\pvinsert{\def\IP{\rfnt I P {.2}}}
+%\pvinsert{\def\CQ{\rfnt l Q {.5}}}
+%\pvinsert{\def\IR{\rfnt I R {.2}}}
+%\pvinsert{\def\SS{\rfnt l S {.4}}}
+%\pvinsert{\def\ZZ{\rfnt Z Z {.295}}}
+%\quality{8.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{9.5137}
+\unitlength 8pt % = 8pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(57,49)(0,0)
+%\qbezvec(6,22)(16,4)(26,22)
+\put(26,22){\vector(1,2){.03}}\qbezier(6,22)(16,4)(26,22)
+%\end
+%\qbezvec(27,22)(37,4)(47,22)
+\put(47,22){\vector(1,2){.03}}\qbezier(27,22)(37,4)(47,22)
+%\end
+\put(3,24){\makebox(0,0)[cc]{$\CC$}}
+\put(25,24){\makebox(0,0)[cc]{$\CC$}}
+\put(48,24){\makebox(0,0)[cc]{$\CC$}}
+\put(16,9){\makebox(0,0)[cc]{$f$}}
+\put(37,9){\makebox(0,0)[cc]{$g$}}
+\put(1,32){\framebox(52,17)[cc]
+{{\footnotesize \begin{tabular}{l}{\TC} is a program for drawing or retouching \{picture\}s in \LaTeX.\\The features of environment \{picture\} are quite limited, but it presents\\ the great advantage of requiring {\bf no} add-on.\\You also enjoy the same fonts, macros, formulas as elsewhere in your \LaTeX \, document.\\ In addition, {\TC} extends the original \{picture\} capabilities,  even without any\\ obligatory \LaTeX \, package, class or style sheet.\\Furthermore, you can still switch on some supported add-ons, but are not obliged to.\\ \end{tabular}}}}
+\end{picture}

@@ -1,0 +1,28 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{4.7568}
+\unitlength 1.50pt
+\linethickness{0.4pt  }
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(200.00,75.00)
+\put(0.00,25.00){\vector(1,0){200.00}}
+\put(25.00,0.00){\vector(0,1){75.00}}
+\put(75.00,22.00){\line(0,1){6.00}}
+\put(125.00,22.00){\line(0,1){6.00}}
+\put(22.00,50.00){\line(1,0){6.00}}
+\thicklines  \put(25,25){\line(1,0){50}}
+\put(75.00,50.00){\line(1,0){50.00}}
+\put(125.00,25.00){\line(1,0){72.00}}
+\put(17.00,50.00){\makebox(0,0)[]{$1$}}
+\put(75.00,13.00){\makebox(0,0)[b]{$\pi$}}
+\put(125.00,13.00){\makebox(0,0)[b]{$2\pi$}}
+\put(195.00,13.00){\makebox(0,0)[b]{$t$}}
+\put(175.00,60.00){\makebox(0,0){$g(t)$}}
+\end{picture}

@@ -1,0 +1,51 @@
+%\zoom{0.2}
+%\input decomp_left.epic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\unitlength}{0.0015in}
+%
+\renewcommand{\dashlinestretch}{30}
+\begin{picture}(2000,1800)(-1100,-450)
+\thicklines
+% Boxen
+\drawline(0,0)(0,200) \drawline(250,100)(250,500)
+\drawline(500,400)(500,600) \drawline(0,0)(250,100)
+\drawline(0,200)(500,400) \drawline(250,500)(500,600)
+%
+\drawline(0,0)(-200,70) \drawline(0,200)(-400,340)
+\drawline(-200,470)(-600,610) \drawline(-200,70)(-200,470)
+\drawline(-400,340)(-400,740) \drawline(-600,610)(-600,810)
+%
+\drawline(-200,270)(50,370)(250,300)
+\drawline(-200,470)(300,670)(500,600) \drawline(-400,740)(100,940)
+\drawline(-400,540)(-150,640)(50,570)
+%
+\drawline(50,370)(50,770)(-350,910)(-600,810)
+\drawline(-600,810)(-350,910) \drawline(-600,810)(-400,740)
+\drawline(-150,840)(-150,640) \drawline(50,570)(250,500)
+\drawline(300,870)(50,770) \drawline(300,870)(100,940)
+\drawline(300,870)(300,670)
+%%
+\thinlines
+% Umrandung
+\drawline(0,0)(500,200) \drawline(0,0)(0,600)
+\drawline(0,0)(-600,210) \drawline(500,800)(500,200)
+\drawline(500,800)(0,600) \drawline(500,800)(-100,1010)
+\drawline(-600,810)(-600,210) \drawline(-600,810)(0,600)
+\drawline(-600,810)(-100,1010)
+%
+\drawline(0,0)(650,260) \drawline(596,250)(650,260)
+\drawline(604,230)(650,260)
+\put(750,270){\makebox(0,0)[lb]{\smash{{{${\scriptstyle i}$}}}}}
+%
+\drawline(0,0)(0,1100) \drawline(-10,1080)(0,1100)
+\drawline(10,1080)(0,1100)
+\put(0,1150){\makebox(0,0)[lb]{\smash{{{${\scriptstyle \ell}$}}}}}
+%
+\drawline(0,0)(-760,266) \drawline(-743.5,249)(-760,266)
+\drawline(-736.5,269)(-760,266)
+\put(-860,286){\makebox(0,0)[lb]{\smash{{{${\scriptstyle j}$}}}}}
+%
+\drawline(-600,960)(-400,760) \drawline(-400,760)(-436,764)
+\drawline(-400,760)(-404,796)
+\put(-750,1000){\makebox(0,0)[lb]{\smash{{{${\scriptstyle t(i,j,\ell)}$}}}}}
+\end{picture}

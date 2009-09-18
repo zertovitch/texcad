@@ -1,0 +1,28 @@
+%\zoom{0.2}
+%\input degen_left.epic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\unitlength}{0.00083333in}
+\renewcommand{\dashlinestretch}{30}
+\begin{picture}(2146,2286)(0,-10)
+\thinlines \drawline(1725,1752)(1725,1752)
+\drawline(225,1752)(1725,1752)(1725,252)
+\drawline(525,1752)(525,1452) \drawline(825,1752)(825,1152)
+\drawline(1425,1752)(1425,552) \drawline(1125,1752)(1125,852)
+\drawline(675,1752)(675,1302) \drawline(375,1752)(375,1602)
+\drawline(975,1752)(975,1002) \drawline(1575,1752)(1575,402)
+\drawline(1275,1752)(1275,702) \thicklines
+\drawline(225,1752)(1725,252) \thinlines
+\drawline(675,627)(900,927)
+\drawline(852.000,813.000)(900.000,927.000)(804.000,849.000)
+\drawline(225,252)(225,2052)
+\drawline(255.000,1932.000)(225.000,2052.000)(195.000,1932.000)
+\drawline(225,252)(2025,252)
+\drawline(1905.000,222.000)(2025.000,252.000)(1905.000,282.000)
+\put(225,27){\makebox(0,0)[lb]{\smash{{{${\scriptstyle 0}$}}}}}
+\put(1725,27){\makebox(0,0)[lb]{\smash{{{${\scriptstyle n}$}}}}}
+\put(0,1752){\makebox(0,0)[lb]{\smash{{{${\scriptstyle n}$}}}}}
+\put(2100,177){\makebox(0,0)[lb]{\smash{{{${\scriptstyle i}$}}}}}
+\put(150,2127){\makebox(0,0)[lb]{\smash{{{${\scriptstyle j}$}}}}}
+\put(1135,1302){\makebox(0,0)[lb]{\smash{{{$\Phi$}}}}}
+\put(750,552){\makebox(0,0)[lb]{\smash{{{$\Psi$}}}}}
+\end{picture}

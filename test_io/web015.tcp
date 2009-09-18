@@ -1,0 +1,23 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{16.0000}
+\unitlength 1.00cm
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(15.00,5.00)
+\put(2.50,0.75){\circle*{0.20}}
+\put(2.50,0.75){\line(0,1){2.75}}
+\put(2.50,0.75){\line(1,0){7.50}}
+\put(2.70,0.95){\makebox(0,0)[lc]{Kruh}}
+\put(12.50,0.75){\oval(5.00,1.50)[]}
+\put(2.50,4.25){\oval(5.00,1.50)[]}
+\put(5.00,3.50){\vector(2,-1){4.50}}
+\put(12.50,0.75){\makebox(0,0)[]{Oval c.~1}}
+\end{picture}

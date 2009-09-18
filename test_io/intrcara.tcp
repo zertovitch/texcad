@@ -1,0 +1,18 @@
+\unitlength=2.0pt
+%\special{em:linewidth 0.4pt}
+\linethickness{0.4pt}
+\begin{picture}(106.00,55.00)
+\put(0.00,5.01){\vector(1,0){100.33}}
+\put(6.33,55.00){\makebox(0,0)[cc]{$t$}}
+\put(106.00,5.00){\makebox(0,0)[cc]{$x$}}
+\put(42.00,5.00){\line(3,4){31.67}}
+\put(73.67,47.00){\line(-1,-6){7.00}}
+\put(39.67,0.5){\makebox(0,0)[cc]{$x_1$}}
+\put(64.33,0.5){\makebox(0,0)[cc]{$x_2$}}
+\put(73.67,47.00){\circle*{1.33}}
+\put(71.67,11.67){\makebox(0,0)[lc]{pente: $f'(u_0(x_2))$}}
+\put(44.33,15.67){\makebox(0,0)[rc]{pente: $f'(u_0(x_1))$}}
+\put(62.33,38.67){\makebox(0,0)[rc]{$u$ vaut $u_0(x_1)$}}
+\put(74.33,32.67){\makebox(0,0)[lc]{$u$ vaut $u_0(x_2)$}}
+\put(6.33,36.00){\vector(0,1){13.67}}
+\end{picture}

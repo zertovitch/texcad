@@ -1,0 +1,14 @@
+\begin{picture}(60,40)(0,0)
+\multiput(0,0)( 0,20){3}{\line(1,0){60}}
+\multiput(0,0)(20, 0){4}{\line(0,1){40}}
+\multiput(0,0)( 0,20){3}{\multiput(0,0)(20,0){4}{\circle*{3}}}
+\linethickness{1.2pt}
+\put( 0,40){\line(1,0){60}}
+\put(20,20){\line(1,0){20}}
+\multiput( 0, 0)(40,0){2}{\line(1,0){20}}
+\multiput( 0, 0)(60,0){2}{\line(0,1){40}}
+\multiput(20, 0)(20,0){2}{\line(0,1){20}}
+\multiput( 0,20)(20,0){3}{\makebox(20,20){1}}
+\multiput( 0, 0)(40,0){2}{\makebox(20,20){1}}
+\put(20,0){\makebox(20,20){0}}
+\end{picture}

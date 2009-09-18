@@ -1,0 +1,17 @@
+%\zoom{0.16}
+%\input decomp_right.epic
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\unitlength}{0.0009in}
+%
+\renewcommand{\dashlinestretch}{30}
+\begin{picture}(2294,1863)(0,-400)
+\put(1062,1011){\circle*{150}} \put(612,1386){\circle*{150}}
+\put(237,1236){\circle*{150}} \put(537,936){\circle*{150}}
+\put(837,561){\circle*{150}} \drawline(12,1536)(12,636)(912,336)
+    (912,1236)(12,1536)
+\drawline(912,336)(1362,636)(1362,1536)(912,1236)
+\drawline(1362,1536)(462,1836)(12,1536)
+\put(1387,1736){\makebox(0,0)[lb]{\smash{{{${\scriptstyle {\mathrm supp}_D t}$}}}}}
+\put(12,36){\makebox(0,0)[lb]{\smash{{{${\scriptstyle I=\{1,2\},\,
+J=\{1,2,3\},\, L=\{1,2\}}$}}}}}
+\end{picture}

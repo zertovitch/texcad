@@ -1,0 +1,31 @@
+%\zoom{8.0}
+
+%Created by PicEdt 1.x
+%Fri Jul 07 23:17:02 CEST 2000
+\unitlength 1mm
+\begin{picture}(28.75,95.00)(0,0)
+
+%Begin group
+%Line 0 0 (18.75,0.00)(18.75,5.00)
+\drawline(18.75,0.00)(18.75,5.00)
+%End Line
+%Line 0 0 (18.75,5.00)(21.25,2.50)
+\drawline(18.75,5.00)(21.25,2.50)
+%End Line
+%Line 0 0 (21.25,2.50)(18.75,0.00)
+\drawline(21.25,2.50)(18.75,0.00)
+%End Line
+%Line 0 0 (21.25,0.00)(21.25,5.00)
+\drawline(21.25,0.00)(21.25,5.00)
+%End Line
+%Line 0 0 (18.75,2.50)(15.00,2.50)
+\drawline(18.75,2.50)(15.00,2.50)
+%End Line
+%Line 0 0 (21.25,2.50)(25.00,2.50)
+\drawline(21.25,2.50)(25.00,2.50)
+%End Line
+\linethickness{0.15mm}
+\put(18.75,6.25){\makebox(0.00,0.00)[bl]{$D$}}
+%End group
+
+\end{picture}

@@ -1,0 +1,46 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{64.0000}
+\unitlength 20.00pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(12.00,5.00)(-4.00,-3.00)
+\put(0.00,-1.00){\vector(0,1){3.00}}
+\put(-3.00,0.00){\vector(1,0){11.00}}
+\qbezier(-3.00,0.90)(-1.00,0.70)(0.00,0.16)
+\qbezier(0.00,0.16)(0.13,0.09)(0.25,0.00)
+\qbezier(0.25,0.00)(0.70,-0.30)(0.80,-2.00)
+\qbezier(1.16,2.00)(1.40,0.30)(2.25,0.00)
+\qbezier(2.25,0.00)(3.20,-0.30)(3.48,-2.00)
+\qbezier(4.64,2.00)(5.25,0.30)(6.25,0.00)
+\qbezier(6.25,0.00)(7.25,-0.30)(7.88,-2.00)
+\put(-2.00,-0.10){\line(0,1){0.20}}
+\put(-2.25,-0.40){$\scriptstyle -2$}
+\put(-1.00,-0.10){\line(0,1){0.20}}
+\put(-1.25,-0.40){$\scriptstyle -1$}
+\put(0.00,-0.10){\line(0,1){0.20}}
+\put(-0.06,-0.40){$\scriptstyle 0$}
+\put(1.00,-0.10){\line(0,1){0.20}}
+\put(0.92,-0.40){$\scriptstyle 1$}
+\put(2.00,-0.10){\line(0,1){0.20}}
+\put(1.92,-0.40){$\scriptstyle 2$}
+\put(3.00,-0.10){\line(0,1){0.20}}
+\put(2.92,-0.40){$\scriptstyle 3$}
+\put(4.00,-0.10){\line(0,1){0.20}}
+\put(3.92,-0.40){$\scriptstyle 4$}
+\put(5.00,-0.10){\line(0,1){0.20}}
+\put(4.92,-0.40){$\scriptstyle 5$}
+\put(6.00,-0.10){\line(0,1){0.20}}
+\put(5.92,-0.40){$\scriptstyle 6$}
+\put(7.00,-0.10){\line(0,1){0.20}}
+\put(6.92,-0.40){$\scriptstyle 7$}
+\put(7.92,-0.30){$\scriptstyle \rho $}
+\put(-0.40,1.80){$k$}
+\end{picture}

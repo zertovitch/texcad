@@ -1,0 +1,54 @@
+%TexCad Options
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{30.9450}
+\unitlength 1.00cm
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(16.00,12.00)
+\thicklines\newcommand{\dpp}[2]{\displaystyle\frac{\partial^2}{\partial #1 \partial #2}}
+\newcommand{\vv}{\vec{v}\,'}
+\newcommand{\ff}[2]{\displaystyle\frac{#1}{#2}}
+\newcommand{\pp}[2]{\displaystyle\frac{\partial #1}{\partial #2}}
+\newcommand{\zz}[2]{\displaystyle\frac{\partial^2 #1}{\partial #2^2}}
+\newcommand{\bix}[1]{\fbox{\parbox[c]{8cm}{#1}}}
+%\put(1,2){\framebox(8,3){}}
+\put(0.00,9.00){\framebox(8.50,3.00)[]
+{\parbox[c]{8cm}{L\"osung der Lighthill-Gleichung:\\ \vspace{1pt}\\$\rho'(\vec{x},t) = \ff{1}{4 \pi c^2} \int \limits_{V_Q}\ff{T_{ij}(\vec{y}, t - |\vec{x} - \vec{y}|/c)}{|\vec{x} - \vec{y}|} \,d^3 \vec{y}$}}}
+%\put(0,8){\vector(1,0){1.0}}
+%-
+\put(0.00,6.75){\framebox(8.50,2.00)[]
+{\parbox[c]{8cm}{Symmetrie:\\ $\pp{}{x_i} \{ |\vec{x} - \vec{y}|\}= - \pp{}{y_i}  \{ |\vec{x} - \vec{y}|\}$}}}
+\put(0.00,4.50){\framebox(8.50,2.00)[]
+{\parbox[c]{8cm}{Konkrete Form der Lighthillschen Spannungen:\\$T_{ij} = \rho \, v_i v_j + P_{ij} - c^2 \rho' \delta_{ij}$}}}
+\put(0.00,2.25){\framebox(8.50,2.00)[]
+{\parbox[c]{8cm}{Exakte Impulsgleichung:\\$\pp{}{t}(\rho v_j) + \pp{}{y_i} (P_{ij} + \rho \, v_i v_j)= 0$}}}
+\put(0.00,0.00){\framebox(8.50,2.00)[]
+{\parbox[c]{8cm}{Exakte Kontinuit\"atsgleichung:\\$\pp{}{t} (\rho') + \pp{}{y_j} (\rho v_j) = 0$}}}
+\put(8.50,10.50){\line(1,0){2.00}}
+\put(10.50,10.50){\line(0,-1){4.50}}
+\put(10.50,6.00){\vector(1,0){1.50}}
+%-
+\put(8.50,7.75){\line(1,0){1.00}}
+\put(9.50,7.75){\line(0,-1){2.00}}
+\put(9.50,5.75){\vector(1,0){2.50}}
+%-
+\put(8.50,5.50){\vector(1,0){3.50}}
+%-
+\put(8.50,3.25){\line(1,0){1.00}}
+\put(9.50,3.25){\line(0,1){2.00}}
+\put(9.50,5.25){\vector(1,0){2.50}}
+%-
+\put(8.50,1.00){\line(1,0){2.00}}
+\put(10.50,1.00){\line(0,1){4.00}}
+\put(10.50,5.00){\vector(1,0){1.50}}
+%-
+\put(12.00,4.50){\framebox(4.00,2.00)[]
+{\parbox[c]{3.5cm}{Gleichung von \\Ffowcs Williams \& \\Hawkings}}}
+\end{picture}

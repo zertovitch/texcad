@@ -1,0 +1,33 @@
+%\zoom{8.0}
+
+%Created by PicEdt 1.x
+%Fri Jul 07 23:27:13 CEST 2000
+\unitlength 1mm
+\begin{picture}(35.00,95.00)(0,0)
+
+%Begin group
+%Line 0 0 (20.00,3.75)(15.00,3.75)
+\drawline(20.00,3.75)(15.00,3.75)
+%End Line
+\linethickness{0.15mm}
+\put(22.00,8.75){\makebox(0.00,0.00)[cc]{$+$}}
+\linethickness{0.15mm}
+\put(22.00,3.75){\makebox(0.00,0.00)[cc]{$-$}}
+%Line 0 0 (20.00,8.75)(15.00,8.75)
+\drawline(20.00,8.75)(15.00,8.75)
+%End Line
+%Line 0 0 (20.00,12.50)(30.00,6.25)
+\drawline(20.00,12.50)(30.00,6.25)
+%End Line
+%Line 0 0 (20.00,12.50)(20.00,0.00)
+\drawline(20.00,12.50)(20.00,0.00)
+%End Line
+%Line 0 0 (20.00,0.00)(30.00,6.25)
+\drawline(20.00,0.00)(30.00,6.25)
+%End Line
+%Line 0 0 (30.00,6.25)(35.00,6.25)
+\drawline(30.00,6.25)(35.00,6.25)
+%End Line
+%End group
+
+\end{picture}

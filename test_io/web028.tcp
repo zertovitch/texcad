@@ -1,0 +1,37 @@
+% UB1_4_3.PIC
+%TexCad Options
+%\grade{\on}
+%\emlines{\on}
+%\beziermacro{\off}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{5.00}
+\special{em:linewidth 0.4pt}
+\unitlength 1mm
+\linethickness{0.4pt}
+\begin{picture}(58.00,60.00)
+\emline{5.00}{60.00}{1}{40.00}{60.00}{2}
+\emline{40.00}{60.00}{3}{40.00}{55.00}{4}
+\put(38.17,45.00){\framebox(3.83,10.00)[cc]{}}
+\emline{40.00}{45.00}{5}{40.00}{35.00}{6}
+\put(38.17,25.00){\framebox(3.83,9.83)[cc]{}}
+\emline{40.00}{25.00}{7}{40.00}{20.00}{8}
+\emline{40.00}{20.00}{9}{5.17}{20.00}{10}
+\emline{40.00}{60.00}{11}{53.33}{60.00}{12}
+\emline{53.33}{60.00}{13}{53.33}{51.00}{14}
+\put(48.33,50.00){\rule{9.17\unitlength}{1.00\unitlength}}
+\put(48.33,48.00){\rule{9.17\unitlength}{1.00\unitlength}}
+\emline{53.33}{47.83}{15}{53.33}{34.83}{16}
+\put(51.33,25.00){\rule{4.17\unitlength}{9.83\unitlength}}
+\emline{53.33}{25.00}{17}{53.33}{20.00}{18}
+\emline{53.33}{20.00}{19}{40.00}{20.00}{20}
+\emline{40.00}{39.83}{21}{53.33}{39.83}{22}
+\put(6.67,39.83){\makebox(0,0)[cc]{$U=20V$}}
+\put(26.33,49.50){\makebox(0,0)[cc]{$R_1=200\Omega$}}
+\put(26.17,29.33){\makebox(0,0)[cc]{$R_2=50\Omega$}}
+\put(58.00,43.17){\makebox(0,0)[lc]{$X_C=100\Omega$}}
+\put(57.83,20.33){\makebox(0,0)[lc]{$X_L=200\Omega$}}
+\end{picture}
