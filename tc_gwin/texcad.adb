@@ -12,6 +12,7 @@ with TC.GWin.MDI_Main;                  use TC.GWin.MDI_Main;
 with TC.GWin.Options;
 
 with GWindows;                          use GWindows;
+with GWindows.Base;
 with GWindows.Application;              use GWindows.Application;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
@@ -60,7 +61,10 @@ procedure TeXCAD is
 
   end Time_id;
 
-  procedure Interactive_crash(E: Ada.Exceptions.Exception_Occurrence) is
+  procedure Interactive_crash(
+    Window : in out GWindows.Base.Base_Window_Type'Class;
+    E: Ada.Exceptions.Exception_Occurrence)
+  is
     small_insult: constant String:=
         Ada.Exceptions.Exception_Name (E) & NL &
         Ada.Exceptions.Exception_Message (E);
@@ -83,25 +87,36 @@ procedure TeXCAD is
       "I was doing ______ (with TeXCAD) when the crash happened" & NL &
       "and append files ______ to help you reproducing the bug.";
   begin
+    Create(f,Out_File,file_name);
+    Put(f, To_String(report));
+    Close(f);
+    GWindows.Base.On_Exception_Handler (Handler => null); -- Avoid infinite recursion!
     case Message_Box
-      ("TeXCAD (Windows) version " & TC.version &
+      ("Crash in TeXCAD (Windows) version " & TC.version &
         ", reference " & TC.reference,
         S2G(insult) & NL &
         "Do you want to try to e-mail a report ?" & NL &
         "In any case, the report is in file: " & S2G(file_name),
         Yes_No_Box
-      ) is
+      )
+    is
       when Yes =>
-        Start( To_URL_Encoding(
-          "mailto:" & TC.mail & "?Subject=Bug in " &
-          pedigree & "&Body="  & report
-          )
-        );
+        begin
+          Start( To_URL_Encoding(
+            "mailto:" & TC.mail & "?Subject=Bug in " &
+            pedigree & "&Body="  & report
+            )
+          );
+        exception
+          when others =>
+            Message_Box(
+              "E-mail of report",
+              "Call of e-mail client failed, please send " &
+              S2G(file_name) & "."
+            );
+        end;
       when others => null;
     end case;
-    Create(f,Out_File,file_name);
-    Put(f, To_String(report));
-    Close(f);
   end Interactive_crash;
 
   uninst: constant GString:= "Uninstall TeXCAD";
@@ -119,11 +134,17 @@ begin
     end if;
   else
     Create_MDI_Top (Top, "TeXCAD");
+    GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
     Message_Loop;
   end if;
 exception
   when TC.GWin.Options.Clear_failed =>
     Message_Box(uninst,"Clearing failed. Do you have administrator rights ?");
   when E : others =>
-    Interactive_crash(E);
+    Message_Box("Uncaught exception","An exception occured in TeXCAD - sorry!");
+    declare
+      dummy: GWindows.Base.Base_Window_Type;
+    begin
+      Interactive_crash(dummy, E);
+    end;
 end TeXCAD;
