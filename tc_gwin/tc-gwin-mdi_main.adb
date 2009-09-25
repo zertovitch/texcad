@@ -9,6 +9,8 @@ with TC.GWin.Display,
      TC.GWin.Toolbars,
      TC.GWin.Previewing;
 
+with TeXCAD_Resource_GUI.Version_info;
+
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Buttons;                  use GWindows.Buttons;
@@ -405,13 +407,12 @@ package body TC.GWin.MDI_Main is
     end if;
   end On_File_Open;
 
-  procedure On_About (
-        Window : in out MDI_Main_Type ) is
-    About                    :          Window_Type;
-    Oki                      :          Default_Button_Type;
-    Result,w                 :          Integer;
-    Wmax                     : constant                     := 550;
-
+  procedure On_About(Window: in out MDI_Main_Type)
+  is
+    About     : Window_Type;
+    Oki       : Default_Button_Type;
+    Result,w  : Integer;
+    Wmax      : constant := 550;
   begin
     Create_As_Dialog(About, Window, "TeXCAD", Width => Wmax + 50, Height => 300);
     Center(About);
@@ -428,7 +429,7 @@ package body TC.GWin.MDI_Main is
     Create_Icon (About, "AAA_Main_Icon", 10,10,32,32);
     Create_Icon (About, "Picture_Icon",   w,10,32,32);
     Create_Label (About, Msg(blurb), 60, 35, Wmax-92, 25);
-    Create_Label (About, "Copyright © 2003..2008 Free Software Foundation, Inc. (cf COPYING.TXT)",
+    Create_Label (About, TeXCAD_Resource_GUI.Version_info.LegalCopyright & " (cf COPYING.TXT)",
       60, 55, Wmax-92, 25);
     Create_URL (About, "Internet: " & web, web,
       60, 75, Wmax-92, 25);
@@ -448,7 +449,7 @@ package body TC.GWin.MDI_Main is
     Create_URL(
       About,
       "David Botton: " & Msg(Gwind),
-      "http://sourceforge.net/projects/gnavi/",
+      "http://sf.net/projects/gnavi/",
       30, 175, Wmax, 16);
 
     Create (Oki, About, "O&K", 20, Client_Area_Height (About) - 40, 60, 25,

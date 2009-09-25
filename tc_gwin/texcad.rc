@@ -77,7 +77,7 @@ BEGIN
 END
 
 1 VERSIONINFO
-FILEVERSION  4,  2, 0, 98
+FILEVERSION  4,  2, 0, 104
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
@@ -88,7 +88,7 @@ BEGIN
             VALUE "CompanyName", "Free Software Foundation, Inc."
             VALUE "Authors", "Georg Horn, Jörn Winkelmann, Gautier de Montmollin"
             VALUE "FileDescription", "TeXCAD, a LaTeX {picture} drawing program"
-            VALUE "FileVersion", "Ver. 4.2, Ref. 103"
+            VALUE "FileVersion", "Ver. 4.2, Ref. 104"
             VALUE "InternalName", "TeXCAD"
             VALUE "LegalCopyright", "© 2003..2009 Free Software Foundation"
             VALUE "OriginalFilename", "TeXCAD.exe"
@@ -105,4 +105,4 @@ END
 //
 // Manifest resources
 //
-1                  RT_MANIFEST    ".\\manifest.xml"
+1                  RT_MANIFEST    "manifest.xml"
