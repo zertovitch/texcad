@@ -15,7 +15,7 @@ copy    ..\..\Changes.txt
 copy    ..\..\Changes_also_minor.txt
 copy       ..\Readme_%distro%_version.txt
 
-call 7zip a -mx ..\tc_%tcver%_w%distro% *
+7z a -mx ..\tc_%tcver%_w%distro%.zip *
 
 cd..
 goto fin

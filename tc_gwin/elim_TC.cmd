@@ -1,1 +1,1 @@
-elim TeXCAD -a -I.. -I..\..
+elim TeXCAD -a -I.. -I..\.. -Iwindows_stuff
