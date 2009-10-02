@@ -1,13 +1,16 @@
-with Ada.Text_IO, TC.Input, TC.Output;
+with TC.Input, TC.Output;
+
+with Ada.Text_IO;                       use Ada.Text_IO;
+with Ada.Characters.Handling;           use Ada.Characters.Handling;
 
 procedure Test_TC_IO is
-  use Ada.Text_IO, TC.RIO;
+  use TC.RIO;
 
   function Short(s: String) return String is
     f: Integer:= s'First;
   begin
     for i in s'Range loop
-      if s(i)='\' then
+      if s(i)='\' or s(i)='/' then
         f:= i+1;
       end if;
     end loop;
@@ -63,8 +66,7 @@ procedure Test_TC_IO is
     Close(f1);
   end Text_compare;
 
-  procedure Test( name1: String; across_sty: Boolean:= False ) is
-    name: constant String:= "Test_IO\" & name1;
+  procedure Test_one( name: String; across_sty: Boolean ) is
     pic: TC.Picture;
 
     Sty_set_combs: constant:= 2**TC.Supposing_sty_set'Length;
@@ -80,8 +82,8 @@ procedure Test_TC_IO is
     end Comb_number_to_set;
 
   begin
-    Put(Short(name) & " [Load/");
     TC.Input.Load( pic, False, name & ".tcp");
+    Put(Short(name) & " ok/");
     if across_sty then
       Comb_number_to_set(0, pic.opt.sty);
       Put("Save]");
@@ -122,7 +124,18 @@ procedure Test_TC_IO is
       Text_compare(name & ".ou2", name & ".ou3");
     end if;
     Put_Line("]");
-  end Test;
+  end Test_one;
+
+  procedure Test( name1: String; across_sty: Boolean:= False ) is
+    name: constant String:= "./Test_IO/" & name1;
+  begin
+    Put(" [Load... ");
+    Test_one(name, across_sty);
+  exception
+    when Name_Error =>
+      Test_one(To_Lower(name), across_sty);
+  end;
+
 
   use TC.Units;
 

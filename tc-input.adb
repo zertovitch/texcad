@@ -49,7 +49,7 @@ package body TC.Input is
     dum_str             : Small_String;
     line_n, line_len,
     com_len, arg_len,
-    p, q, dumi          : Natural;
+    p, q, dumi          : Natural:= 0;
     ch                  : Character;
     stop                : Boolean; -- succ
     end_of_parsing      : Boolean:= False;
@@ -71,6 +71,7 @@ package body TC.Input is
         msg_0 & ASCII.LF &
         " in file :" & file_name & ASCII.LF &
         " at line :" & h & ASCII.LF &
+        " command :" & '[' & com(1..com_len) & ']' & ASCII.LF &
         " --> ";
       procedure Raise_it( content: String ) is
       begin
@@ -101,6 +102,11 @@ package body TC.Input is
            Skip_Line(tf);
          end if;
          Get_Line(tf, line_buf, line_len);
+         if line_len > 0 and then line_buf(line_len) = ASCII.CR then
+           -- Linux & Co has only ASCII.LF as line terminator, then
+           -- the CR of a DOS/Windows file appears at line end.
+           line_len:= line_len - 1;
+         end if;
          line_n:= line_n + 1;
        end if;
        p:=1;
