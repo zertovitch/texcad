@@ -9,7 +9,7 @@ with TC.GWin.Display,
      TC.GWin.Toolbars,
      TC.GWin.Previewing;
 
-with TeXCAD_Resource_GUI.Version_info;
+with TeXCAD_Resource_GUI;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
@@ -47,7 +47,7 @@ package body TC.GWin.MDI_Main is
     end loop;
   end Update_MRU_Menu;
 
-  procedure Update_Toolbar_Menu( m: in out Menu_type; tba: Floating_toolbar_array) is
+  procedure Update_Toolbar_Menu( m: in Menu_type; tba: Floating_toolbar_array) is
     use Floating_toolbars;
   begin
     for c in Floating_toolbar_categ loop
@@ -84,7 +84,7 @@ package body TC.GWin.MDI_Main is
 
   procedure Create_Menus (
         Window : in out MDI_Main_Type ) is
-    Main: Menu_Type := Create_Menu;
+        Main: constant Menu_Type := Create_Menu;
   begin
     Window.File_menu:= TC.GWin.Menus.Create_File_Menu(is_child => False);
     Update_MRU_Menu(Window.file_menu);
@@ -304,8 +304,8 @@ package body TC.GWin.MDI_Main is
   end On_Create;
 
   procedure On_Move (Window : in out MDI_Main_Type;
-                     Top    : in     Integer;
-                     Left   : in     Integer) is
+                     Left   : in     Integer;
+                     Top    : in     Integer) is
     pragma Warnings(Off,Top);
     pragma Warnings(Off,Left);
   begin
@@ -315,6 +315,7 @@ package body TC.GWin.MDI_Main is
       --   from previous session.
       -- We call the function since the Top/Left arguments are reversed -
       -- bug of GWindows <= 2003; workaround compatible with fixes.
+      -- bug fixed on 5-Jan-2012, gnavi rev. 109 !
       TC.Gwin.Wleft  := TC.GWin.MDI_Main.Left(Window);
       TC.Gwin.Wtop   := TC.GWin.MDI_Main.Top(Window);
       -- Will remember position if moved, maximized and closed

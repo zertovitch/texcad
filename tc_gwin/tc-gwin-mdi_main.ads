@@ -53,8 +53,8 @@ package TC.GWin.MDI_Main is
                      Height : in     Integer);
 
   procedure On_Move (Window : in out MDI_Main_Type;
-                     Top    : in     Integer;
-                     Left   : in     Integer);
+                     Left   : in     Integer;
+                     Top    : in     Integer);
 
   procedure On_Menu_Hover (Window  : in out MDI_Main_Type;
                            Item    : in     Integer;

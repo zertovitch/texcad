@@ -70,12 +70,12 @@ package body Floating_toolbars is
   end On_Size;
 
   procedure On_Move (Window : in out Floating_window;
-                     Top    : in     Integer;
-                     Left   : in     Integer) is
+                      Left  : in     Integer;
+                      Top   : in     Integer) is
     use GWindows.Windows;
   begin
     On_Move( Window_type(Window), Left=> Left, Top=> Top );
-    -- GW bug: On_Move inverts Left & Top !!
+    -- GW bug until 5-Jan-2012, gnavi rev. 109: On_Move inverted Left & Top !!
     Memorize_dimensions(Window.belongs_to.all);
   end On_Move;
 

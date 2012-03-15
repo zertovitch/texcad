@@ -199,7 +199,7 @@ package body TC.GWin.MDI_Picture_Child is
   end On_Paint;
 
   procedure Create_Menus (Window : in out MDI_Picture_Child_Type)  is
-    Main: Menu_Type := Create_Menu;
+  Main: constant Menu_Type := Create_Menu;
   begin
     Window.File_menu:= TC.GWin.Menus.Create_File_Menu(is_child => True);
     Append_Menu (Main, Msg(ffile), Window.File_menu);
@@ -308,7 +308,7 @@ package body TC.GWin.MDI_Picture_Child is
   procedure Update_Permanent_Command(Window : in out MDI_Picture_Child_Type) is
 
     procedure Radio_Check_Custom(
-      m                 : in out Menu_Type;
+      m                 : in Menu_Type;
       first, last, check: Custom_cmd)
     is
     begin
@@ -318,7 +318,7 @@ package body TC.GWin.MDI_Picture_Child is
       );
     end Radio_Check_Custom;
 
-    procedure Update_cmd(m: in out Menu_Type) is
+    procedure Update_cmd(m: in Menu_Type) is
     begin
       Radio_Check_Custom(
         m,

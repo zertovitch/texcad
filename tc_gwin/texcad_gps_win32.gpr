@@ -59,11 +59,11 @@ project Texcad_Gps_Win32 is
       case Build_Mode is
 
          when "Debug" =>
-            for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnat95", "-gnatwk", "-gnatwm", "-gnatwp", "-gnatwz", "-gnatVc", "-gnatVd", "-gnatVf", "-gnatVi", "-gnatVm", "-gnatVo", "-gnatVr", "-gnatVs", "-gnatVt", "-gnatyh", 
-"-gnatyi", "-gnatyk", "-gnatyn", "-gnatyp", "-gnatec..\debug.pra", "-gnatectc_elim.pra");
+            for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwk", "-gnatwm", "-gnatwp", "-gnatwz", "-gnatVc", "-gnatVd", "-gnatVf", "-gnatVi", "-gnatVm", "-gnatVo", "-gnatVr", "-gnatVs", "-gnatVt", "-gnatyh", 
+"-gnatyi", "-gnatyk", "-gnatyn", "-gnatyp", "-gnatec..\acu_debg\debug.pra", "-gnatec..\acu_debg\tc_elim.pra");
 
          when "Optimize" =>
-            for Default_Switches ("ada") use ("-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", "-gnatectc_elim.pra");
+            for Default_Switches ("ada") use ("-gnat05", "-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", "-gnatec..\acu_debg\tc_elim.pra");
       end case;
    end Compiler;
 

@@ -32,8 +32,8 @@ package Floating_toolbars is
                      Height : in     Integer);
 
   procedure On_Move (Window : in out Floating_window;
-                     Top    : in     Integer;
-                     Left   : in     Integer);
+                     Left   : in     Integer;
+                     Top    : in     Integer);
 
   procedure On_Close (Window    : in out Floating_window;
                       Can_Close :    out Boolean);
