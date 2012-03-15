@@ -1,4 +1,8 @@
-project Texcad_Gps_Win32 is
+-- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+-- for the Lang_Index project ( http://sf.net/projects/texcad/ )
+-- Build me with "gnatmake -P Texcad_Gps_Win32", or open me with GPS
+--
+project TeXCAD_GPS_Win32 is
 
    for Source_Dirs use ("..\", ".", "Windows_Stuff");
    for Main use ("TeXCAD.adb");
@@ -67,5 +71,5 @@ project Texcad_Gps_Win32 is
       end case;
    end Compiler;
 
-end Texcad_Gps_Win32;
+end TeXCAD_GPS_Win32;
 

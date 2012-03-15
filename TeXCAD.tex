@@ -1,0 +1,914 @@
+\documentclass[11pt,a4paper]{article}
+%
+\usepackage{a4wide}
+%
+\usepackage[dvipdfm]{hyperref} %%% 18-Apr-2001 : hyperliens PDF - prudence!
+%
+%\oddsidemargin  =    -1cm
+%\evensidemargin =    -1cm
+%\textwidth      =    17cm
+%\topmargin      =     0cm
+%\textheight     =    23cm
+%
+\begin{document}
+%
+\parindent 0pt
+%
+\def\TC{{\TeX}CAD}
+%
+\begin{center}
+% \input{tclogo1.tcp}
+{\sf {\Huge \TC} {\LARGE User's manual}}
+\end{center}
+%
+\def\bs{$\backslash$}
+\def\hrefid#1{\href{#1}{{\tt {\small #1}}}}
+%
+$$ $$
+%
+\section{About {\TC}}
+%
+  {\TC} is a program for drawing or retouching \{picture\}s in \LaTeX.
+  The features of environment \{picture\} are quite limited, but it
+  presents the great advantage of requiring {\bf no} add-on.
+  You also enjoy the same fonts, macros, formulas as elsewhere
+  in your \LaTeX \, document
+  \footnote{This holds for previewing too: from {\TC} version 4.2,
+  you can insert your own definitions for previewing.}.
+  \\
+  In addition, {\TC} extends the original \{picture\} capabilities,
+  even without any obligatory \LaTeX \, package, class or style sheet.\\
+  Furthermore, you can still switch on some supported add-ons, but are not obliged to.\\
+
+%
+%  NB: the present document has hyperlinks; if you pass {\TC}.dvi through
+%  {\tt dvipdfm}, the PDF file will provide them.
+
+\subsection{Licence and distribution}
+%
+    {\TC} is free software and is distributed, including its sources,
+    under the GNU General Public License.
+    Copyright \copyright \, 2003..2007
+    \href{http://www.fsf.org/}{Free Software Foundation.}
+    Please read {\TC}.txt for Copyrights details.
+%
+\section{Presentation of {{\TC}} --- a few features}
+%
+{{\TC}} is rather thought for --- but
+not limited to --- simple figures drawn by hand.
+It lifts the annoyance of using a separate program
+just for drawing a little diagram with a box and a few arrows.
+The usual solution is
+to use a specific program, save the picture in EPS format, rescale,
+struggle to obtain
+the \LaTeX\, fonts, set the formulas in the picture, make it appear
+in the final format, which is never given. All this effort is a
+massive loss of time and nerves.
+
+\subsection{Files, I/O} The principle of {\TC} is very simple:
+there is only one format, which is \LaTeX\, code.
+This means that you don't need to store your pictures in
+a format specific to {\TC} and then ``export'' to a \LaTeX\, source in
+another file. In addition, it allows to rework a picture made with
+another program, e.g. GNUPLOT.
+
+\subsection{Integrating a {\TC} picture into a \LaTeX\, file}
+\label{insert}
+All you have is to include your {\TC} file (which is also just \LaTeX\, code)
+into your text, either via the {\tt \bs input} command, or by inserting
+it directly.
+%
+For instance, you save your picture under the name {\tt toto.pic},
+and in \LaTeX, put {\tt \bs input toto.pic} where you want the picture
+to appear, or, alternatively, open {\tt toto.pic} in a text editor, copy
+the full contents, paste it at that place.\\
+For example, the following insertion:
+\\
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+{\tiny
+\begin{minipage}[t]{0.7\linewidth}
+\begin{verbatim}
+For obvious continuity reasons, the interpolation curve {\em will}
+go outside the range if the slope has the inverse sign of the difference
+of values (this excludes the cases with a zero slope or zero delta):
+%
+\begin{center}
+%
+%TeXCAD Picture [u3.tcp]. Options:
+%\grade{\off}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\on}
+%\quality{8.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{4.0000}
+\unitlength 1.2pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(81,41)(0,0)
+\put(10,10){\framebox(70,30)[cc]{}}
+\put(10,10){\circle*{2}}
+\put(80,40){\circle*{2}}
+\put(2,12){\line(4,-1){40}}
+\qbezier(10,10)(59,-3)(80,40)
+\end{picture}
+%
+\end{center}
+%
+\end{verbatim}
+\end{minipage}
+}\\
+\hline
+\end{tabular}
+\end{center}
+%
+will look like:
+\begin{center}
+\begin{tabular}{|c|}
+\hline
+{\tiny
+\begin{minipage}[t]{0.7\linewidth}
+For obvious continuity reasons, the interpolation curve {\em will}
+go outside the range if the slope has the inverse sign of the difference
+of values (this excludes the cases with a zero slope or zero delta):
+%
+\begin{center}
+%
+%TeXCAD Picture [u3.tcp]. Options:
+%\grade{\off}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\on}
+%\quality{8.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{4.0000}
+\unitlength 1.2pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(81,41)(0,0)
+\put(10,10){\framebox(70,30)[cc]{}}
+\put(10,10){\circle*{2}}
+\put(80,40){\circle*{2}}
+\put(2,12){\line(4,-1){40}}
+\qbezier(10,10)(59,-3)(80,40)
+\end{picture}
+%
+\end{center}
+%
+\end{minipage}
+}\\
+\hline
+\end{tabular}
+\end{center}
+%
+See the FAQ (\ref{faq}) about safely removing the \TeX\, comments from
+the picture code.
+%
+\subsection{Compatibility} If there are commands unknown to {\TC},
+for instance color selection or whatever,
+they are {\bf preserved and stored in the same place} of the
+picture file when {\TC} saves the picture.
+Note that this program is upward-compatible with the previous DOS
+``incarnation'', {\TC} 3.2.
+%
+\section{How to use {{\TC}} on MS Windows}
+%
+The program behaves like usual Windows programs, so we assume
+you have a basic knowledge in that subject...
+%
+\subsection{Installing and uninstalling}
+If you are a fan of watching ads during the hours an installation
+program may take, you'll be disappointed: {\TC} doesn't need it.
+The program is wholly contained in {\TC}.exe --- not even a {\tt DLL} around!
+So, if you rather dislike installations with lots of files scattered across
+your hard drive and Windows' system area, you'll be happy.
+You can even put {\TC}.exe in a read-only drive, for instance a network
+drive without writing rights for users, since {\TC} doesn't write
+any configuration file. Since the user settings are stored
+in the registry (HKEY\_CURRENT\_USER\bs Software\bs TeXCAD), the
+desinstallation requires running Uninstall\_TeXCAD.bat
+logged as a super-user (in that case all {\TC} information will be removed).
+As a ``normal" user, you will just remove your own settings by this way.
+%
+\subsection{Outlines}
+{\TC} is a multi-document program, so you can work on several
+drawings --- appearing each in a sub-window ---, copy things from
+one to the clipboard, the paste them from the clipboard to another
+window.
+
+The {\bf mouse buttons} are defined so --- this will be familiar to those who have used the DOS' {\TC} --- :
+\begin{itemize}
+\item The left button is for drawing or picking objects.
+This is the ``Yes'' or ``+'' button.
+\item The right button is for cancelling operations or unpicking objects
+This is the ``No'' or ``-'' button.
+\end{itemize}
+
+Another DOS' {\TC} feature: you can move the mouse cursor with the arrow keys, e.g. for fine tuning.
+
+We describe hereafter the functionalities of {\TC} for Windows in the
+way the menus appear.
+%
+\subsection{Files}
+{\TC} is, like almost all common programs, file-based: there is
+a 1-to-1 relation between the picture being worked and a file name
+on a certain drive --- with the exception of a new, unsaved
+picture which doesn't correspond to a file until it is saved the first
+time. Each time you save the picture, the file contains exactly
+the information currently displayed.
+
+The commands ``New", ``Open", ``Save", ``Close", etc. should sound
+familiar to the user. On the menu's bottom there is a list of recently
+opened files.
+
+\subsubsection{Preview}
+The ``Preview" command compiles the current picture with LaTeX and
+calls the installed DVI previewer - known to me are YAP, and
+\href{http://dviwin.keystone.gr/}{DVIWin}
+which has currently a much better rendering.
+
+If you have trouble with previewing, here is how it
+functions more in detail: {\TC} writes,
+in the temporary directory \footnote{Alternatively, you can choose in
+the general options the {\bf current} directory instead, but {\it caution}, the
+notion of ``current'' directory is floating if you have several pictures
+open stored in different places!},
+a {\tt TeXCADpv.tex} file
+as well as a {\tt TeXCADpv.bat} with the lines :
+\begin{verbatim}
+  call latex TeXCADpv.tex
+  start TeXCADpv.dvi
+\end{verbatim}
+So, if you don't have the ``latex" command available (in the PATH) you
+can create a batch file ``latex.bat" with all workarounds you like...
+
+If text boxes in your picture refers to specific definitions, you
+can set in the \LaTeX \, tab in the picture options these
+definitions. The format is free, you can put there whatever you
+want, it will be inserted between the \verb+\documentclass+ line
+and the \verb+\begin{document}+ line.
+
+NB: as from version 4.2 of \TC, the preview uses by default the
+\verb+\documentclass+ syntax (\LaTeX\, $2\epsilon$ or later) in {\tt
+TeXCADpv.tex} instead of the 2.09 \verb+\documentstyle+ syntax.
+You can still use the old syntax by selecting the appropriate
+general option.
+
+\subsection{Drawing}
+\subsubsection{Objects defined by 1 point}
+It is a text in a broad sense. It can be also formulas between \$ ...
+\$, a sub-picture, an embedded EPS image, or whatever you put in
+your \LaTeX\, document. Text is included in a {\tt \bs makebox}
+with alignment options or in a raw {\tt \bs put} command.
+You need one click for choosing the spot where the text appears.
+%
+\subsubsection{Objects defined by 2 points}
+\begin{itemize}
+\item {\bf Rectangles}. You can choose between a frame
+or a filled rectangle. For non filled rectangles you can put a
+text in it --- a dialog box will appear for entering it and set
+alignment.
+\item {\bf Lines and vectors}. The function is obvious. In the
+picture options you can choose to have only the slope choice of
+the {\tt \bs line} and {\tt \bs vector} commands of \LaTeX\, or
+any slope. {\TC} finds out how to draw these line, independently
+of the choice of add-ons (none, emlines, pstricks,...).
+\item {\bf Circles and discs}. These functions are quite obvious,
+aren't they ? Note that circles of a radius more than 20pt are
+not supported by pure \LaTeX, but anyway {\TC}, even in the mode
+without add-ons, is able to draw them with small line segments. You
+can choose their quality in the option panel. Same for discs: the \LaTeX\,
+command is valid only up to 7.5pt; above that, {\TC} fills the disc
+fractally with boxes.
+\item {\bf Ovals} These are rather rounded rectangles. You can
+choose which side or corner will appear.
+\end{itemize}
+%
+All figures determined by two points need drawing the mouse:
+press left button on first end and release it on the other end.
+Lines and vectors can also be chained: the further segments need clicking
+--- in short: draw, click, click,... right-click to stop.
+%
+\subsubsection{Objects defined by 3 points}
+%
+For the moment, there are only B\'ezier splines in that category.
+B\'ezier curves are made by clicking the three points determining them,
+plus two per further curve
+--- in short: click, click, click, click, click,... right-click to
+stop.
+Initially the splines are filled. You can change it with the
+``Change text or parameters'' (\ref{chgtxt}) menu command and clicking on the
+curve. In the general option panel, you can choose whether you want
+the filled curves first determined by an amount of points fixed by {\TC} or let \LaTeX\, find it, but this requires {\tt \bs qbezier} ---
+included for long in \LaTeX\, --- instead of the old {\tt \bs
+bezier}.
+%
+\subsection{Lines (in a broad sense: also curves)}
+From {\TC} 4.1 the line settings has been made ``othogonal" to the figures
+themselves, hence a new menu and the disappearance of some redundant
+figure choices. Some combinations are not meaningful
+(like arrows for boxes), or yet programmed in {\TC}.
+At the end of this paragraph there is a synopsis of currently possible combinations.
+%
+\subsubsection{Thin or thick}
+``thin" relates to the {\tt \bs thinlines} macro (just the normal thickness)
+and ``thick" to {\tt \bs thicklines}, which displays lines (and curves)
+with a double thickness.
+% In some cases \LaTeX doesn't seem to display effectively with a double
+% thickness. No extensive list of these cases, sorry!
+%
+\subsubsection{Patterns}
+You can choose and configure the following patterns:
+plain, dotted, dashed. Note that when you choose to recognize
+the {\tt epic} environment, {\TC} makes use of its
+{\tt \bs dottedline} and {\tt \bs dashline} macros.
+%
+\subsubsection{Arrows}
+%
+You have there the choice between ``no arrow" (will output e.g. {\tt \bs line}
+or {\tt \bs bezier}), ``head" (e.g. {\tt \bs vector}), ``both", arrow at both ends,
+``middle", an arrow on middle.
+%
+\subsubsection{Synopsis of combinations figures / line settings}
+%
+\begin{center}
+{\scriptsize
+{\renewcommand{\arraystretch}{1.2}
+{\tabcolsep = 2.2pt
+\begin{tabular}{|l r|c|c|c|c|} \hline
+\multicolumn{1}{|l}{\bf Line}&
+\multicolumn{1}{|r|}
+{\begin{tabular}{c c} & \framebox{pattern}\\ \framebox{arrows}\end{tabular}}
+&
+\multicolumn{1}{c}{\sf plain, limited slope}&
+\multicolumn{1}{c}{\sf plain, any slope}&
+\multicolumn{1}{c}{\sf dotted}&
+\multicolumn{1}{c|}{\sf dash}\\
+\cline{2-6}
+&{\sf no\_ arrow}&
+ {$\backslash$}line&
+ {\begin{tabular}{c}
+  {$\backslash$}drawline\\
+  {$\backslash$}emline, {\%}{$\backslash$}emline
+  \end{tabular}
+ }
+ &
+ {$\backslash$}dottedline&
+ {$\backslash$}dashline\\ \cline{3-6}
+&{\sf head}&
+ {$\backslash$}vector&
+ {\%}{$\backslash$}vector&
+ {\%}{$\backslash$}vector{$\lbrace$}dot{$\rbrace$}&
+ {\%}{$\backslash$}vector{$\lbrace$}dash{$\rbrace$}\\ \cline{3-6}
+&{\sf both}&
+ {\%}{$\backslash$}vector{\lbrack}b{\rbrack}{$\lbrace$}{$\backslash$}line{$\rbrace$}&
+ {\%}{$\backslash$}vector{\lbrack}b{\rbrack}&
+ {\%}{$\backslash$}vector{\lbrack}b{\rbrack}{$\lbrace$}dot{$\rbrace$}&
+ {\%}{$\backslash$}vector{\lbrack}b{\rbrack}{$\lbrace$}dash{$\rbrace$}\\ \cline{3-6}
+&{\sf middle}&
+ {\%}{$\backslash$}vector{\lbrack}m{\rbrack}{$\lbrace$}{$\backslash$}line{$\rbrace$}&
+ {\%}{$\backslash$}vector{\lbrack}m{\rbrack}&
+ {\%}{$\backslash$}vector{\lbrack}m{\rbrack}{$\lbrace$}dot{$\rbrace$}&
+ {\%}{$\backslash$}vector{\lbrack}m{\rbrack}{$\lbrace$}dash{$\rbrace$}\\ \hline
+\multicolumn{5}{c}{}\\
+\cline{1-5}
+\multicolumn{1}{|l}{\bf Box}&
+\multicolumn{1}{|r|}{\framebox{pattern}}&
+\multicolumn{1}{c}{\sf plain}&
+\multicolumn{1}{c}{\sf dotted}&
+\multicolumn{1}{c|}{\sf dash}\\
+\cline{2-5}
+\multicolumn{1}{|c}{}&&{$\backslash$}framebox&{\%}{$\backslash$}dottedbox&{$\backslash$}dashbox\\
+\cline{1-5}
+\multicolumn{6}{c}{}\\
+\cline{1-3}
+\multicolumn{1}{|l}{\bf Bezier}&\multicolumn{1}{|l|}{\framebox{arrows}}    &
+&
+\multicolumn{3}{c}{}\\
+\cline{2-3}
+&{\sf no\_ arrow}&{$\backslash$}{\lbrack}{\lbrack}q{\rbrack}{\rbrack}bezier&\multicolumn{3}{c}{}\\
+\cline{3-3}
+&{\sf head}&{\%}{$\backslash$}bezvec&\multicolumn{3}{c}{}\\ \cline{3-3}
+&{\sf both}&{\%}{$\backslash$}bezvec{\lbrack}b{\rbrack}&\multicolumn{3}{c}{}\\
+\cline{3-3}
+&{\sf middle}&{\%}{$\backslash$}bezvec{\lbrack}m{\rbrack}&\multicolumn{3}{c}{}\\
+\cline{1-3}
+\end{tabular}
+} %% fin tabcolsep
+} %% fin arraystretch
+}
+\end{center}
+%
+The commands preceded by a `\verb+%+' are {\em not}\, \LaTeX \, commands
+(or of the supported and switched on extensions like {\tt epic}), but are to be understood by \TC only.
+The code used by \LaTeX \, is in the lines between such a command (the command itself is
+seen by \LaTeX \, as a comment) and the line with \verb+%\end+.
+See the FAQ (\S\ref{faq}) Nr \ref{tccommands} for an example.
+%
+\subsection{Editing}
+\subsubsection{Change text or parameters}
+\label{chgtxt}
+%
+After having selected this menu entry, you can pick certain object
+for changing their contents and/or parameters:\\
+\begin{center}
+\begin{tabular}{|l|l|}
+\hline
+Object          & Content or parameter to change\\
+\hline
+Text            & The text itself, alignment\\
+Rectangle       & Text, text alignment, dot length\\
+Oval            & Displayed edges or corners\\
+B\'ezier curves & Number of dots, or automatic\\
+\hline
+\end{tabular}
+\end{center}
+%
+\subsubsection{Picking objects (individually, in an area, or all)}
+%
+This how you start picking objects ({\sl Pick objects}) in order
+to modify, copy or deleting them.
+\begin{itemize}
+\item
+If you click on an object with
+the left mouse button, you select (``pick'') it, {\bf individually}.
+If you click on an already selected object
+with the right button, you ``unpick'' it.
+The matching criterion is the distance of mouse cursor to the object
+(for a box: the distance to the frame or to the attached text).
+%
+\item
+You can also select objects in an {\bf area} by pushing
+the mouse button when the mouse cursor is in one corner of the area rectangle
+and releasing it on the opposite corner. Inbetween you see a
+dotted frame corresponding to the area's border.
+Same for un-selecting an area: you do the press-move-release with the right button.
+The matching criterion is the presence of the {\em full} object in the
+area dotted frame.
+%
+\item
+Finally you can {\sl Select all } (the)
+{\sl objects}, including the hidden ones {\TC} didn't understand at loading,
+or {\sl Unselect everything} of which was eventually selected previously.
+\end{itemize}
+%
+\subsubsection{Geometric operations}
+Once there are ``picked'' items, you can apply them
+a translation, a rotation, a symmetry (with a certain choice
+of axes) or an affine transformation. The translation needs
+a vector, you draw it as if it was a picture object.
+For the others a point (i.e. a mouse click) is needed.
+%
+\subsubsection{Delete, cut, copy, save macro}
+%
+All these operations need naturally that you have
+selected previously at least one object.
+%
+\subsubsection{Paste, load macro}
+%
+{\sl Paste} and {\sl load macro} operate on the same
+fashion: after choosing the menu item, you are asked to click on
+the spot where the lower left corner of the virtual rectangle
+containing the imported objects will land onto your picture.
+%
+\subsection{View, toolbars}
+The ``View" menu allows to choose which toolbar is shown.
+The ``Drawing tools" toolbar corresponds to the ``Drawing" menu,
+the ``Line settings" toolbar to the ``Line" menu.
+%
+\subsection{Options}
+%
+There are {\sl General options} that contain various parameters you
+--- as user --- permanently prefer, and {\sl Picture options} that
+are specific to the picture of the currently active subwindow.
+Note that you can in {\sl General options} choose default parameters
+for every new picture.
+In the {\sl Picture options} the compatibility ones need maybe
+some explanation. As the \LaTeX\, world evolves some extensions
+to \{picture\} become obsolete, like emlines, other become almost
+standard. ``Almost'' is always the delicate point, since every
+\LaTeX\, user or group of users has its own combination of
+add-ons, packages, fixes, patches, previewers, converters, devices
+and operating systems. For instance the PostScript-related
+add-ons are ``almost'' standard, but they are far of working
+in {\em every} situation, even if a PostScript printer is at the
+end of the line. Of course each package is a genial piece of work
+and I won't contest the quality of any. Simply, the philosophy
+behind {\TC} is: if you like such or such package, use it, but
+we don't force you to use it. We always find a solution without it,
+at the price of a bigger picture file. After all the idea of
+\TeX\, is to be DeVice Independent...
+%
+%
+\section{Frequently Asked Questions (FAQ)} \label{faq}
+%
+\begin{enumerate}
+%
+\item
+{\em How can I put {\TC} picture in my \LaTeX\, file?}
+
+It's straightforward: just include or insert it - see \S \ref{insert}.
+
+\item
+{\em Do I have to add a special style file? }
+
+Only the ones you choose with the Picture Option panel
+(See ``Compatibility (.sty)'').
+
+
+\item
+\label{tccommands}
+{\em {\TC} puts plenty of useless comments in the file it writes. Why ?}
+
+Either they were already in the file as input, or they correspond
+to a command for {\TC} which is not supported by a standard \LaTeX\, macro
+or by a macro of an extension recognized by {\TC} and enabled in the picture options.
+
+The ``active'' \LaTeX\, code is between such a command (like: \verb+%\dottedbox+)
+and a line
+consisting of: \verb+%\end+. Please do {\bf not} remove these comments!
+To get rid of them, you can activate a corresponding {\tt .sty} option
+(picture options), or avoid using the corresponding figure (e.g.
+dotted lines if you don't want to use {\tt epic}). Here is an example that shows
+how the principle works:
+
+{\bf With} {\tt epic} enabled you get:
+  \begin{center}\footnotesize{
+    \begin{tabular}{|c|}
+    \hline
+    \begin{minipage}[t]{0.75\linewidth}
+    \begin{verbatim}
+    \dottedline(7,8.25)(45.25,19.5)
+    \end{verbatim}
+    \end{minipage}\\
+    \hline
+    \end{tabular}
+  }\end{center}
+{\bf Without} {\tt epic}, {\TC} provides an emulation
+for \LaTeX\, but considers itself only the code
+in the first commented line:
+  \begin{center}\footnotesize{
+    \begin{tabular}{|c|}
+    \hline
+    \begin{minipage}[t]{0.75\linewidth}
+    \begin{verbatim}
+    %\dottedline(7,8.25)(45.25,19.5)
+    \multiput(6.93,8.18)(.93293,.27439){42}{{\rule{.4pt}{.4pt}}}
+    %\end
+    \end{verbatim}
+    \end{minipage}\\
+    \hline
+    \end{tabular}
+  }\end{center}
+
+Here is a more subtle case which shows that {\TC} is able to
+provide several levels of emulation according to which style
+extensions are enabled:
+\begin{enumerate}
+\item Nothing, pure \LaTeX : a B\'ezier curve is drawn with sequence of small
+segments; since the slopes of pure \LaTeX\, are limited, some
+oblique segments are drawn via an emulation with a sequence of small horizontal
+segments:
+  \begin{center}\tiny{
+    \begin{tabular}{|c|}
+    \hline
+    \begin{minipage}[t]{0.75\linewidth}
+    \begin{verbatim}
+%\qbezier(2,1.5)(4.563,2.438)(5.875,3.125)
+\multiput(2,1.5)(.12527,.046929){8}{\line(1,0){.12527}}
+\multiput(3.002,1.875)(.108492,.042532){6}{\line(1,0){.108492}}
+\multiput(3.653,2.131)(.099481,.04073){6}{\line(1,0){.099481}}
+\multiput(4.25,2.375)(.10965,.04693){4}{\line(1,0){.10965}}
+\multiput(4.689,2.563)(.10208,.04542){3}{\line(1,0){.10208}}
+\multiput(4.995,2.699)(.09559,.04412){3}{\line(1,0){.09559}}
+\put(5.282,2.831){\line(1,0){.1804}}
+\put(5.462,2.917){\line(1,0){.1717}}
+\put(5.634,3.002){\line(1,0){.1631}}
+\put(5.797,3.084){\line(1,0){.0783}}
+%\end
+    \end{verbatim}
+    \end{minipage}\\
+    \hline
+    \end{tabular}
+  }\end{center}
+\item {\tt epic} enabled but not {\tt bezier}: the sequence of segments emulating the curve
+uses the \verb+\drawline+ command in {\tt epic}:
+  \begin{center}\tiny{
+    \begin{tabular}{|c|}
+    \hline
+    \begin{minipage}[t]{0.75\linewidth}
+    \begin{verbatim}
+%\qbezier(2,1.5)(4.563,2.438)(5.875,3.125)
+\drawline(2,1.5)(3.002,1.875)(3.653,2.131)(4.25,2.375)(4.689,2.563)(4.995,2.699)
+(5.282,2.831)(5.462,2.917)(5.634,3.002)(5.797,3.084)(5.875,3.125)
+%\end
+    \end{verbatim}
+    \end{minipage}\\
+    \hline
+    \end{tabular}
+  }\end{center}
+\item {\tt bezier} enabled, other options meaningless:
+  \begin{center}\footnotesize{
+    \begin{tabular}{|c|}
+    \hline
+    \begin{minipage}[t]{0.75\linewidth}
+    \begin{verbatim}
+\qbezier(2,1.5)(4.563,2.438)(5.875,3.125)
+    \end{verbatim}
+    \end{minipage}\\
+    \hline
+    \end{tabular}
+  }\end{center}
+
+\end{enumerate}
+%
+As a conclusion for this question, please don't remove the \TeX\, comments
+inside the {\TC} picture text, unless you intend not to rework your
+picture again anymore. Even then, you will be able to do it but won't see
+everything on screen, or lose some structures or groupings. Note that you can
+remove harmlessly the comments before ``\verb#\begin{picture}#''
+since they only contain the switches for the {\TC} picture options.
+%
+\end{enumerate}
+%
+\section{The authors}
+%
+\begin{tabular}{l c l}
+Georg Horn, J\"orn Winkelmann &:& The original {\TC} for DOS (1989-1994),\\
+&& in Pascal, up to v. 3.2\\
+Gautier de Montmollin &:& Translation to Ada
+via
+\href{http://p2ada.sf.net}{P2Ada},\\
+&&{\TC} 4.x system,\\
+&&Windows ``hull''\\
+\end{tabular}\\[1em]
+
+I (Gautier) am the maintainer of the current project.\\
+Contact me at \hrefid{http://sourceforge.net/users/gdemont/}.
+
+The latest version is (or might be) on the following URL:\\
+\hrefid{http://texcad.sf.net}.\\
+The project is also hosted at SourceForge, URL:\\
+\hrefid{http://sourceforge.net/projects/texcad/}.
+%
+\section{Acknowledgements --- for tools, help, testing, ideas,
+remarks, asking questions}
+%
+Note that all wishes are not yet concretized. Be patient, it is a
+only question of time! So, thanks to:
+%
+\begin{itemize}
+  \item David Botton, for his GNAVI R.A.D. system, in
+        particular his wonderful GWindows library (URL:
+        \hrefid{http://sourceforge.net/projects/gnavi/})
+        and his help to this project.
+  \item
+  \begin{itemize}
+    \item
+        Prof. Robert A.G. Seely (McGill), for his enthusiastic testing.
+    \item
+        Bernd S. W. Schroeder (Louisiana Tech University), for suggestions
+        and his review in \href{http://www.merlot.org/}{MERLOT}.
+  \end{itemize}
+  \item Also thanks to \ldots
+    \begin{itemize}
+    \item {\em User side:}
+        Th. Bauer,
+        Prof. Dr.-Ing. Helmut Bollenbacher,
+        Prof. Carlos A. Cinquetti,
+        Prof. Jean-Pierre Corriou,
+        Maxwell Dondo,
+        Zeno Enders,
+        Roman Heinisch,
+        Shul-John Li,
+        Alessandro Rosa,
+        Paolo Tommasini,
+        Rune T\o nnesen,
+        Song Yu,
+        Dr Yahya H. Zweiri.
+    \item {\em Programming side:}
+        Andr\'e van Splunter
+  \end{itemize}
+\end{itemize}
+%
+\section{How to build the program yourself}
+%
+
+To build the sources, you need an Ada compiler, for instance the
+GNU Ada compiler (GNAT) that can be found there:
+  \hrefid{https://libre2.adacore.com/}
+
+The project uses extensively Ada's modularity.
+The platform-dependent parts are confined to their minimum and
+the core of {\TC} is totally portable across platforms and
+compilers, without conditional compilation (which doesn't exist in Ada
+by the way!). The core includes:
+%
+\begin{itemize}
+  \item the memory storage of pictures
+  \item transformations
+  \item input / output
+  \item object picking rules
+  \item \ldots and even the display, which is possible in a platform-independent
+        way through the magic of Ada's {\em generic programming}
+\end{itemize}
+%
+As a test I build and run regularily the core with GNAT as well as another system,
+ObjectAda 7.2.2 SE (free version), available at \hrefid{http://www.aonix.com/}.
+
+The Windows ``skin'' uses the open-source library GWindows based on GNAT
+that can be found there:
+  \hrefid{http://sourceforge.net/projects/gnavi/}
+Caution: If you are using GNAT GPL 2005 or later you need (as of writing) a
+slightly modified version of GWindows.
+
+You need to download and install the following to build {\TC} for Windows:
+
+\begin{itemize}
+
+\item[\ldots] from the GNAT Ada compiler:\\
+  1/ {\tt gnat-XXXXp-nt.exe}: the binary distribution for Windows platforms.\\
+  As from 2005 the name is like: {\tt
+  gnat-gpl-2006-1-pentium-mingw32msv-bin.exe}\\
+
+\item[\ldots] for the GWindows library (as indicated on the Web site):\\
+  2/ Install {\bf GNATCOM} and make the GNATCOM tools available to the PATH - e.g. copy them
+     to the \bs bin subdirectory where you've put the GNAT compiler\\
+%
+  3/ Install {\bf GWindows} (latest release)\\
+%
+  4/ Only for GNAT GPL 2005 or later: since the comfortable
+     project visibility through the Registry has been removed to
+     behave similarly to other operating systems, things are a bit more
+     complicated.\\
+     The simplest workaround is to copy
+     all sources (*.ads, *.adb) from {\tt gnatcom/bindings/},
+     {\tt gwindows/bindings/} into
+     {\tt TC\_GWin/windows\_stuff/}. NOW you can compile your
+     version of {\TC} !
+
+\end{itemize}
+
+You can also install the AdaGIDE editor
+  \hrefid{http://www.martincarlisle.com/adagide.html}
+
+Then, go to TC\_GWin directory and run {\tt "build\_debug.cmd"}, or open any
+Ada source in AdaGIDE and press F3.
+%
+$$ $$
+The principal directories are:\\
+%
+\begin{tabular}{|l c l|}\hline
+  (root) &:& the core of {\TC} as described earlier.
+             There is a test program,\\
+         & & Test\_TC\_IO, mainly an entropy test,
+             that does a massive number of\\
+         & & Load/Format-change/Save operations
+             and checks if something gets\\
+         & & lost, also in accuracy.\\
+  TC\_GWin&:& the parts for the Windows version.\\
+  Test\_IO&:& a few pictures, some of mine, some grabbed from the web,\\
+           &&some output of GNUPlot. Test\_TC\_IO reads them and write\\
+           &&copies, for checking consistency.\\ \hline
+\end{tabular}
+%
+$$ $$
+The full tree looks like:
+%
+\begin{center}
+{\small
+%
+%TeXCAD Picture [folders.tcp]. Options:
+%\grade{\on}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\on}
+%\pvinsert{\def\TC{{\TeX}CAD}}
+%\quality{8.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{6.7272}
+\unitlength 3pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(133,51)(0,0)
+\put(8,48){\line(0,-1){5}}
+\put(8,43){\line(1,0){7}}
+\put(15,43){\line(0,1){5}}
+\put(15,48){\line(-1,0){7}}
+%\emline(8,48)(9,49)
+\multiput(8,48)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(9,49){\line(1,0){2}}
+%\emline(11,49)(12,48)
+\multiput(11,49)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(18,40){\line(0,-1){5}}
+\put(18,35){\line(1,0){7}}
+\put(25,35){\line(0,1){5}}
+\put(25,40){\line(-1,0){7}}
+%\emline(18,40)(19,41)
+\multiput(18,40)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(19,41){\line(1,0){2}}
+%\emline(21,41)(22,40)
+\multiput(21,41)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(11,37){\line(1,0){7}}
+\put(21,29){\line(1,0){7}}
+\put(28,32){\line(0,-1){5}}
+\put(28,27){\line(1,0){7}}
+\put(35,27){\line(0,1){5}}
+\put(35,32){\line(-1,0){7}}
+%\emline(28,32)(29,33)
+\multiput(28,32)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(29,33){\line(1,0){2}}
+%\emline(31,33)(32,32)
+\multiput(31,33)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(18,24){\line(0,-1){5}}
+\put(18,19){\line(1,0){7}}
+\put(25,19){\line(0,1){5}}
+\put(25,24){\line(-1,0){7}}
+%\emline(18,24)(19,25)
+\multiput(18,24)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(19,25){\line(1,0){2}}
+%\emline(21,25)(22,24)
+\multiput(21,25)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(18,16){\line(0,-1){5}}
+\put(18,8){\line(0,-1){5}}
+\put(18,11){\line(1,0){7}}
+\put(18,3){\line(1,0){7}}
+\put(25,11){\line(0,1){5}}
+\put(25,3){\line(0,1){5}}
+\put(25,16){\line(-1,0){7}}
+\put(25,8){\line(-1,0){7}}
+%\emline(18,16)(19,17)
+\multiput(18,16)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+%\emline(18,8)(19,9)
+\multiput(18,8)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(19,17){\line(1,0){2}}
+\put(19,9){\line(1,0){2}}
+%\emline(21,17)(22,16)
+\multiput(21,17)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+%\emline(21,9)(22,8)
+\multiput(21,9)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(11,21){\line(1,0){7}}
+\put(11,13){\line(1,0){7}}
+\put(11,5){\line(1,0){7}}
+\put(21,34){\line(0,-1){5}}
+\put(17,46){\makebox(0,0)[lc]{(root)}}
+\put(27,38){\makebox(0,0)[lc]{TC\_GWin}}
+\put(37,30){\makebox(0,0)[lc]{Windows\_Stuff}}
+\put(11,42){\line(0,-1){37}}
+\put(27,22){\makebox(0,0)[lc]{Test\_IO}}
+\put(27,14){\makebox(0,0)[lc]{ACU\_Opti}}
+\put(27,6){\makebox(0,0)[lc]{ACU\_Debg}}
+%\dottedline{1}(26,45)(66,45)
+\multiput(25.93,44.93)(.97561,0){42}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(40,37)(66,37)
+\multiput(39.93,36.93)(.963,0){28}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(54,29)(66,29)
+\multiput(53.93,28.93)(.9231,0){14}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(37,21)(66,21)
+\multiput(36.93,20.93)(.9667,0){31}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(40,13)(66,13)
+\multiput(39.93,12.93)(.963,0){28}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(40,5)(66,5)
+\multiput(39.93,4.93)(.963,0){28}{{\rule{.4pt}{.4pt}}}
+%\end
+\put(67,45){\makebox(0,0)[lb]{Core of {\TC}}}
+\put(67,37){\makebox(0,0)[lb]{Parts for the Windows version}}
+\put(67,29){\makebox(0,0)[lb]{GWindows, GNATCOM bindings}}
+\put(67,21){\makebox(0,0)[lb]{Test pictures}}
+\put(67,13){\makebox(0,0)[lb]{Compiled parts of the optimized version}}
+\put(67,5){\makebox(0,0)[lb]{Compiled parts of the debug version}}
+\put(69,26){\oval(128,50)[]}
+\end{picture}
+%
+}
+\end{center}
+%
+\end{document}

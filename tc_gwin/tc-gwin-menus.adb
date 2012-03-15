@@ -6,9 +6,9 @@ package body TC.GWin.Menus is
 
   use GWindows.Menus, GWin_Util;
 
-  procedure Append_Item (Menu    : in out Menu_Type;
-                         Command : in     Custom_cmd;
-                         Keys    : in     GString:= "")
+  procedure Append_Item (Menu    : in Menu_Type;
+                         Command : in Custom_cmd;
+                         Keys    : in GString:= "")
   is
     i: constant Integer:= ID_custom(Command);
     s: constant String:= Msg(msg_for_command(Command));
@@ -21,7 +21,7 @@ package body TC.GWin.Menus is
   end Append_Item;
 
   function Create_File_Menu(is_child: Boolean) return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+    m: constant Menu_Type:= Create_Popup;
   begin
     Append_Item (m, Msg(fnew)  & HT & "Ctrl+N", Id_File_New);
     Append_Item (m, Msg(fopen) & HT & "Ctrl+O", Id_File_Open);
@@ -45,7 +45,7 @@ package body TC.GWin.Menus is
   end Create_File_Menu;
 
   function Create_Draw_Menu return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+  m: constant Menu_Type:= Create_Popup;
   begin
     Append_Item (m, text );
     Append_Item (m, "\&put", ID_custom(put) );
@@ -62,7 +62,7 @@ package body TC.GWin.Menus is
   end Create_Draw_Menu;
 
   function Create_Line_Menu return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+    m: constant Menu_Type:= Create_Popup;
   begin
     for c in Line_setting_cmd loop
       Append_Item (m, c);
@@ -74,7 +74,7 @@ package body TC.GWin.Menus is
   end Create_Line_Menu;
 
   function Create_Edit_Menu return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+    m: constant Menu_Type:= Create_Popup;
   begin
     Append_Item (m, change_text );
     Append_Separator (m);
@@ -97,7 +97,7 @@ package body TC.GWin.Menus is
   end Create_Edit_Menu;
 
   function Create_View_Menu return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+    m: constant Menu_Type:= Create_Popup;
   begin
     for c in Floating_toolbar_categ loop
       Append_Item (m, c);
@@ -109,7 +109,7 @@ package body TC.GWin.Menus is
   end Create_View_Menu;
 
   function Create_Options_Menu(is_child: Boolean) return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+  m: constant Menu_Type:= Create_Popup;
   begin
     Append_Item (m, Msg(ogenopt), ID_custom(gen_opt_dialog));
     if is_child then
@@ -119,7 +119,7 @@ package body TC.GWin.Menus is
   end Create_Options_Menu;
 
   function Create_Wndw_Menu return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+    m: constant Menu_Type:= Create_Popup;
   begin
     Append_Item (m, Msg(wcascade), ID_WINDOW_CASCADE);
     Append_Item (m, Msg(wtilehor), ID_WINDOW_TILE_HORZ);
@@ -129,7 +129,7 @@ package body TC.GWin.Menus is
   end Create_Wndw_Menu;
 
   function Create_Help_Menu return GWindows.Menus.Menu_Type is
-    m: Menu_Type:= Create_Popup;
+    m: constant Menu_Type:= Create_Popup;
   begin
     Append_Item (m, Msg(habout), Id_App_About);
     return m;
