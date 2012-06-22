@@ -215,9 +215,13 @@ package body TC.GWin.MDI_Main is
       Finish_subwindow_opening(Window, New_Window.all);
     end;
   exception
-    when E:TC.Input.Load_Error =>
-      Message_Box(Window, "Syntax error", Ada.Exceptions.Exception_Message(
-          E), Icon => Exclamation_Icon);
+    when E : TC.Input.Load_Error =>
+      Message_Box(
+        Window,
+        "Error when loading picture data",
+        Ada.Exceptions.Exception_Message(E),
+        Icon => Exclamation_Icon
+      );
     when Ada.Text_IO.Name_Error =>
       Message_Box(Window, Msg(error), Msg(fnotfound), Icon => Exclamation_Icon);
   end Open_Child_Window_And_Load_Picture;

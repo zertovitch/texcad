@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2012/03/15  09:47:32
+-- Transcription time: 2012/06/22  16:02:14
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 24-Feb-2010
+-- RC Grammar version: 23-May-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -33,12 +33,12 @@ package TeXCAD_Resource_GUI is
     CompanyName: constant String:= "Free Software Foundation, Inc.";
     Authors: constant String:= "Georg Horn, Jörn Winkelmann, Gautier de Montmollin";
     FileDescription: constant String:= "TeXCAD, a LaTeX {picture} drawing program";
-    FileVersion: constant String:= "Ver. 4.2, Ref. 104";
+    FileVersion: constant String:= "Ver. 4.3, Ref. 105";
     InternalName: constant String:= "TeXCAD";
-    LegalCopyright: constant String:= "© 2003..2009 Free Software Foundation";
+    LegalCopyright: constant String:= "© 2003 .. 2012 Free Software Foundation";
     OriginalFilename: constant String:= "TeXCAD.exe";
     ProductName: constant String:= "TeXCAD";
-    ProductVersion: constant String:= "4.2";
+    ProductVersion: constant String:= "4.3";
     Translation: constant:= 1033;
   end Version_info;
 

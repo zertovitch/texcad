@@ -9,6 +9,7 @@ with TC.GWin.Previewing;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Buttons;                  use GWindows.Buttons;
+with GWindows.Clipboard;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Cursors;                  use GWindows.Cursors;
@@ -21,7 +22,11 @@ with GWindows.Windows;                  use GWindows.Windows;
 
 with GWin_Util;                         use GWin_Util;
 
+with Ada.Directories;                   use Ada.Directories;
+with Ada.Exceptions;                    use Ada.Exceptions;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;
+with Ada.Text_IO;                       use Ada.Text_IO;
 
 with Interfaces.C;
 
@@ -752,16 +757,49 @@ package body TC.GWin.MDI_Picture_Child is
       TC.GWin.Previewing.Cleanup;
   end Preview;
 
-  clipname: constant String:= "TeXCADcp.txt";
+  function Clip_filename return String is
+  begin
+    return Temp_dir & "TeXCADcp.txt";
+  end Clip_filename;
+
+  procedure Clipboard_to_Clip_file( Window : in Window_Type'Class ) is
+    contents: constant String:= GWindows.Clipboard.Get_Clipboard_Text(Window_Type(Window));
+    f: File_Type;
+  begin
+    if contents = "" then
+      null; -- do nothing, we still might have the clipboard file
+    else
+      Create(f, Out_File, Clip_filename);
+      Put_Line(f, contents);
+      Close(f);
+    end if;
+  end Clipboard_to_Clip_file;
+
+  procedure Clip_file_to_Clipboard( Window : in Window_Type'Class ) is
+    f: File_Type;
+    contents: Unbounded_String:= Null_Unbounded_String;
+  begin
+    if not Exists(Clip_filename) then
+      null; -- do nothing, we still might have something on the Windows clipboard
+    else
+      Open(f, In_File, Clip_filename);
+      while not End_Of_File(f) loop
+        contents:= contents & Get_Line(f) & NL;
+      end loop;
+      Close(f);
+      GWindows.Clipboard.Set_Clipboard_Text(Window_Type(Window), contents);
+    end if;
+  end Clip_file_to_Clipboard;
 
   procedure Copy_clip( Window : in out MDI_Picture_Child_Type ) is
   begin
     TC.Output.Save(
       pic            => Window.Draw_control.Picture,
       macro          => True,
-      file_name      => Temp_dir & clipname,
+      file_name      => Clip_filename,
       displayed_name => "Clipboard"
     );
+    Clip_file_to_Clipboard(Window);
   end Copy_clip;
 
   procedure On_Open_Macro (
@@ -790,7 +828,22 @@ package body TC.GWin.MDI_Picture_Child is
   begin
     mo:= pw.opt;
     pw.opt.P0:= Window.Draw_control.PU; -- origin on mouse cursor
-    TC.Input.Load( pw, True, To_GString_From_unbounded(Window.Macro_Name) );
+    begin
+      TC.Input.Load( pw, True, To_GString_From_unbounded(Window.Macro_Name) );
+    exception
+      when E : TC.Input.Load_error =>
+        Message_Box(
+          Window,
+          "Error when loading picture data",
+          "The LaTeX picture on" & NL &
+          "clipboard / macro / partial / temp / scrap / (whatever)" & NL &
+          "is ill-formed." & NL &
+          "Items were only partially loaded, or not at all." & NL &
+          "--- Message ---" & NL &
+          Exception_Message(E),
+          Icon => Exclamation_Icon
+        );
+    end;
     pw.opt:= mo; -- restore options
     Refresh_size_dependent_parameters(pw,objects => True);
     -- ^ was missing ! Fixed 14-Jan-2004
@@ -977,8 +1030,9 @@ package body TC.GWin.MDI_Picture_Child is
           if c = load_macro then
             On_Open_Macro(Window,success);
           else
+            Clipboard_to_Clip_file(Window);
             declare
-              n: constant String:= Temp_dir & clipname;
+              n: constant String:= Clip_filename;
             begin
               success:= GWin_Util.Exist(n);
               if success then

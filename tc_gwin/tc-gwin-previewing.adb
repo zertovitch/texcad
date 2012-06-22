@@ -6,7 +6,7 @@ with Ada.Text_IO;
 with GWin_Util;
 pragma Elaborate_All(GWin_Util);
 
-with GNAT.OS_Lib;
+with Ada.Directories, Ada.Environment_Variables;
 
 package body TC.GWin.Previewing is
 
@@ -65,29 +65,34 @@ package body TC.GWin.Previewing is
   end Create_files;
 
   procedure Start is
-    use GNAT.OS_Lib;
-    comspec: constant GNAT.OS_Lib.String_Access:= Getenv ("comspec");
-    barc : constant String := "/C";
   begin
-    if comspec = null then
-      raise Preview_error;
-    end if;
     GWin_Util.Start(
-      comspec.all,
-      barc & ' ' & TC.GWin.Previewing.bat,
+      Ada.Environment_Variables.Value("comspec"), -- usually, cmd.exe
+      "/C " & TC.GWin.Previewing.bat,
       Minimized => True
     );
+  exception
+    when Constraint_Error => -- no "comspec" set
+      raise Preview_error;
   end Start;
 
   procedure Cleanup is
-    use GNAT.OS_Lib;
-    ok : Boolean;
+    use Ada.Directories;
+    --
+    procedure Delete_if_any(Name: String) is
+    begin
+      Delete_File(Name);
+    exception
+      when Name_Error =>
+        null;
+    end Delete_if_any;
+    --
   begin
-    Delete_File(tex, ok);
-    Delete_File(dvi, ok);
-    Delete_File(bat, ok);
-    Delete_File(name & "aux", ok);
-    Delete_File(name & "log", ok);
+    Delete_if_any(tex);
+    Delete_if_any(dvi);
+    Delete_if_any(bat);
+    Delete_if_any(name & "aux");
+    Delete_if_any(name & "log");
   end Cleanup;
 
 end TC.GWin.Previewing;
