@@ -1,0 +1,44 @@
+To do list - TC:
+
+Bugs to be fixed
+================
+  - tiny loss of precision in web033.tcp
+  - support this (written by some program using eepic):
+    \SetFigFont{12}{14.4}{\rmdefault}{\mddefault}{\updefault}
+
+  - support (some of) eepic at least for input
+	\spline(x1,y1)(x2,y2)...(xn,yn)
+	\ellipse{x-diameter}{y-diameter}
+	\ellipse*{x-diameter}{y-diameter}
+	\arc{diameter}{start-angle}{end-angle}
+	
+
+  - bezier arrow tips seem a bit misplaced (yap: [y] dviwin: [] pdf: [y])
+    a solution: make the curve slightly shorter
+
+Improvements
+============
+  - anchors on selected objects for direct modifications
+  - arcs
+  - ellipses
+  - Simplify_picture(p: in out Picture), on demand, with selection of...
+    - erase empty texts
+    - remove 0-dim'ed objects
+    - remove commands not understood
+    - remove comments
+  - dashes: display of stretch, output emulated with \multiput
+  - individual \linethickness or \linewidth
+  - \multiput, \shortstack
+  - Unicode available ? (a TString subtype of String or Wide_String)
+  - linked items (maybe <-> nested {picture}s)
+  - grouped / nested {picture}s (maybe <-> linked items)
+  - Undo & Redo system
+  - parametric curves
+  - some of these extensions supported by GNUPlot:
+  	* eepic		EEPIC -- extended LaTeX picture environment
+  	  epslatex	LaTeX (Text) and encapsulated PostScript
+  	  pslatex		LaTeX picture environment with PostScript \specials
+  	* pstricks	LaTeX picture environment with PSTricks macros
+  	  texdraw		LaTeX texdraw environment
+  	  tpic		TPIC -- LaTeX picture environment with tpic \specials
+

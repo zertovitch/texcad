@@ -1,0 +1,126 @@
+Major changes in TeXCAD
+=======================
+
+Version 4.3
+===========
+105:
+- (Windows) Use of Windows clipboard for copy/cut/paste
+
+
+Version 4.2
+===========
+
+099, Upload 14-Aug-2007:
+- More refined algorithm to pick / unpick single objects: when the pointer touches several objects,
+    at most one is considered at a time
+- (Windows) Fixed case of non-maximized sub-windows: any new window, even on a next session,
+    was invisible, making TC unusable without fiddling the registry!
+
+
+096, 097, Upload 2-Feb-2007:
+- TC.Output automatically chains epic's lines (\drawline, \dashline, \dottedline)
+    whenever possible
+- TC.Input treats H-Tabs as blanks, understands unary "+"
+- TC.Input understands fully epic's \drawline (new), \dashline, \dottedline
+    commands, also with N > 2 points, and the eepic \path command
+- line "\usepackage{epic}" for LaTeX2e previewing (is \documentstyle[epic] in 2.09 mode)
+
+095, Upload 14-Jan-2007:
+- LaTeX code insertions for previewing (e.g. \usepackage, \renewcommand, \input, ...)
+- Can select, instead of 2.09, LaTeX 2e for preview (now default) 
+- Use of Unbounded_String's for options and figure contents -> no more limitation to 255 characters
+- Backup of files (optional); original file only replaced when write successful
+- (Windows) Saves default .sty switches
+
+Version 4.1
+===========
+
+Upload 17-Apr-2004 & 1-May-2004
+- changes an "anyline" to \line, \vector whenever possible
+- changes a \line, \vector to "anyline" when it is so short that LaTeX outputs nothing
+- (Windows) Display the delta-x,y of 2-point mousing operation
+
+Upload 6-Mar-2004
+- Line_setting across figure types with
+  - thin / thick
+  - plain / dotted / dashed
+  - no arrow, 1 arrow, 2 arrows, arrow in middle
+- some epic commands (\dottedline, \dashline)
+- Testing I/O: entropy test across all ".sty" combinations
+
+- (Windows) Toolbar for figures
+- (Windows) Toolbar for line styles, choice of width, pattern, arrows
+- (Windows) Preview files deleted when quitting TC
+
+
+Version 4.0
+===========
+
+Upload 18-Jan-2004
+- arrows displayed with correct size (4pt) (tc.display)
+- oval corners with correct max radius (20pt) (tc.display)
+- Set_slope_of_bezvec: fits arrow on curve or // tangent PE-PC in hard cases
+- (Windows) Corrected bug of non-refreshing after text/oval/bezier changes
+- TeX_Number fixed
+
+Upload 17 & 14-Oct-2003
+- (Windows) Corrected bug of non-refreshing after option changes
+    (manual zoom, origin set), colours settings and deformations
+
+Upload 21-Jun-2003
+- (Windows) Double-buffering
+- (Windows) Workaround for Windows 95 bug with hatches
+- (Windows) Aspect ratio used
+- (Windows) Minimal use of pen/brush/font creation (caused a leak under Windows 95/98/ME)
+- TC.RW scissed into TC.Input and TC.Output
+
+Upload 14-Jun-2003
+- smallest output for floating-point values
+- (Windows) filled figures displayed by hatches (allow overlapping with several colours)
+- big \circle*s supported (filled fractally by boxes)
+
+Upload 7-Jun-2003
+- extra precision for small-scaled pictures
+- {0.2} for \vector solved
+- Good_Num_of_Bezier_points sensitive to paper size, not ul size 
+- construction of lines of any slope with \line's sensitive to paper size, not ul size 
+
+Upload 30-May-2003
+- Homothethy (if hx/hy/=1 -> \line slope has image as "any_slope")
+- text alignment influenced by Rotation & Symmetry
+
+
+--------------------------------
+Changes in ergonomy since v. 3.2
+--------------------------------
+
+If you are/were a TC 3.2 user, you'll notice that
+when you pick objects, you cannot choose what you are picking.
+As a counterbalance, you also can unpick individual objects,
+and the algorithm for detecting proximity has been refined:
+- frame of a non-filled box and its text (was the full one)
+- shape of a non-filled circle (was the full one)
+- Bezier curve (was only end points)
+
+----------------------------------
+Changes in the parser since v. 3.2
+----------------------------------
+
+- Bug with empty comments (lines with only "%") fixed
+
+- GNUPlot LaTeX outputs are read. The parser recognizes:
+  - "\setlength{\unitlength}{...}"
+  - "\linethickness" inside a picture
+  - optional y-offset in "\rule"
+  - alternative unitlengths in "\rule" (converted into the
+    main dimension)
+
+- \qbezier with optional absence of [number of points] recognized
+  (when that number is given, TC writes a \bezier for the sake
+   of compatibility).
+
+- numbers like ".123" accepted
+- \framebox, \dashbox without [text] accepted
+- \oval without options accepted
+- \makebox without (0,0) accepted
+- origin of picture is read

@@ -1,0 +1,22 @@
+To do list - TC.GWin (MS Windows skin):
+
+Bugs to be fixed
+================
+  - by resizing the window the vertical "lift" quits the bottom
+
+
+Improvements
+============
+- show thick lines as thick
+- Big cross cursor (optional)
+- See size of pasted object when pointing left-bottom corner
+- Rulers
+- Undo's (Ctrl-Z), Redo's (Ctrl-Y)
+- pgup/pgdn, ... for scrolling inside window
+- At most one instance of TC running on one PC
+- Unicode - resistant (a TString subtype of String or Wide_String)
+
+[For GWindows]
+- Mouse wheel (roulette)
+- Choosecolor with custom colors open
+- Internationalize MsgBox (Win32: MessageBoxEx)
