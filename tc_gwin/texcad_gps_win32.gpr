@@ -1,21 +1,18 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the Lang_Index project ( http://sf.net/projects/texcad/ )
--- Build me with "gnatmake -P Texcad_Gps_Win32", or open me with GPS
+-- for the TeXCAD project ( http://sf.net/projects/texcad/ )
+-- Build me with "gnatmake -P texcad_gps_win32", or open me with GPS
 --
 project TeXCAD_GPS_Win32 is
 
    for Source_Dirs use ("..\", ".", "Windows_Stuff");
    for Main use ("TeXCAD.adb");
-   for Exec_Dir use ".";
-   type Build_Mode_Type is
-      ("Optimize", "Debug");
+   -- for Exec_Dir use ".";
+   type Build_Mode_Type is ("Optimize", "Debug");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
 
    case Build_Mode is
-
       when "Debug" =>
          for Object_Dir use "..\ACU_Debg";
-
       when "Optimize" =>
          for Object_Dir use "..\ACU_Opti";
    end case;
@@ -25,50 +22,38 @@ project TeXCAD_GPS_Win32 is
    end Ide;
 
    package Builder is
-
       case Build_Mode is
-
          when "Debug" =>
             for Default_Switches ("ada") use ("-j2");
-
          when "Optimize" =>
-            for Default_Switches ("ada") use ("-j2", "-s");
+            for Default_Switches ("ada") use ("-j2", "-s"); -- , "-a", "-x"
       end case;
    end Builder;
 
-   package Naming is
-      for Specification_Suffix ("c") use ".h";
-      for Implementation_Suffix ("c") use ".c";
-      for Specification_Suffix ("c++") use ".hh";
-      for Implementation_Suffix ("c++") use ".cpp";
-      for Specification_Suffix ("changelog") use "changelog";
-      for Specification_Suffix ("project file") use ".gpr";
-      for Specification_Suffix ("python") use ".py";
-   end Naming;
-
-   package Linker is
-
-      case Build_Mode is
-
-         when "Debug" =>
-            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-LWindows_Stuff");
-
-         when "Optimize" =>
-            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-s", "-LWindows_Stuff");
-      end case;
-   end Linker;
-
    package Compiler is
-
       case Build_Mode is
-
          when "Debug" =>
             for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwk", "-gnatwm", "-gnatwp", "-gnatwz", "-gnatVa", "-gnatyhiknp", "-gnatec..\acu_debg\debug.pra", "-gnatec..\acu_debg\tc_elim.pra");
-
          when "Optimize" =>
             for Default_Switches ("ada") use ("-gnat05", "-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", "-gnatec..\acu_debg\tc_elim.pra");
       end case;
    end Compiler;
 
-end TeXCAD_GPS_Win32;
+   package Linker is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-LWindows_Stuff");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-s", "-LWindows_Stuff");
+      end case;
+   end Linker;
 
+   package Binder is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-E");
+         when "Optimize" =>
+      end case;
+   end Binder;
+
+end TeXCAD_GPS_Win32;
