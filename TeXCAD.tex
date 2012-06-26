@@ -48,7 +48,7 @@ $$ $$
 %
     {\TC} is free software and is distributed, including its sources,
     under the GNU General Public License.
-    Copyright \copyright \, 2003..2007
+    Copyright \copyright \, 2003..2012
     \href{http://www.fsf.org/}{Free Software Foundation.}
     Please read {\TC}.txt for Copyrights details.
 %
@@ -312,7 +312,7 @@ included for long in \LaTeX\, --- instead of the old {\tt \bs
 bezier}.
 %
 \subsection{Lines (in a broad sense: also curves)}
-From {\TC} 4.1 the line settings has been made ``othogonal" to the figures
+From {\TC} 4.1 the line settings has been made ``orthogonal" to the figures
 themselves, hence a new menu and the disappearance of some redundant
 figure choices. Some combinations are not meaningful
 (like arrows for boxes), or yet programmed in {\TC}.
@@ -704,13 +704,16 @@ only question of time! So, thanks to:
 
 To build the sources, you need an Ada compiler, for instance the
 GNU Ada compiler (GNAT) that can be found there:
-  \hrefid{https://libre2.adacore.com/}
-
+  \hrefid{http://libre.adacore.com/} \\
+Alternatively you can use the MinGW version: \hrefid{http://mingw.org/}.
+In case there is an implementation for Linux, GNAT is available with
+the standard packages.
+  
 The project uses extensively Ada's modularity.
 The platform-dependent parts are confined to their minimum and
 the core of {\TC} is totally portable across platforms and
-compilers, without conditional compilation (which doesn't exist in Ada
-by the way!). The core includes:
+compilers, without conditional compilation -- which doesn't exist in Ada
+by the way! The core includes:
 %
 \begin{itemize}
   \item the memory storage of pictures
@@ -721,47 +724,23 @@ by the way!). The core includes:
         way through the magic of Ada's {\em generic programming}
 \end{itemize}
 %
-As a test I build and run regularily the core with GNAT as well as another system,
-ObjectAda 7.2.2 SE (free version), available at \hrefid{http://www.aonix.com/}.
+As a test I build and run regularily the core with GNAT, on both Windows
+and Linux, as well as with another development system,
+ObjectAda 7.2.2 SE (free version), available at \hrefid{http://www.aonix.com/}.\\
 
-The Windows ``skin'' uses the open-source library GWindows based on GNAT
-that can be found there:
+The Windows ``skin'' uses the open-source framework GWindows for the user interface.
+
+All you need to do for building {\TC} for Windows is to install 
+a binary distribution of the {\bf GNAT Ada compiler} for Windows platforms
+(from AdaCore or MinGW, links above).
+
+Then, go to the TC\_GWin directory and run {\tt "build\_debug.cmd"},
+or open {\tt texcad\_gwin.gpr} with GPS (the GNAT Programming Studio) and press F4.
+
+NB: a snapshot of the {\bf GWindows} library, ANSI mode, is included with
+{\TC}'s sources (in {\tt TC\_GWin/windows\_stuff/}), so you don't need to install it!
+If for whatever reason you need to update GWindows, you'll find it there:
   \hrefid{http://sourceforge.net/projects/gnavi/}
-Caution: If you are using GNAT GPL 2005 or later you need (as of writing) a
-slightly modified version of GWindows.
-
-You need to download and install the following to build {\TC} for Windows:
-
-\begin{itemize}
-
-\item[\ldots] from the GNAT Ada compiler:\\
-  1/ {\tt gnat-XXXXp-nt.exe}: the binary distribution for Windows platforms.\\
-  As from 2005 the name is like: {\tt
-  gnat-gpl-2006-1-pentium-mingw32msv-bin.exe}\\
-
-\item[\ldots] for the GWindows library (as indicated on the Web site):\\
-  2/ Install {\bf GNATCOM} and make the GNATCOM tools available to the PATH - e.g. copy them
-     to the \bs bin subdirectory where you've put the GNAT compiler\\
-%
-  3/ Install {\bf GWindows} (latest release)\\
-%
-  4/ Only for GNAT GPL 2005 or later: since the comfortable
-     project visibility through the Registry has been removed to
-     behave similarly to other operating systems, things are a bit more
-     complicated.\\
-     The simplest workaround is to copy
-     all sources (*.ads, *.adb) from {\tt gnatcom/bindings/},
-     {\tt gwindows/bindings/} into
-     {\tt TC\_GWin/windows\_stuff/}. NOW you can compile your
-     version of {\TC} !
-
-\end{itemize}
-
-You can also install the AdaGIDE editor
-  \hrefid{http://www.martincarlisle.com/adagide.html}
-
-Then, go to TC\_GWin directory and run {\tt "build\_debug.cmd"}, or open any
-Ada source in AdaGIDE and press F3.
 %
 $$ $$
 The principal directories are:\\
@@ -901,7 +880,7 @@ The full tree looks like:
 %\end
 \put(67,45){\makebox(0,0)[lb]{Core of {\TC}}}
 \put(67,37){\makebox(0,0)[lb]{Parts for the Windows version}}
-\put(67,29){\makebox(0,0)[lb]{GWindows, GNATCOM bindings}}
+\put(67,29){\makebox(0,0)[lb]{GWindows, GNATCOM frameworks}}
 \put(67,21){\makebox(0,0)[lb]{Test pictures}}
 \put(67,13){\makebox(0,0)[lb]{Compiled parts of the optimized version}}
 \put(67,5){\makebox(0,0)[lb]{Compiled parts of the debug version}}

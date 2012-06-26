@@ -2,6 +2,13 @@
 
 if "%tcver%"=="" goto morale
 if "%distro%"=="" goto morale
+
+if exist ..\TeXCAD.pdf goto doc_ok
+cd ..
+call doc
+cd tc_gwin
+:doc_ok
+
 md $_%distro%_pack_dir
 cd $_%distro%_pack_dir
 copy /B    ..\texcad_%distro%.exe TeXCAD.exe
@@ -10,7 +17,7 @@ copy    ..\..\TC_Todo.txt
 copy       ..\"Uninstall TeXCAD.bat"
 copy    ..\..\TeXCAD.txt
 copy /B ..\..\TeXCAD.pdf
-copy    ..\..\COPYING.txt
+copy    ..\..\Copying.txt
 copy    ..\..\Changes.txt
 copy    ..\..\Changes_also_minor.txt
 copy       ..\Readme_%distro%_version.txt

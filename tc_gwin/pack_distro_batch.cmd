@@ -1,6 +1,6 @@
 rem ***** VERSION: *****
-set tcver=42
-set tcref=104
+set tcver=43
+set tcref=105
 
 del tc_%tcver%_*.zip
 
@@ -15,15 +15,15 @@ ren tc_%tcver%_woptim.zip tc_%tcver%_wo.zip
 ren tc_%tcver%_wdebug.zip tc_%tcver%_wd.zip
 
 cd..
-call pack_src_with_ali
+call pack_src
 cd tc_gwin
 copy /B ..\TCA00x_s.zip tc_%tcver%_s.zip
 
 rem goto skip_rezip
 
-call rezip_tc tc_%tcver%_s.zip
-call rezip_tc tc_%tcver%_wo.zip
-call rezip_tc tc_%tcver%_wd.zip
+call rezip_tc tc_%tcver%_s
+call rezip_tc tc_%tcver%_wo
+call rezip_tc tc_%tcver%_wd
 
 :skip_rezip
 
@@ -32,6 +32,6 @@ ren tc_%tcver%_wo.zip tc_%tcver%_wo.%tcref%.zip
 ren tc_%tcver%_wd.zip tc_%tcver%_wd.%tcref%.zip
 
 rem  For our archives
-zip -9 TC_%tcver%_Distro_%tcref%.zip tc_%tcver%_s.%tcref%.zip tc_%tcver%_wo.%tcref%.zip tc_%tcver%_wd.%tcref%.zip
+zipada TC_%tcver%_Distro_%tcref%.zip tc_%tcver%_s.%tcref%.zip tc_%tcver%_wo.%tcref%.zip tc_%tcver%_wd.%tcref%.zip
 
 pause
