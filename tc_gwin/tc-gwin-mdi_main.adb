@@ -330,9 +330,7 @@ package body TC.GWin.MDI_Main is
                      Width  : in     Integer;
                      Height : in     Integer) is
   begin
-    On_Size(MDI_Main_Window_Type(Window),Width,Height);
-    -- ^ Without this the button bar is not correctly refreshed !
-    --   Strange, isn't it ?
+    Dock_Children(Window);
     if Window.record_dimensions and
        not (Zoom(Window) or Minimized(Window)) then
       -- ^ Avoids recording dimensions before restoring them

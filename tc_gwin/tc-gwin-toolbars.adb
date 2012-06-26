@@ -46,13 +46,15 @@ package body TC.GWin.Toolbars is
     il    : in out GWindows.Image_Lists.Image_List_Type;
     parent: in out GWindows.Base.Base_Window_Type'Class)
   is
+    st: Interfaces.C.unsigned;
   begin
     GWindows.Common_Controls.Create (tb, parent, 0, 0, 0, 40);
     GWindows.Common_Controls.Dock (tb, GWindows.Base.At_Top);
 
     Create (il, "Toolbar_Bmp", 16);
     GWindows.Common_Controls.Set_Image_List (tb, il);
-    GWindows.Common_Controls.Set_Style(tb, TBSTYLE_FLAT);
+    st:= GWindows.Common_Controls.Get_Style(tb);
+    GWindows.Common_Controls.Set_Style(tb, TBSTYLE_FLAT + st);
 
     GWindows.Common_Controls.Add_Button (tb,  0, ID_File_New);
     GWindows.Common_Controls.Add_Button (tb,  1, ID_File_Open);
