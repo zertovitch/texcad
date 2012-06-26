@@ -999,12 +999,12 @@ package body TC.Output is
        Pmin:= (0.0,0.0);
      end if;
 
-     Put_Line(
-       tf,
-       "%TeXCAD (" & web & ") Picture. File: [" &
-       Short_name(displayed_name) &
-       "]. Options on following lines."
-     );
+     Put_Line(tf, "% This is a LaTeX picture output by TeXCAD.");
+     Put_Line(tf, "% File name: [" & Short_name(displayed_name) & "].");
+     Put_Line(tf, "% Version of TeXCAD: " & version);
+     Put_Line(tf, "% Reference / build: " & reference);
+     Put_Line(tf, "% For new versions, check: " & web);
+     Put_Line(tf, "% Options on the following lines.");
      -- 8-Jul-2004: + file name
      Put_Line(tf,Img(cgrade)  & On_off(pic.opt.steigung) );
      Put_Line(tf,Img(clines)  & On_off(pic.opt.sty(emlines)) );

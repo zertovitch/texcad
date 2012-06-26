@@ -1,0 +1,58 @@
+-- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+-- for the TeXCAD project ( http://sf.net/projects/texcad/ )
+-- Build me with "gnatmake -P texcad_gwin", or open me with GPS
+--
+project TeXCAD_GWin is
+
+   for Source_Dirs use ("..\", ".", "Windows_Stuff");
+   for Main use ("TeXCAD.adb");
+   type Build_Mode_Type is ("Optimize", "Debug");
+   Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
+
+   case Build_Mode is
+      when "Debug" =>
+         for Object_Dir use "..\ACU_Debg";
+      when "Optimize" =>
+         for Object_Dir use "..\ACU_Opti";
+   end case;
+
+   package Ide is
+      for Default_Switches ("adacontrol") use ("-F", "gnat_short");
+   end Ide;
+
+   package Builder is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-j2");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-j2", "-s"); -- , "-a", "-x"
+      end case;
+   end Builder;
+
+   package Compiler is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatyhiknp", "-gnatec..\acu_debg\debug.pra", "-gnatec..\acu_debg\tc_elim.pra");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-gnat05", "-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", "-gnatec..\acu_debg\tc_elim.pra");
+      end case;
+   end Compiler;
+
+   package Linker is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-LWindows_Stuff");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-s", "-LWindows_Stuff");
+      end case;
+   end Linker;
+
+   package Binder is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-E");
+         when "Optimize" =>
+      end case;
+   end Binder;
+
+end TeXCAD_GWin;

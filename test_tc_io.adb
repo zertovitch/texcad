@@ -212,6 +212,6 @@ begin
   Test("op_amp", True);   -- epic, output from jPicEdt
   Test("diode", True);    -- epic, output from jPicEdt
   Test("eepfig4c", True); -- epic with chained \drawline, \dashline
-  Put("---Done--- Last time to check memory usage... press Return");
+  Put("---Done--- Last chance to check memory usage... press Return");
   Skip_Line;
 end Test_TC_IO;

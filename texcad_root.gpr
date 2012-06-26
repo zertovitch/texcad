@@ -1,20 +1,20 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
 -- for the TeXCAD project ( http://sf.net/projects/texcad/ )
--- Build me with "gnatmake -P texcad_gps_win32", or open me with GPS
+-- Build me with "gnatmake -P texcad_root", or open me with GPS
 --
-project TeXCAD_GPS_Win32 is
+project TeXCAD_Root is
 
-   for Source_Dirs use ("..\", ".", "Windows_Stuff");
-   for Main use ("TeXCAD.adb");
-   -- for Exec_Dir use ".";
+   for Source_Dirs use (".");
+   for Exec_Dir use ".";
+   for Main use ("test_tc_io_gnat.ads");
    type Build_Mode_Type is ("Optimize", "Debug");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
-
+   
    case Build_Mode is
       when "Debug" =>
-         for Object_Dir use "..\ACU_Debg";
+         for Object_Dir use "ACU_Debg";
       when "Optimize" =>
-         for Object_Dir use "..\ACU_Opti";
+         for Object_Dir use "ACU_Opti";
    end case;
 
    package Ide is
@@ -39,15 +39,6 @@ project TeXCAD_GPS_Win32 is
       end case;
    end Compiler;
 
-   package Linker is
-      case Build_Mode is
-         when "Debug" =>
-            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-LWindows_Stuff");
-         when "Optimize" =>
-            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-s", "-LWindows_Stuff");
-      end case;
-   end Linker;
-
    package Binder is
       case Build_Mode is
          when "Debug" =>
@@ -56,4 +47,4 @@ project TeXCAD_GPS_Win32 is
       end case;
    end Binder;
 
-end TeXCAD_GPS_Win32;
+end TeXCAD_Root;
