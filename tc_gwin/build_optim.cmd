@@ -2,7 +2,7 @@ rem *********************************************************
 rem OPTIMIZED IN SPACE (excepted explicit inlining) AND TIME:
 rem *********************************************************
 
-gnatmake -Ptexcad_gps_win32 -XBuild_Mode=Optimize
+gnatmake -Ptexcad_gwin -XBuild_Mode=Optimize
 
 copy /b ..\acu_opti\texcad.exe TeXCAD_optim.exe
 

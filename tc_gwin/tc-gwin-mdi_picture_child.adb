@@ -25,7 +25,6 @@ with GWin_Util;                         use GWin_Util;
 with Ada.Directories;                   use Ada.Directories;
 with Ada.Exceptions;                    use Ada.Exceptions;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
-with Ada.Strings.Unbounded;
 with Ada.Text_IO;                       use Ada.Text_IO;
 
 with Interfaces.C;

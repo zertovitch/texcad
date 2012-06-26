@@ -65,6 +65,7 @@ procedure TeXCAD is
     Window : in out GWindows.Base.Base_Window_Type'Class;
     E: Ada.Exceptions.Exception_Occurrence)
   is
+    pragma Unreferenced (Window);
     small_insult: constant String:=
         Ada.Exceptions.Exception_Name (E) & NL &
         Ada.Exceptions.Exception_Message (E);

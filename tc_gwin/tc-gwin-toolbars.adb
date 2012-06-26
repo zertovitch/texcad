@@ -46,40 +46,42 @@ package body TC.GWin.Toolbars is
     il    : in out GWindows.Image_Lists.Image_List_Type;
     parent: in out GWindows.Base.Base_Window_Type'Class)
   is
+    use GWindows.Common_Controls;
     st: Interfaces.C.unsigned;
   begin
-    GWindows.Common_Controls.Create (tb, parent, 0, 0, 0, 40);
-    GWindows.Common_Controls.Dock (tb, GWindows.Base.At_Top);
+    Create (tb, parent, 0, 0, 0, 40);
+    Dock (tb, GWindows.Base.At_Top);
 
     Create (il, "Toolbar_Bmp", 16);
-    GWindows.Common_Controls.Set_Image_List (tb, il);
-    st:= GWindows.Common_Controls.Get_Style(tb);
-    GWindows.Common_Controls.Set_Style(tb, TBSTYLE_FLAT + st);
+    Set_Image_List (tb, il);
+    st:= Get_Style(tb);
+    Set_Style(tb, TBSTYLE_FLAT or st);
+    -- Attempted TBSTYLE_AUTOSIZE to stop flickering, in vain...
 
-    GWindows.Common_Controls.Add_Button (tb,  0, ID_File_New);
-    GWindows.Common_Controls.Add_Button (tb,  1, ID_File_Open);
+    Add_Button (tb,  0, ID_File_New);
+    Add_Button (tb,  1, ID_File_Open);
     Add_Button (tb,  2, save);
 
-    GWindows.Common_Controls.Add_Separator(tb, sep_w);
+    Add_Separator(tb, sep_w);
 
     Add_Button (tb, 13, pick_obj);
     Add_Button (tb,  3, cut_clip);
     Add_Button (tb,  4, copy_clip);
     Add_Button (tb,  5, paste_clip);
 
-    GWindows.Common_Controls.Add_Separator(tb, sep_w);
+    Add_Separator(tb, sep_w);
 
     Add_Button (tb, 12, preview);
     Add_Button (tb,  9, zoom_plus);
     Add_Button (tb, 10, zoom_minus);
 
-    GWindows.Common_Controls.Add_Separator(tb, sep_w);
+    Add_Separator(tb, sep_w);
 
     Add_Button (tb, 15, pic_opt_dialog);
 
-    GWindows.Common_Controls.Add_Separator(tb, sep_w);
+    Add_Separator(tb, sep_w);
 
-    GWindows.Common_Controls.Add_Button (tb, 14, ID_App_About); -- 7 = help
+    Add_Button (tb, 14, ID_App_About); -- 7 = help
 
   end Init_Main_toolbar;
 
