@@ -196,7 +196,7 @@ begin
       Test("petri" & n(4..5), True);
     end;
   end loop;
-  for i in 1..33 loop
+  for i in 1..41 loop
     declare
       n: constant String:= Integer'Image(1000+i);
     begin

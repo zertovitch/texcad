@@ -1,0 +1,41 @@
+%TexCad Options [Wanderweg]
+%\grade{\off}
+%\emlines{\off}
+%\beziermacro{\off}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{2.00}
+%\graddiff{0.01}
+%\snapasp{1}
+%\zoom{1.00}
+\unitlength 1.00mm
+\linethickness{0.4pt}
+\begin{picture}(120.00,100.00)
+\put(0.00,70.00){\framebox(40.00,10.00)[lc]{Gemeinde}}
+\put(35.00,80.00){\line(0,-1){10.00}}
+\put(37.33,75.00){\makebox(0,0)[cc]{$\nabla$}}
+\put(80.00,70.00){\framebox(40.00,10.00)[lc]{Gemeinde}}
+\put(115.00,80.00){\line(0,-1){10.00}}
+\put(117.33,75.00){\makebox(0,0)[cc]{$\nabla$}}
+\put(80.00,55.00){\framebox(40.00,10.00)[lc]{Anfahrtsweg (km Luftlinie)}}
+\put(115.00,65.00){\line(0,-1){10.00}}
+\put(117.33,60.00){\makebox(0,0)[cc]{$\nabla$}}
+\put(0.00,35.00){\framebox(40.00,10.00)[lc]{Schwierigkeitsgrad}}
+\put(35.00,45.00){\line(0,-1){10.00}}
+\put(37.33,40.00){\makebox(0,0)[cc]{$\nabla$}}
+\put(0.00,15.00){\framebox(40.00,10.00)[lc]{Zeitdauer}}
+\put(35.00,25.00){\line(0,-1){10.00}}
+\put(37.33,20.00){\makebox(0,0)[cc]{$\nabla$}}
+\put(0.00,50.00){\line(1,0){120.00}}
+\put(0.00,10.00){\line(1,0){120.00}}
+\put(0.00,0.00){\makebox(0,0)[lc]{Zufallswanderung}}
+\put(0.00,85.00){\makebox(0,0)[lc]{Talort}}
+\put(60.00,75.00){\makebox(0,0)[cc]{oder}}
+\put(80.00,85.00){\makebox(0,0)[lc]{derzeitiger Aufenthaltsort}}
+\put(0.00,100.00){\makebox(0,0)[lc]{Sprache}}
+\put(0.00,90.00){\framebox(3.00,3.00)[cc]{d}}
+\put(10.00,90.00){\framebox(3.00,3.00)[cc]{e}}
+\put(20.00,90.00){\framebox(3.00,3.00)[cc]{f}}
+\put(30.00,90.00){\framebox(3.00,3.00)[cc]{i}}
+\put(40.00,90.00){\framebox(3.00,3.00)[cc]{s}}
+\end{picture}

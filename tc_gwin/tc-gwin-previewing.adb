@@ -2,11 +2,12 @@
 -- Fix enabled: temporary files left in temp dir.
 
 with TC.Output;
+
 with Ada.Text_IO;
+with Ada.Directories, Ada.Environment_Variables;
+
 with GWin_Util;
 pragma Elaborate_All(GWin_Util);
-
-with Ada.Directories, Ada.Environment_Variables;
 
 package body TC.GWin.Previewing is
 
@@ -83,7 +84,9 @@ package body TC.GWin.Previewing is
     begin
       Delete_File(Name);
     exception
-      when Name_Error =>
+      when Name_Error => -- Doesn't exist, perhaps already deleted
+        null;
+      when Use_Error =>  -- Exists, but locked: e.g. a .tex file, locked by TeX
         null;
     end Delete_if_any;
     --
