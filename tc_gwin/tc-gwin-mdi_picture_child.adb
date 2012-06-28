@@ -277,14 +277,20 @@ package body TC.GWin.MDI_Picture_Child is
                            Keys    : in     Mouse_Key_States;
                            Z_Delta : in Integer)
   is
-    pragma Unreferenced (X, Y, Keys);
+    pragma Unreferenced (X, Y);
     WW: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window);
     v_pos: constant Natural:= Scroll_Position (WW, Vertical);
+    z: Integer;
     dy: constant Natural:= Scroll_Page_Size(WW, Vertical);
   begin
     if Z_Delta /= 0 then
-      Scroll_Position(WW, Vertical, v_pos - dy * (Z_Delta / abs Z_Delta));
-      Adjust_Draw_Control_Position(WW);
+      z:= Z_Delta / abs Z_Delta;
+      if Keys(Control) then
+        Zoom_picture(WW, z);
+      else
+        Scroll_Position(WW, Vertical, v_pos - dy * z);
+        Adjust_Draw_Control_Position(WW);
+      end if;
     end if;
   end Do_Mouse_Wheel;
 
@@ -510,16 +516,17 @@ package body TC.GWin.MDI_Picture_Child is
       -- 2007: Maximize-demaximize (non-maximized case) to
       -- avoid invisible windows...
       declare
-        maximized: constant Boolean:= MDI_childen_maximized;
+        memo_unmaximized_children: constant Boolean:= not MDI_childen_maximized;
       begin
-        if not maximized then
+        if memo_unmaximized_children then
           Freeze(Window.parent.all);
           Zoom(Window);
         end if;
         On_Size(Window,Width(Window),Height(window));
-        if not maximized then
+        if memo_unmaximized_children then
+          Thaw(Window.parent.all); -- Before Zoom, otherwise uncomplete draw.
           Zoom(Window, False);
-          Thaw(Window.parent.all);
+          Window.parent.Tool_Bar.Redraw;
         end if;
       end;
 
