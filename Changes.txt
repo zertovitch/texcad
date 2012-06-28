@@ -4,8 +4,8 @@ Major changes in TeXCAD
 Version 4.3
 ===========
 105:
-- (Windows) Use of Windows clipboard for copy/cut/paste
-
+- (Windows) Using Windows clipboard for copy/cut/paste
+- (Windows) Using the mouse wheel for scrolling
 
 Version 4.2
 ===========

@@ -35,6 +35,19 @@ package body TC.GWin.MDI_Picture_Child is
 
   use TC.REF;
 
+  -- Adjust the Draw control's position to those of the scroll controls.
+  --
+  procedure Adjust_Draw_Control_Position(Window : in out MDI_Picture_Child_Type)
+  is
+  begin
+     Window.Draw_Control.X0:= Scroll_Position (Window, Horizontal);
+     Window.Draw_Control.Y0:= Scroll_Position (Window, Vertical);
+     Move (Window.Draw_Control,
+           0 - Window.Draw_Control.X0,
+           0 - Window.Draw_Control.Y0
+     );
+  end Adjust_Draw_Control_Position;
+
   procedure On_Size (Window : in out MDI_Picture_Child_Type;
                      Width  : in     Integer;
                      Height : in     Integer) is
@@ -55,12 +68,7 @@ package body TC.GWin.MDI_Picture_Child is
           Client_Area_Width (Window.Draw_Control) -
           Client_Area_Width (Window) + 30);
        Scroll_Page_Size (Window, Horizontal, 30);
-       -- Added 15-Apr-2003 to obtain effect
-       Window.Draw_Control.X0:= Scroll_Position (Window, Horizontal);
-       Window.Draw_Control.Y0:= Scroll_Position (Window, Vertical);
-       Move (Window.Draw_Control,
-             0 - Window.Draw_Control.X0,
-             0 - Window.Draw_Control.Y0);
+       Adjust_Draw_Control_Position(Window);
     else
        Left (Window.Draw_Control, 0);
        Scroll_Position (Window, Horizontal, 0);
@@ -77,12 +85,7 @@ package body TC.GWin.MDI_Picture_Child is
           Client_Area_Height (Window.Draw_Control) -
           Client_Area_Height (Window) + 30);
        Scroll_Page_Size (Window, Vertical, 30);
-       -- Added 15-Apr-2003 to obtain effect
-       Window.Draw_Control.X0:= Scroll_Position (Window, Horizontal);
-       Window.Draw_Control.Y0:= Scroll_Position (Window, Vertical);
-       Move (Window.Draw_Control,
-             0 - Window.Draw_Control.X0,
-             0 - Window.Draw_Control.Y0);
+       Adjust_Draw_Control_Position(Window);
     else
        Top (Window.Draw_Control, 0);
        Scroll_Position (Window, Vertical, 0);
@@ -107,12 +110,7 @@ package body TC.GWin.MDI_Picture_Child is
             0 - Window.Draw_Control.X0,
             0 - Window.Draw_Control.Y0);
     else
-      Window.Draw_Control.X0:= Scroll_Position (Window, Horizontal);
-      Window.Draw_Control.Y0:= Scroll_Position (Window, Vertical);
-      Move (Window.Draw_Control,
-            0 - Window.Draw_Control.X0,
-            0 - Window.Draw_Control.Y0);
-
+       Adjust_Draw_Control_Position(Window);
        On_Horizontal_Scroll
          (GWindows.Windows.Window_Type (Window),
           Request,
@@ -138,12 +136,7 @@ package body TC.GWin.MDI_Picture_Child is
             0 - Window.Draw_Control.X0,
             0 - Window.Draw_Control.Y0);
     else
-      Window.Draw_Control.X0:= Scroll_Position (Window, Horizontal);
-      Window.Draw_Control.Y0:= Scroll_Position (Window, Vertical);
-      Move (Window.Draw_Control,
-            0 - Window.Draw_Control.X0,
-            0 - Window.Draw_Control.Y0);
-
+      Adjust_Draw_Control_Position(Window);
       On_Vertical_Scroll (GWindows.Windows.Window_Type (Window),
                           Request,
                           Control);
@@ -256,6 +249,17 @@ package body TC.GWin.MDI_Picture_Child is
     end if;
   end Do_right_Mouse_Down;
 
+  procedure Do_Mouse_Up (Window : in out Base_Window_Type'Class;
+                         X, Y   : in     Integer;
+                         Keys   : in     Mouse_Key_States)
+  is
+    pragma Warnings (Off, Keys);
+  begin
+    if Window in TC_Picture_Panel'Class then
+      Mouse_Up(TC_Picture_Panel(Window),X,Y);
+    end if;
+  end Do_Mouse_Up;
+
   procedure Do_Mouse_Move (Window : in out Base_Window_Type'Class;
                            X, Y   : in     Integer;
                            Keys   : in     Mouse_Key_States)
@@ -267,16 +271,22 @@ package body TC.GWin.MDI_Picture_Child is
     end if;
   end Do_Mouse_Move;
 
-  procedure Do_Mouse_Up (Window : in out Base_Window_Type'Class;
-                         X, Y   : in     Integer;
-                         Keys   : in     Mouse_Key_States)
+  procedure Do_Mouse_Wheel(Window  : in out Base_Window_Type'Class;
+                           X       : in     Integer;
+                           Y       : in     Integer;
+                           Keys    : in     Mouse_Key_States;
+                           Z_Delta : in Integer)
   is
-    pragma Warnings (Off, Keys);
+    pragma Unreferenced (X, Y, Keys);
+    WW: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window);
+    v_pos: constant Natural:= Scroll_Position (WW, Vertical);
+    dy: constant Natural:= Scroll_Page_Size(WW, Vertical);
   begin
-    if Window in TC_Picture_Panel'Class then
-      Mouse_Up(TC_Picture_Panel(Window),X,Y);
+    if Z_Delta /= 0 then
+      Scroll_Position(WW, Vertical, v_pos - dy * (Z_Delta / abs Z_Delta));
+      Adjust_Draw_Control_Position(WW);
     end if;
-  end Do_Mouse_Up;
+  end Do_Mouse_Wheel;
 
   -- Added Key down handler for steering mouse cursor with arrow keys 14-Oct-2005
 
@@ -454,6 +464,8 @@ package body TC.GWin.MDI_Picture_Child is
       On_Left_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
       On_Right_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
       On_Mouse_Move_Handler (Window.Draw_Control, Do_Mouse_Move'Access);
+      On_Mouse_Wheel_Handler (Window, Do_Mouse_Wheel'Access);
+      --
       On_Character_Down_Handler (Window, Do_Key_Down'Access); -- 14-Oct-2005
 
       Get_Canvas (Window.Draw_Control, Window.Draw_Control.Drawing_Area);
@@ -512,14 +524,8 @@ package body TC.GWin.MDI_Picture_Child is
       end;
 
       Scroll_Position(Window, Vertical, Scroll_Maximum(Window, Vertical));
-
-      -- Added 15-Apr-2003 to obtain effect
-      Window.Draw_Control.X0:= Scroll_Position (Window, Horizontal);
-      Window.Draw_Control.Y0:= Scroll_Position (Window, Vertical);
-      Move (Window.Draw_Control,
-            0 - Window.Draw_Control.X0,
-            0 - Window.Draw_Control.Y0);
-
+      Adjust_Draw_Control_Position(Window);
+      Window.Use_Mouse_Wheel;
    end On_Create;
 
    procedure On_Picture_Options
