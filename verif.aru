@@ -1,0 +1,37 @@
+-- AdaControl verification rules
+-- Required:
+check unnecessary_use_clause;
+check style (no_closing_name);
+check style (negative_condition);
+check style (compound_statement);
+check max_nesting (6);
+check parameter_aliasing (certain);
+check simplifiable_expressions (range, logical, parentheses);
+check statements (goto, abort, unnecessary_null, while_true);
+check if_for_case;
+check expressions (real_equality);
+check entities (debug);
+-- check entities (all 'Unchecked_Access);
+-- check entities (all 'Unrestricted_Access);
+-- check entity_inside_exception (ada.text_io.put_line);
+-- check exception_propagation (interface, C);
+-- check exception_propagation (task);
+-- check pragmas (elaborate_all, elaborate_body);
+check representation_clauses (at, 'address);
+check representation_clauses ('size);
+
+-- Acceptable, but should be looked at:
+-- search style (multiple_elements);
+search style (casing_identifier, original);
+search parameter_aliasing (possible);
+search max_nesting (4);
+-- search local_hiding;
+search expressions (array_others, record_others);
+search statements (delay);
+-- search default_parameter (all, all, used);
+search instantiations (ada.unchecked_deallocation);
+search instantiations (ada.unchecked_conversion);
+search local_instantiation (ada.unchecked_deallocation);
+search statements(multiple_exits); -- case_others_null, case_others
+-- search statements(exception_others_null); -- exception_others
+-- search pragmas (nonstandard);

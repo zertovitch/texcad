@@ -181,12 +181,18 @@ of values (this excludes the cases with a zero slope or zero delta):
 See the FAQ (\ref{faq}) about safely removing the \TeX\, comments from
 the picture code.
 %
+\subsection{More examples}
+You will find in the {\tt Test\_IO} directory, in the source archive,
+dozens of examples, mostly found on the Internet. Note that they
+have the {\tt .tcp} extension instead of the default {\tt .pic} extension.
+They are used for testing the {\TC} Input/Output.
+%
 \subsection{Compatibility} If there are commands unknown to {\TC},
 for instance color selection or whatever,
 they are {\bf preserved and stored in the same place} of the
 picture file when {\TC} saves the picture.
-Note that this program is upward-compatible with the previous DOS
-``incarnation'', {\TC} 3.2.
+Note that this program is compatible with the pictures saved by earlier
+versions, including the DOS ``ancestor'', {\TC} 3.2.
 %
 \section{How to use {{\TC}} on MS Windows}
 %
@@ -579,11 +585,12 @@ in the first commented line:
   }\end{center}
 
 Here is a more subtle case which shows that {\TC} is able to
-provide several levels of emulation according to which style
+provide {\it several levels} of emulation according to which style
 extensions are enabled:
 \begin{enumerate}
 \item Nothing, pure \LaTeX : a B\'ezier curve is drawn with sequence of small
-segments; since the slopes of pure \LaTeX\, are limited, some
+segments.
+Since the slopes of pure \LaTeX\, are limited, some
 oblique segments are drawn via an emulation with a sequence of small horizontal
 segments:
   \begin{center}\tiny{
@@ -741,7 +748,7 @@ All you need to do for building {\TC} for Windows is to install
 a binary distribution of the {\bf GNAT Ada compiler} for Windows platforms
 (from AdaCore or MinGW, links above).
 
-Then, go to the TC\_GWin directory and run {\tt "build\_debug.cmd"},
+Then, go to the {\tt TC\_GWin} directory and run {\tt "build\_debug.cmd"},
 or open {\tt texcad\_gwin.gpr} with GPS (the GNAT Programming Studio) and press F4.
 
 NB: a snapshot of the {\bf GWindows} library, ANSI mode, is included with

@@ -4,6 +4,12 @@ set tcref=105
 
 del tc_%tcver%_*.zip
 
+rem Ensure we have latest builds
+del TeXCAD_optim.exe
+call build_optim.cmd
+del TeXCAD_debug.exe
+call build_debug.cmd
+
 upx --brute TeXCAD_optim.exe
 
 set distro=optim

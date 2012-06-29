@@ -5,7 +5,8 @@ Version 4.3
 ===========
 105:
 - (Windows) Using Windows clipboard for copy/cut/paste
-- (Windows) Using the mouse wheel for scrolling
+- (Windows) Using the mouse wheel for scrolling/zooming
+- (Windows) Using the Page Up/Down keys for scrolling
 
 Version 4.2
 ===========

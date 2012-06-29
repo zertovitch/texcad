@@ -280,8 +280,8 @@ package body TC.GWin.MDI_Picture_Child is
     pragma Unreferenced (X, Y);
     WW: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window);
     v_pos: constant Natural:= Scroll_Position (WW, Vertical);
-    z: Integer;
     dy: constant Natural:= Scroll_Page_Size(WW, Vertical);
+    z: Integer;
   begin
     if Z_Delta /= 0 then
       z:= Z_Delta / abs Z_Delta;
@@ -301,8 +301,11 @@ package body TC.GWin.MDI_Picture_Child is
                Special_Key : in     Special_Key_Type;
                Value       : in     GCharacter)
   is
-    pragma Warnings (Off, Window);
+    WW: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window);
+    v_pos: constant Natural:= Scroll_Position (WW, Vertical);
+    dy: constant Natural:= Scroll_Page_Size(WW, Vertical);
     pragma Warnings (Off, Value);
+    --
     procedure Move_mouse_cursor(dx,dy: Integer) is
       p: constant GWindows.Types.Point_Type:= Get_Cursor_Position;
     begin
@@ -314,6 +317,12 @@ package body TC.GWin.MDI_Picture_Child is
       when Up_Key       => Move_mouse_cursor(0,-1);
       when Right_Key    => Move_mouse_cursor(+1,0);
       when Down_Key     => Move_mouse_cursor(0,+1);
+      when Page_Up      =>
+        Scroll_Position(WW, Vertical, v_pos - dy);
+        Adjust_Draw_Control_Position(WW);
+      when Page_Down    =>
+        Scroll_Position(WW, Vertical, v_pos + dy);
+        Adjust_Draw_Control_Position(WW);
       when others       => null;
     end case;
   end Do_Key_Down;

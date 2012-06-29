@@ -923,9 +923,12 @@ package body TC.GWin.MDI_Main is
     -- ^ Don't forget to save unsaved pictures !
     -- Operation can be cancelled by user for one unsaved picture.
     Can_Close:= MDI_Picture_Child.success_in_enumerated_close;
-    -- if Can_Close then
-    --   GWindows.Base.On_Exception_Handler (Handler => null);
-    -- end if;
+    --
+    if Can_Close then
+      GWindows.Base.On_Exception_Handler (Handler => null);
+      -- !! Trick to remove a strange crash on Destroy_Children
+      -- !! on certain Windows platforms - 29-Jun-2012
+    end if;
   end On_Close;
 
   procedure Update_Status_Bar(
