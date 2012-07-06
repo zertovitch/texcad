@@ -286,6 +286,11 @@ package body TC.Input is
       a2: String(arg_1'Range);
       l2: Natural;
     begin
+      -- Added 6-Jul-2012: there may be blanks before arguments!
+      while ch = ' ' and not end_of_parsing loop
+        Read_ch;
+      end loop;
+      --
       if optional and ch/= op then
         len:= 0;
         return;

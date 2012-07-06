@@ -1,0 +1,62 @@
+% This is a LaTeX picture output by TeXCAD. 
+% File name: [texcads.tcp]. 
+% Version of TeXCAD: 4.3 
+% Reference / build: 30-Jun-2012 (rev. 105) 
+% For new versions, check: http://texcad.sf.net/ 
+% Options on the following lines. 
+%\grade{\on} 
+%\emlines{\off} 
+%\epic{\off} 
+%\beziermacro{\on} 
+%\reduce{\on} 
+%\snapping{\off} 
+%\quality{8.000} 
+%\graddiff{0.005} 
+%\snapasp{1} 
+%\zoom{4.0000} 
+\unitlength 3pt % = 3pt 
+\linethickness{0.4pt} 
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility 
+\begin{picture}(135.199,116)(0,0) 
+\put(6.75,6.5){\makebox(0,0)[cc]{2015}} 
+\put(6.75,24.75){\makebox(0,0)[cc]{2010}} 
+\put(6.75,43){\makebox(0,0)[cc]{2005}} 
+\put(6.75,61.25){\makebox(0,0)[cc]{2000}} 
+\put(6.75,79.5){\makebox(0,0)[cc]{1995}} 
+\put(6.75,97.75){\makebox(0,0)[cc]{1990}} 
+\put(6.75,116){\makebox(0,0)[cc]{1985}} 
+\put(18,42.75){\framebox(33,20)[cc] 
+{\begin{tabular}{l}TeXCAD 4.0\\ \hline Kernel: portable\\GUI for Windows\\ \hline Ada\end{tabular}}} 
+\put(18.125,0){\framebox(33,20)[cc] 
+{\begin{tabular}{l}TeXCAD 4.3\\ \hline Kernel: portable\\GUI for Windows\\ \hline Ada\end{tabular}}} 
+\put(102.199,48.5){\framebox(33,20)[cc] 
+{\begin{tabular}{l}TeXCAD 2.4\\ \hline Linux\end{tabular}}} 
+\put(60.625,94.5){\framebox(33,20)[cc] 
+{\begin{tabular}{l}TeXCAD 3.2\\ \hline DOS\\ \hline Turbo Pascal\end{tabular}}} 
+\put(63.352,43.522){\framebox(33,20)[cc] 
+{\begin{tabular}{l}Texcad32 4.4.2\\ \hline Windows\\ \hline Delphi\end{tabular}}} 
+%\vector{dash}{1}(88.504,91.658)(102.379,70.425) 
+\put(102.379,70.425){\vector(2,-3){.067}}\multiput(88.437,91.591)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(89.505,89.958)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(90.572,88.325)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(91.639,86.691)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(92.707,85.058)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(93.774,83.425)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(94.841,81.791)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(95.908,80.158)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(96.976,78.525)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(98.043,76.892)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(99.11,75.258)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(100.178,73.625)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+\multiput(101.245,71.992)(.0313914,-.0480385){17}{\line(0,-1){.0480385}} 
+%\end 
+\put(99.436,82.828){\makebox(0,0)[cc]{?}} 
+\thicklines 
+%\vector(74.63,90.817)(73.789,65.38) 
+\put(73.789,65.38){\vector(0,-1){.067}}\multiput(74.63,90.817)(-.0311481,-.9421111){27}{\line(0,-1){.9421111}} 
+%\end 
+%\vector(59.704,91.658)(38.051,66.641) 
+\put(38.051,66.641){\vector(-3,-4){.067}}\multiput(59.704,91.658)(-.03198375185,-.03695273264){677}{\line(0,-1){.03695273264}} 
+%\end 
+\put(34.056,40.783){\vector(0,-1){18.71}} 
+\end{picture} 
