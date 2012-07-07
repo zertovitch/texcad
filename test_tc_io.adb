@@ -107,23 +107,23 @@ procedure Test_TC_IO is
       end loop;
       Comb_number_to_set(0, pic.opt.sty);
       TC.Output.Save( pic, False, name & ".ou3", "");
-      Put("][Compare v.1 &" & Integer'Image(1+2*Sty_set_combs**2));
+      Put("][Comparing v. 1 & v." & Integer'Image(1+2*Sty_set_combs**2) & ']');
       Text_compare(name & ".out", name & ".ou3");
     else
       Put("..2S.out");
       TC.Output.Save( pic, False, name & ".out", "");
       Put("][3L.out");
       TC.Input.Load( pic, False, name & ".out");
-      Put("..4S.ou2,C");
+      Put("..4S.ou2,Comp");
       TC.Output.Save( pic, False, name & ".ou2", "");
       Text_compare(name & ".out", name & ".ou2");
       Put("][5L.ou2");
       TC.Input.Load( pic, False, name & ".ou2");
-      Put("..6S.ou3,C");
+      Put("..6S.ou3,Comp...]");
       TC.Output.Save( pic, False, name & ".ou3", "");
       Text_compare(name & ".ou2", name & ".ou3");
     end if;
-    Put_Line("]");
+    Put_Line("[Last comparison done]");
   end Test_one;
 
   procedure Test( name1: String; across_sty: Boolean:= False ) is
@@ -212,6 +212,9 @@ begin
   Test("op_amp", True);   -- epic, output from jPicEdt
   Test("diode", True);    -- epic, output from jPicEdt
   Test("eepfig4c", True); -- epic with chained \drawline, \dashline
+  Test("gesicht", True);  -- an example in the old DOS TeXCAD...
+  Test("tanne", True);    -- an example in the old DOS TeXCAD...
+  Test("texcads", True);  -- TeXCAD genealogy, appearing in the doc
   Put("---Done--- Last chance to check memory usage... press Return");
   Skip_Line;
 end Test_TC_IO;
