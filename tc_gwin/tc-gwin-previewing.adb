@@ -66,15 +66,22 @@ package body TC.GWin.Previewing is
   end Create_files;
 
   procedure Start is
+    params: constant String:= "/C " & TC.GWin.Previewing.bat;
   begin
-    GWin_Util.Start(
-      Ada.Environment_Variables.Value("comspec"), -- usually, cmd.exe
-      "/C " & TC.GWin.Previewing.bat,
-      Minimized => True
-    );
+    declare
+      cmd: constant String:= Ada.Environment_Variables.Value("COMSPEC");
+      -- usually, cmd.exe
+    begin
+      GWin_Util.Start(cmd, params, Minimized => True);
+    end;
   exception
-    when Constraint_Error => -- no "comspec" set
-      raise Preview_error;
+    when Constraint_Error => -- no "COMSPEC" set
+      begin
+        GWin_Util.Start("cmd.exe", params, Minimized => True);
+      exception
+        when others =>
+          raise Preview_error;
+      end;
   end Start;
 
   procedure Cleanup is

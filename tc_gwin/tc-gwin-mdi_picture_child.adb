@@ -771,9 +771,11 @@ package body TC.GWin.MDI_Picture_Child is
     );
     TC.GWin.Previewing.Start;
   exception
-    when TC.GWin.Previewing.Preview_error =>
+    when E: TC.GWin.Previewing.Preview_error =>
       Message_Box (
-        Window, Msg(preview), Msg(prev_fail),
+        Window,
+        Msg(preview),
+        Msg(prev_fail) & NL & NL & Exception_Message(E),
         OK_Box, Exclamation_Icon);
       TC.GWin.Previewing.Cleanup;
   end Preview;
