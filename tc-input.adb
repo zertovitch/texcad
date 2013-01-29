@@ -798,9 +798,9 @@ package body TC.Input is
           pic.picked:= pic.picked + 1;
         end if;
         if hidden( o.art ) then
-          pic.totalh:= pic.totalh + 1;
+          pic.total_hidden:= pic.total_hidden + 1;
           if o.picked then
-            pic.pickedh:= pic.pickedh + 1;
+            pic.picked_hidden:= pic.picked_hidden + 1;
           end if;
         end if;
       end if;

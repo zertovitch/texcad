@@ -1,0 +1,51 @@
+-- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
+-- for the TeXCAD project ( http://sf.net/projects/texcad/ ).
+-- This project file is for the import facility from GraphThing (gt).
+-- Build me with "gnatmake -P gt", or open me with GPS
+--
+project GT is
+
+   for Source_Dirs use (".", "..");
+   for Exec_Dir use ".";
+   for Main use ("gt2pic.adb");
+   type Build_Mode_Type is ("Optimize", "Debug");
+   Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
+   
+   case Build_Mode is
+      when "Debug" =>
+         for Object_Dir use "../acu_debg";
+      when "Optimize" =>
+         for Object_Dir use "../acu_opti";
+   end case;
+
+   package Ide is
+      for Default_Switches ("adacontrol") use ("-F", "gnat_short");
+   end Ide;
+
+   package Builder is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-j2");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-j2", "-s"); -- , "-a", "-x"
+      end case;
+   end Builder;
+
+   package Compiler is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatec../acu_debg/debug.pra");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-gnat05", "-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2");
+      end case;
+   end Compiler;
+
+   package Binder is
+      case Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-E");
+         when "Optimize" =>
+      end case;
+   end Binder;
+
+end GT;

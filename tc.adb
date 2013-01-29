@@ -564,6 +564,37 @@ package body TC is
     end if;
   end Improve_linvec;
 
+  procedure Insert( p: in out Picture; t: ptr_Obj_type; where: Insert_location ) is
+    a: ptr_Obj_type;
+  begin
+    case where is
+      when at_begin =>
+        t.next:= p.root;
+        p.root:= t;
+      when at_end =>
+        t.next:= null;
+        if p.root = null then
+          p.root:= t;
+        else
+          -- invariant: a /= null
+          a:= p.root;
+          loop
+            if a.next = null then
+              a.next:= t;
+              exit;
+            end if;
+            a:= a.next;
+          end loop;
+        end if;
+
+        p.saved:= False;
+        p.total:= p.total + 1;
+        if hidden( t.art ) then
+          p.total_hidden:= p.total_hidden + 1;
+        end if;
+    end case;
+  end Insert;
+
   procedure Refresh_size_dependent_parameters(p: in out Picture; objects: Boolean) is
     ul: constant String:= To_String(p.opt.unitlength);
     lw: constant String:= To_String(p.opt.linewidth);

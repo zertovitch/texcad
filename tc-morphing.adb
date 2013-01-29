@@ -475,8 +475,8 @@ package body TC.Morphing is
         p.picked:= p.picked + iter-1;
         p.total := p.total  + bilan;
         if hidden(o.art) then
-          p.pickedh:= p.pickedh + iter-1;
-          p.totalh := p.totalh  + bilan;
+          p.picked_hidden:= p.picked_hidden + iter - 1;
+          p.total_hidden := p.total_hidden  + bilan;
         end if;
         p.saved:= False;
         if need_copied_model then

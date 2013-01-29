@@ -294,7 +294,7 @@ package body TC.Picking is
               a.picked:= True;
               p.picked:= p.picked + 1;
               if hidden( a.art ) then
-                p.pickedh:= p.pickedh + 1;
+                p.picked_hidden:= p.picked_hidden + 1;
               end if;
               p.memo:= a;
               exit when op = pick_text or op = pick;
@@ -304,7 +304,7 @@ package body TC.Picking is
             a.picked:= False;
             p.picked:= p.picked - 1;
             if hidden( a.art ) then
-              p.pickedh:= p.pickedh - 1;
+              p.picked_hidden:= p.picked_hidden - 1;
             end if;
             exit when op = pick_text or op = unpick;
           end if;
@@ -321,8 +321,8 @@ package body TC.Picking is
       p.picked:= p.picked - 1;
       p.total:= p.total - 1;
       if hidden( o.art ) then
-        p.pickedh:= p.pickedh - 1;
-        p.totalh:= p.totalh - 1;
+        p.picked_hidden:= p.picked_hidden - 1;
+        p.total_hidden:= p.total_hidden - 1;
       end if;
       Dispose(o);
     end Stat_and_del;

@@ -435,8 +435,8 @@ package body TC.GWin.MDI_Picture_Child is
     Star: constant array(Boolean) of GCharacter:= (False => ' ',True => '*');
   begin
     Update_Status_Bar(Window.parent.all,stat_objects,
-      Stotal("Objects:",p.total,p.totalh) &
-      Stotal("; picked:",p.picked,p.pickedh)
+      Stotal("Objects:", p.total, p.total_hidden) &
+      Stotal("; picked:", p.picked, p.picked_hidden)
     );
     Update_Status_Bar(Window.parent.all,modified,(1=>Star(not p.saved)));
   end Show_Totals;

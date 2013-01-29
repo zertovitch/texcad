@@ -2,36 +2,6 @@ with TC.GWin.Object_editing;            use TC.GWin.Object_editing;
 
 package body TC.GWin.New_objects is
 
-  procedure Insert( p: in out Picture; t: ptr_Obj_type ) is
-    a: ptr_Obj_type;
-  begin
-    -- * Insert at beginning:
-    -- t.next:= p.root;
-    -- p.root:= t;
-
-    -- * Insert at end:
-    t.next:= null;
-    if p.root = null then
-      p.root:= t;
-    else
-      -- invariant: a /= null
-      a:= p.root;
-      loop
-        if a.next = null then
-          a.next:= t;
-          exit;
-        end if;
-        a:= a.next;
-      end loop;
-    end if;
-
-    p.saved:= False;
-    p.total:= p.total + 1;
-    if hidden( t.art ) then
-      p.totalh:= p.totalh + 1;
-    end if;
-  end Insert;
-
   procedure New_boxoval(
     p           : in out Picture;
     parent      : in out Base_Window_Type'Class;
@@ -70,7 +40,7 @@ package body TC.GWin.New_objects is
     end case;
     ls:= t.ls; -- possible current dot/dash change by Text_Change
     -- Box is kept even if Change_Text cancelled (modif=False)
-    Insert(p,t);
+    Insert(p, t, at_end);
   end New_Boxoval;
 
   procedure New_linvec(
@@ -87,7 +57,7 @@ package body TC.GWin.New_objects is
     t.any_slope:= p.opt.steigung or t.ls.pattern /= plain;
     Set_slope_of_linvec(t.all);
     Improve_linvec(t.all, p.ul_in_pt); -- 30-Apr-2004
-    Insert(p,t);
+    Insert(p, t, at_end);
     P2:= t.P2;
   end New_linvec;
 
@@ -107,7 +77,7 @@ package body TC.GWin.New_objects is
       when suggest => t.num:= Good_num_of_bezier_points(t.all,p.ul_in_pt);
     end case;
     Set_slope_of_bezvec(t.all,p.ul_in_pt);
-    Insert(p,t);
+    Insert(p, t, at_end);
   end New_bezier;
 
   procedure New_circdisc(
@@ -127,7 +97,7 @@ package body TC.GWin.New_objects is
     t.ls:= ls;
     t.P1:= P1;
     Set_radius( t.all, df=> P2 - P1 );
-    Insert(p,t);
+    Insert(p, t, at_end);
   end New_circdisc;
 
   procedure New_text(
@@ -149,7 +119,7 @@ package body TC.GWin.New_objects is
     t.ls:= ls;
     Change_Text(parent, main, t.all, modif);
     if modif then
-      Insert(p,t);
+      Insert(p, t, at_end);
       p.refresh:= only_last; -- 30-Apr-2004
     end if;
   end New_text;

@@ -239,9 +239,9 @@ package TC is
     aspect : Real   := 1.0;  --  Faktoren und Aspect-ratio um
                              --  Welt- in Bildschirmkoordinaten umzurechnen
     total,
-    totalh,
+    total_hidden,
     picked,
-    pickedh: Natural:= 0; -- total / picked objects, visible / hidden
+    picked_hidden: Natural:= 0; -- total / picked objects, visible / hidden
     memo   : ptr_Obj_type:= null; -- pointer to a certain object (e.g. text to change)
     refresh: Refresh_mode;   -- 9-May-2003: sort of refresh needed
 
@@ -251,6 +251,10 @@ package TC is
     lw_in_pt : Real;
     -- \linewidth expressed in pt
   end record;
+
+  type Insert_location is (at_begin, at_end);
+
+  procedure Insert( p: in out Picture; t: ptr_Obj_type; where: Insert_location );
 
   -- Refresh_size_dependent_parameters (was: Set_pt_lengths), sets:
   --   - ul_in_pt, lw_in_pt
