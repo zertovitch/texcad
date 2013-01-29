@@ -73,12 +73,12 @@ vertex:
 	  kwVERTEX QSTRING kwAT LPAREN_t NUMBER COMMA_t NUMBER RPAREN_t
 		{
 			vcount:= vcount + 1;
-			vertex(vcount):= ($5.intval, $7.intval);
+			vertex(vcount):= ($5.intval, $7.intval, To_Unbounded_String($2.text(1..$2.length)));
 			max_x:= Integer'Max(max_x, $5.intval);
 			max_y:= Integer'Max(max_y, $7.intval);
 			begin
               Add(vmap, vcount, $2.text(1..$2.length));
-			  Put_Line("Adding vertex: " & $2.text(1..$2.length) );
+			  -- Put_Line("Adding vertex: " & $2.text(1..$2.length) );
 			exception
 			  when GT_Help.Duplicate_name =>
 			    New_Line;
@@ -90,17 +90,26 @@ vertex:
 
 edge:
 	  kwEDGE QSTRING arrow QSTRING
-		{
+		{   if first_edge then
+		      Start_picture;
+			  first_edge:= False;
+		    end if;
 			current_edge:= (
 			  v1 => Index(vmap, $2.text(1..$2.length)), 
-			  v2 => Index(vmap, $4.text(1..$4.length)));
-			if $3.intval = 2 then -- swap
-			  current_edge:= (current_edge.v2, current_edge.v1);
+			  v2 => Index(vmap, $4.text(1..$4.length)),
+			  arrowed => $3.intval /= 1,
+			  weight  => 1
+			);
+			if $3.intval = 2 then -- swap edges
+			  current_edge:= (
+			    current_edge.v2, current_edge.v1, 
+			    current_edge.arrowed, current_edge.weight
+		      );
 			end if;
 		}
 	  edge_properties
 		{ 
-		  null; -- Insert(pic, arrow)
+		  Insert_edge(current_edge);
         }
 	;
 
@@ -116,7 +125,7 @@ edge_properties:
 	;
 
 edge_property:
-	  kwWEIGHT NUMBER	{ current_weight := $2.intval; }
+	  kwWEIGHT NUMBER	{ current_edge.weight := $2.intval; }
 	;
 
 %%
@@ -134,6 +143,7 @@ with Text_IO; -- for compat.
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;                        use Interfaces;
 

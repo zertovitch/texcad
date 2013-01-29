@@ -1,40 +1,8 @@
 --------------------------------------------------------------------------
---  RC2GW.adb
---
---  RC2GW translates a Resource Compiler script file (.rc or .dlg)
---  into an Ada package for the GWindows GUI system.
---
---  Copyright (c) Gautier de Montmollin 2008..2012
---  SWITZERLAND
---
---  Permission is hereby granted, free of charge, to any person obtaining a copy
---  of this software and associated documentation files (the "Software"), to deal
---  in the Software without restriction, including without limitation the rights
---  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
---  copies of the Software, and to permit persons to whom the Software is
---  furnished to do so, subject to the following conditions:
-
---  The above copyright notice and this permission notice shall be included in
---  all copies or substantial portions of the Software.
-
---  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
---  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
---  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
---  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
---  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
---  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
---  THE SOFTWARE.
-
--- NB: this is the MIT License, as found 28-Jul-2008 on the site
--- http://www.opensource.org/licenses/mit-license.php
-----------------------------------------------------------------------------
+--  gt2pic.adb
+--------------------------------------------------------------------------
 --
 -- Change log:
---
--- 24-Jun-2009 GdM: Added the -c option (initialize controls, for testing)
---  ~ May-2009 GdM: Added the -t option (test generation)
--- 29-Aug-2008 GdM: Added the -x and -y options
--- 28-Jul-2008 GdM: Created
 --
 
 with Ada.Command_Line;                  use Ada.Command_Line;
@@ -82,8 +50,7 @@ begin
             GT_IO.Open_Input (fname => arg);
             Inp_Opened := True;
             Put_Line(Standard_error,
-              "GT2Pic: transcripting '" & arg &
-              "' to LaTeX picture." );
+              "GT2Pic: exporting '" & arg & "' to a LaTeX picture." );
           exception
             when Name_Error =>
               Put_Line( Standard_Error, "Input file '" & arg &
@@ -109,7 +76,9 @@ begin
   YYParse;
 
   if Inp_Opened then
+    GT_Help.Save_picture(Name(GT_IO.user_input_file) & ".pic");
     GT_IO.Close_Input;
   end if;
+
 
 end GT2Pic;

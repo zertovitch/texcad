@@ -12,6 +12,7 @@ with Text_IO; -- for compat.
 
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
 with Interfaces;                        use Interfaces;
 
@@ -302,14 +303,18 @@ when 9 => -- #line 74
 			vcount:= vcount + 1;
 			vertex(vcount):= (
 yy.value_stack(yy.tos-3).intval, 
+yy.value_stack(yy.tos-1).intval, To_Unbounded_String(
+yy.value_stack(yy.tos-6).text(1..
+yy.value_stack(yy.tos-6).length)));
+			max_x:= Integer'Max(max_x, 
+yy.value_stack(yy.tos-3).intval);
+			max_y:= Integer'Max(max_y, 
 yy.value_stack(yy.tos-1).intval);
 			begin
               Add(vmap, vcount, 
 yy.value_stack(yy.tos-6).text(1..
 yy.value_stack(yy.tos-6).length));
-			  Put_Line("Adding: " & 
-yy.value_stack(yy.tos-6).text(1..
-yy.value_stack(yy.tos-6).length) );
+			  -- Put_Line("Adding vertex: " & $2.text(1..$2.length) );
 			exception
 			  when GT_Help.Duplicate_name =>
 			    New_Line;
@@ -320,40 +325,50 @@ yy.value_stack(yy.tos-6).length) & ']');
 		    end;
 		
 
-when 10 => -- #line 91
-
+when 10 => -- #line 93
+   if first_edge then
+		      Start_picture;
+			  first_edge:= False;
+		    end if;
 			current_edge:= (
 			  v1 => Index(vmap, 
 yy.value_stack(yy.tos-2).text(1..
 yy.value_stack(yy.tos-2).length)), 
 			  v2 => Index(vmap, 
 yy.value_stack(yy.tos).text(1..
-yy.value_stack(yy.tos).length)));
+yy.value_stack(yy.tos).length)),
+			  arrowed => 
+yy.value_stack(yy.tos-1).intval /= 1,
+			  weight  => 1
+			);
 			if 
-yy.value_stack(yy.tos-1).intval = 2 then -- swap
-			  current_edge:= (current_edge.v2, current_edge.v1);
+yy.value_stack(yy.tos-1).intval = 2 then -- swap edges
+			  current_edge:= (
+			    current_edge.v2, current_edge.v1, 
+			    current_edge.arrowed, current_edge.weight
+		      );
 			end if;
 		
 
-when 11 => -- #line 100
+when 11 => -- #line 111
  
-		  null; -- Insert(pic, arrow)
+		  Insert_edge(current_edge);
         
 
-when 12 => -- #line 106
+when 12 => -- #line 117
  
 yyval.intval := 1; 
 
-when 13 => -- #line 107
+when 13 => -- #line 118
  
 yyval.intval := 2; 
 
-when 14 => -- #line 108
+when 14 => -- #line 119
  
 yyval.intval := 3; 
 
-when 17 => -- #line 117
- current_weight := 
+when 17 => -- #line 128
+ current_edge.weight := 
 yy.value_stack(yy.tos).intval; 
 
                     when others => null;
