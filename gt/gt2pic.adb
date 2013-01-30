@@ -9,6 +9,7 @@ with Ada.Command_Line;                  use Ada.Command_Line;
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Text_IO;                       use Ada.Text_IO;
 
+with TC;
 with GT_IO, GT_Help, YYParse;
 
 procedure GT2Pic is
@@ -20,6 +21,8 @@ procedure GT2Pic is
     New_Line( Standard_Error );
     Put_Line( Standard_Error, "GT2Pic translates a GraphThing file (.gt)" );
     Put_Line( Standard_Error, "into a LaTeX picture, compatible with TeXCAD." );
+    Put_Line( Standard_Error, "Build: " & TC.Reference);
+    Put_Line( Standard_Error, "Web: " & TC.Web);
     New_Line( Standard_Error );
     Put_Line( Standard_Error, "options:  (none at the moment!)");
   end Syntax;
