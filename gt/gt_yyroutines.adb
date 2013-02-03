@@ -1,7 +1,7 @@
-with GT_YYlex, GT_tokens;
+with GT_YYlex, GT_Tokens;
 
-package body yyroutines is
-  use GT_tokens;
+package body GT_YYroutines is
+  use GT_Tokens;
 
   Lookahead : Token;
   HaveLookahead : Boolean := False;
@@ -27,4 +27,4 @@ package body yyroutines is
     end if;
   end UnYYLex;
 
-end yyroutines;
+end;

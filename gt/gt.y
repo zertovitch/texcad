@@ -132,20 +132,19 @@ edge_property:
 
 -- This header comes from gt.y (bottom)
 
-with GT_Tokens, GT_Shift_Reduce, GT_Goto, GT_Help, GT_IO;
-use  GT_Tokens, GT_Shift_Reduce, GT_Goto, GT_Help, GT_IO;
+with GT_Tokens, GT_Shift_Reduce, GT_Goto, GT_Help, GT_IO, GT_YYroutines;
+use  GT_Tokens, GT_Shift_Reduce, GT_Goto, GT_Help, GT_IO, GT_YYroutines;
 
-with GT_DFA, YYroutines, YYerror;
-use  GT_DFA, YYroutines;
+with YYerror;
 
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Text_IO; -- for compat.
 
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+-- with Ada.Characters.Handling;           use Ada.Characters.Handling;
+-- with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 with Ada.Strings.Unbounded;             use Ada.Strings.Unbounded;
 
-with Interfaces;                        use Interfaces;
+-- with Interfaces;                        use Interfaces;
 
 -- Header end.
 

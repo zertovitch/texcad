@@ -1,11 +1,11 @@
-with GT_tokens;
+with GT_Tokens;
 
-package YYroutines is
+package GT_YYroutines is
 
-  use GT_tokens;
+  use GT_Tokens;
 
   function YYLex return Token;
 
   procedure UnYYLex(tok : Token);
 
-end YYroutines;
+end;
