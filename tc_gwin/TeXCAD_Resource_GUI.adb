@@ -1,18 +1,19 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2012/06/22  16:02:14
+-- Transcription time: 2013/03/28   14:37:32
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 23-May-2012
+-- RC Grammar version: 25-Nov-2012
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
 with GWindows.Drawing;                  use GWindows.Drawing;
 with GWindows.Drawing_Objects;
+with GWindows.GStrings;                 use GWindows.GStrings;
 with System;
 
 package body TeXCAD_Resource_GUI is
@@ -61,10 +62,10 @@ package body TeXCAD_Resource_GUI is
     GWindows.Base.Set_Font (Window, Common_Fonts.GUI_Font);
   end Use_GUI_Font;
 
-  function Num_resource(id: Natural) return String is
+  function Num_resource(id: Natural) return GString is
     img: constant String:= Integer'Image(id);
   begin
-    return '#' & img(img'first+1..img'Last);
+    return To_GString_from_String('#' & img(img'first+1..img'Last));
   end Num_resource;
 
   package body Common_Fonts is

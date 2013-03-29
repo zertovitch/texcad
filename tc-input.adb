@@ -90,26 +90,28 @@ package body TC.Input is
 
     procedure Read_line is --  GH
     begin
-       if End_Of_File(tf) then
-         if mode = 2 then
-           line_len:= 0;
-           end_of_parsing:= True;
-         else
-           Error("Unexpected end of file");
-         end if;
-       else
-         if End_Of_Line(tf) then
-           Skip_Line(tf);
-         end if;
-         Get_Line(tf, line_buf, line_len);
-         if line_len > 0 and then line_buf(line_len) = ASCII.CR then
-           -- Linux & Co has only ASCII.LF as line terminator, then
-           -- the CR of a DOS/Windows file appears at line end.
-           line_len:= line_len - 1;
-         end if;
-         line_n:= line_n + 1;
-       end if;
-       p:=1;
+      loop
+        if End_Of_File(tf) then
+          if mode = 2 then
+            line_len:= 0;
+            end_of_parsing:= True;
+          else
+            Error("Unexpected end of file");
+          end if;
+          exit;
+        else
+          Get_Line(tf, line_buf, line_len);
+          if line_len > 0 and then line_buf(line_len) = ASCII.CR then
+            -- Linux & Co has only ASCII.LF as line terminator, then
+            -- the CR of a DOS/Windows file appears at line end when parsed
+            -- on Linux.
+            line_len:= line_len - 1;
+          end if;
+          line_n:= line_n + 1;
+        end if;
+        p:= 1;
+        exit when line_len > 0; -- skip all blank lines
+      end loop;
     end Read_line;
 
     procedure Read_ch is --  JW,GH
