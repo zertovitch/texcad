@@ -1,9 +1,7 @@
 ayacc gt.y Off Off On Off Off .a On
 gnatchop -w gt.a
 
-pause
-
-aflex -i -E gt.l
+aflex -i -x -E gt.l
 
 gnatchop -w gt_io.a
 gnatchop -w gt_dfa.a

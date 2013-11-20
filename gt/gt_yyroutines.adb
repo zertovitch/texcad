@@ -1,4 +1,4 @@
-with GT_YYlex, GT_Tokens;
+with GT_Lex, GT_Tokens;
 
 package body GT_YYroutines is
   use GT_Tokens;
@@ -13,7 +13,7 @@ package body GT_YYroutines is
       HaveLookahead := False;
       return Lookahead;
     else
-      return GT_YYlex;
+      return GT_Lex;
     end if;
   end YYLex;
 

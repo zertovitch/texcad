@@ -13,7 +13,7 @@ with gt_io; use gt_io;
 with GT_Tokens; use GT_Tokens;
 with GT_Help;   use GT_Help;
 
-function YYLex return Token is
+function gt_Lex return Token is
 subtype Short is Integer range -32768..32767;
     yy_act : Integer;
     yy_c   : Short;
@@ -460,5 +460,5 @@ when YY_END_OF_BUFFER + INITIAL + 1 =>
                     raise AFLEX_INTERNAL_ERROR;
             end case; -- case (yy_act)
         end loop; -- end of loop waiting for end of file
-end YYLex;
+end gt_Lex;
 --# line 80 "gt.l"
