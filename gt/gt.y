@@ -135,7 +135,7 @@ edge_property:
 with GT_Tokens, GT_Shift_Reduce, GT_Goto, GT_Help, GT_IO, GT_YYroutines;
 use  GT_Tokens, GT_Shift_Reduce, GT_Goto, GT_Help, GT_IO, GT_YYroutines;
 
-with YYerror;
+with GT_YYerror;
 
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Text_IO; -- for compat.

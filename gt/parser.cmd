@@ -11,3 +11,4 @@ del gt_io.a
 del gt_dfa.a
 del gt.a
 
+gnatmake -P gt
