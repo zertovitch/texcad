@@ -10,7 +10,7 @@ with Ada.Characters.Handling;           use Ada.Characters.Handling;
 with Ada.Text_IO;                       use Ada.Text_IO;
 
 with TC;
-with GT_IO, GT_Help, YYParse;
+with GT_IO, GT_Help, GT_Parse;
 
 procedure GT2Pic is
   Inp_Opened  : Boolean := False;
@@ -76,7 +76,7 @@ begin
 
   --  RC_Help.Ada_Begin;
 
-  YYParse;
+  GT_Parse;
 
   if Inp_Opened then
     GT_Help.Save_picture(Name(GT_IO.user_input_file) & ".pic");

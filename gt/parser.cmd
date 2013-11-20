@@ -1,5 +1,7 @@
-ayacc gt.y
+ayacc gt.y Off Off On Off Off .a On
 gnatchop -w gt.a
+
+pause
 
 aflex -i -E gt.l
 
