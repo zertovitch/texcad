@@ -25,15 +25,15 @@
 \put(4.25,79.75){\makebox(0,0)[cc]{1995}}
 \put(4.25,98){\makebox(0,0)[cc]{1990}}
 \put(4.25,116.25){\makebox(0,0)[cc]{1985}}
-\put(18,42.75){\framebox(33,20)[cc]
-{\begin{tabular}{l}TeXCAD 4.0\\ \hline Kernel: portable\\GUI for Windows\\ \hline Ada\end{tabular}}}
-\put(18.125,0){\framebox(33,20)[cc]
-{\begin{tabular}{l}TeXCAD 4.3\\ \hline Kernel: portable\\GUI for Windows\\ \hline Ada\end{tabular}}}
+\put(18,42.75){\framebox(39,20)[cc]
+{\begin{tabular}{l}TeXCAD 4.0\\ \hline Kernel: portable\\GUI: for Windows\\ \hline Ada\end{tabular}}}
+\put(18.125,0){\framebox(39,20)[cc]
+{\begin{tabular}{l}TeXCAD 4.3\\ \hline Kernel: portable\\GUI: for Windows\\ \hline Ada\end{tabular}}}
 \put(102.199,48.5){\framebox(33,20)[cc]
-{\begin{tabular}{l}TeXCAD 2.4\\ \hline Linux\end{tabular}}}
+{\begin{tabular}{l}TeXCAD 2.4\\ \hline Linux\\ \hline ? \end{tabular}}}
 \put(60.625,94.5){\framebox(33,20)[cc]
 {\begin{tabular}{l}TeXCAD 3.2\\ \hline DOS\\ \hline Turbo Pascal\end{tabular}}}
-\put(63.352,43.522){\framebox(33,20)[cc]
+\put(63.352,43.522){\framebox(35,20)[cc]
 {\begin{tabular}{l}Texcad32 4.4.2\\ \hline Windows\\ \hline Delphi\end{tabular}}}
 \thicklines
 %\vector{dash}{1}(88.504,91.658)(102.379,70.425)
