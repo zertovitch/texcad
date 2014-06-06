@@ -1,13 +1,8 @@
-with Ada.Text_IO;                       use Ada.Text_IO;
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
-
-with Ada.Exceptions;
+with Ada.Exceptions, Ada.Strings.Fixed, Ada.Text_IO;
 
 with TC.IO_Commands;                    use TC.IO_Commands;
 
 package body TC.Input is
-
-  use RIO;
 
   procedure Which_command(com: String; art: out Obj_art_type;
                           options: Boolean; k: out Kom_type) is --  JW
@@ -44,7 +39,7 @@ package body TC.Input is
     subtype Big_String is String(1..4090);
 
     --  JW,GH
-    tf: File_Type;
+    tf: Ada.Text_IO.File_Type;
     line_buf, com, arg  : Big_String;
     dum_str             : Small_String;
     line_n, line_len,
@@ -63,7 +58,7 @@ package body TC.Input is
     mode: mode_int;
     -- Fix 23-Apr-2003: End_of_File(tf) before the end of parsing (prefetch)
 
-    use TC.Units;
+    use TC.Units, Ada.Strings, Ada.Strings.Fixed, Ada.Text_IO;
 
     procedure Error(msg_0: String) is --  JW,GH
       h: constant String:= Integer'Image(line_n);
@@ -99,18 +94,17 @@ package body TC.Input is
             Error("Unexpected end of file");
           end if;
           exit;
-        else
-          Get_Line(tf, line_buf, line_len);
-          if line_len > 0 and then line_buf(line_len) = ASCII.CR then
-            -- Linux & Co has only ASCII.LF as line terminator, then
-            -- the CR of a DOS/Windows file appears at line end when parsed
-            -- on Linux.
-            line_len:= line_len - 1;
-          end if;
-          line_n:= line_n + 1;
         end if;
+        Get_Line(tf, line_buf, line_len);
+        if line_len > 0 and then line_buf(line_len) = ASCII.CR then
+          -- Linux & Co has only ASCII.LF as line terminator, then
+          -- the CR of a DOS/Windows file appears at line end when parsed
+          -- on Linux.
+          line_len:= line_len - 1;
+        end if;
+        line_n:= line_n + 1;
         p:= 1;
-        exit when line_len > 0; -- skip all blank lines
+        exit when line_len > 0; -- skip all empty lines
       end loop;
     end Read_line;
 
@@ -426,7 +420,7 @@ package body TC.Input is
       com_len:= 0;
       Read_word;
       if com(1..com_len) /= "\unitlength" then
-        Put(vi,v,5,0);
+        RIO.Put(vi,v,5,0);
         pts:= Convert( Trim(vi,Left) & com(1..com_len), pt );
         v:= pts / pic.ul_in_pt;
         -- Put('[' & Trim(vi,left) & com(1..com_len) & ',');
@@ -496,21 +490,20 @@ package body TC.Input is
       Seek_ch('('); Read_slope(o.line_slope(h));
       Seek_ch(','); Read_slope(o.line_slope(v)); Seek_ch(')');
       Read_real_arg(o_len);
-      if  o.line_slope(h) /=0 then
+      if  o.line_slope(h) = 0 then
+        o.P2.x:= o.P1.x;
+        o.P2.y:= o.P1.y + o_len*Real(o.line_slope(v));
+      else
         if  o.line_slope(h) > 0 then
           o.P2.x:= o.P1.x + o_len;
         else
           o.P2.x:= o.P1.x - o_len;
         end if;
-        if  o.line_slope(v) /= 0 then
-          o.P2.y:= o.P1.y + o_len /
-            Real(abs o.line_slope(h) )*Real(o.line_slope(v));
-        else
+        if  o.line_slope(v) = 0 then
           o.P2.y:= o.P1.y;
+        else
+          o.P2.y:= o.P1.y + o_len / Real(abs o.line_slope(h) )*Real(o.line_slope(v));
         end if;
-      else
-        o.P2.x:= o.P1.x;
-        o.P2.y:= o.P1.y + o_len*Real(o.line_slope(v));
       end if;
     end Read_line_vector_parameters;
 

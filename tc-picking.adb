@@ -16,14 +16,12 @@ package body TC.Picking is
   )
   is
     dist_max, dist_max_2, txt_dist2: Real;
-    a: ptr_obj_type:= p.root;
+    a: ptr_Obj_type:= p.root;
 
     last_near_dist: Real; -- 2007
 
-    use REF;
-
     function Near_Point return Boolean is
-      use TC.Graphics;
+      use REF, TC.Graphics;
 
       function Near_Text( T: Point ) return Boolean is
         x_adj: Natural;
@@ -48,7 +46,7 @@ package body TC.Picking is
       function Near_Box( P1, P2: Point; frame: Boolean) return Boolean is
         dist: Real;
       begin
-        if frame then -- distance to frame
+        if frame then -- Distance to frame:
           -- vertical range
           if M1.y >= P1.y - dist_max and then M1.y <= P2.y + dist_max then
             if abs(M1.x - P1.x) <= dist_max then     -- left side
@@ -70,20 +68,20 @@ package body TC.Picking is
             end if;
           end if;
           return a.art=box and then Near_Text( Position_of_text( a.all ));
-        else -- distance to full box
-          dist:= Real'Max(P1.x - M1.x, M1.x - P2.x);
-          dist:= Real'Max(dist, P1.y - M1.y);
-          dist:= Real'Max(dist, M1.y - P2.y);
-          if dist <= dist_max then
-            last_near_dist:= dist;
-            return True;
-          end if;
+        end if;
+        -- Distance to full box:
+        dist:= Real'Max(P1.x - M1.x, M1.x - P2.x);
+        dist:= Real'Max(dist, P1.y - M1.y);
+        dist:= Real'Max(dist, M1.y - P2.y);
+        if dist <= dist_max then
+          last_near_dist:= dist;
+          return True;
         end if;
         return False;
       end Near_Box;
 
     function Near_Line return Boolean is
-      slope,h_slope,v_slope,dx,dy,aux:real;
+      slope,h_slope,v_slope,dx,dy,aux: Real;
       P,A1,A2: Point;
     begin
       if a.any_slope then
@@ -124,17 +122,17 @@ package body TC.Picking is
       return False;
     end Near_Line;
 
-    function Near_bezier return Boolean is
+    function Near_Bezier return Boolean is
       near: Boolean:= False;
       procedure N(P:Point) is
         dist: Real;
       begin
         if Norm2(M1-P) <= dist_max_2 then
           dist:= Sqrt(Norm2(M1-P));
-          if not near then
-            last_near_dist:= dist;
-          else
+          if near then
             last_near_dist:= Real'Min(dist, last_near_dist);
+          else
+            last_near_dist:= dist;
           end if;
           near:= True;
         end if;
@@ -217,7 +215,7 @@ package body TC.Picking is
 
     found: Boolean;
 
-    has_modifiable_info: constant array(obj_art_type) of Boolean:=
+    has_modifiable_info: constant array(Obj_art_type) of Boolean:=
       (txt | putaux | box | oval | bezier => True, others=> False);
 
     min_dist: Real:= Real'Last;
@@ -247,9 +245,9 @@ package body TC.Picking is
     while a /= null loop
       case op is
         when pick      | unpick      =>
-          found:= Near_point;
+          found:= Near_Point;
         when pick_area | unpick_area =>
-          found:= In_area;
+          found:= In_Area;
         when pick_all  | unpick_all  =>
           found:= True;
         when pick_text =>
@@ -257,7 +255,7 @@ package body TC.Picking is
             if (a.art=box and then a.solid) then
               found:= False;
             else
-              found:= Near_point;
+              found:= Near_Point;
             end if;
           else
             found:= False;
@@ -290,7 +288,7 @@ package body TC.Picking is
       if a.pick_swap_candidate then
         case op is
           when pick | pick_area | pick_all | pick_text =>
-            if op /= pick or else Almost_Zero(a.pick_distance - min_dist) then
+            if op /= pick or else Almost_zero(a.pick_distance - min_dist) then
               a.picked:= True;
               p.picked:= p.picked + 1;
               if hidden( a.art ) then
@@ -300,7 +298,7 @@ package body TC.Picking is
               exit when op = pick_text or op = pick;
             end if;
         when unpick | unpick_area | unpick_all =>
-          if op /= unpick or else Almost_Zero(a.pick_distance - min_dist) then
+          if op /= unpick or else Almost_zero(a.pick_distance - min_dist) then
             a.picked:= False;
             p.picked:= p.picked - 1;
             if hidden( a.art ) then

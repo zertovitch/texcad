@@ -4,11 +4,6 @@
 
 package TC.IO_Commands is
 
-  type kom_ident is record
-    art: Obj_art_type;
-    kom: String(1 ..15);
-  end record;
-
   type Kom_type is
            (cmakebox,                   -- text
             cframebox,

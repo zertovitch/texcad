@@ -1,13 +1,11 @@
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Characters.Handling;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 
-with Ada.Numerics;                      use Ada.Numerics;
+with Ada.Numerics;
 
 with TC.IO_Commands;                    use TC.IO_Commands;
 
 package body TC.Output is
-
-  use REF, RIO;
 
   function Max(a,b,c:Real) return Real is --  GH
   begin
@@ -192,7 +190,9 @@ package body TC.Output is
     tf: Ada.Text_IO.File_Type renames file;
     o: ptr_Obj_type;
     s1,s2,Pmin,Pmax: Point;
-    pointnum: Integer;
+    pointnum: Natural;
+
+    use REF;
 
     current_LaTeX_ls: Line_settings:= normal_line_settings;
     -- ^ 2-Mar-2004. Tracks changes in settings (esp. thickness) in the
@@ -224,7 +224,7 @@ package body TC.Output is
       if Ada.Text_IO."<"(Ada.Text_IO.Col(tf), 75) then
         Forget_Last_New_Line(tf);
       end if;
-    end Pack_line;
+    end Pack_Line;
 
     procedure End_of_emulation is
     begin
@@ -234,7 +234,6 @@ package body TC.Output is
     procedure Write_line_any_slope(
       M       : in out Point;
       PP      :        Point;
-      pointnum: in out Integer;
       stretch :        Integer)
     is
     --  JW
@@ -309,17 +308,17 @@ package body TC.Output is
       M:= PP;
     end Write_line_any_slope;
 
-    procedure write_reduced_emlines(
+    procedure Write_reduced_emlines(
       M, Q : in out Point;
-      PP: Point; no_start: Boolean;
-      pointnum     : in out Integer) is
+      PP: Point; no_start: Boolean)
+    is
       --  JW, GM
       --  Fasst EMlinien mit fast gleicher Steigung zusammen
       s1,s2,df: Real;
     begin
       if no_start then
         if not pic.opt.reduce then
-          Write_line_any_slope( M, Q, pointnum, 0);
+          Write_line_any_slope( M, Q, 0);
         elsif
           abs(PP.x-M.x) > 0.01  and  abs(PP.y-M.y) > 0.01 and
           -- Bug found thanks to GNAT's validity checks:
@@ -329,21 +328,21 @@ package body TC.Output is
           s2:=(PP.y-Q.y) / (PP.x-Q.x);
           df:= abs(s1-s2);
           if df > pic.opt.stdiff then
-            Write_line_any_slope( M, Q, pointnum, 0);
+            Write_line_any_slope( M, Q, 0);
           end if;
         end if;
       end if;
       Q:= PP;
-    end write_reduced_emlines;
+    end Write_reduced_emlines;
 
-    procedure Write_emline_bezier(o: Obj_type; pointnum: in out Integer) is
+    procedure Write_emline_bezier(o: Obj_type) is
       --  JW , GM
       M, Q: Point;
       no_start: Boolean:= False;
 
       procedure PlotPoint( P: Point ) is
       begin
-        write_reduced_emlines( M, Q, P, no_start,pointnum );
+        Write_reduced_emlines( M, Q, P, no_start );
         no_start:= True;
       end PlotPoint;
 
@@ -355,10 +354,12 @@ package body TC.Output is
       -- ^ Unused at start, just calms down
       -- validity check (-gnatVa) + pragma Initialize_Scalars
       Draw_Bezier(o,pic.ul_in_pt);
-      Write_line_any_slope( M, o.PE, pointnum, 0);
+      Write_line_any_slope( M, o.PE, 0);
     end Write_emline_bezier;
 
-    procedure write_kreis( o: Obj_type; Pmin: Point; pointnum: in out Integer) is
+    procedure Write_kreis( o: Obj_type; Pmin: Point ) is
+
+      use Ada.Numerics;
 
       procedure Write_circle_with_lines(C: Point; as_command: Boolean) is
         --  JW, GM
@@ -377,10 +378,10 @@ package body TC.Output is
         M:= C + (o.rad,0.0);
         while t < pid loop
           PP:= o.rad * ( Cos(t), Sin(t) ) + o.P1;
-          write_reduced_emlines( M, Q, PP, not Almost_zero(t), pointnum );
+          Write_reduced_emlines( M, Q, PP, not Almost_zero(t) );
           t:= t+dt;
         end loop;
-        Write_line_any_slope( M, o.P1 - Pmin + (o.rad,0.0), pointnum, 0);
+        Write_line_any_slope( M, o.P1 - Pmin + (o.rad,0.0), 0);
         if as_command then
           End_of_emulation;
         end if;
@@ -398,10 +399,10 @@ package body TC.Output is
           prec: constant Integer:= current_precision + 1;
           with_frames: constant Boolean:= False; -- For seeing what's done
         begin
-          if rep /= single then
-            Put(tf, "\multiput");
-          else
+          if rep = single then
             Put(tf, Img_track(cput));
+          else
+            Put(tf, "\multiput");
           end if;
           Put(tf, Pt(C+P1-(pad,pad),prec));
           if rep /= single then
@@ -458,7 +459,7 @@ package body TC.Output is
           pad:= pad / pic.ul_in_pt;
         end if;
         Put_Line(tf,"%\circle*" & Pt(C) & Br(2.0*o.rad));
-        Fill( (0.0,0.0), 0.0, pi / 2.0 );
+        Fill( (0.0,0.0), 0.0, Pi / 2.0 );
         Write_circle_with_lines(o.P1 - Pmin, as_command => False);
         -- For disc: just a fine outline, no command
         End_of_emulation;
@@ -476,7 +477,7 @@ package body TC.Output is
       else
         Write_circle_with_lines(o.P1 - Pmin, as_command => True);
       end if;
-    end write_kreis;
+    end Write_kreis;
 
     function Arrows_option_image( ls: Line_settings ) return String is
     begin
@@ -528,7 +529,7 @@ package body TC.Output is
         else
           Put(tf,'%');
           Write_bezier_command(o);
-          Write_emline_bezier(o,pointnum);
+          Write_emline_bezier(o);
           End_of_emulation;
         end if;
       else                           -- %\bezvec or %\qbezvec
@@ -542,7 +543,7 @@ package body TC.Output is
         if pic.opt.sty(bezier) then
           Write_bezier_command(o, force_no_vec => True);
         else
-          Write_emline_bezier(o,pointnum);
+          Write_emline_bezier(o);
         end if;
         End_of_emulation;
       end if;
@@ -580,7 +581,7 @@ package body TC.Output is
              Pt(s1) & Pt(s2) );             -- (0,0)(10,10)
           Write_vector_arrows(s1,s2,o.ls.arrows);
       end case;
-      Write_line_any_slope( s1, s2, pointnum, o.ls.stretch );
+      Write_line_any_slope( s1, s2, o.ls.stretch );
       -- ^ emline, epic or emulation
       case o.ls.arrows is
         when no_arrow =>
@@ -767,7 +768,7 @@ package body TC.Output is
         for i in 1..ns loop
           Pb:= E1p + Real(i) * D;
           if i mod 2 =1 then
-            Write_line_any_slope( Pa, Pb, pointnum, 0 );
+            Write_line_any_slope( Pa, Pb, 0 );
             -- ^ emline or emulation
           end if;
           Pa:= Pb;
@@ -843,6 +844,7 @@ package body TC.Output is
       o_len: Real;
       special_arrows_limited_slope: constant Boolean:=
         o.art = line and o.ls.arrows in both .. middle;
+      use Ada.Characters.Handling;
     begin
       if special_arrows_limited_slope then
         -- %\vector command around!
@@ -969,10 +971,10 @@ package body TC.Output is
                 s2:= o.P1 - 0.5 * o.osize;
 
              when bezier =>
-                s1.x:=  max( o.P1.x, o.PC.x, o.PE.x);
-                s2.x:= -max(-o.P1.x,-o.PC.x,-o.PE.x);
-                s1.y:=  max( o.P1.y, o.PC.y, o.PE.y);
-                s2.y:= -max(-o.P1.y,-o.PC.y,-o.PE.y);
+                s1.x:=  Max( o.P1.x, o.PC.x, o.PE.x);
+                s2.x:= -Max(-o.P1.x,-o.PC.x,-o.PE.x);
+                s1.y:=  Max( o.P1.y, o.PC.y, o.PE.y);
+                s2.y:= -Max(-o.P1.y,-o.PC.y,-o.PE.y);
 
              when others => -- includes aux
                 s1:= (-1.0)*Pinf;
@@ -1053,7 +1055,7 @@ package body TC.Output is
 
      if pic.ul_in_pt > 0.0 then
        current_precision:= default_precision +
-         Integer'Max(0, Integer(log(pic.ul_in_pt) / log(10.0) - 0.5));
+         Integer'Max(0, Integer(Log(pic.ul_in_pt) / Log(10.0) - 0.5));
        -- Add extra precision when 1 UL is a "big" distance
      else
        current_precision:= default_precision;
@@ -1088,7 +1090,7 @@ package body TC.Output is
         else  -- Something else (not an em-line/vector)
           case o.art is
             when bezier      => Write_bezier(o.all);
-            when circ | disc => Write_kreis(o.all, Pmin, pointnum);
+            when circ | disc => Write_kreis(o.all, Pmin);
             when aux         => Put(tf,To_String(o.inhalt));
             when others =>
               if o.art = box and o.ls.pattern=dot then
@@ -1115,7 +1117,7 @@ package body TC.Output is
     use Ada.Text_IO;
     tf: File_Type;
   begin
-    Create(tf,out_file,file_name);
+    Create(tf,Out_File,file_name);
     Insert(pic,macro,tf,displayed_name);
     Close(tf);
     if not macro then pic.saved:= True; end if;
@@ -1124,7 +1126,7 @@ package body TC.Output is
   procedure Insert_and_Wrap_in_document(
     pic  : in Picture;
     macro:    Boolean;
-    file :    Ada.Text_IO.File_type;
+    file :    Ada.Text_IO.File_Type;
     title:    String )
   is
     use Ada.Text_IO;

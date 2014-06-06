@@ -1,4 +1,4 @@
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Characters.Handling;
 
 package body TC.Morphing is
 
@@ -49,7 +49,7 @@ package body TC.Morphing is
   end Text_align_to_oval_corner;
 
   procedure Oval_corner_to_text_align(o: in out Obj_type; corner: Ovop) is
-    a: constant String:= To_Lower(Ovop'Image(corner));
+    a: constant String:= Ada.Characters.Handling.To_Lower(Ovop'Image(corner));
   begin
     case corner is
       when entire => o.adjust_len:= 0; -- same as "cc"
@@ -405,7 +405,7 @@ package body TC.Morphing is
 
   -- 28-May-2003 -- Affine transformation with factors Diag.x, Diag.y
   procedure Affine( o: in out Obj_type; Center, Diag: Point; pt_scale: Real ) is
-    Dabs: constant Point:= (abs Diag.x, abs diag.y);
+    Dabs: constant Point:= (abs Diag.x, abs Diag.y);
   begin
     Affine_positive( o, Center, Dabs, pt_scale );
     if Diag.x < 0.0 then

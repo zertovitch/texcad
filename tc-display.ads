@@ -13,7 +13,7 @@ generic
   with procedure Full_rectangle( x1,y1,x2,y2: Integer );
   with procedure Ellipse( x,y, rx,ry: Integer; fill: Boolean );
   with procedure Arc( x,y, a1,a2, r: Integer );
-  with procedure SetTextJustify( h: Graphics.H_Justify; v: Graphics.V_Justify );
+  with procedure SetTextJustify( h: Graphics.H_justify; v: Graphics.V_justify );
   with procedure OutTextXY( x,y: Integer; t: String );
 
 package TC.Display is

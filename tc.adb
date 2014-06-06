@@ -523,7 +523,7 @@ package body TC is
   end Almost_zero;
 
   procedure Improve_linvec(o: in out Obj_type; ul_pt: Real) is
-    dx,dy,dpt: Real;
+    dx,dy: Real;
     threshold: constant:= 14.142136;
     -- ^ Above Sqrt(2) * 10pt, LaTeX dares to display
     LaTeX_displays: Boolean;
@@ -544,6 +544,7 @@ package body TC is
         if LaTeX_displays then -- A too short \line will not be displayed!
           declare
             olatex: Obj_type:= o;
+            dpt: Real;
           begin
             olatex.any_slope:= False;
             Set_slope_of_linvec(olatex);

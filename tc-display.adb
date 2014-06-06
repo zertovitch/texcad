@@ -408,19 +408,19 @@ package body TC.Display is
   begin
     SetColor( pick_to_zone( o.picked ) );
     case o.art is
-      when txt         => draw_text(o);
-      when box         => draw_box(o);
-      when line        => draw_line(o);
-      when circ | disc => draw_circ(o);
-      when oval        => draw_oval(o);
+      when txt         => Draw_text(o);
+      when box         => Draw_box(o);
+      when line        => Draw_line(o);
+      when circ | disc => Draw_circ(o);
+      when oval        => Draw_oval(o);
       when bezier      => Bezier_and_arrows(o);
-      when putaux      => draw_unknown_put(o);
+      when putaux      => Draw_unknown_put(o);
       when others=> null;
     end case;
   end Draw;
 
   procedure Draw (p: in out Picture) is
-    o: ptr_obj_type;
+    o: ptr_Obj_type;
   begin
     if p.refresh = no then return; end if;
     -- ^ NB: for performance sake, it is a good idea to treat that case
