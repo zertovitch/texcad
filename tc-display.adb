@@ -39,10 +39,12 @@ package body TC.Display is
     end if;
     if s'Length > 2 and then
          ( (s(s'First)='{' and s(s'Last)='}') or
-           (s(s'First)='$' and s(s'Last)='$') ) then
+           (s(s'First)='$' and s(s'Last)='$') )
+    then
       return Abbr(s( s'First+1 .. s'Last-1 ));
     elsif s'Length > 1 and then
-       s(s'First)='\' then
+       s(s'First)='\'
+    then
       for i in reverse s'Range loop
         if s(i)=' ' then e:= i; end if;
       end loop;
@@ -293,7 +295,8 @@ package body TC.Display is
     stepy: constant:= 1.0;
   begin
     if gen_opt.grid /= none and then
-       h_mag > small and then v_mag > small then
+       h_mag > small and then v_mag > small
+    then
       cx:= Integer(Real(m_x)/h_mag);
       cy:= Integer(Real(m_y)/v_mag);
       SetColor( shadow );

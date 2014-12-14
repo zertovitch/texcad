@@ -314,7 +314,8 @@ package body TC.GWin.MDI_Main is
     pragma Warnings(Off,Left);
   begin
     if Window.record_dimensions and
-       not (Zoom(Window) or Minimized(Window)) then
+       not (Zoom(Window) or Minimized(Window))
+    then
       -- ^ Avoids recording dimensions before restoring them
       --   from previous session.
       -- We call the function since the Top/Left arguments are reversed -
@@ -332,7 +333,8 @@ package body TC.GWin.MDI_Main is
   begin
     Dock_Children(Window);
     if Window.record_dimensions and
-       not (Zoom(Window) or Minimized(Window)) then
+       not (Zoom(Window) or Minimized(Window))
+    then
       -- ^ Avoids recording dimensions before restoring them
       --   from previous session.
       TC.Gwin.Wwidth := Width;
@@ -821,7 +823,8 @@ package body TC.GWin.MDI_Main is
   is
   begin
     if Window.all in MDI_Picture_Child_Type'Class and then
-       MDI_Picture_Child.Success_In_Enumerated_Close then -- no [cancel] up to now
+       MDI_Picture_Child.Success_In_Enumerated_Close
+    then -- no [cancel] up to now
       GWindows.Base.Close (Window.all);
     end if;
   end My_Close_Win;

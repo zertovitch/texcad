@@ -1081,7 +1081,8 @@ package body TC.GWin.MDI_Picture_Child is
   begin
     for c in MDI_child_cmd loop
       if  Item = ID_custom(c) or else
-         (Item = ID_std(c) and then Item /= no_std_id) then
+         (Item = ID_std(c) and then Item /= no_std_id)
+      then
         Command(c);
         exit;
       end if;
