@@ -1,13 +1,13 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2013/03/28   14:37:32
+-- Transcription time: 2015/08/10  21:36:53
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 25-Nov-2012
+-- RC Grammar version: 05-Apr-2015
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -33,9 +33,9 @@ package TeXCAD_Resource_GUI is
     CompanyName: constant String:= "Free Software Foundation, Inc.";
     Authors: constant String:= "Georg Horn, Jörn Winkelmann, Gautier de Montmollin";
     FileDescription: constant String:= "TeXCAD, a LaTeX {picture} drawing program";
-    FileVersion: constant String:= "Ver. 4.3 (rev. a34)";
+    FileVersion: constant String:= "Ver. 4.3 (rev. a44)";
     InternalName: constant String:= "TeXCAD";
-    LegalCopyright: constant String:= "© 2003 .. 2013 Free Software Foundation";
+    LegalCopyright: constant String:= "© 2003 .. 2015 Free Software Foundation";
     OriginalFilename: constant String:= "TeXCAD.exe";
     ProductName: constant String:= "TeXCAD";
     ProductVersion: constant String:= "4.3";
@@ -143,7 +143,7 @@ package TeXCAD_Resource_GUI is
 
   procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class);
 
-  function Num_resource(id: Natural) return GString;
+  function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
   -- Last line of resource script file: 106
