@@ -88,7 +88,7 @@ BEGIN
             VALUE "CompanyName", "Free Software Foundation, Inc."
             VALUE "Authors", "Georg Horn, Jörn Winkelmann, Gautier de Montmollin"
             VALUE "FileDescription", "TeXCAD, a LaTeX {picture} drawing program"
-            VALUE "FileVersion", "Ver. 4.3 (rev. a44)"
+            VALUE "FileVersion", "Ver. 4.3"
             VALUE "InternalName", "TeXCAD"
             VALUE "LegalCopyright", "© 2003 .. 2015 Free Software Foundation"
             VALUE "OriginalFilename", "TeXCAD.exe"

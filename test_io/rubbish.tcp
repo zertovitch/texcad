@@ -1,0 +1,41 @@
+% This is a LaTeX picture output by TeXCAD.
+% File name: [rubbish.tcp].
+% Version of TeXCAD: 4.3
+% Reference / build: 29-Mar-2013 (rev. a34)
+% For new versions, check: http://texcad.sf.net/
+% Options on the following lines.
+%\grade{\on}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\quality{8.000}
+%\graddiff{0.005}
+%\snapasp{1}
+%\zoom{4.0000}
+\unitlength 1mm % = 2.845pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(158.005,143.67)(0,0)
+%%% Testing TC.Tools.Clean - See Test_TC_IO.adb %%%
+\bezier{156}(30.67,61)(49.33,68.33)(36.67,82)
+\bezier{180}(36.33,82)(12,91)(18.67,72.67)
+\bezier{276}(18.67,72.33)(31.67,39)(29.67,72)
+\bezier{412}(41.67,70.67)(75.67,42.33)(81,100.33)
+\put(74,45.67){\circle{0}}
+\put(85.33,120.17){\oval(74,47)[]}
+\put(123.67,72.83){\oval(68.67,23.67)[l]}
+\put(115.67,57.67){\oval(48,28.67)[rt]}
+\put(5,142.33){\vector(2,-1){30}}
+\put(35,127.33){\vector(4,-3){39}}
+\put(74,98.08){\vector(-4,1){42.33}}
+\put(31.67,108.67){\vector(4,1){84.33}}
+\put(116,129.75){\vector(-1,-3){11.92}}
+\put(104.08,94){\vector(-4,-3){23.75}}
+\put(39,98.33){\line(2,1){0}}
+\put(15,25.75){\makebox(0,0)[cc]{}}
+\put(27.75,23.75){}
+% Here a comment...
+\sbox{\plotpoint}{\rule[-0.200pt]{0.400pt}{0.400pt}}%
+\end{picture}

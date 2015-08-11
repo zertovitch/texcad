@@ -1,12 +1,16 @@
+with TC.Picking;
+
 package body TC.Tools is
 
   procedure Analyse(o: Obj_type; possible: out Cleanup_action) is
   begin
+    possible:= (others => False);
     case o.art is
-       when aux | txt | putaux | box =>
+       when txt | putaux =>
          if o.inhalt = "" then
            possible(empty_text):= True;
          end if;
+       when box =>
          if Almost_zero(Norm2(o.size)) then
            possible(zero_sized_object):= True;
          end if;
@@ -25,6 +29,12 @@ package body TC.Tools is
        when bezier =>
          if Almost_zero(Norm2(o.PE-o.P1)) then
            possible(zero_sized_object):= True;
+         end if;
+       when aux =>
+         if Length(o.inhalt) > 0 and then Element(o.inhalt, 1) = '%' then
+           possible(comment):= True;
+         else
+           possible(unknown_command):= True;
          end if;
        when others =>
          null;
@@ -54,24 +64,24 @@ package body TC.Tools is
   
   procedure Clean(pic: in out Picture; action: Cleanup_action) is
     o: ptr_Obj_type:= pic.root;
-    next: ptr_Obj_type;
     possible: Cleanup_action;
-    do_it: Boolean;
+    use TC.Picking;
   begin
+    PicPic(pic, unpick_all);
     while o /= null loop
       Analyse(o.all, possible);
-      do_it:= False;
       for topic in possible'Range loop
         if possible(topic) and action(topic) then
-          do_it:= True;
+          o.picked:= True;
+          pic.picked:= pic.picked + 1;
+          if hidden( o.art ) then
+            pic.picked_hidden:= pic.picked_hidden + 1;
+          end if;
         end if;
       end loop;
-      next:= o.next;
-      if do_it then
-        Dispose(o);
-      end if;
-      o:= next;
+      o:= o.next;
     end loop;
+    Del_picked(pic);
   end Clean;
 
 end TC.Tools;

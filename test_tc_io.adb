@@ -1,4 +1,4 @@
-with TC.Input, TC.Output;
+with TC.Input, TC.Output, TC.Tools;
 
 with Ada.Text_IO;                       use Ada.Text_IO;
 with Ada.Characters.Handling;           use Ada.Characters.Handling;
@@ -66,6 +66,24 @@ procedure Test_TC_IO is
     Close(f1);
   end Text_compare;
 
+  procedure Test_clean ( name: String ) is
+    use TC.Tools;
+    pic: TC.Picture;
+    stat: Detection_stat;
+    action: Cleanup_action;
+  begin
+    for topic in Detection loop
+      TC.Input.Load( pic, False, name & ".tcp");
+      action:= (others => False);
+      action(topic):= True;
+      TC.Tools.Detect( pic, stat );
+      if stat(topic).number > 0 then
+        TC.Tools.Clean( pic, action );
+        TC.Output.Save( pic, False, name & "_Clean_" & Detection'Image(topic) & ".out", "");
+      end if;
+    end loop;
+  end Test_clean;
+
   procedure Test_one( name: String; across_sty: Boolean ) is
     pic: TC.Picture;
 
@@ -131,11 +149,11 @@ procedure Test_TC_IO is
   begin
     Put(" [Load... ");
     Test_one(name, across_sty);
+    Test_clean(name);
   exception
     when Name_Error =>
       Test_one(To_Lower(name), across_sty);
   end;
-
 
   use TC.Units;
 
@@ -203,6 +221,7 @@ begin
       Test("web" & n(3..5));
     end;
   end loop;
+  Test("rubbish");  --  Testing TC.Tools.Clean
   Test("gnuplot1");
   Test("gnuplot2");
   Test("gnuplot3", True);
