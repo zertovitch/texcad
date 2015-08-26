@@ -47,6 +47,8 @@ package TC.GWin.Lang.English is
          esavemac   => U("&Save macro"),
          eloadmac   => U("&Load macro"),
          eedit      => U("&Edit"),
+         ttools     => U("&Tools"),
+         tclean     => U("&Cleanup"),
          vview      => U("&View"),
          vtogdtb    => U("&Drawing tools"),
          vtogltb    => U("&Line settings"),

@@ -6,6 +6,7 @@ with TC.GWin.Display;                   use TC.GWin.Display;
 with TC.GWin.Mousing;                   use TC.GWin.Mousing;
 with TC.GWin.Menus;
 with TC.GWin.Previewing;
+with TC.GWin.Tools;
 
 with GWindows.Application;              use GWindows.Application;
 with GWindows.Buttons;                  use GWindows.Buttons;
@@ -196,7 +197,7 @@ package body TC.GWin.MDI_Picture_Child is
   end On_Paint;
 
   procedure Create_Menus (Window : in out MDI_Picture_Child_Type)  is
-  Main: constant Menu_Type := Create_Menu;
+    Main: constant Menu_Type := Create_Menu;
   begin
     Window.File_menu:= TC.GWin.Menus.Create_File_Menu(is_child => True);
     Append_Menu (Main, Msg(ffile), Window.File_menu);
@@ -210,6 +211,8 @@ package body TC.GWin.MDI_Picture_Child is
     Window.Edit_menu:= TC.GWin.Menus.Create_Edit_Menu;
     Append_Menu (Main, Msg(eedit), Window.Edit_menu);
 
+    Append_Menu (Main, Msg(ttools), TC.GWin.Menus.Create_Tools_Menu);
+
     Window.View_menu:= TC.GWin.Menus.Create_View_Menu;
     Append_Menu (Main, Msg(vview), Window.View_menu);
 
@@ -217,7 +220,7 @@ package body TC.GWin.MDI_Picture_Child is
     Append_Menu (Main, Msg(wwindow), TC.GWin.Menus.Create_Wndw_Menu);
     Append_Menu (Main, Msg(hhelp), TC.GWin.Menus.Create_Help_Menu);
 
-    MDI_Menu (Window, Main, Window_Menu => 7);
+    MDI_Menu (Window, Main, Window_Menu => 8);
   end Create_Menus;
 
   procedure Do_Change_Cursor(Window : in out Base_Window_Type'Class) is
@@ -971,6 +974,7 @@ package body TC.GWin.MDI_Picture_Child is
         when zoom_minus => Zoom_picture(Window,-2);
         when zoom_plus  => Zoom_picture(Window,+2);
         when preview    => Preview(Window);
+        when clean_pic  => TC.GWin.Tools.Cleanup_dialog(Window);
         when pic_opt_dialog =>
           On_Picture_Options(
             Window,

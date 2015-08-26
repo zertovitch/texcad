@@ -23,6 +23,8 @@ package TC.GWin.Lang is
       etranslate, emirror, erotate, emorphing,
       edelete, ecopyclip, ecutclip, epasteclip,
       esavemac, eloadmac,
+    ttools,
+      tclean,
     vview,
       vtogdtb, vtogltb,
     oopt,

@@ -47,6 +47,8 @@ package TC.GWin.Lang.French is
          esavemac   => U("&Ecrire macro"),
          eloadmac   => U("&Lire macro"),
          eedit      => U("&Edition"),
+         ttools     => U("&Outils"),
+         tclean     => U("&Nettoyage"),
          vview      => U("&Affichage"),
          vtogdtb    => U("Outils de &Dessin"),
          vtogltb    => U("Paramètres des &lignes"),

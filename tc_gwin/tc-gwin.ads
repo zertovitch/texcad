@@ -76,6 +76,7 @@ package TC.GWin is
       -- Misc.:
       pic_opt_dialog,
       zoom_plus, zoom_minus,
+      clean_pic,
       preview,
       save, save_as, close,
       -- Only for MDI main:

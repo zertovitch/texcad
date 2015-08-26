@@ -96,6 +96,13 @@ package body TC.GWin.Menus is
     return m;
   end Create_Edit_Menu;
 
+  function Create_Tools_Menu return GWindows.Menus.Menu_Type is
+    m: constant Menu_Type:= Create_Popup;
+  begin
+    Append_Item (m, Msg(tclean), ID_custom(clean_pic));
+    return m;
+  end Create_Tools_Menu;
+
   function Create_View_Menu return GWindows.Menus.Menu_Type is
     m: constant Menu_Type:= Create_Popup;
   begin
@@ -109,7 +116,7 @@ package body TC.GWin.Menus is
   end Create_View_Menu;
 
   function Create_Options_Menu(is_child: Boolean) return GWindows.Menus.Menu_Type is
-  m: constant Menu_Type:= Create_Popup;
+    m: constant Menu_Type:= Create_Popup;
   begin
     Append_Item (m, Msg(ogenopt), ID_custom(gen_opt_dialog));
     if is_child then
