@@ -11,6 +11,9 @@
 
 #include "standard_ids.h"
 #include <windows.h>
+#include <commctrl.h>
+#include <richedit.h>
+#include "texcad.h"
 
 //#define VK_INSERT         0x2D
 //#define VK_DELETE         0x2E
@@ -51,6 +54,20 @@ Picking_cursor      CURSOR DISCARDABLE	"picking.cur"
 Text_Change_cursor  CURSOR DISCARDABLE	"chg_text.cur"
 Set_origin_cursor   CURSOR DISCARDABLE	"set_origin.cur"
 Finger_cursor       CURSOR DISCARDABLE	"finger.cur"
+
+//
+// Dialog resources
+//
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Cleanup_Dialog DIALOG 0, 0, 298, 110
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "CLEANUP"
+FONT 8, "Ms Shell Dlg"
+{
+    PUSHBUTTON      "CANCEL", IDCANCEL, 237, 90, 50, 14, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "&CLEANUP", IDOK, 181, 90, 50, 14, 0, WS_EX_LEFT
+    CONTROL         "", Detection_List, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 9, 7, 277, 77, WS_EX_LEFT
+}
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/08/10  21:36:53
+-- Transcription time: 2015/08/26  16:12:57
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -28,12 +28,45 @@ with Interfaces.C;                      use Interfaces.C;
 
 package TeXCAD_Resource_GUI is
 
+  type Cleanup_Dialog_Type is new Window_type with record
+
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    Detection_List: List_View_Control_Type;
+  end record; -- Cleanup_Dialog_Type
+
+  -- Dialog at resource line 68
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Cleanup_Dialog_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "CLEANUP";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Cleanup_Dialog_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
   package Version_info is
     Comments: constant String:= "TeXCAD is a program for drawing or retouching {picture}s in LaTeX.";
     CompanyName: constant String:= "Free Software Foundation, Inc.";
     Authors: constant String:= "Georg Horn, Jörn Winkelmann, Gautier de Montmollin";
     FileDescription: constant String:= "TeXCAD, a LaTeX {picture} drawing program";
-    FileVersion: constant String:= "Ver. 4.3 (rev. a44)";
+    FileVersion: constant String:= "Ver. 4.3";
     InternalName: constant String:= "TeXCAD";
     LegalCopyright: constant String:= "© 2003 .. 2015 Free Software Foundation";
     OriginalFilename: constant String:= "TeXCAD.exe";
@@ -51,6 +84,7 @@ package TeXCAD_Resource_GUI is
   -- These constants are needed for getting button and menu feedbacks.
 
   IDC_STATIC             : constant:=     -1;
+  Detection_List         : constant:=     -1;
   ID_FILE_NEW            : constant:=  57600;
   ID_FILE_OPEN           : constant:=  57601;
   ID_FILE_CLOSE          : constant:=  57602;
@@ -146,6 +180,6 @@ package TeXCAD_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 106
+  -- Last line of resource script file: 123
 
 end TeXCAD_Resource_GUI;

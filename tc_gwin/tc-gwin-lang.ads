@@ -1,3 +1,5 @@
+with TC.Tools;                          use TC.Tools;
+
 with Ada.Strings.Unbounded;
 
 package TC.GWin.Lang is
@@ -88,6 +90,15 @@ package TC.GWin.Lang is
     error,
     fnotfound,
     expl_pick,
+    -- Tools
+    cleanup,
+    topic,
+    occurrences,
+    first_pos,
+    clean_empty_text,
+    clean_zero_sized_object,
+    clean_unknown_command,
+    clean_comment,
     -- About
     blurb,
     authors,
@@ -157,6 +168,13 @@ package TC.GWin.Lang is
       TB_drawing       => vtogdtb,
       TB_line_settings => vtogltb,
       others => empty);
+
+  msg_for_cleanup: constant array(TC.Tools.Detection) of Message:=
+    ( empty_text         =>  clean_empty_text,
+      zero_sized_object  =>  clean_zero_sized_object,
+      unknown_command    =>  clean_unknown_command,
+      comment            =>  clean_comment
+    );
 
   function U (Source : String) return Ada.Strings.Unbounded.Unbounded_String
     renames Ada.Strings.Unbounded.To_Unbounded_String;
