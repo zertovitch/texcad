@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/08/26  16:12:57
+-- Transcription time: 2015/08/26  17:52:05
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -37,7 +37,7 @@ package TeXCAD_Resource_GUI is
     Detection_List: List_View_Control_Type;
   end record; -- Cleanup_Dialog_Type
 
-  -- Dialog at resource line 68
+  -- Dialog at resource line 69
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -180,6 +180,6 @@ package TeXCAD_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 123
+  -- Last line of resource script file: 124
 
 end TeXCAD_Resource_GUI;

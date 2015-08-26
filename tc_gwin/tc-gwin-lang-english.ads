@@ -146,6 +146,7 @@ package TC.GWin.Lang.English is
          fnotfound  => U("File not found"),
          expl_pick  => U("Pick / unpick object / area"),
          cleanup    => U("Cleanup"),
+         cleanup_selected    => U("Cleanup selected topics"),
          topic      => U("Topic"),
          occurrences => U("Occurrences"),
          first_pos  => U("First position"),

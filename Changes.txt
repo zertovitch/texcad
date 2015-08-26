@@ -1,6 +1,12 @@
 Major changes in TeXCAD
 =======================
 
+Version 4.4
+===========
+a48:
+- (Windows) Added a Tools menu, with cleanup entry
+- TC.Tools added, with picture cleanup
+
 Version 4.3
 ===========
 105:

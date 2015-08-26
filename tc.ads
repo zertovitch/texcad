@@ -16,8 +16,8 @@ package TC is
 
   use Ada.Strings.Unbounded;
 
-  version   : constant String:= "4.3";
-  reference : constant String:= "11-Aug-2015 (rev. a45)";
+  version   : constant String:= "4.4";
+  reference : constant String:= "26-Aug-2015 (rev. a48)";
   web       : constant String:= "http://texcad.sf.net/";
   mail      : constant String:= "gdemont@users.sf.net";
 

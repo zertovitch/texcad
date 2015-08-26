@@ -31,6 +31,7 @@ AAA_Main_Icon   ICON DISCARDABLE	"texcad.ico"
 Picture_Icon    ICON DISCARDABLE	"picture.ico"
 Grid_Icon       ICON DISCARDABLE	"grid.ico"
 Options_Icon    ICON DISCARDABLE	"options.ico"
+Tools_Icon      ICON DISCARDABLE	"tools.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -65,7 +66,7 @@ CAPTION "CLEANUP"
 FONT 8, "Ms Shell Dlg"
 {
     PUSHBUTTON      "CANCEL", IDCANCEL, 237, 90, 50, 14, 0, WS_EX_LEFT
-    DEFPUSHBUTTON   "&CLEANUP", IDOK, 181, 90, 50, 14, 0, WS_EX_LEFT
+    DEFPUSHBUTTON   "&CLEANUP SELECTED", IDOK, 117, 90, 114, 14, 0, WS_EX_LEFT
     CONTROL         "", Detection_List, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 9, 7, 277, 77, WS_EX_LEFT
 }
 

@@ -7,7 +7,9 @@ package TC.Tools is
   end record;
   type Detection_stat is array(Detection) of Occurrence;
   type Cleanup_action is array(Detection) of Boolean;   
-  
+  no_cleanup_action: constant Cleanup_action:= (others => False);
+
+
   procedure Detect(pic: Picture; stat: out Detection_stat);
   procedure Clean(pic: in out Picture; action: Cleanup_action);
 

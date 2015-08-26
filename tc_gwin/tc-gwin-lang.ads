@@ -92,6 +92,7 @@ package TC.GWin.Lang is
     expl_pick,
     -- Tools
     cleanup,
+    cleanup_selected,
     topic,
     occurrences,
     first_pos,

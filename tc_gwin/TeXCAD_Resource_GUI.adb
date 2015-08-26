@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/08/26  16:12:57
+-- Transcription time: 2015/08/26  17:52:05
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -21,7 +21,7 @@ package body TeXCAD_Resource_GUI is
   -- ** Generated code begins here \/ \/ \/.
 
 
-  -- Dialog at resource line 64
+  -- Dialog at resource line 65
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -88,12 +88,12 @@ package body TeXCAD_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-    Dlg_to_Scn(  181, 90, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  117, 90, 114, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "&CLEANUP", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "&CLEANUP", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK, Window, "&CLEANUP SELECTED", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "&CLEANUP SELECTED", x,y,w,h, ID => IDOK);
     if for_dialog then -- hide the non-closing button
       Hide(Window.IDOK_permanent);
     else -- hide the closing button
@@ -214,6 +214,6 @@ package body TeXCAD_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 123
+  -- Last line of resource script file: 124
 
 end TeXCAD_Resource_GUI;

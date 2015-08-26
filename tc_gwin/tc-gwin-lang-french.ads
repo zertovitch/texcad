@@ -146,6 +146,7 @@ package TC.GWin.Lang.French is
          fnotfound  => U("Fichier inexistant"),
          expl_pick  => U("Epingler / libérer objet / zone"),
          cleanup    => U("Nettoyer"),
+         cleanup_selected    => U("Nettoyer sujets sélectionnés"),
          topic      => U("Sujet"),
          occurrences => U("Occurrences"),
          clean_empty_text         => U("Texte vide"),

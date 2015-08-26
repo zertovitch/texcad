@@ -5,6 +5,7 @@ with TC.GWin.Lang;                      use TC.GWin.Lang;
 with TeXCAD_Resource_GUI;               use TeXCAD_Resource_GUI;
 
 with GWindows.Application;              use GWindows.Application;
+with GWindows.Base;
 with GWindows.Constants;                use GWindows.Constants;
 
 package body TC.GWin.Tools is
@@ -13,12 +14,25 @@ package body TC.GWin.Tools is
     d: TeXCAD_Resource_GUI.Cleanup_Dialog_Type;
     Result: Integer;
     stat: Detection_stat;
+    action: Cleanup_action:= no_cleanup_action;
+
+    procedure Get_Data
+      (Window : in out GWindows.Base.Base_Window_Type'Class)
+    is
+    pragma Unreferenced (Window);
+    begin
+      for topic in Detection loop
+        action(topic):= d.Detection_List.Is_Selected(Detection'Pos(topic));
+      end loop;
+    end Get_Data;
+
   begin
     Create_Full_Dialog(d, Window, Msg(cleanup));
-    d.IDOK.Text(Msg(cleanup));
+    d.IDOK.Text(Msg(cleanup_selected));
     d.IDCANCEL.Text(Msg(mcancel));
     d.Center;
-    d.Small_Icon("Options_Icon");
+    d.Small_Icon("Tools_Icon");
+    d.On_Destroy_Handler(Get_Data'Unrestricted_Access);
     Detect(Window.Draw_Control.picture, stat);
     d.Detection_List.Insert_Column(Msg(topic), 0, 210);
     d.Detection_List.Insert_Column(Msg(occurrences), 1, 90);
@@ -33,10 +47,12 @@ package body TC.GWin.Tools is
     Result:= Show_Dialog(d, Window);
     case Result is
       when IDOK     =>
-        Clean(Window.Draw_Control.picture, (others => True));  --  !! must be selectable
-        Window.Draw_Control.picture.saved:= False;
-        Window.Draw_Control.picture.refresh:= full;
-        Show_Totals(Window); -- show the '*' for modified
+        if action /= no_cleanup_action then
+          Clean(Window.Draw_Control.picture, action);
+          Window.Draw_Control.picture.saved:= False;
+          Window.Draw_Control.picture.refresh:= full;
+          Show_Totals(Window); -- show the '*' for modified
+        end if;
       when others   =>
         null; -- Contains IDCANCEL
     end case;
