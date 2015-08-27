@@ -6,8 +6,8 @@
 *.xls
 *.txt
 *.pra
-*.tex
-*.pdf
+doc\*.tex
+doc\*.pdf
 *.___
 gnat.ago
 verif.aru

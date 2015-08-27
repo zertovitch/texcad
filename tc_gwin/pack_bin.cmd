@@ -3,9 +3,11 @@
 if "%tcver%"=="" goto morale
 if "%distro%"=="" goto morale
 
-if exist ..\TeXCAD.pdf goto doc_ok
+if exist ..\doc\TeXCAD.pdf goto doc_ok
 cd ..
+cd doc
 call doc
+cd ..
 cd tc_gwin
 :doc_ok
 
@@ -16,7 +18,7 @@ copy       ..\TC_Todo_GWin.txt
 copy    ..\..\TC_Todo.txt
 copy       ..\"Uninstall TeXCAD.bat"
 copy    ..\..\TeXCAD.txt
-copy /B ..\..\TeXCAD.pdf
+copy /B ..\..\doc\TeXCAD.pdf
 copy    ..\..\Copying.txt
 copy    ..\..\Changes.txt
 copy    ..\..\Changes_also_minor.txt
@@ -28,7 +30,7 @@ cd..
 goto fin
 :morale
 echo.
-echo You should run pack_distro.cmd !
+echo You should run distro.cmd !
 echo.
 pause
 :fin
