@@ -124,6 +124,39 @@ package body TC is
     end loop;
   end Bezier_curve;
 
+  function Evaluate_param_curve_2D( o: Obj_type; t: Real ) return Point is
+  begin
+    return o.P1 + o.scale * (
+      t**3-3.0*t,   --  Fake !!
+      3.0*t**2-9.0  --  Fake !!
+    );
+  end Evaluate_param_curve_2D;
+
+  procedure Parametric_curve_2D( o: Obj_type; pt_scale: Real ) is
+    sc, nt: Natural;
+    isc, t: Real;
+    len: constant Real:= o.max_t - o.min_t;
+    P1, P2, P3: Point;
+    density: Real;
+  begin
+  Ada.Text_IO.put_line("Parametric_curve_2D");
+    sc:= o.segments;
+    if sc = 0 then
+      density:= 8.0 * Real'Max(1.0, pt_scale);
+      P1:= Evaluate_param_curve_2D(o, o.min_t);
+      P2:= Evaluate_param_curve_2D(o, 0.5 * (o.min_t + o.max_t));
+      P3:= Evaluate_param_curve_2D(o, o.max_t);
+      sc:= 1 + Integer(density * ( Norm(P1 - P2) + Norm(P2 - P3) ));
+    end if;
+    isc:= 1.0 / Real(sc);
+    nt:= 0;
+    while nt <= sc loop
+      t:= (Real(nt) * isc) * len + o.min_t;  --  t in [o.min_t, o.max_t]
+      Action(Evaluate_param_curve_2D(o, t));
+      nt:= nt + 1;
+    end loop;
+  end Parametric_curve_2D;
+
   -- For Get_Slope
 
   rad2deg: constant:= 57.295779513082320877;

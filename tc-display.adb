@@ -9,7 +9,7 @@ package body TC.Display is
     P0:= P;
   end Set_Origin;
 
-  procedure Set_ul( pt: Real ) is -- size of unitlength, for qBezier density
+  procedure Set_ul( pt: Real ) is -- size of unitlength, for qBezier and parametric curves density
   begin
     ulpt:= pt;
   end Set_ul;
@@ -325,6 +325,7 @@ package body TC.Display is
   end Draw_grid;
 
   procedure Draw_Bezier is new Bezier_curve(PlotPoint);
+  procedure Draw_Param_Curve is new Parametric_curve_2D(PlotPoint);
 
   procedure Bezier_and_arrows(o: Obj_type) is
     x,y: Integer;
@@ -346,7 +347,6 @@ package body TC.Display is
         Arrow(x,y,  o.bez_slope(1)(h), -o.bez_slope(1)(v));
     end case;
   end Bezier_and_arrows;
-
 
   procedure Shadow (o: Obj_type) is
     x,y,x1,y1: Integer;
@@ -417,6 +417,7 @@ package body TC.Display is
       when circ | disc => Draw_circ(o);
       when oval        => Draw_oval(o);
       when bezier      => Bezier_and_arrows(o);
+      when paramcurve2d => Draw_Param_Curve(o, ulpt);
       when putaux      => Draw_unknown_put(o);
       when others=> null;
     end case;

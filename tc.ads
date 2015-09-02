@@ -115,6 +115,7 @@ package TC is
     (txt, box, line,
      circ, disc, oval, aux, putaux,
      bezier,
+     paramcurve2d,
      unitl, spez, beginn, ende1, ende2, point0, option);
 
   type Art_set is array( Obj_art_type ) of Boolean;
@@ -202,6 +203,13 @@ package TC is
           Pmiddle   : Point; -- midpoint (for arrows = middle only)
           bez_slope : LaTeX_slopes;
           num       : Natural;
+       when paramcurve2d =>  --  %\paramcurve2d[segments](form_x, form_y, min_t,max_t)
+          scale     : Real;
+          form_x    : Unbounded_String;  --  x(t)
+          form_y    : Unbounded_String;  --  y(t)
+          min_t     : Real;
+          max_t     : Real;
+          segments  : Natural;  --  if 0: automatic
        when others=> null;
     end case;
   end record;
@@ -266,6 +274,10 @@ package TC is
   generic
     with procedure Action( P: Point );
   procedure Bezier_curve( o: Obj_type; pt_scale: Real );
+
+  generic
+    with procedure Action( P: Point );
+  procedure Parametric_curve_2D( o: Obj_type; pt_scale: Real );
 
   procedure Get_slope(df: Point; sl: out LaTeX_slope; vector:Boolean);
   procedure Set_slope_of_bezvec(o: in out Obj_type; pt_scale: Real);

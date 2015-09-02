@@ -1,0 +1,25 @@
+% This is a LaTeX picture output by TeXCAD.
+% File name: [bez.tcp].
+% Version of TeXCAD: 4.4
+% Reference / build: 26-Aug-2015 (rev. a48)
+% For new versions, check: http://texcad.sf.net/
+% Options on the following lines.
+%\grade{\on}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\pvinsert{% Your \input, \def, etc. here}
+%\quality{8.000}
+%\graddiff{0.005}
+%\snapasp{1}
+%\zoom{4.0000}
+\unitlength 1mm % = 2.845pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(256.125,259.25)(0,0)
+%\paramcurvexy(20,10)(1)(t * t , t, -3, 3)
+%
+%\end
+\end{picture}

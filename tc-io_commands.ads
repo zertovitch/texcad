@@ -21,6 +21,7 @@ package TC.IO_Commands is
             -- \qbezier added 24-Apr-2003
             cbezvec, cqbezvec,
             ccircle1,ccircle2,
+            c_paramcurvexy_2,           --  %\paramcurve2d +02-Sep-2015
             coval,cput,cbegin,cend1,cend2,
             cthinlines, cthicklines,
             caux,
@@ -49,6 +50,7 @@ package TC.IO_Commands is
       cemline1 .. cvector2     => line,
       cbezier1 .. cqbezvec     => bezier,
       ccircle1 .. ccircle2     => circ,
+      c_paramcurvexy_2      => paramcurve2d,
       coval     => oval,
       cput      => point0,
       cbegin    => beginn,

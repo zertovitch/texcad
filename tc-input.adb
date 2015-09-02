@@ -327,26 +327,26 @@ package body TC.Input is
     end Read_arg;
 
     procedure Read_real_arg(
-      op, cl: Character;
+      open, close: Character;
       wert: out Real;
       optional: Boolean:= False)
     is
     begin
-      if optional and ch/= op then
+      if optional and ch/= open then
         wert:= 0.0;
       else
-        Seek_ch(op); Read_real(wert); Seek_ch(cl);
+        Seek_ch(open); Read_real(wert); Seek_ch(close);
       end if;
     end Read_real_arg;
 
     function Read_real_arg(
-      op, cl: Character;
+      open, close: Character;
       optional: Boolean:= False
     ) return Real
     is
       r: Real;
     begin
-      Read_real_arg(op,cl,r,optional);
+      Read_real_arg(open, close, r,optional);
       return r;
     end Read_real_arg;
 
@@ -631,6 +631,38 @@ package body TC.Input is
              Read_real_arg(o.rad);
              o.rad:= o.rad*0.5;
              Skip_until_end_of_emulation;
+
+        when c_paramcurvexy_2 =>
+             --  %\paramcurveplane[segments](orig_x, orig_y)(scale)(form_x, form_y, min_t, max_t)
+             --  (the LaTeX commands for displaying the curve in segments)
+             --  %\end
+             Read_arg('[',']',dum_str, dumi, optional => True);
+             o.segments:= 0;
+             if dumi > 0 then
+               o.segments:= Integer'Value(dum_str(1..dumi));
+             end if;
+             Read_coords_and_adjust(o.P1);
+             Read_real_arg('(',')', o.scale);
+             Seek_ch('(');
+             while ch /= ',' loop
+               o.form_x:= o.form_x & ch;
+               Read_ch;
+             end loop;
+             -- Put_Line("x(t)= " & To_String(o.form_x));
+             Read_ch;
+             while ch /= ',' loop
+               o.form_y:= o.form_y & ch;
+               Read_ch;
+             end loop;
+             -- Put_Line("y(t)= " & To_String(o.form_x));
+             Read_ch;
+             Read_real(o.min_t);
+             -- Put_Line("min= " & Real'Image(o.min_t));
+             Seek_ch(',');
+             Read_real(o.max_t);
+             -- Put_Line("max= " & Real'Image(o.max_t));
+             Seek_ch(')');
+             Skip_until_end_of_emulation;  --  skip until reaching: %\end
 
         when cend1   =>
              declare
