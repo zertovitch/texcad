@@ -122,26 +122,23 @@ package body TC.Picking is
       return False;
     end Near_Line;
 
-    function Near_Bezier return Boolean is
-      near: Boolean:= False;
-      procedure N(P:Point) is
-        dist: Real;
-      begin
-        if Norm2(M1-P) <= dist_max_2 then
-          dist:= Sqrt(Norm2(M1-P));
-          if near then
-            last_near_dist:= Real'Min(dist, last_near_dist);
-          else
-            last_near_dist:= dist;
-          end if;
-          near:= True;
-        end if;
-      end N;
-      procedure Scout_Bezier is new Bezier_curve(N);
+    near: Boolean:= False;
+    procedure Near_to_target_Point(P:Point) is
+      dist: Real;
     begin
-      Scout_Bezier(a.all,p.ul_in_pt);
-      return near;
-    end Near_Bezier;
+      if Norm2(M1-P) <= dist_max_2 then
+        dist:= Sqrt(Norm2(M1-P));
+        if near then
+          last_near_dist:= Real'Min(dist, last_near_dist);
+        else
+          last_near_dist:= dist;
+        end if;
+        near:= True;
+      end if;
+    end Near_to_target_Point;
+
+    procedure Scout_Bezier is new Bezier_curve(Near_to_target_Point);
+    procedure Scout_Param_2D is new Parametric_curve_2D(Near_to_target_Point);
 
     begin -- Near_Point
       case a.art  is
@@ -164,10 +161,11 @@ package body TC.Picking is
         when oval  =>
           return Near_Box( a.LL, a.LL + a.osize, frame => True );
         when bezier =>
-          return Near_bezier;
-          -- old method:
-          --  return Norm2( M1 - a.P1 ) <= dist_max_2 or
-          --         Norm2( M1 - a.PE ) <= dist_max_2;
+          Scout_Bezier(a.all, p.ul_in_pt);
+          return near;
+        when paramcurve2d =>
+          Scout_Param_2D(a.all, p.ul_in_pt);
+          return near;
         when others =>
           return False; -- incl.: aux
       end case;
@@ -208,6 +206,10 @@ package body TC.Picking is
                  a.PE.y >= MI.y and then
                  a.P1.y <= MA.y and then  --  yc<=yy and then
                  a.PE.y <= MA.y;        --  xc,yc kann ausserhalb Screen liegen
+        when paramcurve2d =>
+          return a.P1.x >= MI.x and then a.P1.x <= MA.x  and then
+                 a.P1.y >= MI.y and then a.P1.y <= MA.y;
+          -- !! Cheap solution (catch only 1st point)...
         when others =>
           return False; -- incl.: aux
       end case;

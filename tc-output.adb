@@ -308,7 +308,7 @@ package body TC.Output is
       M:= PP;
     end Write_line_any_slope;
 
-    procedure Write_reduced_emlines(
+    procedure Write_reduced_any_lines(
       M, Q : in out Point;
       PP: Point; no_start: Boolean)
     is
@@ -333,16 +333,16 @@ package body TC.Output is
         end if;
       end if;
       Q:= PP;
-    end Write_reduced_emlines;
+    end Write_reduced_any_lines;
 
-    procedure Write_emline_bezier(o: Obj_type) is
+    procedure Write_emulated_bezier(o: Obj_type) is
       --  JW , GM
       M, Q: Point;
       no_start: Boolean:= False;
 
       procedure PlotPoint( P: Point ) is
       begin
-        Write_reduced_emlines( M, Q, P, no_start );
+        Write_reduced_any_lines( M, Q, P, no_start );
         no_start:= True;
       end PlotPoint;
 
@@ -355,7 +355,26 @@ package body TC.Output is
       -- validity check (-gnatVa) + pragma Initialize_Scalars
       Draw_Bezier(o,pic.ul_in_pt);
       Write_line_any_slope( M, o.PE, 0);
-    end Write_emline_bezier;
+    end Write_emulated_bezier;
+
+    procedure Write_emulated_paramcurve2d(o: Obj_type) is
+      M, Q: Point;
+      no_start: Boolean:= False;
+
+      procedure PlotPoint( P: Point ) is
+      begin
+        Write_reduced_any_lines( M, Q, P, no_start );
+        no_start:= True;
+      end PlotPoint;
+
+      procedure Draw_Paramcurve is new Parametric_curve_2D(PlotPoint);
+
+    begin
+      M:= o.P1;
+      Q:= (0.0,0.0);
+      Draw_Paramcurve(o,pic.ul_in_pt);
+      Write_line_any_slope( M, o.PE, 0);
+    end Write_emulated_paramcurve2d;
 
     procedure Write_kreis( o: Obj_type; Pmin: Point ) is
 
@@ -378,7 +397,7 @@ package body TC.Output is
         M:= C + (o.rad,0.0);
         while t < pid loop
           PP:= o.rad * ( Cos(t), Sin(t) ) + o.P1;
-          Write_reduced_emlines( M, Q, PP, not Almost_zero(t) );
+          Write_reduced_any_lines( M, Q, PP, not Almost_zero(t) );
           t:= t+dt;
         end loop;
         Write_line_any_slope( M, o.P1 - Pmin + (o.rad,0.0), 0);
@@ -529,7 +548,7 @@ package body TC.Output is
         else
           Put(tf,'%');
           Write_bezier_command(o);
-          Write_emline_bezier(o);
+          Write_emulated_bezier(o);
           End_of_emulation;
         end if;
       else                           -- %\bezvec or %\qbezvec
@@ -543,11 +562,36 @@ package body TC.Output is
         if pic.opt.sty(bezier) then
           Write_bezier_command(o, force_no_vec => True);
         else
-          Write_emline_bezier(o);
+          Write_emulated_bezier(o);
         end if;
         End_of_emulation;
       end if;
     end Write_bezier;
+
+    procedure Write_paramcurve2d(o: Obj_type) is
+      long: constant Boolean:= Length(o.form_x) + Length(o.form_y) > 40;
+      procedure Spacing is
+      begin
+        if long then
+          New_Line(tf);
+          Put(tf, "   ");
+        end if;
+      end;
+    begin
+      Put(tf, "%\paramcurvexy");
+      if o.segments > 0 then
+        Put(tf, '[' & I(o.segments) & ']');
+      end if;
+      Put(tf, Pt(o.P1 - Pmin) & '(' & R(o.scale) & ")(");
+      Spacing;
+      Put(tf, To_String(o.form_x) & ", ");
+      Spacing;
+      Put(tf, To_String(o.form_y) & ", ");
+      Spacing;
+      Put_Line(tf, R(o.min_t) & ", " & R(o.max_t) & ')');
+      Write_emulated_paramcurve2d(o);
+      End_of_emulation;
+    end Write_paramcurve2d;
 
     procedure Write_vector_arrows(P1,P2: Point; arrows: Line_arrows) is
       s: LaTeX_slope;
@@ -1090,6 +1134,7 @@ package body TC.Output is
         else  -- Something else (not an em-line/vector)
           case o.art is
             when bezier      => Write_bezier(o.all);
+            when paramcurve2d=> Write_paramcurve2d(o.all);
             when circ | disc => Write_kreis(o.all, Pmin);
             when aux         => Put(tf,To_String(o.inhalt));
             when others =>
