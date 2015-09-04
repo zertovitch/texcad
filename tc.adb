@@ -124,12 +124,21 @@ package body TC is
     end loop;
   end Bezier_curve;
 
-  function Evaluate_param_curve_2D( o: Obj_type; t: Real ) return Point is
+  function Evaluate_variable (name : String; payload: Real) return Real is
   begin
-    return o.P1 + o.scale * (
-      t**3-3.0*t,   --  Fake !!
-      3.0*t**2-9.0  --  Fake !!
-    );
+    if name'Length = 1 and then (name(name'First) = 't' or name(name'First) = 'T') then
+      return payload;
+    end if;
+    return 0.0;
+  end Evaluate_variable;
+
+  function Evaluate_param_curve_2D( o: Obj_type; t: Real ) return Point is
+    x: constant Real:= TC_Formulas.Evaluate(o.parsed_x, t);
+    y: constant Real:= TC_Formulas.Evaluate(o.parsed_y, t);
+  begin
+    -- RIO.Put(x); RIO.Put(16.0 * sin(t)**3); Ada.Text_IO.New_Line;
+    -- RIO.Put(y); RIO.Put(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t)); Ada.Text_IO.New_Line;
+    return o.P1 + o.scale * (x, y);
   end Evaluate_param_curve_2D;
 
   procedure Parametric_curve_2D( o: Obj_type; pt_scale: Real ) is
@@ -139,7 +148,6 @@ package body TC is
     P1, P2, P3: Point;
     density: Real;
   begin
-  Ada.Text_IO.put_line("Parametric_curve_2D");
     sc:= o.segments;
     if sc = 0 then
       density:= 8.0 * Real'Max(1.0, pt_scale);

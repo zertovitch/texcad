@@ -527,6 +527,7 @@ package body TC.Input is
     end Points_3_to_N;
 
     procedure Read_new_object is
+      use TC_Formulas;
     begin
       o:= new Obj_type(ziart);
       o.ls:= ls;
@@ -648,13 +649,15 @@ package body TC.Input is
                o.form_x:= o.form_x & ch;
                Read_ch;
              end loop;
-             -- Put_Line("x(t)= " & To_String(o.form_x));
+             Parse(o.parsed_x, To_String(o.form_x));
+             -- Put_Line("x(t)= [" & To_String(o.form_x) & ']'); Put(o.parsed_x); New_Line;
              Read_ch;
              while ch /= ',' loop
                o.form_y:= o.form_y & ch;
                Read_ch;
              end loop;
-             -- Put_Line("y(t)= " & To_String(o.form_x));
+             Parse(o.parsed_y, To_String(o.form_y));
+             -- Put_Line("y(t)= [" & To_String(o.form_y) & ']'); Put(o.parsed_y); New_Line;
              Read_ch;
              Read_real(o.min_t);
              -- Put_Line("min= " & Real'Image(o.min_t));

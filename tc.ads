@@ -12,6 +12,8 @@ with Ada.Text_IO,
      Ada.Numerics.Generic_Elementary_Functions,
      Ada.Strings.Unbounded;
 
+with Formulas;
+
 package TC is
 
   use Ada.Strings.Unbounded;
@@ -173,6 +175,9 @@ package TC is
   type LaTeX_slopes is array( 1..2 ) of LaTeX_slope;
   -- 25-Feb-2004: line, vector, bezvec,... up to 2 non-parallel arrows
 
+  function Evaluate_variable (name : String; payload: Real) return Real;
+  package TC_Formulas is new Formulas(Real, Real, Evaluate_variable);
+
   type Obj_type(art: Obj_art_type) is record  --  JW,GH
     P1: Point;
     next: ptr_Obj_type:= null;
@@ -207,6 +212,8 @@ package TC is
           scale     : Real;
           form_x    : Unbounded_String;  --  x(t)
           form_y    : Unbounded_String;  --  y(t)
+          parsed_x  : TC_Formulas.Formula;
+          parsed_y  : TC_Formulas.Formula;
           min_t     : Real;
           max_t     : Real;
           segments  : Natural;  --  if 0: automatic
