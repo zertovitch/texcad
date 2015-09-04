@@ -51,11 +51,20 @@
 % LaTeX emulation here...
 %\end
 
-%\paramcurvexy[5000](60,30)(1)( 
-  16 * sin(t)^3,
-  13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t),
+%\paramcurvexy[500](60,30)(0.5)( 
+  16*sin(t)^3,
+  13*cos(t)-5*cos(2*t)-2*cos(3*t)-cos(4*t),
   -3.1415927, 
    3.1415927)
 % LaTeX emulation here...
 %\end
+
+%\paramcurvexy[5000](20,40)(4)( 
+  cos(t) * (1 + 0.9 * Cos(8 * t)) * (1 + 0.1 * Cos(24 * t)) * (0.9 + 0.05 * Cos(200 * t)) * (1 + Sin(t)), % x
+  sin(t) * (1 + 0.9 * Cos(8 * t)) * (1 + 0.1 * Cos(24 * t)) * (0.9 + 0.05 * Cos(200 * t)) * (1 + Sin(t)), % y
+  -3.1415927, % min_t
+   3.1415927) % max_t
+% LaTeX emulation here...
+%\end
+
 \end{picture}

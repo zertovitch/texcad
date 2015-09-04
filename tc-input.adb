@@ -650,14 +650,14 @@ package body TC.Input is
                Read_ch;
              end loop;
              Parse(o.parsed_x, To_String(o.form_x));
-             -- Put_Line("x(t)= [" & To_String(o.form_x) & ']'); Put(o.parsed_x); New_Line;
+             -- Put_Line("x(t)= [" & To_String(o.form_x) & ']'); Put(o.parsed_x, bracketed); New_Line;
              Read_ch;
              while ch /= ',' loop
                o.form_y:= o.form_y & ch;
                Read_ch;
              end loop;
              Parse(o.parsed_y, To_String(o.form_y));
-             -- Put_Line("y(t)= [" & To_String(o.form_y) & ']'); Put(o.parsed_y); New_Line;
+             -- Put_Line("y(t)= [" & To_String(o.form_y) & ']'); Put(o.parsed_y, bracketed); New_Line;
              Read_ch;
              Read_real(o.min_t);
              -- Put_Line("min= " & Real'Image(o.min_t));
