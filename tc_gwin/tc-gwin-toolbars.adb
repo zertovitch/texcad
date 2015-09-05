@@ -152,7 +152,7 @@ package body TC.GWin.Toolbars is
        TB_Line_settings => 56+6);
 
     max_height: constant array(Floating_toolbar_categ) of Integer:=
-      (TB_Drawing       => 322+6,
+      (TB_Drawing       => 322+28+6,
        TB_Line_settings => 224+8);
 
     title: constant array(Floating_toolbar_categ) of Message:=
@@ -192,7 +192,7 @@ begin
         ( geom =>
            (l => 310,
             t => 2,
-            w => 20 + (28+8)*9,
+            w => 20 + (28+8)*10,
             h => 40 + 28),
           stat => default_stat
         ),
