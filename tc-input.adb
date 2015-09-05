@@ -206,7 +206,7 @@ package body TC.Input is
         when '.' | '0'..'9' =>
           null;
         when others =>
-          Error("Number expected");
+          Error("Number expected, found: [" & ch & ']');
       end case;
 
       while ch in '0'..'9' and not end_of_parsing loop
@@ -526,8 +526,63 @@ package body TC.Input is
       Points_3_to_N(clone.all); -- go further, recursively
     end Points_3_to_N;
 
-    procedure Read_new_object is
+    procedure Read_paramcurve2d is
       use TC_Formulas;
+      --
+      procedure Read_formula(f: out Unbounded_String; p: out Formula) is
+      begin
+        Skip_blanks;
+        while ch /= ',' and not end_of_parsing loop
+          f:= f & ch;
+          Read_ch;
+          exit when ch = '%';
+          --  Final comma can be omitted if there is a new line and %
+        end loop;
+        Trim(f, Both);
+        if Length(f) > 0 and then Element(f, 1)='%' then
+          Delete(f, 1, 1);
+          Trim(f, Left);
+        end if;
+        Parse(p, f);
+        Read_ch;
+      end Read_formula;
+      --
+      procedure Skip_Stuff is
+      begin
+        while (ch = ',' or ch = '%' or ch = ' ' or ch = ASCII.HT) and not end_of_parsing loop
+          Read_ch;
+        end loop;
+      end;
+      --
+    begin
+      --  %\paramcurveplane[segments](orig_x, orig_y)(scale)(*form_x, *form_y, *min_t, *max_t)
+      --  * = here, optional new line starting with %
+      --  (the LaTeX commands for displaying the curve in segments)
+      --  %\end
+      Read_arg('[',']',dum_str, dumi, optional => True);
+      o.segments:= 0;
+      if dumi > 0 then
+        o.segments:= Integer'Value(dum_str(1..dumi));
+      end if;
+      Read_coords_and_adjust(o.P1);     --  (orig_x, orig_y)
+      Read_real_arg('(',')', o.scale);  --  (scale)
+      Seek_ch('(');
+      Read_formula(o.form_x, o.parsed_x);
+      -- Put_Line("x(t)= [" & To_String(o.form_x) & ']'); Put(o.parsed_x, bracketed); New_Line;
+      Read_formula(o.form_y, o.parsed_y);
+      -- Put_Line("y(t)= [" & To_String(o.form_y) & ']'); Put(o.parsed_y, bracketed); New_Line;
+      Skip_Stuff;
+      Read_real(o.min_t);
+      -- Put_Line("min= " & Real'Image(o.min_t));
+      Skip_stuff;
+      Read_real(o.max_t);
+      -- Put_Line("max= " & Real'Image(o.max_t));
+      Skip_stuff;
+      Seek_ch(')');
+      Skip_until_end_of_emulation;  --  skip until reaching: %\end
+    end Read_paramcurve2d;
+
+    procedure Read_new_object is
     begin
       o:= new Obj_type(ziart);
       o.ls:= ls;
@@ -634,38 +689,7 @@ package body TC.Input is
              Skip_until_end_of_emulation;
 
         when c_paramcurvexy_2 =>
-             --  %\paramcurveplane[segments](orig_x, orig_y)(scale)(form_x, form_y, min_t, max_t)
-             --  (the LaTeX commands for displaying the curve in segments)
-             --  %\end
-             Read_arg('[',']',dum_str, dumi, optional => True);
-             o.segments:= 0;
-             if dumi > 0 then
-               o.segments:= Integer'Value(dum_str(1..dumi));
-             end if;
-             Read_coords_and_adjust(o.P1);
-             Read_real_arg('(',')', o.scale);
-             Seek_ch('(');
-             while ch /= ',' loop
-               o.form_x:= o.form_x & ch;
-               Read_ch;
-             end loop;
-             Parse(o.parsed_x, To_String(o.form_x));
-             -- Put_Line("x(t)= [" & To_String(o.form_x) & ']'); Put(o.parsed_x, bracketed); New_Line;
-             Read_ch;
-             while ch /= ',' loop
-               o.form_y:= o.form_y & ch;
-               Read_ch;
-             end loop;
-             Parse(o.parsed_y, To_String(o.form_y));
-             -- Put_Line("y(t)= [" & To_String(o.form_y) & ']'); Put(o.parsed_y, bracketed); New_Line;
-             Read_ch;
-             Read_real(o.min_t);
-             -- Put_Line("min= " & Real'Image(o.min_t));
-             Seek_ch(',');
-             Read_real(o.max_t);
-             -- Put_Line("max= " & Real'Image(o.max_t));
-             Seek_ch(')');
-             Skip_until_end_of_emulation;  --  skip until reaching: %\end
+             Read_paramcurve2d;
 
         when cend1   =>
              declare

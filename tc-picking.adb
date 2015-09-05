@@ -210,6 +210,7 @@ package body TC.Picking is
           return a.P1.x >= MI.x and then a.P1.x <= MA.x  and then
                  a.P1.y >= MI.y and then a.P1.y <= MA.y;
           -- !! Cheap solution (catch only 1st point)...
+          -- We should compute a bounding box !!
         when others =>
           return False; -- incl.: aux
       end case;

@@ -18,8 +18,8 @@ package TC is
 
   use Ada.Strings.Unbounded;
 
-  version   : constant String:= "4.4";
-  reference : constant String:= "26-Aug-2015 (rev. a48)";
+  version   : constant String:= "4.5 Preview";
+  reference : constant String:= "05-Sep-2015 (rev. a54+)";
   web       : constant String:= "http://texcad.sf.net/";
   mail      : constant String:= "gdemont@users.sf.net";
 
@@ -175,7 +175,7 @@ package TC is
   type LaTeX_slopes is array( 1..2 ) of LaTeX_slope;
   -- 25-Feb-2004: line, vector, bezvec,... up to 2 non-parallel arrows
 
-  function Evaluate_variable (name : String; payload: Real) return Real;
+  function Evaluate_variable (name : String; t: Real) return Real;
   package TC_Formulas is new Formulas(Real, Real, Evaluate_variable);
 
   type Obj_type(art: Obj_art_type) is record  --  JW,GH
@@ -208,15 +208,16 @@ package TC is
           Pmiddle   : Point; -- midpoint (for arrows = middle only)
           bez_slope : LaTeX_slopes;
           num       : Natural;
-       when paramcurve2d =>  --  %\paramcurve2d[segments](form_x, form_y, min_t,max_t)
+       when paramcurve2d =>  --  Check Read_paramcurve2d in TC.Input for syntax
+          segments  : Natural;  --  if 0: automatic
           scale     : Real;
           form_x    : Unbounded_String;  --  x(t)
           form_y    : Unbounded_String;  --  y(t)
-          parsed_x  : TC_Formulas.Formula;
-          parsed_y  : TC_Formulas.Formula;
           min_t     : Real;
           max_t     : Real;
-          segments  : Natural;  --  if 0: automatic
+          --
+          parsed_x  : TC_Formulas.Formula;  --  Needs refresh after each modification
+          parsed_y  : TC_Formulas.Formula;  --  Needs refresh after each modification
        when others=> null;
     end case;
   end record;
@@ -351,5 +352,9 @@ package TC is
     function Num_segments(D_lta: Point; dotgap: Real) return Positive;
     -- For dotgap = 0.0 (<=> no parameter), 1 is taken.
   end epic_calc;
+
+private
+
+  function Evaluate_param_curve_2D( o: Obj_type; t: Real ) return Point;
 
 end TC;

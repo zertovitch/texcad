@@ -482,7 +482,19 @@ package body Formulas is
   function Parse (s : String) return Formula is
     f: Formula;
   begin
-    Parse(f,s);
+    Parse(f, s);
+    return f;
+  end Parse;
+
+  procedure Parse (f : out Formula; u : Unbounded_String) is
+  begin
+    Parse(f, To_String(u));
+  end Parse;
+
+  function Parse (u : Unbounded_String) return Formula is
+    f: Formula;
+  begin
+    Parse(f, u);
     return f;
   end Parse;
 

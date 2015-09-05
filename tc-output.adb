@@ -358,7 +358,7 @@ package body TC.Output is
     end Write_emulated_bezier;
 
     procedure Write_emulated_paramcurve2d(o: Obj_type) is
-      M, Q: Point;
+      M, Q, PE: Point;
       no_start: Boolean:= False;
 
       procedure PlotPoint( P: Point ) is
@@ -370,10 +370,11 @@ package body TC.Output is
       procedure Draw_Paramcurve is new Parametric_curve_2D(PlotPoint);
 
     begin
-      M:= o.P1;
+      M:= Evaluate_param_curve_2D(o, o.min_t);
       Q:= (0.0,0.0);
       Draw_Paramcurve(o,pic.ul_in_pt);
-      Write_line_any_slope( M, o.PE, 0);
+      PE:= Evaluate_param_curve_2D(o, o.max_t);
+      Write_line_any_slope( M, PE, 0);
     end Write_emulated_paramcurve2d;
 
     procedure Write_kreis( o: Obj_type; Pmin: Point ) is
@@ -574,7 +575,7 @@ package body TC.Output is
       begin
         if long then
           New_Line(tf);
-          Put(tf, "   ");
+          Put(tf, "%   ");
         end if;
       end;
     begin
@@ -1019,6 +1020,10 @@ package body TC.Output is
                 s2.x:= -Max(-o.P1.x,-o.PC.x,-o.PE.x);
                 s1.y:=  Max( o.P1.y, o.PC.y, o.PE.y);
                 s2.y:= -Max(-o.P1.y,-o.PC.y,-o.PE.y);
+
+             when paramcurve2d =>
+                s1:= o.P1;  --  We should compute a bounding box !!
+                s2:= s1;
 
              when others => -- includes aux
                 s1:= (-1.0)*Pinf;

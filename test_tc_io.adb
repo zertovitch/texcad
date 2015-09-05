@@ -214,14 +214,15 @@ begin
       Test("petri" & n(4..5), True);
     end;
   end loop;
-  for i in 1..41 loop
+  for i in 1..42 loop
     declare
       n: constant String:= Integer'Image(1000+i);
     begin
       Test("web" & n(3..5));
     end;
   end loop;
-  Test("rubbish");  --  Testing TC.Tools.Clean
+  Test("param");    --  Testing parametric curves (TC 4.5)
+  Test("rubbish");  --  Testing TC.Tools.Clean (TC 4.4)
   Test("gnuplot1");
   Test("gnuplot2");
   Test("gnuplot3", True);

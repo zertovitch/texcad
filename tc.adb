@@ -124,10 +124,10 @@ package body TC is
     end loop;
   end Bezier_curve;
 
-  function Evaluate_variable (name : String; payload: Real) return Real is
+  function Evaluate_variable (name : String; t: Real) return Real is
   begin
     if name'Length = 1 and then (name(name'First) = 't' or name(name'First) = 'T') then
-      return payload;
+      return t;
     end if;
     return 0.0;
   end Evaluate_variable;
@@ -149,8 +149,8 @@ package body TC is
     density: Real;
   begin
     sc:= o.segments;
-    if sc = 0 then
-      density:= 8.0 * Real'Max(1.0, pt_scale);
+    if sc = 0 then  --  Automatically compute number of segments
+      density:= 16.0 * Real'Max(1.0, pt_scale);
       P1:= Evaluate_param_curve_2D(o, o.min_t);
       P2:= Evaluate_param_curve_2D(o, 0.5 * (o.min_t + o.max_t));
       P3:= Evaluate_param_curve_2D(o, o.max_t);
