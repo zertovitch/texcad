@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/08/26  17:52:05
+-- Transcription time: 2015/09/05  11:00:40
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -37,7 +37,7 @@ package TeXCAD_Resource_GUI is
     Detection_List: List_View_Control_Type;
   end record; -- Cleanup_Dialog_Type
 
-  -- Dialog at resource line 69
+  -- Dialog at resource line 71
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -57,6 +57,48 @@ package TeXCAD_Resource_GUI is
   --
   procedure Create_Contents
      ( Window      : in out Cleanup_Dialog_Type;
+       for_dialog  : in     Boolean; -- True: buttons do close the window
+       resize      : in     Boolean:= False -- optionnally resize Window as designed
+     );
+
+  type Param_Curve_2D_Dialog_Type is new Window_type with record
+
+    -- Label: 0
+    -- Label: 0
+    X_Form_Box: Edit_Box_Type;
+    Y_Form_Box: Edit_Box_Type;
+    -- Label: 0
+    -- Label: 0
+    T_Min_Box: Edit_Box_Type;
+    T_Max_Box: Edit_Box_Type;
+    Segments_Label: Label_Type;
+    Segments_Box: Edit_Box_Type;
+    IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
+    IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
+    IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
+    IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
+  end record; -- Param_Curve_2D_Dialog_Type
+
+  -- Dialog at resource line 91
+
+  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --
+  procedure Create_Full_Dialog
+     (Window      : in out Param_Curve_2D_Dialog_Type;
+      Parent      : in out GWindows.Base.Base_Window_Type'Class;
+      Title       : in     GString := "2D PARAMETRIC CURVE";
+      Left        : in     Integer := Use_Default; -- Default = as designed
+      Top         : in     Integer := Use_Default; -- Default = as designed
+      Width       : in     Integer := Use_Default; -- Default = as designed
+      Height      : in     Integer := Use_Default; -- Default = as designed
+      Help_Button : in     Boolean := False;
+      Is_Dynamic  : in     Boolean := False);
+
+  --  b) Create all contents, not the window itself (must be
+  --      already created) -> can be used in/as any kind of window.
+  --
+  procedure Create_Contents
+     ( Window      : in out Param_Curve_2D_Dialog_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
        resize      : in     Boolean:= False -- optionnally resize Window as designed
      );
@@ -83,91 +125,16 @@ package TeXCAD_Resource_GUI is
   -- NB: only items with a defined symbol get a constant here
   -- These constants are needed for getting button and menu feedbacks.
 
-  IDC_STATIC             : constant:=     -1;
-  Detection_List         : constant:=     -1;
-  ID_FILE_NEW            : constant:=  57600;
-  ID_FILE_OPEN           : constant:=  57601;
-  ID_FILE_CLOSE          : constant:=  57602;
-  ID_FILE_SAVE           : constant:=  57603;
-  ID_FILE_SAVE_AS        : constant:=  57604;
-  ID_FILE_PAGE_SETUP     : constant:=  57605;
-  ID_FILE_PRINT_SETUP    : constant:=  57606;
-  ID_FILE_PRINT          : constant:=  57607;
-  ID_FILE_PRINT_DIRECT   : constant:=  57608;
-  ID_FILE_PRINT_PREVIEW  : constant:=  57609;
-  ID_FILE_UPDATE         : constant:=  57610;
-  ID_FILE_SAVE_COPY_AS   : constant:=  57611;
-  ID_FILE_SEND_MAIL      : constant:=  57612;
-  ID_FILE_MRU_FIRST      : constant:=  57616;
-  ID_FILE_MRU_FILE1      : constant:=  57616;
-  ID_FILE_MRU_FILE2      : constant:=  57617;
-  ID_FILE_MRU_FILE3      : constant:=  57618;
-  ID_FILE_MRU_FILE4      : constant:=  57619;
-  ID_FILE_MRU_FILE5      : constant:=  57620;
-  ID_FILE_MRU_FILE6      : constant:=  57621;
-  ID_FILE_MRU_FILE7      : constant:=  57622;
-  ID_FILE_MRU_FILE8      : constant:=  57623;
-  ID_FILE_MRU_FILE9      : constant:=  57624;
-  ID_FILE_MRU_FILE10     : constant:=  57625;
-  ID_FILE_MRU_FILE11     : constant:=  57626;
-  ID_FILE_MRU_FILE12     : constant:=  57627;
-  ID_FILE_MRU_FILE13     : constant:=  57628;
-  ID_FILE_MRU_FILE14     : constant:=  57629;
-  ID_FILE_MRU_FILE15     : constant:=  57630;
-  ID_FILE_MRU_FILE16     : constant:=  57631;
-  ID_FILE_MRU_LAST       : constant:=  57631;
-  ID_EDIT_CLEAR          : constant:=  57632;
-  ID_EDIT_CLEAR_ALL      : constant:=  57633;
-  ID_EDIT_COPY           : constant:=  57634;
-  ID_EDIT_CUT            : constant:=  57635;
-  ID_EDIT_FIND           : constant:=  57636;
-  ID_EDIT_PASTE          : constant:=  57637;
-  ID_EDIT_PASTE_LINK     : constant:=  57638;
-  ID_EDIT_PASTE_SPECIAL  : constant:=  57639;
-  ID_EDIT_REPEAT         : constant:=  57640;
-  ID_EDIT_REPLACE        : constant:=  57641;
-  ID_EDIT_SELECT_ALL     : constant:=  57642;
-  ID_EDIT_UNDO           : constant:=  57643;
-  ID_EDIT_REDO           : constant:=  57644;
-  ID_WINDOW_NEW          : constant:=  57648;
-  ID_WINDOW_ARRANGE      : constant:=  57649;
-  ID_WINDOW_CASCADE      : constant:=  57650;
-  ID_WINDOW_TILE_HORZ    : constant:=  57651;
-  ID_WINDOW_TILE_VERT    : constant:=  57652;
-  ID_WINDOW_SPLIT        : constant:=  57653;
-  ID_WINDOW_CLOSE_ALL    : constant:=  57654;
-  ID_APP_ABOUT           : constant:=  57664;
-  ID_APP_EXIT            : constant:=  57665;
-  ID_HELP_INDEX          : constant:=  57666;
-  ID_HELP_FINDER         : constant:=  57667;
-  ID_HELP_USING          : constant:=  57668;
-  ID_CONTEXT_HELP        : constant:=  57669;
-  ID_HELP                : constant:=  57670;
-  ID_DEFAULT_HELP        : constant:=  57671;
-  ID_NEXT_PANE           : constant:=  57680;
-  ID_PREV_PANE           : constant:=  57681;
-  ID_FORMAT_FONT         : constant:=  57696;
-  ID_OLE_INSERT_NEW      : constant:=  57856;
-  ID_OLE_EDIT_LINKS      : constant:=  57857;
-  ID_OLE_EDIT_CONVERT    : constant:=  57858;
-  ID_OLE_EDIT_CHANGE_ICON: constant:=  57859;
-  ID_OLE_EDIT_PROPERTIES : constant:=  57860;
-  ID_OLE_VERB_FIRST      : constant:=  57872;
-  ID_OLE_VERB_LAST       : constant:=  57887;
-  ID_VIEW_TOOLBAR        : constant:=  59392;
-  ID_VIEW_STATUS_BAR     : constant:=  59393;
-  ID_VIEW_REBAR          : constant:=  59396;
-  ID_VIEW_AUTOARRANGE    : constant:=  59397;
-  ID_VIEW_SMALLICON      : constant:=  59408;
-  ID_VIEW_LARGEICON      : constant:=  59409;
-  ID_VIEW_LIST           : constant:=  59410;
-  ID_VIEW_DETAILS        : constant:=  59411;
-  ID_VIEW_LINEUP         : constant:=  59412;
-  ID_VIEW_BYNAME         : constant:=  59413;
-  ID_RECORD_FIRST        : constant:=  59648;
-  ID_RECORD_LAST         : constant:=  59649;
-  ID_RECORD_NEXT         : constant:=  59650;
-  ID_RECORD_PREV         : constant:=  59651;
+  IDC_STATIC           : constant:=     -1;
+  Cleanup_Dialog       : constant:=    101;
+  Param_Curve_2D_Dialog: constant:=    102;
+  X_Form_Box           : constant:=  40000;
+  Y_Form_Box           : constant:=  40001;
+  Detection_List       : constant:=  40002;
+  T_Max_Box            : constant:=  40002;
+  T_Min_Box            : constant:=  40003;
+  Segments_Label       : constant:=  40004;
+  Segments_Box         : constant:=  40005;
 
   -- ** Some helper utilities (spec).
 
@@ -180,6 +147,6 @@ package TeXCAD_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 124
+  -- Last line of resource script file: 146
 
 end TeXCAD_Resource_GUI;

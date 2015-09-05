@@ -6,14 +6,15 @@
 //         /    /___   /  \  /____  /   / /____/
 //
 //          TeXCAD for Windows, resource script
+//          Partially edited on ResEdit 1.6.2, http://www.resedit.net
 //
 /////////////////////////////////////////////////////////////////////////////
 
-#include "standard_ids.h"
 #include <windows.h>
 #include <commctrl.h>
 #include <richedit.h>
 #include "texcad.h"
+#include "standard_ids.h"
 
 //#define VK_INSERT         0x2D
 //#define VK_DELETE         0x2E
@@ -59,6 +60,7 @@ Finger_cursor       CURSOR DISCARDABLE	"finger.cur"
 //
 // Dialog resources
 //
+
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 Cleanup_Dialog DIALOG 0, 0, 298, 110
 STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
@@ -68,6 +70,26 @@ FONT 8, "Ms Shell Dlg"
     PUSHBUTTON      "CANCEL", IDCANCEL, 237, 90, 50, 14, 0, WS_EX_LEFT
     DEFPUSHBUTTON   "&CLEANUP SELECTED", IDOK, 117, 90, 114, 14, 0, WS_EX_LEFT
     CONTROL         "", Detection_List, WC_LISTVIEW, WS_TABSTOP | WS_BORDER | LVS_ALIGNLEFT | LVS_REPORT, 9, 7, 277, 77, WS_EX_LEFT
+}
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+Param_Curve_2D_Dialog DIALOG 0, 0, 331, 118
+STYLE DS_3DLOOK | DS_CENTER | DS_MODALFRAME | DS_SHELLFONT | WS_CAPTION | WS_VISIBLE | WS_POPUP | WS_SYSMENU
+CAPTION "2D PARAMETRIC CURVE"
+FONT 8, "Ms Shell Dlg"
+{
+    LTEXT           "x(t)", 0, 8, 12, 15, 12, SS_LEFT, WS_EX_LEFT
+    LTEXT           "y(t)", 0, 8, 31, 15, 12, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        X_Form_Box, 26, 10, 297, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    EDITTEXT        Y_Form_Box, 26, 29, 297, 15, ES_AUTOHSCROLL, WS_EX_LEFT
+    LTEXT           "t_min", 0, 24, 52, 25, 13, SS_LEFT, WS_EX_LEFT
+    LTEXT           "t_max", 0, 24, 71, 25, 13, SS_LEFT, WS_EX_LEFT
+    EDITTEXT        T_Min_Box, 58, 50, 70, 14, ES_AUTOHSCROLL, WS_EX_LEFT
+    EDITTEXT        T_Max_Box, 58, 69, 70, 14, ES_AUTOHSCROLL, WS_EX_LEFT
+    RTEXT           "SEGMENTS (0=auto)", Segments_Label, 143, 59, 104, 10, SS_RIGHT, WS_EX_LEFT
+    EDITTEXT        Segments_Box, 256, 57, 37, 12, ES_AUTOHSCROLL, WS_EX_LEFT
+    DEFPUSHBUTTON   "OK", IDOK, 257, 95, 50, 14, 0, WS_EX_LEFT
+    PUSHBUTTON      "Cancel", IDCANCEL, 203, 95, 50, 14, 0, WS_EX_LEFT
 }
 
 /////////////////////////////////////////////////////////////////////////////
