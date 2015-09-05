@@ -72,6 +72,7 @@ package body TC.GWin.Toolbars is
     Add_Separator(tb, sep_w);
 
     Add_Button_with_Tip (tb, 13, pick_obj);
+    Add_Button_with_Tip (tb, 18, change_text);
     Add_Button_with_Tip (tb,  3, cut_clip);
     Add_Button_with_Tip (tb,  4, copy_clip);
     Add_Button_with_Tip (tb,  5, paste_clip);
