@@ -9,6 +9,7 @@ with TC.GWin.Object_editing;            use TC.GWin.Object_editing;
 with TC.GWin.Phantoms;                  use TC.GWin.Phantoms;
 
 with GWindows.Base;                     use GWindows.Base;
+--  with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 
@@ -339,6 +340,10 @@ package body TC.GWin.Mousing is
                 when bezier =>
                   Change_Bezier(
                     w.parent.all, w.main.all, w.picture.ul_in_pt,
+                    w.picture.memo.all, modif);
+                when paramcurve2d =>
+                  Change_Param_2D(
+                    w.parent.all, w.main.all,
                     w.picture.memo.all, modif);
                 when others =>
                   modif:= False;

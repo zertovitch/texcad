@@ -11,3 +11,5 @@
 #define T_Min_Box                               40003
 #define Segments_Label                          40004
 #define Segments_Box                            40005
+#define Scale_Label                             40006
+#define Scale_Box                               40007

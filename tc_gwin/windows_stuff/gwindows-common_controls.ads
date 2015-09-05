@@ -1,13 +1,13 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---             GWINDOWS - Ada 95 Framework for Win32 Development            --
+--            GWINDOWS - Ada 95 Framework for Windows Development           --
 --                                                                          --
 --      G W I N D O W S . W I N D O W S . C O M M O N _ C O N T R O L S     --
 --                                                                          --
 --                                 S p e c                                  --
 --                                                                          --
 --                                                                          --
---                 Copyright (C) 1999 - 2005 David Botton                   --
+--                 Copyright (C) 1999 - 2015 David Botton                   --
 --                                                                          --
 -- This is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -28,7 +28,10 @@
 -- covered by the  GNU Public License.                                      --
 --                                                                          --
 -- More information about GWindows and the latest current release can       --
--- be located on the web at http://www.gnavi.org/gwindows                   --
+-- be located on the web at one of the following places:                    --
+--   http://sf.net/projects/gnavi/                                          --
+--   http://www.gnavi.org/gwindows                                          --
+--   http://www.adapower.com/gwindows                                       --
 --                                                                          --
 ------------------------------------------------------------------------------
 
@@ -143,7 +146,6 @@ package GWindows.Common_Controls is
    --  These should be overiden with caution and only with a full
    --  understanding of the internals of the entire GWindows framework
 
-   overriding
    procedure On_Notify
      (Window       : in out Common_Control_Type;
       Message      : in     GWindows.Base.Pointer_To_Notification;
@@ -312,7 +314,8 @@ package GWindows.Common_Controls is
 
    procedure Date_Time_Format (Control : in out Date_Time_Picker_Type;
                                Format  : in     GString);
-   --  Allows for a custom date/time format
+   --  Allows for a custom date/time format.
+   --  This custom format replaces the Format parameter set by Create.
    --
    --  Element Description
    --   "d"     The one- or two-digit day.
@@ -398,7 +401,6 @@ package GWindows.Common_Controls is
    --  These should be overiden with caution and only with a full
    --  understanding of the internals of the entire GWindows framework
 
-   overriding
    procedure On_Notify
      (Window       : in out Date_Time_Picker_Type;
       Message      : in     GWindows.Base.Pointer_To_Notification;
@@ -613,7 +615,6 @@ package GWindows.Common_Controls is
    --  These should be overiden with caution and only with a full
    --  understanding of the internals of the entire GWindows framework
 
-   overriding
    procedure On_Notify
      (Window       : in out Up_Down_Control_Type;
       Message      : in     GWindows.Base.Pointer_To_Notification;
@@ -758,7 +759,7 @@ package GWindows.Common_Controls is
       Position : in     GWindows.Types.Point_Type;
       Item     : in out Integer;
       SubItem  : in out Integer);
-   --  Item under position (position is in client coordinates)
+   --  Item under screen position, in client coordinates
 
    function Text
      (Control : in List_View_Control_Type;
@@ -780,6 +781,12 @@ package GWindows.Common_Controls is
                            Text      : in     GString;
                            Index     : in     Integer;
                            Sub_Index : in     Integer);
+
+   procedure Insert_Item (Control      : in out List_View_Control_Type;
+                          Text         : in  GString;
+                          Index        : in  Integer;
+                          Sorted_Index : out Integer;
+                          Icon         : in  Integer := 0);
 
    procedure Insert_Item (Control : in out List_View_Control_Type;
                           Text    : in GString;
@@ -804,6 +811,11 @@ package GWindows.Common_Controls is
       Index   : in     Integer;
       Width   : in     Integer);
 
+   function Column_Width
+     (Control : in List_View_Control_Type;
+      Index   : in Integer)
+     return Integer;
+
    procedure Clear (Control : in out List_View_Control_Type);
 
    -------------------------------------------------------------------------
@@ -814,6 +826,20 @@ package GWindows.Common_Controls is
 
    procedure On_Create (Control : in out List_View_Control_Type);
    --  Sets control as a tab stop and with a border
+
+   procedure On_Item_Changed (Control : in out List_View_Control_Type);
+
+   procedure On_Item_Changed_Handler
+      (Control : in out List_View_Control_Type;
+       Handler : in     GWindows.Base.Action_Event);
+
+   procedure Fire_On_Item_Changed (Control : in out List_View_Control_Type);
+
+   procedure On_Notify
+     (Window       : in out List_View_Control_Type;
+      Message      : in     GWindows.Base.Pointer_To_Notification;
+      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
+      Return_Value : in out GWindows.Types.Lresult);
 
    --------------
    -- AnSp: Next List_View_Control_Type functions are added --
@@ -880,11 +906,22 @@ package GWindows.Common_Controls is
    function Selected_Item (Control : in Tree_View_Control_Type)
                           return Tree_Item_Node;
 
+   procedure Item_At_Position
+     (Control  : in     Tree_View_Control_Type;
+      Position : in     GWindows.Types.Point_Type;
+      Item     :    out Tree_Item_Node);
+   --  Item under screen position, in client coordinates
+
+   function Item_At_Position
+     (Control  : in     Tree_View_Control_Type;
+      Position : in     GWindows.Types.Point_Type)
+   return Tree_Item_Node;
+   --  Item under screen position, in client coordinates
+
    function Text (Control : in Tree_View_Control_Type;
                   Where   : in Tree_Item_Node)
                  return GString;
 
-   --  GdM: procedure Text (with node) added 2-Jun-2009, uses AnSp's Set_Item
    procedure Text (Control : in out Tree_View_Control_Type;
                    Where   : in     Tree_Item_Node;
                    Text    : in     GString);
@@ -1006,7 +1043,6 @@ package GWindows.Common_Controls is
    --  These should be overiden with caution and only with a full
    --  understanding of the internals of the entire GWindows framework
 
-   overriding
    procedure On_Notify
      (Window       : in out Tree_View_Control_Type;
       Message      : in     GWindows.Base.Pointer_To_Notification;
@@ -1105,7 +1141,6 @@ package GWindows.Common_Controls is
    procedure On_Create (Control : in out Tab_Control_Type);
    --  Sets control as a tab stop
 
-   overriding
    procedure On_Notify
      (Window       : in out Tab_Control_Type;
       Message      : in     GWindows.Base.Pointer_To_Notification;
@@ -1228,6 +1263,9 @@ package GWindows.Common_Controls is
       Index     :    out Integer);
 
    --  AlKe: added
+   --  Text can be a series of strings seperated by GCharacter'Val (0),
+   --  e.g. to be used for button labels or tooltips.
+   --  See Add_Button below with IString.
    procedure Add_String
      (Control     : in out Toolbar_Control_Type;
       Text        : in     GString);
@@ -1286,6 +1324,10 @@ package GWindows.Common_Controls is
      return Interfaces.C.unsigned;
 
    procedure Set_Style
+     (Control    : in out Toolbar_Control_Type;
+      Style      : in     Interfaces.C.unsigned);
+
+   procedure Set_Extended_Style
      (Control    : in out Toolbar_Control_Type;
       Style      : in     Interfaces.C.unsigned);
 
@@ -1468,7 +1510,10 @@ private
 
    type Progress_Control_Type is new Common_Control_Type with null record;
 
-   type List_View_Control_Type is new Common_Control_Type with null record;
+   type List_View_Control_Type is new Common_Control_Type with
+      record
+         On_Item_Changed_Event  : GWindows.Base.Action_Event := null;
+      end record;
 
    type Tree_View_Control_Type is new Common_Control_Type with
       record

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/05  11:00:40
+-- Transcription time: 2015/09/05  12:49:14
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -180,6 +180,10 @@ package body TeXCAD_Resource_GUI is
     Create( Window.Segments_Label, Window, "SEGMENTS (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Segments_Label);
     Dlg_to_Scn(  256, 57, 37, 12, x,y,w,h);
     Create( Window.Segments_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Segments_Box);
+    Dlg_to_Scn(  143, 77, 104, 10, x,y,w,h);
+    Create( Window.Scale_Label, Window, "SCALE (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Scale_Label);
+    Dlg_to_Scn(  256, 75, 37, 12, x,y,w,h);
+    Create( Window.Scale_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Scale_Box);
     Dlg_to_Scn(  257, 95, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
@@ -315,6 +319,6 @@ package body TeXCAD_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 146
+  -- Last line of resource script file: 148
 
 end TeXCAD_Resource_GUI;

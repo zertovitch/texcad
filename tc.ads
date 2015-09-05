@@ -178,6 +178,15 @@ package TC is
   function Evaluate_variable (name : String; t: Real) return Real;
   package TC_Formulas is new Formulas(Real, Real, Evaluate_variable);
 
+  type Param_curve_2D_data is record
+    segments  : Natural;  --  if 0: automatic
+    scale     : Real;
+    form_x    : Unbounded_String;  --  x(t)
+    form_y    : Unbounded_String;  --  y(t)
+    min_t     : Real;
+    max_t     : Real;
+  end record;
+
   type Obj_type(art: Obj_art_type) is record  --  JW,GH
     P1: Point;
     next: ptr_Obj_type:= null;
@@ -209,15 +218,9 @@ package TC is
           bez_slope : LaTeX_slopes;
           num       : Natural;
        when paramcurve2d =>  --  Check Read_paramcurve2d in TC.Input for syntax
-          segments  : Natural;  --  if 0: automatic
-          scale     : Real;
-          form_x    : Unbounded_String;  --  x(t)
-          form_y    : Unbounded_String;  --  y(t)
-          min_t     : Real;
-          max_t     : Real;
-          --
-          parsed_x  : TC_Formulas.Formula;  --  Needs refresh after each modification
-          parsed_y  : TC_Formulas.Formula;  --  Needs refresh after each modification
+          data_2d      : Param_curve_2D_data;
+          parsed_2d_x  : TC_Formulas.Formula;  --  Needs refresh after each modification
+          parsed_2d_y  : TC_Formulas.Formula;  --  Needs refresh after each modification
        when others=> null;
     end case;
   end record;
@@ -312,7 +315,7 @@ package TC is
 
   function TeX_Number( s: String ) return Real;
   -- Tolerant parsing of a TeX number
-  function TeX_Number( x: Real; prec: Positive ) return String;
+  function TeX_Number( x: Real; prec: Positive:= Real'Digits ) return String;
   -- Minimal representation of a TeX number
 
   function Image( o:Ovop ) return String;

@@ -23,4 +23,10 @@ package TC.GWin.Object_editing is
     t       : in out Obj_type;
     modified:    out Boolean );
 
+  procedure Change_Param_2D(
+    parent  : in out Base_Window_Type'Class;
+    main    : in out MDI_Main_Type;
+    t       : in out Obj_type;
+    modified:    out Boolean );
+
 end TC.GWin.Object_editing;

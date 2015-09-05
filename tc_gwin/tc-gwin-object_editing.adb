@@ -1,4 +1,5 @@
 with TC.GWin.Lang;                      use TC.GWin.Lang;
+with TeXCAD_Resource_GUI;               use TeXCAD_Resource_GUI;
 
 with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Constants;                use GWindows.Constants;
@@ -284,5 +285,67 @@ package body TC.GWin.Object_editing is
     end case;
 
   end Change_Bezier;
+
+  procedure Change_Param_2D(
+    parent  : in out Base_Window_Type'Class;
+    main    : in out MDI_Main_Type;
+    t       : in out Obj_type;
+    modified:    out Boolean )
+  is
+    pan       : TeXCAD_Resource_GUI.Param_Curve_2D_Dialog_Type;
+    Result    : Integer;
+    candidate : Param_curve_2D_data:= t.data_2d;
+    valid     : Boolean:= False;
+
+    procedure Set_Data is
+    begin
+      pan.Segments_Box.Text(Trim(Integer'Image(candidate.segments), Left));
+      pan.Scale_Box.Text(TeX_Number(candidate.scale));
+      pan.X_Form_Box.Text(To_String(candidate.form_x));
+      pan.Y_Form_Box.Text(To_String(candidate.form_y));
+      pan.T_Min_Box.Text(TeX_Number(candidate.min_t));
+      pan.T_Max_Box.Text(TeX_Number(candidate.max_t));
+    end Set_Data;
+
+    procedure Get_Data
+      (Window : in out GWindows.Base.Base_Window_Type'Class)
+    is
+      pragma Warnings(off,window);
+    begin
+      candidate:=
+        ( segments => Natural'Value(pan.Segments_Box.Text),
+          scale    => TeX_Number(pan.Scale_Box.Text),
+          form_x   => U(pan.X_Form_Box.Text),
+          form_y   => U(pan.Y_Form_Box.Text),
+          min_t    => TeX_Number(pan.T_Min_Box.Text),
+          max_t    => TeX_Number(pan.T_Max_Box.Text)
+        );
+      valid:= True;
+    exception
+      when others => null; -- Wrong data
+    end Get_Data;
+
+  begin
+    Create_Full_Dialog(pan, Parent, Msg(param2d_title));
+    Center(pan);
+    Small_Icon (Pan, "Options_Icon");
+    On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
+    Set_Data;
+    pan.Segments_Label.Text(Msg(param2d_segments));
+    pan.Scale_Label.Text(Msg(param2d_scale));
+    pan.IDCANCEL.Text(Msg(mcancel));
+    Show_Dialog_with_Toolbars_off(pan, parent, main, result);
+
+    case Result is
+      when IDOK     =>
+        if valid then
+          modified:= candidate /= t.data_2d;
+          if modified then
+            t.data_2d:= candidate;
+          end if;
+        end if;
+      when others   => modified:= False; -- Contains IDCANCEL
+    end case;
+  end Change_Param_2D;
 
 end TC.GWin.Object_editing;

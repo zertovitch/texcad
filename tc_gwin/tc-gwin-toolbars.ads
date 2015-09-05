@@ -1,11 +1,12 @@
-with GWindows.Base, GWindows.Common_Controls, Gwindows.Image_Lists;
+with GWindows.Base, GWindows.Image_Lists;
+with Floating_toolbars;
 
 package TC.GWin.Toolbars is
 
   -- ** Main tool bar (new/open/save/...) at top left of the main window:
 
   procedure Init_Main_toolbar(
-    tb    : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
+    tb    : in out Floating_toolbars.GUI_toolbar'Class;
     il    : in out GWindows.Image_Lists.Image_List_Type;
     parent: in out GWindows.Base.Base_Window_Type'Class);
 

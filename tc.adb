@@ -133,33 +133,33 @@ package body TC is
   end Evaluate_variable;
 
   function Evaluate_param_curve_2D( o: Obj_type; t: Real ) return Point is
-    x: constant Real:= TC_Formulas.Evaluate(o.parsed_x, t);
-    y: constant Real:= TC_Formulas.Evaluate(o.parsed_y, t);
+    x: constant Real:= TC_Formulas.Evaluate(o.parsed_2d_x, t);
+    y: constant Real:= TC_Formulas.Evaluate(o.parsed_2d_y, t);
   begin
     -- RIO.Put(x); RIO.Put(16.0 * sin(t)**3); Ada.Text_IO.New_Line;
     -- RIO.Put(y); RIO.Put(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t)); Ada.Text_IO.New_Line;
-    return o.P1 + o.scale * (x, y);
+    return o.P1 + o.data_2d.scale * (x, y);
   end Evaluate_param_curve_2D;
 
   procedure Parametric_curve_2D( o: Obj_type; pt_scale: Real ) is
     sc, nt: Natural;
     isc, t: Real;
-    len: constant Real:= o.max_t - o.min_t;
+    len: constant Real:= o.data_2d.max_t - o.data_2d.min_t;
     P1, P2, P3: Point;
     density: Real;
   begin
-    sc:= o.segments;
+    sc:= o.data_2d.segments;
     if sc = 0 then  --  Automatically compute number of segments
       density:= 16.0 * Real'Max(1.0, pt_scale);
-      P1:= Evaluate_param_curve_2D(o, o.min_t);
-      P2:= Evaluate_param_curve_2D(o, 0.5 * (o.min_t + o.max_t));
-      P3:= Evaluate_param_curve_2D(o, o.max_t);
+      P1:= Evaluate_param_curve_2D(o, o.data_2d.min_t);
+      P2:= Evaluate_param_curve_2D(o, 0.5 * (o.data_2d.min_t + o.data_2d.max_t));
+      P3:= Evaluate_param_curve_2D(o, o.data_2d.max_t);
       sc:= 1 + Integer(density * ( Norm(P1 - P2) + Norm(P2 - P3) ));
     end if;
     isc:= 1.0 / Real(sc);
     nt:= 0;
     while nt <= sc loop
-      t:= (Real(nt) * isc) * len + o.min_t;  --  t in [o.min_t, o.max_t]
+      t:= (Real(nt) * isc) * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
       Action(Evaluate_param_curve_2D(o, t));
       nt:= nt + 1;
     end loop;
@@ -449,7 +449,7 @@ package body TC is
     return rv;
   end TeX_Number;
 
-  function TeX_Number( x: Real; prec: Positive ) return String is
+  function TeX_Number( x: Real; prec: Positive:= Real'Digits ) return String is
     s: String(1..30);
     na,nb,np:Natural;
   begin

@@ -56,6 +56,7 @@ package TC.GWin.Lang is
     gcolors, background, normal, picked, shadow,
     grid,gridnone,gridpts,gridlin,
     bezpts, bezauto, bezsugg,
+    param2d_title, param2d_segments, param2d_scale,
     preview_latex_mode,
     preview_directory,
     mcurrent,

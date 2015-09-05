@@ -370,10 +370,10 @@ package body TC.Output is
       procedure Draw_Paramcurve is new Parametric_curve_2D(PlotPoint);
 
     begin
-      M:= Evaluate_param_curve_2D(o, o.min_t);
+      M:= Evaluate_param_curve_2D(o, o.data_2d.min_t);
       Q:= (0.0,0.0);
       Draw_Paramcurve(o,pic.ul_in_pt);
-      PE:= Evaluate_param_curve_2D(o, o.max_t);
+      PE:= Evaluate_param_curve_2D(o, o.data_2d.max_t);
       Write_line_any_slope( M, PE, 0);
     end Write_emulated_paramcurve2d;
 
@@ -570,7 +570,7 @@ package body TC.Output is
     end Write_bezier;
 
     procedure Write_paramcurve2d(o: Obj_type) is
-      long: constant Boolean:= Length(o.form_x) + Length(o.form_y) > 40;
+      long: constant Boolean:= Length(o.data_2d.form_x) + Length(o.data_2d.form_y) > 40;
       procedure Spacing is
       begin
         if long then
@@ -580,16 +580,16 @@ package body TC.Output is
       end;
     begin
       Put(tf, "%\paramcurvexy");
-      if o.segments > 0 then
-        Put(tf, '[' & I(o.segments) & ']');
+      if o.data_2d.segments > 0 then
+        Put(tf, '[' & I(o.data_2d.segments) & ']');
       end if;
-      Put(tf, Pt(o.P1 - Pmin) & '(' & R(o.scale) & ")(");
+      Put(tf, Pt(o.P1 - Pmin) & '(' & R(o.data_2d.scale) & ")(");
       Spacing;
-      Put(tf, To_String(o.form_x) & ", ");
+      Put(tf, To_String(o.data_2d.form_x) & ", ");
       Spacing;
-      Put(tf, To_String(o.form_y) & ", ");
+      Put(tf, To_String(o.data_2d.form_y) & ", ");
       Spacing;
-      Put_Line(tf, R(o.min_t) & ", " & R(o.max_t) & ')');
+      Put_Line(tf, R(o.data_2d.min_t) & ", " & R(o.data_2d.max_t) & ')');
       Write_emulated_paramcurve2d(o);
       End_of_emulation;
     end Write_paramcurve2d;

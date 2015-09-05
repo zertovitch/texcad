@@ -1,13 +1,13 @@
 ------------------------------------------------------------------------------
 --                                                                          --
---             GWINDOWS - Ada 95 Framework for Win32 Development            --
+--            GWINDOWS - Ada 95 Framework for Windows Development           --
 --                                                                          --
 --      G W I N D O W S . W I N D O W S . C O M M O N _ C O N T R O L S     --
 --                                                                          --
 --                                 B o d y                                  --
 --                                                                          --
 --                                                                          --
---                 Copyright (C) 1999 - 2005 David Botton                   --
+--                 Copyright (C) 1999 - 2014 David Botton                   --
 --                                                                          --
 -- This is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -28,7 +28,10 @@
 -- covered by the  GNU Public License.                                      --
 --                                                                          --
 -- More information about GWindows and the latest current release can       --
--- be located on the web at http://www.gnavi.org/gwindows                   --
+-- be located on the web at one of the following places:                    --
+--   http://sf.net/projects/gnavi/                                          --
+--   http://www.gnavi.org/gwindows                                          --
+--   http://www.adapower.com/gwindows                                       --
 --                                                                          --
 ------------------------------------------------------------------------------
 
@@ -239,6 +242,7 @@ package body GWindows.Common_Controls is
    TVM_SETITEMW            : constant := TV_FIRST + 63;  --  AnSp
    TVM_SETIMAGELIST        : constant := TV_FIRST + 9;  --  AnSp
    TVM_SELECTITEM          : constant := TV_FIRST + 11; -- GdM
+   TVM_HITTEST             : constant := TV_FIRST + 17;
 
    TVGN_ROOT               : constant := 16#0000#;
    TVGN_NEXT               : constant := 16#0001#;
@@ -314,6 +318,8 @@ package body GWindows.Common_Controls is
    TB_GETSTATE         : constant := (WM_USER + 18);
    TB_SETSTYLE         : constant := 1080;
    TB_GETSTYLE         : constant := 1081;
+   TB_SETEXTENDEDSTYLE : constant := (WM_USER + 84);
+
    --  * AnSp: Styles now defined in ads
    --  * AnSp   TBSTATE_ENABLED     : constant := 16#4#;
    --  * AnSp   TBSTATE_HIDDEN        : constant := 16#8#;
@@ -1576,12 +1582,12 @@ package body GWindows.Common_Controls is
 
       Seconds := Ada.Calendar.Seconds (Time);
 
-      Temp := Seconds / (60*60);
+      Temp := Seconds / (60 * 60);
       C_Time.wHour   :=
         Interfaces.C.short (Float'Floor (Float (Temp)));
 
       Temp := (Seconds - (Ada.Calendar.Day_Duration
-                          (C_Time.wHour) * (60*60))) / 60;
+                          (C_Time.wHour) * (60 * 60))) / 60;
       C_Time.wMinute :=
         Interfaces.C.short (Float'Floor (Float (Temp)));
 
@@ -1918,7 +1924,7 @@ package body GWindows.Common_Controls is
       LVS_LIST                : constant := 16#0003#;
       --  LVS_TYPEMASK            : constant := 16#0003#;
       LVS_SINGLESEL           : constant := 16#0004#;
-      --  LVS_SHOWSELALWAYS       : constant := 16#0008#;
+      LVS_SHOWSELALWAYS       : constant := 16#0008#;
       LVS_SORTASCENDING       : constant := 16#0010#;
       LVS_SORTDESCENDING      : constant := 16#0020#;
       --  LVS_SHAREIMAGELISTS     : constant := 16#0040#;
@@ -1933,7 +1939,7 @@ package body GWindows.Common_Controls is
       --  LVS_NOCOLUMNHEADER      : constant := 16#4000#;
       LVS_NOSORTHEADER        : constant := 16#8000#;
 
-      Styles     : Interfaces.C.unsigned := 0;
+      Styles     : Interfaces.C.unsigned := LVS_SHOWSELALWAYS;
    begin
       if Selection = Single then
          Styles := Styles or LVS_SINGLESEL;
@@ -2071,28 +2077,31 @@ package body GWindows.Common_Controls is
    -- Insert_Item --
    -----------------
 
-   procedure Insert_Item (Control : in out List_View_Control_Type;
-                          Text    : in GString;
-                          Index   : in Integer;
-                          Icon    : in Integer := 0)
+   procedure Insert_Item (Control      : in out List_View_Control_Type;
+                          Text         : in  GString;
+                          Index        : in  Integer;
+                          Sorted_Index : out Integer;
+                          Icon         : in  Integer := 0)
    is
       C_Text : GString_C := GWindows.GStrings.To_GString_C (Text);
 
       Item : LVITEM;
 
-      procedure SendMessageA
+      function SendMessageA
         (hwnd   : GWindows.Types.Handle := Handle (Control);
          uMsg   : Interfaces.C.int      := LVM_INSERTITEMA;
          wParam : GWindows.Types.Wparam := 0;
-         lParam : LVITEM                := Item);
+         lParam : LVITEM                := Item)
+      return GWindows.Types.Lparam;
       pragma Import (StdCall, SendMessageA,
                        "SendMessage" & Character_Mode_Identifier);
 
-      procedure SendMessageW
+      function SendMessageW
         (hwnd   : GWindows.Types.Handle := Handle (Control);
          uMsg   : Interfaces.C.int      := LVM_INSERTITEMW;
          wParam : GWindows.Types.Wparam := 0;
-         lParam : LVITEM                := Item);
+         lParam : LVITEM                := Item)
+      return GWindows.Types.Lparam;
       pragma Import (StdCall, SendMessageW,
                        "SendMessage" & Character_Mode_Identifier);
    begin
@@ -2103,10 +2112,26 @@ package body GWindows.Common_Controls is
 
       case Character_Mode is
          when Unicode =>
-            SendMessageW;
+            Sorted_Index := Integer (SendMessageW);
          when ANSI =>
-            SendMessageA;
+            Sorted_Index := Integer (SendMessageA);
       end case;
+   end Insert_Item;
+
+   procedure Insert_Item (Control : in out List_View_Control_Type;
+                          Text    : in GString;
+                          Index   : in Integer;
+                          Icon    : in Integer := 0)
+   is
+      Sorted_Index : Integer; -- will be ignored
+   begin
+      Insert_Item (
+         Control      => Control,
+         Text         => Text,
+         Index        => Index,
+         Sorted_Index => Sorted_Index,
+         Icon         => Icon
+      );
    end Insert_Item;
 
    ----------------
@@ -2451,6 +2476,31 @@ package body GWindows.Common_Controls is
       end case;
    end Set_Column_Width;
 
+   ------------------
+   -- Column_Width --
+   ------------------
+
+   function Column_Width (
+      Control : in List_View_Control_Type;
+      Index   : in Integer
+   )
+   return Integer
+   is
+      LVM_FIRST               : constant := 16#1000#;
+      LVM_GETCOLUMNWIDTH      : constant := LVM_FIRST + 29;
+
+      function SendMessage
+        (hwnd   : GWindows.Types.Handle := Handle (Control);
+         uMsg   : Interfaces.C.int      := LVM_GETCOLUMNWIDTH;
+         wParam : GWindows.Types.Wparam := GWindows.Types.Wparam (Index);
+         lParam : GWindows.Types.Lparam := 0)
+        return Integer;
+      pragma Import (StdCall, SendMessage,
+                       "SendMessage" & Character_Mode_Identifier);
+   begin
+      return SendMessage;
+   end Column_Width;
+
    -----------------
    -- Delete_Item --
    -----------------
@@ -2481,6 +2531,63 @@ package body GWindows.Common_Controls is
       Border (Control);
       Tab_Stop (Control);
    end On_Create;
+
+   ---------------------
+   -- On_Item_Changed --
+   ---------------------
+
+   procedure On_Item_Changed (Control : in out List_View_Control_Type) is
+   begin
+      Fire_On_Item_Changed (Control);
+   end On_Item_Changed;
+
+   -----------------------------
+   -- On_Item_Changed_Handler --
+   -----------------------------
+
+   procedure On_Item_Changed_Handler
+      (Control : in out List_View_Control_Type;
+       Handler : in     GWindows.Base.Action_Event)
+   is
+   begin
+      Control.On_Item_Changed_Event := Handler;
+   end On_Item_Changed_Handler;
+
+   ---------------------
+   -- On_Item_Changed --
+   ---------------------
+
+   procedure Fire_On_Item_Changed (Control : in out List_View_Control_Type)
+   is
+      use GWindows.Base;
+   begin
+      if Control.On_Item_Changed_Event /= null then
+         Control.On_Item_Changed_Event (Base_Window_Type'Class (Control));
+      end if;
+   end Fire_On_Item_Changed;
+
+   ---------------
+   -- On_Notify --
+   ---------------
+
+   procedure On_Notify
+     (Window       : in out List_View_Control_Type;
+      Message      : in     GWindows.Base.Pointer_To_Notification;
+      Control      : in     GWindows.Base.Pointer_To_Base_Window_Class;
+      Return_Value : in out GWindows.Types.Lresult)
+   is
+      LVN_FIRST       : constant := -100;
+      --  LVN_ITEMCHANGING : constant := LVN_FIRST - 0;
+      LVN_ITEMCHANGED : constant := LVN_FIRST - 1;
+   begin
+      case Message.Code is
+         when LVN_ITEMCHANGED =>
+            On_Item_Changed (List_View_Control_Type'Class (Window));
+         when others =>
+            On_Notify (Common_Control_Type (Window),
+                       Message, Control, Return_Value);
+      end case;
+   end On_Notify;
 
    --------------
    -- AnSp: Next List_View_Control_Type functions are added --
@@ -2533,7 +2640,7 @@ package body GWindows.Common_Controls is
       TVS_LINESATROOT         : constant := 16#0004#;
       --  TVS_EDITLABELS          : constant := 16#0008#;
       --  TVS_DISABLEDRAGDROP     : constant := 16#0010#;
-      --  TVS_SHOWSELALWAYS       : constant := 16#0020#;
+      TVS_SHOWSELALWAYS       : constant := 16#0020#;
       --  TVS_RTLREADING          : constant := 16#0040#;
       --  TVS_NOTOOLTIPS          : constant := 16#0080#;
       --  TVS_CHECKBOXES          : constant := 16#0100#;
@@ -2544,7 +2651,7 @@ package body GWindows.Common_Controls is
       --  TVS_NOSCROLL            : constant := 16#2000#;
       --  TVS_NONEVENHEIGHT       : constant := 16#4000#;
 
-      Styles     : Interfaces.C.unsigned := 0;
+      Styles     : Interfaces.C.unsigned := TVS_SHOWSELALWAYS;
    begin
       if Lines then
          Styles := Styles or TVS_HASLINES;
@@ -2793,6 +2900,44 @@ package body GWindows.Common_Controls is
    begin
       return SendMessage;
    end Get_Previous_Item;
+
+   --  GdM 25-Jul-2013: added similar as for List_View.
+   --  Code from Ex_TV, under the name Tree_Hit_Test.
+   function Item_At_Position
+     (Control  : in     Tree_View_Control_Type;
+      Position : in     GWindows.Types.Point_Type)
+   return Tree_Item_Node
+   is
+      type Tv_Hit_Test_Info_Type is
+         record
+            Point : GWindows.Types.Point_Type     := Position;
+            Flags : Integer;
+            Hitem : Tree_Item_Node;
+         end record;
+
+      Hit_Test_Structure : Tv_Hit_Test_Info_Type;
+
+      procedure Sendmessage
+        (Hwnd   : GWindows.Types.Handle := Handle (Control);
+         Umsg   : Interfaces.C.int  := TVM_HITTEST;
+         Wparam : Integer           := 0;
+         Lparam : System.Address    := Hit_Test_Structure'Address);
+      pragma Import (Stdcall, Sendmessage,
+                       "SendMessage" & Character_Mode_Identifier);
+
+   begin
+      Sendmessage;
+      return Hit_Test_Structure.Hitem;
+   end Item_At_Position;
+
+   procedure Item_At_Position
+     (Control  : in     Tree_View_Control_Type;
+      Position : in     GWindows.Types.Point_Type;
+      Item     :    out Tree_Item_Node)
+   is
+   begin
+     Item := Item_At_Position (Control, Position);
+   end Item_At_Position;
 
    ----------
    -- Text --
@@ -4113,16 +4258,24 @@ package body GWindows.Common_Controls is
      (Control     : in out Toolbar_Control_Type;
       Text        : in     GString)
    is
+      use GWindows.GStrings;
+      TB_ADDSTRINGA : constant := WM_USER + 28;
       TB_ADDSTRINGW : constant := WM_USER + 77;
-      C_Text : GString := Text & GCharacter'Val (0) & GCharacter'Val (0);
+      TB_ADDSTRING : constant array (Character_Mode_Type) of
+         Interfaces.C.int :=
+            (ANSI    => TB_ADDSTRINGA,
+             Unicode => TB_ADDSTRINGW);
+      C_Text : GString_C := To_GString_C (Text & GCharacter'Val (0));
+      --  C_Text has to have a double NUL at the end, since it is a list
+      --  of NUL-separated C strings.
+
       procedure SendMessage
         (hwnd   : GWindows.Types.Handle := Handle (Control);
-         uMsg   : Interfaces.C.int      := TB_ADDSTRINGW;
+         uMsg   : Interfaces.C.int      := TB_ADDSTRING (Character_Mode);
          wParam : GWindows.Types.Lparam := 0;
          lParam : System.Address        := C_Text'Address);
       pragma Import (StdCall, SendMessage,
                      "SendMessage" & Character_Mode_Identifier);
-      use Interfaces.C;
    begin
       SendMessage;
    end Add_String;
@@ -4391,6 +4544,21 @@ package body GWindows.Common_Controls is
       SendMessage;
    end Set_Style;
 
+   procedure Set_Extended_Style
+     (Control    : in out Toolbar_Control_Type;
+      Style      : in     Interfaces.C.unsigned)
+   is
+      procedure SendMessage
+        (hwnd   : GWindows.Types.Handle := Handle (Control);
+         uMsg   : Interfaces.C.int      := TB_SETEXTENDEDSTYLE;
+         wParam : GWindows.Types.Wparam := 0;
+         lParam : GWindows.Types.Lparam := GWindows.Types.Lparam (Style));
+      pragma Import (StdCall, SendMessage,
+                       "SendMessage" & Character_Mode_Identifier);
+   begin
+      SendMessage;
+   end Set_Extended_Style;
+
    --  * AnSp: Added a new record, 2 helper functions and 2 public functions
    ----------------------
    -- TBBUTTONONFO --
@@ -4654,9 +4822,12 @@ package body GWindows.Common_Controls is
          lParam : TOOLINFO              := Info);
       pragma Import (StdCall, SendMessageW,
                        "SendMessage" & Character_Mode_Identifier);
+      use GWindows.Base;
    begin
       Info.Flags := TTF_IDISHWND or TTF_SUBCLASS;
-      Info.HWND := GWindows.Base.Handle (Parent (Control).all);
+      if Parent (Control) /= null then
+         Info.HWND := GWindows.Base.Handle (Parent (Control).all);
+      end if;
       Info.UID := GWindows.Base.Handle (Window);
       Info.Text := C_Text (0)'Unchecked_Access;
 

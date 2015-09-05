@@ -5,8 +5,6 @@ with TC.GWin.MDI_Main;
 
 pragma Elaborate(TC.Gwin); -- Windows_95 flag needed
 
-with Floating_toolbars;
-
 with Interfaces.C;
 
 package body TC.GWin.Toolbars is
@@ -14,22 +12,23 @@ package body TC.GWin.Toolbars is
   use Floating_toolbars, GWindows.Image_Lists, Interfaces.C;
 
   procedure Add_Button
-    (Control     : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
+    (Control     : in out GUI_toolbar'Class;
      Image_Index : in     Natural;
      Command     : in     Custom_cmd)
   is
     i: constant Integer:= ID_custom(Command);
-    s: GString:= Msg(msg_for_command(Command));
-    pragma Warnings(off,s); -- tip unused !!
-     --    t: Tool_Tip_Type;
+    s: constant GString:= Msg(msg_for_command(Command));
   begin
-    GWindows.Common_Controls.Add_button(Control, Image_Index, i);
-    --    Create(t, Controlling_Parent(Control).all, Is_Dynamic => True);
-    --    Add_Tool_Tip(t, Control, Tip => s);
-    --    Maximum_Width(t, 150);
+    -- The tool tip is the menu text.
+    Control.Add_String(s);
+    Control.Add_button(Image_Index, i, Control.string_count);
+    Control.string_count:= Control.string_count + 1;
   end Add_Button;
 
-  TBSTYLE_FLAT : constant:= 16#800#;
+  TBSTYLE_TOOLTIPS            : constant:= 16#00000100#;
+  TBSTYLE_FLAT                : constant:= 16#00000800#;
+  TBSTYLE_LIST                : constant:= 16#00001000#;
+  TBSTYLE_EX_MIXEDBUTTONS     : constant:= 16#00000008#;
   sep_w: constant:= 8;
 
   procedure Add_Button
@@ -42,11 +41,11 @@ package body TC.GWin.Toolbars is
   end Add_Button;
 
   procedure Init_Main_toolbar(
-    tb    : in out GWindows.Common_Controls.Toolbar_Control_Type'Class;
+    tb    : in out Floating_toolbars.GUI_toolbar'Class;
     il    : in out GWindows.Image_Lists.Image_List_Type;
     parent: in out GWindows.Base.Base_Window_Type'Class)
   is
-    use GWindows.Common_Controls;
+--    use GWindows.Common_Controls;
     st: Interfaces.C.unsigned;
   begin
     Create (tb, parent, 0, 0, 0, 40);
@@ -55,8 +54,9 @@ package body TC.GWin.Toolbars is
     Create (il, "Toolbar_Bmp", 16);
     Set_Image_List (tb, il);
     st:= Get_Style(tb);
-    Set_Style(tb, TBSTYLE_FLAT or st);
+    Set_Style(tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);
     -- Attempted TBSTYLE_AUTOSIZE to stop flickering, in vain...
+    Set_Extended_Style(tb, TBSTYLE_EX_MIXEDBUTTONS);
 
     Add_Button (tb,  0, ID_File_New);
     Add_Button (tb,  1, ID_File_Open);
@@ -87,7 +87,8 @@ package body TC.GWin.Toolbars is
 
   procedure Reset_Drawing_toolbar(tb: in out Floating_toolbar) is
   begin
-    Set_Style(tb.bar, TBSTYLE_WRAPABLE + TBSTYLE_FLAT);
+    Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST);
+    Set_Extended_Style(tb.bar, TBSTYLE_EX_MIXEDBUTTONS);
     Dock(tb.bar, Gwindows.Base.At_Top);
     Create(tb.images, "Drawing_Toolbar_Bmp", 28);
     Set_Image_List(tb.bar, tb.images);
@@ -105,7 +106,8 @@ package body TC.GWin.Toolbars is
 
   procedure Reset_Line_toolbar(tb: in out Floating_toolbar) is
   begin
-    Set_Style(tb.bar, TBSTYLE_WRAPABLE + TBSTYLE_FLAT);
+    Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST);
+    Set_Extended_Style(tb.bar, TBSTYLE_EX_MIXEDBUTTONS);
     Dock(tb.bar, Gwindows.Base.At_Top);
     Create(tb.images, "Line_Toolbar_Bmp", 56);
     Set_Image_List(tb.bar, tb.images);

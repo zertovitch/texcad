@@ -742,7 +742,8 @@ package body TC.GWin.MDI_Main is
               Speak(Gen_Opt.Lang,lng_chg) & " - " &
               Speak(Candidate.Lang,lng_chg) ,
               Speak(Gen_Opt.Lang,fx_restrt) & ASCII.LF &
-              Speak(Candidate.Lang,fx_restrt)
+              Speak(Candidate.Lang,fx_restrt),
+              Icon => Information_Icon
             );
         end if;
         gen_opt:= candidate;

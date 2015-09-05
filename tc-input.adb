@@ -560,22 +560,22 @@ package body TC.Input is
       --  (the LaTeX commands for displaying the curve in segments)
       --  %\end
       Read_arg('[',']',dum_str, dumi, optional => True);
-      o.segments:= 0;
+      o.data_2d.segments:= 0;
       if dumi > 0 then
-        o.segments:= Integer'Value(dum_str(1..dumi));
+        o.data_2d.segments:= Integer'Value(dum_str(1..dumi));
       end if;
       Read_coords_and_adjust(o.P1);     --  (orig_x, orig_y)
-      Read_real_arg('(',')', o.scale);  --  (scale)
+      Read_real_arg('(',')', o.data_2d.scale);  --  (scale)
       Seek_ch('(');
-      Read_formula(o.form_x, o.parsed_x);
+      Read_formula(o.data_2d.form_x, o.parsed_2d_x);
       -- Put_Line("x(t)= [" & To_String(o.form_x) & ']'); Put(o.parsed_x, bracketed); New_Line;
-      Read_formula(o.form_y, o.parsed_y);
+      Read_formula(o.data_2d.form_y, o.parsed_2d_y);
       -- Put_Line("y(t)= [" & To_String(o.form_y) & ']'); Put(o.parsed_y, bracketed); New_Line;
       Skip_Stuff;
-      Read_real(o.min_t);
+      Read_real(o.data_2d.min_t);
       -- Put_Line("min= " & Real'Image(o.min_t));
       Skip_stuff;
-      Read_real(o.max_t);
+      Read_real(o.data_2d.max_t);
       -- Put_Line("max= " & Real'Image(o.max_t));
       Skip_stuff;
       Seek_ch(')');

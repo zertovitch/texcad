@@ -219,7 +219,8 @@ package body TC.Picking is
     found: Boolean;
 
     has_modifiable_info: constant array(Obj_art_type) of Boolean:=
-      (txt | putaux | box | oval | bezier => True, others=> False);
+      (txt | putaux | box | oval | bezier | paramcurve2d => True,
+       others => False);
 
     min_dist: Real:= Real'Last;
 

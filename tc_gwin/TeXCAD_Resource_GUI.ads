@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/05  11:00:40
+-- Transcription time: 2015/09/05  12:49:14
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -73,13 +73,15 @@ package TeXCAD_Resource_GUI is
     T_Max_Box: Edit_Box_Type;
     Segments_Label: Label_Type;
     Segments_Box: Edit_Box_Type;
+    Scale_Label: Label_Type;
+    Scale_Box: Edit_Box_Type;
     IDOK: Default_Dialog_Button_Type;    -- closes parent window after click
     IDOK_permanent: Default_Button_Type; -- doesn't close parent window after click
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Param_Curve_2D_Dialog_Type
 
-  -- Dialog at resource line 91
+  -- Dialog at resource line 93
 
   --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
@@ -135,6 +137,8 @@ package TeXCAD_Resource_GUI is
   T_Min_Box            : constant:=  40003;
   Segments_Label       : constant:=  40004;
   Segments_Box         : constant:=  40005;
+  Scale_Label          : constant:=  40006;
+  Scale_Box            : constant:=  40007;
 
   -- ** Some helper utilities (spec).
 
@@ -147,6 +151,6 @@ package TeXCAD_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 146
+  -- Last line of resource script file: 148
 
 end TeXCAD_Resource_GUI;

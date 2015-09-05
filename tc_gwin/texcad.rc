@@ -88,6 +88,8 @@ FONT 8, "Ms Shell Dlg"
     EDITTEXT        T_Max_Box, 58, 69, 70, 14, ES_AUTOHSCROLL, WS_EX_LEFT
     RTEXT           "SEGMENTS (0=auto)", Segments_Label, 143, 59, 104, 10, SS_RIGHT, WS_EX_LEFT
     EDITTEXT        Segments_Box, 256, 57, 37, 12, ES_AUTOHSCROLL, WS_EX_LEFT
+    RTEXT           "SCALE (0=auto)", Scale_Label, 143, 77, 104, 10, SS_RIGHT, WS_EX_LEFT
+    EDITTEXT        Scale_Box, 256, 75, 37, 12, ES_AUTOHSCROLL, WS_EX_LEFT
     DEFPUSHBUTTON   "OK", IDOK, 257, 95, 50, 14, 0, WS_EX_LEFT
     PUSHBUTTON      "Cancel", IDCANCEL, 203, 95, 50, 14, 0, WS_EX_LEFT
 }

@@ -3,6 +3,7 @@ with GWindows.Windows.MDI;
 with GWindows.Common_Controls;
 with GWindows.Image_Lists;
 with GWindows.Menus;
+with Floating_toolbars;
 
 package TC.GWin.MDI_Main is
 
@@ -15,8 +16,7 @@ package TC.GWin.MDI_Main is
   procedure On_Right_Click (Control : in out MDI_Status_Bar_Type);
   --  Handle right clicks on status bar
 
-  type MDI_Toolbar_Type is
-    new GWindows.Common_Controls.Toolbar_Control_Type with null record;
+  type MDI_Toolbar_Type is new Floating_toolbars.GUI_toolbar with null record;
 
   procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
                               Item    : in     Integer);

@@ -43,8 +43,9 @@ package Floating_toolbars is
   type GUI_toolbar is
     new GWindows.Common_Controls.Toolbar_Control_Type with
   record
-    w,mw,h,mh : Integer:= GWindows.Constants.Use_Default;
-    belongs_to: p_Floating_toolbar;
+    w,mw,h,mh    : Integer:= GWindows.Constants.Use_Default;
+    belongs_to   : p_Floating_toolbar;
+    string_count : Natural:= 0;
   end record;
 
   procedure On_Button_Select (Control : in out GUI_toolbar;
