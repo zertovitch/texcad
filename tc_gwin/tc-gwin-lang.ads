@@ -142,6 +142,7 @@ package TC.GWin.Lang is
       put           => empty, --!!
       oval          => doval,
       bez           => dbezchain,
+      par_cur_2d_cmd=> param2d_title,
       pick_obj      => epickobj,
       select_all    => epickall,
       unselect      => eunpickall,

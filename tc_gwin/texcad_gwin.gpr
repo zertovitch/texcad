@@ -41,7 +41,7 @@ project TeXCAD_GWin is
    package Linker is
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("texcad.rbj", "-LWindows_Stuff");
+            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-LWindows_Stuff");
          when "Optimize" =>
             for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-s", "-LWindows_Stuff");
       end case;

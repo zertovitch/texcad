@@ -286,6 +286,10 @@ package body TC.GWin.Object_editing is
 
   end Change_Bezier;
 
+  ---------------------------------------------
+  --  2D parametric curve properties dialog  --
+  ---------------------------------------------
+
   procedure Change_Param_2D(
     parent  : in out Base_Window_Type'Class;
     main    : in out MDI_Main_Type;
@@ -342,6 +346,8 @@ package body TC.GWin.Object_editing is
           modified:= candidate /= t.data_2d;
           if modified then
             t.data_2d:= candidate;
+            t.parsed_2d_x.Parse(t.data_2d.form_x);
+            t.parsed_2d_y.Parse(t.data_2d.form_y);
           end if;
         end if;
       when others   => modified:= False; -- Contains IDCANCEL

@@ -159,7 +159,7 @@ package body TC.GWin.Mousing is
                        bez_click2 => new_Capture:= w.Capture;
                   when others => null;
                 end case;
-              when text | put =>
+              when text | put | par_cur_2d_cmd =>
                 new_Capture:= click_1;
                 w.phantomart:= txt;
             end case;
@@ -252,7 +252,8 @@ package body TC.GWin.Mousing is
               Change_Cursor(w, cur_select);
               Invert_rubber_box(w,picked); -- show
             end if;
-          when text | put    => null; -- Capture = click_1
+          when text | put | par_cur_2d_cmd =>
+            null; -- Capture = click_1
           when Box_cmd | line |
                circle | filled_circle | oval   =>
             null; -- Capture = figure_2 for this
@@ -318,6 +319,8 @@ package body TC.GWin.Mousing is
             New_text( w.picture, w.parent.all, w.main.all, w.PU, txt, w.current_ls );
           when put           =>
             New_text( w.picture, w.parent.all, w.main.all, w.PU, putaux, w.current_ls );
+          when par_cur_2d_cmd  =>
+            New_paramcurve_2d( w.picture, w.parent.all, w.main.all, w.PU, w.current_ls );
           when Deformation_cmd =>
             Deformation(w);
           when others =>

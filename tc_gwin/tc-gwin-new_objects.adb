@@ -124,4 +124,28 @@ package body TC.GWin.New_objects is
     end if;
   end New_text;
 
+  procedure New_paramcurve_2d(
+    p       : in out Picture;
+    parent  : in out Base_Window_Type'Class;
+    main    : in out MDI_Main_Type;
+    orig    :        Point;
+    ls      : in out Line_settings
+  )
+  is
+    t : constant ptr_Obj_type:= new Obj_type(paramcurve2d);
+    modif: Boolean;
+  begin
+    t.P1:= orig;
+    t.ls:= ls;
+    t.data_2d.segments := 0;
+    t.data_2d.scale    := 1.0;
+    t.data_2d.min_t    := 0.0;
+    t.data_2d.max_t    := 1.0;
+    Change_Param_2D(parent, main, t.all, modif);
+    if modif then
+      Insert(p, t, at_end);
+      p.refresh:= only_last;
+    end if;
+  end New_paramcurve_2d;
+
 end TC.GWin.New_objects;

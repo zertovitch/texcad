@@ -58,6 +58,7 @@ package body TC.GWin.Menus is
     Append_Item (m, filled_circle );
     Append_Separator (m); -- ^ 1-click, 2-point commands
     Append_Item (m, bez );
+    Append_Item (m, par_cur_2d_cmd );
     return m;
   end Create_Draw_Menu;
 

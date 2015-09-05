@@ -44,7 +44,7 @@
 %\end
 \put(15,34.25){\makebox(0,0)[lc]{Poisson}}
 
-%\paramcurvexy[500](30,30)(2)( 
+%\paramcurvexy[600](30,30)(2)( 
 %  1.5 * cos(t) - cos(5 * t), 
 %  1.5 * sin(t) - sin(5 * t), 
 %  -3.1415927, 
@@ -70,5 +70,13 @@
 % LaTeX emulation here...
 %\end
 \put(24.75,53){\makebox(0,0)[lb]{Plante}}
+
+%\paramcurvexy(46.125,48.125)(0.5)( t* cos(2*t) , t* sin(t) , 0, 18.849555921538759430775860299677)
+% LaTeX emulation here...
+%\end
+
+%\paramcurvexy(10,60)(4)(- sin(t) * (1 + cos(25*t)), cos(t) * (1 + sin(25 * t)), -3.1415927, 3.1415927)
+% LaTeX emulation here...
+%\end
 
 \end{picture}

@@ -43,4 +43,12 @@ package TC.GWin.New_objects is
     ls          :        Line_settings
   );
 
+  procedure New_paramcurve_2d(
+    p       : in out Picture;
+    parent  : in out Base_Window_Type'Class;
+    main    : in out MDI_Main_Type;
+    orig    :        Point;
+    ls      : in out Line_settings
+  );
+
 end TC.GWin.New_objects;

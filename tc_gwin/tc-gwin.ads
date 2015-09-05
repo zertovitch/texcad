@@ -62,6 +62,7 @@ package TC.GWin is
       oval,
       circle, filled_circle,
       bez,
+      par_cur_2d_cmd,
       -- Editing (permanent):
       pick_obj,
       change_text,
@@ -85,7 +86,7 @@ package TC.GWin is
       mru1, mru2, mru3, mru4, mru5, mru6, mru7, mru8, mru9
     );
 
-  subtype Drawing_cmd is Custom_cmd range text .. bez;
+  subtype Drawing_cmd is Custom_cmd range text .. par_cur_2d_cmd;
   -- ^ All drawing commands
   subtype Box_cmd is Custom_cmd range framebox .. filled_box;
   -- ^ Box-type drawing commands
