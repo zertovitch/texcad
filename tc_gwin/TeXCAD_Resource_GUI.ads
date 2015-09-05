@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/05  12:49:14
+-- Transcription time: 2015/09/05  21:08:25
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -151,6 +151,6 @@ package TeXCAD_Resource_GUI is
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
 
 
-  -- Last line of resource script file: 148
+  -- Last line of resource script file: 149
 
 end TeXCAD_Resource_GUI;

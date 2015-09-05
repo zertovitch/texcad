@@ -4,11 +4,13 @@ with TeXCAD_Resource_GUI;               use TeXCAD_Resource_GUI;
 with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
+with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Windows;                  use GWindows.Windows;
 
 with GWin_Util;                         use GWin_Util;
 
+with Ada.Exceptions;                    use Ada.Exceptions;
 with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 
 package body TC.GWin.Object_editing is
@@ -300,6 +302,8 @@ package body TC.GWin.Object_editing is
     Result    : Integer;
     candidate : Param_curve_2D_data:= t.data_2d;
     valid     : Boolean:= False;
+    px, py    : TC_Formulas.Formula;
+    err       : Unbounded_String;
 
     procedure Set_Data is
     begin
@@ -324,34 +328,49 @@ package body TC.GWin.Object_editing is
           min_t    => TeX_Number(pan.T_Min_Box.Text),
           max_t    => TeX_Number(pan.T_Max_Box.Text)
         );
+      px.Parse(candidate.form_x);
+      py.Parse(candidate.form_y);
       valid:= True;
     exception
-      when others => null; -- Wrong data
+      when E: others =>
+        err:= U(Exception_Name(E) & ASCII.CR & ASCII.LF & Exception_Message(E)); -- Wrong data
     end Get_Data;
 
   begin
-    Create_Full_Dialog(pan, Parent, Msg(param2d_title));
-    Center(pan);
-    Small_Icon (Pan, "Options_Icon");
-    On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
-    Set_Data;
-    pan.Segments_Label.Text(Msg(param2d_segments));
-    pan.Scale_Label.Text(Msg(param2d_scale));
-    pan.IDCANCEL.Text(Msg(mcancel));
-    Show_Dialog_with_Toolbars_off(pan, parent, main, result);
+    loop
+      Create_Full_Dialog(pan, Parent, Msg(param2d_title));
+      Center(pan);
+      Small_Icon (Pan, "Options_Icon");
+      On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
+      Set_Data;
+      pan.Segments_Label.Text(Msg(param2d_segments));
+      pan.Scale_Label.Text(Msg(param2d_scale));
+      pan.IDCANCEL.Text(Msg(mcancel));
 
-    case Result is
-      when IDOK     =>
-        if valid then
-          modified:= candidate /= t.data_2d;
-          if modified then
-            t.data_2d:= candidate;
-            t.parsed_2d_x.Parse(t.data_2d.form_x);
-            t.parsed_2d_y.Parse(t.data_2d.form_y);
+      Show_Dialog_with_Toolbars_off(pan, parent, main, result);
+      case Result is
+        when IDOK     =>
+          if valid then
+            modified:= candidate /= t.data_2d;
+            if modified then
+              t.data_2d:= candidate;
+              t.parsed_2d_x:= px;
+              t.parsed_2d_y:= py;
+            end if;
+            exit;
+          else
+            Message_Box(Parent,
+              "Error",
+              "Error in data" & NL & "Details:" & NL & To_String(err)
+            );
+            modified:= False;
           end if;
-        end if;
-      when others   => modified:= False; -- Contains IDCANCEL
-    end case;
-  end Change_Param_2D;
+        when others   =>
+          modified:= False; -- Contains IDCANCEL
+          exit;
+      end case;
+
+    end loop;
+    end Change_Param_2D;
 
 end TC.GWin.Object_editing;

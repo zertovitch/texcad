@@ -1032,7 +1032,7 @@ package body TC.GWin.MDI_Picture_Child is
 
         when Action_on_picked_cmd =>
           if Window.Draw_Control.picture.picked = 0 then
-            Message_Box("",Msg(no_picked), OK_Box, Error_Icon);
+            Message_Box(Window, "",Msg(no_picked), OK_Box, Error_Icon);
           else
             case Action_on_picked_cmd(c) is
               when Deformation_cmd =>

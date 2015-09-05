@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/05  12:49:14
+-- Transcription time: 2015/09/05  21:08:25
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -168,34 +168,34 @@ package body TeXCAD_Resource_GUI is
     Create( Window.X_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => X_Form_Box);
     Dlg_to_Scn(  26, 29, 297, 15, x,y,w,h);
     Create( Window.Y_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Y_Form_Box);
-    Dlg_to_Scn(  24, 52, 25, 13, x,y,w,h);
+    Dlg_to_Scn(  14, 52, 25, 13, x,y,w,h);
     Create_label( Window, "t_min", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  24, 71, 25, 13, x,y,w,h);
+    Dlg_to_Scn(  14, 71, 25, 13, x,y,w,h);
     Create_label( Window, "t_max", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
-    Dlg_to_Scn(  58, 50, 70, 14, x,y,w,h);
+    Dlg_to_Scn(  48, 50, 70, 14, x,y,w,h);
     Create( Window.T_Min_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => T_Min_Box);
-    Dlg_to_Scn(  58, 69, 70, 14, x,y,w,h);
+    Dlg_to_Scn(  48, 69, 70, 14, x,y,w,h);
     Create( Window.T_Max_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => T_Max_Box);
-    Dlg_to_Scn(  143, 59, 104, 10, x,y,w,h);
+    Dlg_to_Scn(  126, 52, 104, 10, x,y,w,h);
     Create( Window.Segments_Label, Window, "SEGMENTS (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Segments_Label);
-    Dlg_to_Scn(  256, 57, 37, 12, x,y,w,h);
+    Dlg_to_Scn(  239, 50, 37, 12, x,y,w,h);
     Create( Window.Segments_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Segments_Box);
-    Dlg_to_Scn(  143, 77, 104, 10, x,y,w,h);
+    Dlg_to_Scn(  126, 70, 104, 10, x,y,w,h);
     Create( Window.Scale_Label, Window, "SCALE (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Scale_Label);
-    Dlg_to_Scn(  256, 75, 37, 12, x,y,w,h);
+    Dlg_to_Scn(  239, 68, 37, 12, x,y,w,h);
     Create( Window.Scale_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Scale_Box);
-    Dlg_to_Scn(  257, 95, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  210, 99, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
-    Create( Window.IDOK, Window, "OK", x,y,w,h, ID => IDOK);
-    Create( Window.IDOK_permanent, Window, "OK", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK, Window, "O&K", x,y,w,h, ID => IDOK);
+    Create( Window.IDOK_permanent, Window, "O&K", x,y,w,h, ID => IDOK);
     if for_dialog then -- hide the non-closing button
       Hide(Window.IDOK_permanent);
     else -- hide the closing button
       Hide(Window.IDOK);
     end if;
-    Dlg_to_Scn(  203, 95, 50, 14, x,y,w,h);
+    Dlg_to_Scn(  267, 99, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice
     -- can be reversed, for instance on a "Browse" button.
@@ -319,6 +319,6 @@ package body TeXCAD_Resource_GUI is
 begin
   Common_Fonts.Create_Common_Fonts;
 
-  -- Last line of resource script file: 148
+  -- Last line of resource script file: 149
 
 end TeXCAD_Resource_GUI;

@@ -148,11 +148,11 @@ package body TC.GWin.Toolbars is
     parent: in out GWindows.Base.Base_Window_Type'Class)
   is
     min_width: constant array(Floating_toolbar_categ) of Integer:=
-      (TB_Drawing       => 28+6,
-       TB_Line_settings => 56+6);
+      (TB_Drawing       => 28+7,
+       TB_Line_settings => 56+7);
 
     max_height: constant array(Floating_toolbar_categ) of Integer:=
-      (TB_Drawing       => 322+28+6,
+      (TB_Drawing       => 322+28+12,
        TB_Line_settings => 224+8);
 
     title: constant array(Floating_toolbar_categ) of Message:=

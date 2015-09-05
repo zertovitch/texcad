@@ -153,7 +153,7 @@ package body TC.GWin.Morphing is
     L     : Point;    -- Diagonal linear transformation
   begin
     if w.picture.picked = 0 then
-      Message_Box("",Msg(no_picked), OK_Box, Error_Icon); -- usually doesn't happen...
+      Message_Box(w,"",Msg(no_picked), OK_Box, Error_Icon); -- usually doesn't happen...
     else
       mo:= m( w.current_cmd );
       Deformation_dialog(w.main.all, mo, subcmd, iter, keep_o, L);
