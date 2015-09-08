@@ -138,7 +138,10 @@ package body TC.Picking is
     end Near_to_target_Point;
 
     procedure Scout_Bezier is new Bezier_curve(Near_to_target_Point);
-    procedure Scout_Param_2D is new Parametric_curve_2D(Near_to_target_Point);
+
+    procedure Do_Nothing is begin null; end;
+
+    procedure Scout_Param_2D is new Parametric_curve_2D(Near_to_target_Point, Do_Nothing);
 
     begin -- Near_Point
       case a.art  is

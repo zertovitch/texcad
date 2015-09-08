@@ -1,6 +1,7 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/05  21:08:25
+-- Transcription time: 2015/09/08  15:01:30
+-- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi

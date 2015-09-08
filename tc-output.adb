@@ -359,15 +359,26 @@ package body TC.Output is
 
     procedure Write_emulated_paramcurve2d(o: Obj_type) is
       M, Q, PE: Point;
-      no_start: Boolean:= False;
+      no_start, restart: Boolean:= False;
 
       procedure PlotPoint( P: Point ) is
       begin
-        Write_reduced_any_lines( M, Q, P, no_start );
-        no_start:= True;
+        if restart then
+          M:= P;
+          restart:= False;
+        else
+          Write_reduced_any_lines( M, Q, P, no_start );
+          no_start:= True;
+        end if;
       end PlotPoint;
 
-      procedure Draw_Paramcurve is new Parametric_curve_2D(PlotPoint);
+      procedure Singularity is
+      begin
+        no_start:= False;
+        restart:= True;
+      end;
+
+      procedure Draw_Paramcurve is new Parametric_curve_2D(PlotPoint, Singularity);
 
     begin
       M:= Evaluate_param_curve_2D(o, o.data_2d.min_t);

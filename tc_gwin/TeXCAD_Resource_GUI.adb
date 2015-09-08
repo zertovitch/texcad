@@ -1,6 +1,7 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/05  21:08:25
+-- Transcription time: 2015/09/08  15:01:30
+-- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
 -- URL: http://sf.net/projects/gnavi
@@ -100,7 +101,7 @@ package body TeXCAD_Resource_GUI is
       Hide(Window.IDOK);
     end if;
     Dlg_to_Scn(  9, 7, 277, 77, x,y,w,h);
-    Create( Window.Detection_List, Window, x,y,w,h, MULTIPLE, REPORT_VIEW, NO_SORTING, FALSE, ALIGN_LEFT);
+    Create( Window.Detection_List, Window, x,y,w,h, MULTIPLE, REPORT_VIEW, NO_SORTING, False, ALIGN_LEFT);
   end Create_Contents; -- Cleanup_Dialog_Type
 
 
@@ -165,25 +166,25 @@ package body TeXCAD_Resource_GUI is
     Dlg_to_Scn(  8, 31, 15, 12, x,y,w,h);
     Create_label( Window, "y(t)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  26, 10, 297, 15, x,y,w,h);
-    Create( Window.X_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => X_Form_Box);
+    Create( Window.X_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => X_Form_Box);
     Dlg_to_Scn(  26, 29, 297, 15, x,y,w,h);
-    Create( Window.Y_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Y_Form_Box);
+    Create( Window.Y_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Y_Form_Box);
     Dlg_to_Scn(  14, 52, 25, 13, x,y,w,h);
     Create_label( Window, "t_min", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  14, 71, 25, 13, x,y,w,h);
     Create_label( Window, "t_max", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
     Dlg_to_Scn(  48, 50, 70, 14, x,y,w,h);
-    Create( Window.T_Min_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => T_Min_Box);
+    Create( Window.T_Min_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => T_Min_Box);
     Dlg_to_Scn(  48, 69, 70, 14, x,y,w,h);
-    Create( Window.T_Max_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => T_Max_Box);
+    Create( Window.T_Max_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => T_Max_Box);
     Dlg_to_Scn(  126, 52, 104, 10, x,y,w,h);
     Create( Window.Segments_Label, Window, "SEGMENTS (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Segments_Label);
     Dlg_to_Scn(  239, 50, 37, 12, x,y,w,h);
-    Create( Window.Segments_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Segments_Box);
+    Create( Window.Segments_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Segments_Box);
     Dlg_to_Scn(  126, 70, 104, 10, x,y,w,h);
     Create( Window.Scale_Label, Window, "SCALE (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Scale_Label);
     Dlg_to_Scn(  239, 68, 37, 12, x,y,w,h);
-    Create( Window.Scale_Box, Window, "", x,y,w,h, Horizontal_Scroll => TRUE, Read_Only => FALSE, ID => Scale_Box);
+    Create( Window.Scale_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Scale_Box);
     Dlg_to_Scn(  210, 99, 50, 14, x,y,w,h);
     -- Both versions of the button are created.
     -- The more meaningful one is made visible, but this choice

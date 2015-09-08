@@ -288,6 +288,7 @@ package TC is
 
   generic
     with procedure Action( P: Point );
+    with procedure Singularity;  --  Lift pen of drawing, for instance
   procedure Parametric_curve_2D( o: Obj_type; pt_scale: Real );
 
   procedure Get_slope(df: Point; sl: out LaTeX_slope; vector:Boolean);

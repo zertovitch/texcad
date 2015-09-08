@@ -145,22 +145,39 @@ package body TC is
     sc, nt: Natural;
     isc, t: Real;
     len: constant Real:= o.data_2d.max_t - o.data_2d.min_t;
-    P1, P2, P3: Point;
+    P1, P2, P3, P: Point;
     density: Real;
+    function Convert_0_1_to_min_t_max_t(z: Real) return Real is
+    begin
+      return z * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
+    end;
+    sing: Boolean;
   begin
     sc:= o.data_2d.segments;
     if sc = 0 then  --  Automatically compute number of segments
       density:= 16.0 * Real'Max(1.0, pt_scale);
-      P1:= Evaluate_param_curve_2D(o, o.data_2d.min_t);
-      P2:= Evaluate_param_curve_2D(o, 0.5 * (o.data_2d.min_t + o.data_2d.max_t));
-      P3:= Evaluate_param_curve_2D(o, o.data_2d.max_t);
+      --  We pick 3 points, and hope there is no singularity there
+      P1:= Evaluate_param_curve_2D(o, Convert_0_1_to_min_t_max_t(0.01));
+      P2:= Evaluate_param_curve_2D(o, Convert_0_1_to_min_t_max_t(0.49));
+      P3:= Evaluate_param_curve_2D(o, Convert_0_1_to_min_t_max_t(0.99));
       sc:= 1 + Integer(density * ( Norm(P1 - P2) + Norm(P2 - P3) ));
     end if;
     isc:= 1.0 / Real(sc);
     nt:= 0;
     while nt <= sc loop
       t:= (Real(nt) * isc) * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
-      Action(Evaluate_param_curve_2D(o, t));
+      begin
+        P:= Evaluate_param_curve_2D(o, t);
+        sing:= False;
+      exception
+        when others =>
+          sing:= True;
+      end;
+      if sing then
+        Singularity;
+      else
+        Action(P);
+      end if;
       nt:= nt + 1;
     end loop;
   end Parametric_curve_2D;

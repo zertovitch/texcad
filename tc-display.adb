@@ -64,16 +64,27 @@ package body TC.Display is
     return Abbr(To_String(s));
   end Abbr;
 
+  maxint_real: constant Real:= 0.99 * Real(Integer'Last);
+  minint_real: constant Real:= -maxint_real;
+
   function TransX( rx: Real ) return Integer is
   pragma Inline(TransX);
+    rix: Real;
   begin
-    return Integer(h_mag*(rx-P0.x)); --  + 0.5
+    rix := h_mag*(rx-P0.x);
+    rix := Real'Min(maxint_real, rix);  --  Avoid underflow
+    rix := Real'Max(minint_real, rix);  --  Avoid overflow
+    return Integer(rix); --  + 0.5
   end TransX;
 
   function TransY( ry: Real ) return Integer is
   pragma Inline(TransY);
+    riy: Real;
   begin
-    return m_y - Integer(v_mag*(ry-P0.y) + 0.5);
+    riy := v_mag*(ry-P0.y) + 0.5;
+    riy := Real'Min(maxint_real, riy);  --  Avoid underflow
+    riy := Real'Max(minint_real, riy);  --  Avoid overflow
+    return m_y - Integer(riy);
   end TransY;
 
   procedure Trans( P: Point; sx,sy: out Integer) is
@@ -325,7 +336,10 @@ package body TC.Display is
   end Draw_grid;
 
   procedure Draw_Bezier is new Bezier_curve(PlotPoint);
-  procedure Draw_Param_Curve is new Parametric_curve_2D(PlotPoint);
+
+  procedure Do_Nothing is begin null; end;
+
+  procedure Draw_Param_Curve is new Parametric_curve_2D(PlotPoint, Do_Nothing);
 
   procedure Bezier_and_arrows(o: Obj_type) is
     x,y: Integer;
