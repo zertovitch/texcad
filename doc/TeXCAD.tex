@@ -279,11 +279,253 @@ general option.
 
 \subsection{Drawing}
 \subsubsection{Objects defined by 1 point}
+\begin{itemize}
+\item {\bf Text with {\tt \bs makebox} or {\tt \bs put}}.
 It is a text in a broad sense. It can be also formulas between \$ ...
 \$, a sub-picture, an embedded EPS image, or whatever you put in
 your \LaTeX\, document. Text is included in a {\tt \bs makebox}
-with alignment options or in a raw {\tt \bs put} command.
+with alignment options, or in a raw {\tt \bs put} command.
 You need one click for choosing the spot where the text appears.
+\item {\bf 2D parametric curves (since {\TC} 4.5)}.
+You can set the origin of a parametric curve with one click,
+then a dialogue will appear for choosing a scale factor and number
+of segments for drawing, the $x(t)$ and $y(t)$ functions and the range
+$t_{min} \dots t_{max}$ for the parameter $t$. For instance the
+curve $x(t), y(t)$ defined as
+\begin{eqnarray*}
+ x(t) &=& 16*\sin(t) \, {\hat {}} \, 3\\
+ y(t) &=& 13*\cos(t)-5*\cos(2*t)-2*\cos(3*t)-\cos(4*t)
+\end{eqnarray*}
+will be displayed as:
+\begin{center}
+%
+% This is a LaTeX picture output by TeXCAD.
+% File name: [Clipboard].
+% Version of TeXCAD: 4.5 Preview
+% Reference / build: 05-Sep-2015 (rev. a54+)
+% For new versions, check: http://texcad.sf.net/
+% Options on the following lines.
+%\grade{\on}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\off}
+%\pvinsert{% Your \input, \def, etc. here}
+%\quality{8.000}
+%\graddiff{0.005}
+%\snapasp{1}
+%\zoom{4.0000}
+\unitlength 3pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(12,6)(0,0)
+%\paramcurvexy[200](0,0)(.3)(
+%   16*sin(t)^3, 
+%   13*cos(t)-5*cos(2*t)-2*cos(3*t)-cos(4*t), 
+%   -3.142, 3.142)
+\put(5.75,.4){\line(0,1){.1128}}
+\put(5.732,.513){\line(0,1){.0489}}
+\put(5.719,.562){\line(0,1){.0571}}
+\put(5.7,.619){\line(0,1){.0651}}
+\put(5.676,.684){\line(0,1){.0726}}
+\put(5.646,.757){\line(0,1){.0798}}
+\put(5.609,.836){\line(0,1){.0866}}
+\put(5.564,.923){\line(0,1){.093}}
+\put(5.511,1.016){\line(0,1){.0989}}
+\put(5.45,1.115){\line(0,1){.1044}}
+\put(5.38,1.219){\line(0,1){.1095}}
+\put(5.302,1.329){\line(0,1){.1141}}
+\put(5.214,1.443){\line(0,1){.1183}}
+\put(5.118,1.561){\line(0,1){.1221}}
+\put(5.013,1.683){\line(0,1){.1255}}
+\multiput(4.899,1.809)(-.03057,.03215){4}{\line(0,1){.03215}}
+\multiput(4.777,1.937)(-.03258,.03284){4}{\line(0,1){.03284}}
+\multiput(4.646,2.069)(-.03449,.03346){4}{\line(-1,0){.03449}}
+\multiput(4.508,2.202)(-.029004,.027216){5}{\line(-1,0){.029004}}
+\multiput(4.363,2.339)(-.030297,.027625){5}{\line(-1,0){.030297}}
+\multiput(4.212,2.477)(-.031454,.028001){5}{\line(-1,0){.031454}}
+\multiput(4.054,2.617)(-.03246,.028352){5}{\line(-1,0){.03246}}
+\multiput(3.892,2.758)(-.033301,.028687){5}{\line(-1,0){.033301}}
+\multiput(3.726,2.902)(-.0368396,.0314311){14}{\line(-1,0){.0368396}}
+\multiput(3.21,3.342)(-.03482,.029994){5}{\line(-1,0){.03482}}
+\multiput(3.036,3.492)(-.034699,.030341){5}{\line(-1,0){.034699}}
+\multiput(2.862,3.644)(-.034368,.030703){5}{\line(-1,0){.034368}}
+\multiput(2.691,3.797)(-.033825,.031082){5}{\line(-1,0){.033825}}
+\multiput(2.521,3.952)(-.03307,.031478){5}{\line(-1,0){.03307}}
+\multiput(2.356,4.11)(-.032105,.031891){5}{\line(-1,0){.032105}}
+\multiput(2.196,4.269)(-.030934,.032319){5}{\line(0,1){.032319}}
+\multiput(2.041,4.431)(-.029561,.032757){5}{\line(0,1){.032757}}
+\multiput(1.893,4.595)(-.027995,.0332){5}{\line(0,1){.0332}}
+\multiput(1.753,4.761)(-.0328,.04205){4}{\line(0,1){.04205}}
+\multiput(1.622,4.929)(-.03039,.0426){4}{\line(0,1){.0426}}
+\put(1.5,5.099){\line(0,1){.1725}}
+\put(1.389,5.272){\line(0,1){.1744}}
+\put(1.289,5.446){\line(0,1){.1762}}
+\put(1.201,5.622){\line(0,1){.1777}}
+\put(1.126,5.8){\line(0,1){.1789}}
+\put(1.063,5.979){\line(0,1){.1798}}
+\put(1.014,6.159){\line(0,1){.1802}}
+\put(.979,6.339){\line(0,1){.8888}}
+\put(1.013,7.228){\line(0,1){.1708}}
+\put(1.062,7.399){\line(0,1){.1668}}
+\put(1.125,7.565){\line(0,1){.1619}}
+\put(1.2,7.727){\line(0,1){.1563}}
+\put(1.288,7.884){\line(0,1){.1499}}
+\put(1.388,8.034){\line(0,1){.1426}}
+\multiput(1.499,8.176)(.03036,.03364){4}{\line(0,1){.03364}}
+\multiput(1.62,8.311)(.03277,.03144){4}{\line(1,0){.03277}}
+\put(1.751,8.436){\line(1,0){.1399}}
+\put(1.891,8.553){\line(1,0){.1477}}
+\put(2.039,8.659){\line(1,0){.1546}}
+\put(2.193,8.754){\line(1,0){.1605}}
+\put(2.354,8.837){\line(1,0){.1653}}
+\put(2.519,8.909){\line(1,0){.1691}}
+\put(2.688,8.968){\line(1,0){.1718}}
+\put(2.86,9.015){\line(1,0){.1735}}
+\put(3.034,9.048){\line(1,0){.1741}}
+\put(3.208,9.069){\line(1,0){.346}}
+\put(3.554,9.072){\line(1,0){.1699}}
+\put(3.724,9.054){\line(1,0){.1666}}
+\put(3.89,9.024){\line(1,0){.1624}}
+\put(4.052,8.982){\line(1,0){.1573}}
+\put(4.21,8.929){\line(1,0){.1516}}
+\put(4.361,8.865){\line(1,0){.1451}}
+\put(4.506,8.792){\line(1,0){.138}}
+\put(4.644,8.71){\line(1,0){.1304}}
+\put(4.775,8.62){\line(1,0){.1224}}
+\put(4.897,8.523){\line(1,0){.114}}
+\put(5.011,8.421){\line(0,-1){.1068}}
+\put(5.117,8.314){\line(0,-1){.11}}
+\put(5.213,8.204){\line(0,-1){.1118}}
+\put(5.301,8.092){\line(0,-1){.1124}}
+\put(5.379,7.98){\line(0,-1){.1117}}
+\put(5.449,7.868){\line(0,-1){.1097}}
+\put(5.51,7.759){\line(0,-1){.1064}}
+\put(5.563,7.652){\line(0,-1){.1018}}
+\put(5.608,7.55){\line(0,-1){.0961}}
+\put(5.646,7.454){\line(0,-1){.0893}}
+\put(5.676,7.365){\line(0,-1){.0814}}
+\put(5.7,7.284){\line(0,-1){.0726}}
+\put(5.718,7.211){\line(1,0){.0632}}
+\put(5.782,7.211){\line(0,1){.0726}}
+\put(5.8,7.284){\line(0,1){.0814}}
+\put(5.824,7.365){\line(0,1){.0893}}
+\put(5.854,7.454){\line(0,1){.0961}}
+\put(5.892,7.55){\line(0,1){.1018}}
+\put(5.937,7.652){\line(0,1){.1064}}
+\put(5.99,7.759){\line(0,1){.1097}}
+\put(6.051,7.868){\line(0,1){.1117}}
+\put(6.121,7.98){\line(0,1){.1124}}
+\put(6.199,8.092){\line(0,1){.1118}}
+\put(6.287,8.204){\line(0,1){.11}}
+\put(6.383,8.314){\line(0,1){.1068}}
+\put(6.489,8.421){\line(1,0){.114}}
+\put(6.603,8.523){\line(1,0){.1224}}
+\put(6.725,8.62){\line(1,0){.1304}}
+\put(6.856,8.71){\line(1,0){.138}}
+\put(6.994,8.792){\line(1,0){.1451}}
+\put(7.139,8.865){\line(1,0){.1516}}
+\put(7.29,8.929){\line(1,0){.1573}}
+\put(7.448,8.982){\line(1,0){.1624}}
+\put(7.61,9.024){\line(1,0){.1666}}
+\put(7.776,9.054){\line(1,0){.1699}}
+\put(7.946,9.072){\line(1,0){.346}}
+\put(8.292,9.069){\line(1,0){.1741}}
+\put(8.466,9.048){\line(1,0){.1735}}
+\put(8.64,9.015){\line(1,0){.1718}}
+\put(8.812,8.968){\line(1,0){.1691}}
+\put(8.981,8.909){\line(1,0){.1653}}
+\put(9.146,8.837){\line(1,0){.1605}}
+\put(9.307,8.754){\line(1,0){.1546}}
+\put(9.461,8.659){\line(1,0){.1477}}
+\put(9.609,8.553){\line(1,0){.1399}}
+\multiput(9.749,8.436)(.03277,-.03144){4}{\line(1,0){.03277}}
+\multiput(9.88,8.311)(.03036,-.03364){4}{\line(0,-1){.03364}}
+\put(10.001,8.176){\line(0,-1){.1426}}
+\put(10.112,8.034){\line(0,-1){.1499}}
+\put(10.212,7.884){\line(0,-1){.1563}}
+\put(10.3,7.727){\line(0,-1){.1619}}
+\put(10.375,7.565){\line(0,-1){.1668}}
+\put(10.438,7.399){\line(0,-1){.1708}}
+\put(10.487,7.228){\line(0,-1){.174}}
+\put(10.522,7.054){\line(0,-1){.895}}
+\put(10.486,6.159){\line(0,-1){.1798}}
+\put(10.437,5.979){\line(0,-1){.1789}}
+\put(10.374,5.8){\line(0,-1){.1777}}
+\put(10.299,5.622){\line(0,-1){.1762}}
+\put(10.211,5.446){\line(0,-1){.1744}}
+\put(10.111,5.272){\line(0,-1){.1725}}
+\multiput(10,5.099)(-.03039,-.0426){4}{\line(0,-1){.0426}}
+\multiput(9.878,4.929)(-.0328,-.04205){4}{\line(0,-1){.04205}}
+\multiput(9.747,4.761)(-.027995,-.0332){5}{\line(0,-1){.0332}}
+\multiput(9.607,4.595)(-.029561,-.032757){5}{\line(0,-1){.032757}}
+\multiput(9.459,4.431)(-.030934,-.032319){5}{\line(0,-1){.032319}}
+\multiput(9.304,4.269)(-.032105,-.031891){5}{\line(-1,0){.032105}}
+\multiput(9.144,4.11)(-.03307,-.031478){5}{\line(-1,0){.03307}}
+\multiput(8.979,3.952)(-.033825,-.031082){5}{\line(-1,0){.033825}}
+\multiput(8.809,3.797)(-.034368,-.030703){5}{\line(-1,0){.034368}}
+\multiput(8.638,3.644)(-.034699,-.030341){5}{\line(-1,0){.034699}}
+\multiput(8.464,3.492)(-.03482,-.029994){5}{\line(-1,0){.03482}}
+\multiput(8.29,3.342)(-.0368396,-.0314311){14}{\line(-1,0){.0368396}}
+\multiput(7.774,2.902)(-.033301,-.028687){5}{\line(-1,0){.033301}}
+\multiput(7.608,2.758)(-.03246,-.028352){5}{\line(-1,0){.03246}}
+\multiput(7.446,2.617)(-.031454,-.028001){5}{\line(-1,0){.031454}}
+\multiput(7.288,2.477)(-.030297,-.027625){5}{\line(-1,0){.030297}}
+\multiput(7.137,2.339)(-.029004,-.027216){5}{\line(-1,0){.029004}}
+\multiput(6.992,2.202)(-.03449,-.03346){4}{\line(-1,0){.03449}}
+\multiput(6.854,2.069)(-.03258,-.03284){4}{\line(0,-1){.03284}}
+\multiput(6.723,1.937)(-.03057,-.03215){4}{\line(0,-1){.03215}}
+\put(6.601,1.809){\line(0,-1){.1255}}
+\put(6.487,1.683){\line(0,-1){.1221}}
+\put(6.382,1.561){\line(0,-1){.1183}}
+\put(6.286,1.443){\line(0,-1){.1141}}
+\put(6.198,1.329){\line(0,-1){.1095}}
+\put(6.12,1.219){\line(0,-1){.1044}}
+\put(6.05,1.115){\line(0,-1){.0989}}
+\put(5.989,1.016){\line(0,-1){.093}}
+\put(5.936,.923){\line(0,-1){.0866}}
+\put(5.891,.836){\line(0,-1){.0798}}
+\put(5.854,.757){\line(0,-1){.0726}}
+\put(5.824,.684){\line(0,-1){.0651}}
+\put(5.8,.619){\line(0,-1){.0571}}
+\put(5.781,.562){\line(0,-1){.1617}}
+%\end
+\end{picture}
+%
+\end{center}
+Some further funny examples can be found in the file {\tt param.tcp}
+provided along with the sources.\\
+The built-in functions available for defining $x(t)$ and $y(t)$ comprise:\\
+{\tt
+Abs, 
+Sign, 
+Step, 
+Round, 
+Trunc, 
+Floor, 
+Ceiling,
+Exp, 
+Log, 
+Sqrt, 
+Sin, 
+Arcsin, 
+Cos, 
+Arccos, 
+Tan, 
+Arctan, 
+Sinh, 
+Arcsinh,
+Cosh, 
+Arccosh,
+Tanh, 
+Arctanh,
+Min, 
+Max.}
+\\
+The names are case-insensitive: you can write {\tt Sin}, {\tt sin}, or {\tt SIN} as you like.
+%
+\end{itemize}
 %
 \subsubsection{Objects defined by 2 points}
 \begin{itemize}

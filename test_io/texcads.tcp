@@ -1,7 +1,7 @@
 % This is a LaTeX picture output by TeXCAD.
 % File name: [texcads.tcp].
-% Version of TeXCAD: 4.3
-% Reference / build: 30-Jun-2012 (rev. 105)
+% Version of TeXCAD: 4.5
+% Reference / build: 13-Sep-2015 (rev. a64)
 % For new versions, check: http://texcad.sf.net/
 % Options on the following lines.
 %\grade{\on}
@@ -28,7 +28,7 @@
 \put(18,42.75){\framebox(39,20)[cc]
 {\begin{tabular}{l}TeXCAD 4.0\\ \hline Kernel: portable\\GUI: for Windows\\ \hline Ada\end{tabular}}}
 \put(18.125,0){\framebox(39,20)[cc]
-{\begin{tabular}{l}TeXCAD 4.3\\ \hline Kernel: portable\\GUI: for Windows\\ \hline Ada\end{tabular}}}
+{\begin{tabular}{l}TeXCAD 4.5\\ \hline Kernel: portable\\GUI: for Windows\\ \hline Ada\end{tabular}}}
 \put(102.199,48.5){\framebox(33,20)[cc]
 {\begin{tabular}{l}TeXCAD 2.4\\ \hline Linux\\ \hline ? \end{tabular}}}
 \put(60.625,94.5){\framebox(33,20)[cc]

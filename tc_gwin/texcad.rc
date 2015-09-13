@@ -120,7 +120,7 @@ BEGIN
 END
 
 1 VERSIONINFO
-FILEVERSION  4,  3, 0, 105
+FILEVERSION  4,  5, 0, 105
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
@@ -131,12 +131,12 @@ BEGIN
             VALUE "CompanyName", "Free Software Foundation, Inc."
             VALUE "Authors", "Georg Horn, Jörn Winkelmann, Gautier de Montmollin"
             VALUE "FileDescription", "TeXCAD, a LaTeX {picture} drawing program"
-            VALUE "FileVersion", "Ver. 4.3"
+            VALUE "FileVersion", "Ver. 4.5"
             VALUE "InternalName", "TeXCAD"
             VALUE "LegalCopyright", "© 2003 .. 2015 Free Software Foundation"
             VALUE "OriginalFilename", "TeXCAD.exe"
             VALUE "ProductName", "TeXCAD"
-            VALUE "ProductVersion", "4.3"
+            VALUE "ProductVersion", "4.5"
         END
     END
     BLOCK "VarFileInfo"

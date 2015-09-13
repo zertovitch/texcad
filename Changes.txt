@@ -1,6 +1,11 @@
 Major changes in TeXCAD
 =======================
 
+Version 4.5
+===========
+a64:
+- Added 2D parametric curves
+
 Version 4.4
 ===========
 a48:
