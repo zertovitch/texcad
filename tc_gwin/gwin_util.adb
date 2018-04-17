@@ -5,6 +5,7 @@ with Interfaces.C;                      use Interfaces.C;
 
 with GWindows.Application;
 with GWindows.Base;                     use GWindows.Base;
+with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.Constants;
 with GWindows.Drawing_Objects;
 
@@ -400,33 +401,9 @@ package body GWin_Util is
       return long;
   end Find_short_path_name;
 
-  GWL_EXSTYLE : constant := -20;
-
-  procedure SetWindowLong
-    (hwnd : GWindows.Types.Handle;
-     nIndex  : Interfaces.C.int := GWL_EXSTYLE;
-     newLong : Interfaces.C.unsigned);
-  pragma Import (StdCall, SetWindowLong,
-                   "SetWindowLong" & Character_Mode_Identifier);
-
-  function GetWindowLong
-    (hwnd : GWindows.Types.Handle;
-     nIndex : Interfaces.C.int := GWL_EXSTYLE)
-    return Interfaces.C.unsigned;
-  pragma Import (StdCall, GetWindowLong,
-                   "GetWindowLong" & Character_Mode_Identifier);
-
   ----------------------------
   -- Tabs - Property sheets --
   ----------------------------
-
-  procedure Fix_Tabbed_control( Tab_Control: Tab_Window_Control_Type ) is
-    WS_EX_CONTROLPARENT : constant := 16#00010000#;
-  begin
-    SetWindowLong (Handle (Base_Window_Type (Tab_Control)), GWL_EXSTYLE,
-       GetWindowLong (Handle (Base_Window_Type (Tab_Control))) or
-       WS_EX_CONTROLPARENT);
-  end Fix_Tabbed_control;
 
   package body Property_Tabs_Package is
     --
@@ -442,7 +419,7 @@ package body GWin_Util is
         Client_Area_Width(Parent) - margin * 2,
         Client_Area_Height(Parent) - 30 - margin * 2
       );
-      GWin_Util.Fix_Tabbed_control(tabs); -- <- Avoid button press hanging the app.
+      Set_As_Control_Parent (tabs); -- <- Avoid button press hanging the app.
       -- 2/ Create each tab
       for s in Tab_enumeration loop
         Insert_Tab (tabs, Tab_enumeration'Pos(s)-Tab_enumeration'Pos(Tab_enumeration'First), Title(s));

@@ -7,7 +7,7 @@
 --                                 B o d y                                  --
 --                                                                          --
 --                                                                          --
---                 Copyright (C) 1999 - 2014 David Botton                   --
+--                 Copyright (C) 1999 - 2018 David Botton                   --
 --                                                                          --
 -- This is free software;  you can  redistribute it  and/or modify it under --
 -- terms of the  GNU General Public License as published  by the Free Soft- --
@@ -91,7 +91,7 @@ package body GWindows.Common_Controls is
    UDM_SETRANGE                 : constant := (WM_USER + 101);
 --     UDM_GETRANGE                 : constant := (WM_USER + 102);
    UDM_SETPOS                   : constant := (WM_USER + 103);
---     UDM_GETPOS                   : constant := (WM_USER + 104);
+   UDM_GETPOS                   : constant := (WM_USER + 104);
 --     UDM_SETBUDDY                 : constant := (WM_USER + 105);
 --     UDM_GETBUDDY                 : constant := (WM_USER + 106);
 --     UDM_SETACCEL                 : constant := (WM_USER + 107);
@@ -1764,7 +1764,7 @@ package body GWindows.Common_Controls is
       Top        : in     Integer;
       Width      : in     Integer;
       Height     : in     Integer;
-      Direction  : in     Progress_Control_Direction_Type      := Vertical;
+      Direction  : in     Progress_Control_Direction_Type      := Horizontal;
       Smooth     : in     Boolean                              := False;
       Show       : in     Boolean                              := True;
       Is_Dynamic : in     Boolean                              := False)
@@ -3499,14 +3499,15 @@ package body GWindows.Common_Controls is
    is
       function SendMessage
         (hwnd   : GWindows.Types.Handle := Handle (Control);
-         uMsg   : Interfaces.C.int      := UDM_SETPOS;
+         uMsg   : Interfaces.C.int      := UDM_GETPOS;
          wParam : GWindows.Types.Wparam := 0;
          lParam : GWindows.Types.Lparam := 0)
         return Integer;
       pragma Import (StdCall, SendMessage,
                        "SendMessage" & Character_Mode_Identifier);
    begin
-      return SendMessage;
+      --  mod: filter eventual error flag on HIWORD (see MSDN doc for details)
+      return SendMessage mod 65536;
    end Position;
 
    ---------------
@@ -3522,7 +3523,8 @@ package body GWindows.Common_Controls is
          uMsg   : Interfaces.C.int      := UDM_SETRANGE;
          wParam : GWindows.Types.Wparam := 0;
          lParam : GWindows.Types.Lparam := GWindows.Utilities.Make_Long
-           (Interfaces.C.short (Min), Interfaces.C.short (Max)));
+           (High => Interfaces.C.short (Min),
+            Low  => Interfaces.C.short (Max)));
       pragma Import (StdCall, SendMessage,
                        "SendMessage" & Character_Mode_Identifier);
    begin
@@ -4035,6 +4037,37 @@ package body GWindows.Common_Controls is
       end case;
 
    end On_Notify;
+
+   -----------------------------
+   --  Set_As_Control_Parent  --
+   -----------------------------
+
+   GWL_EXSTYLE : constant := -20;
+
+   procedure SetWindowLong
+     (hwnd : GWindows.Types.Handle;
+      nIndex  : Interfaces.C.int := GWL_EXSTYLE;
+      newLong : Interfaces.C.unsigned);
+   pragma Import (StdCall, SetWindowLong,
+                    "SetWindowLong" & Character_Mode_Identifier);
+
+   function GetWindowLong
+     (hwnd : GWindows.Types.Handle;
+      nIndex : Interfaces.C.int := GWL_EXSTYLE)
+     return Interfaces.C.unsigned;
+   pragma Import (StdCall, GetWindowLong,
+                    "GetWindowLong" & Character_Mode_Identifier);
+
+   procedure Set_As_Control_Parent (Control : in out Tab_Window_Control_Type)
+   is
+     --  By André van Splunter, 6-Jan-2007.
+     WS_EX_CONTROLPARENT : constant := 16#00010000#;
+     use GWindows.Base;
+   begin
+     SetWindowLong (Handle (Base_Window_Type (Control)), GWL_EXSTYLE,
+        GetWindowLong (Handle (Base_Window_Type (Control))) or
+        WS_EX_CONTROLPARENT);
+   end Set_As_Control_Parent;
 
    ----------------
    -- Tab_Window --

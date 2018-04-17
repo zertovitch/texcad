@@ -2,7 +2,6 @@
 
 with GWindows.Base;
 with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Common_Controls;          use GWindows.Common_Controls;
 with GWindows.GStrings;                 use GWindows.GStrings;
 --with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Windows;
@@ -94,12 +93,6 @@ package GWin_Util is
   ----------------------------
   -- Tabs - Property sheets --
   ----------------------------
-
-  -- 6-Jan-2007 : Solution to buttons in tabs creating an infinte loop
-  --              in Windows' GUI system. This should be corrected
-  --              inside of GWindows.
-  --              By André van Splunter
-  procedure Fix_Tabbed_control( Tab_Control: Tab_Window_Control_Type );
 
   -- The package Property_Tabs_Package is indeed a kind of generic object type
   -- An instance, like:
