@@ -34,7 +34,8 @@ project GT is
    package Compiler is
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatec../acu_debg/debug.pra");
+            for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", 
+               "-gnatec" & project'Project_Dir & "../acu_debg/debug.pra");
          when "Optimize" =>
             for Default_Switches ("ada") use ("-gnat05", "-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2");
       end case;
