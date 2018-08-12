@@ -789,7 +789,7 @@ package body TC.GWin.MDI_Picture_Child is
   end Clip_filename;
 
   procedure Clipboard_to_Clip_file( Window : in Window_Type'Class ) is
-    contents: constant String:= GWindows.Clipboard.Get_Clipboard_Text(Window_Type(Window));
+    contents: constant String:= GWindows.Clipboard.Clipboard_Text(Window_Type(Window));
     f: File_Type;
   begin
     if contents = "" then
@@ -813,7 +813,7 @@ package body TC.GWin.MDI_Picture_Child is
         contents:= contents & Get_Line(f) & NL;
       end loop;
       Close(f);
-      GWindows.Clipboard.Set_Clipboard_Text(Window_Type(Window), contents);
+      GWindows.Clipboard.Clipboard_Text(Window_Type(Window), contents);
     end if;
   end Clip_file_to_Clipboard;
 

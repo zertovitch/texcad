@@ -1,6 +1,6 @@
 -- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the TeXCAD project ( http://sf.net/projects/texcad/ )
--- Build me with "gnatmake -P texcad_gwin", or open me with GPS
+-- for the TeXCAD project ( http://texcad.sf.net/ )
+-- Build me with "gnatmake -p -P texcad_gwin", or open me with GPS
 --
 project TeXCAD_GWin is
 
