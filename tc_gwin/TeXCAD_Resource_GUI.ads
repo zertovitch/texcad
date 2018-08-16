@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/08  15:01:30
+-- Transcription time: 2018/08/16  14:58:26
 -- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 05-Apr-2015
+-- RC Grammar version: 31-Oct-2017
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -16,7 +16,7 @@ with GWindows.Constants;                use GWindows.Constants;
 with GWindows.Windows;                  use GWindows.Windows;
 with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Buttons.Graphic;          use GWindows.Buttons.Graphic;
-with GWindows.Buttons.Owner_drawn;      use GWindows.Buttons.Owner_drawn;
+with GWindows.Buttons.Owner_Drawn;      use GWindows.Buttons.Owner_Drawn;
 with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
 with GWindows.List_Boxes;               use GWindows.List_Boxes;
 with GWindows.Combo_Boxes;              use GWindows.Combo_Boxes;
@@ -29,7 +29,7 @@ with Interfaces.C;                      use Interfaces.C;
 
 package TeXCAD_Resource_GUI is
 
-  type Cleanup_Dialog_Type is new Window_type with record
+  type Cleanup_Dialog_Type is new Window_Type with record
 
     IDCANCEL: Dialog_Button_Type;    -- closes parent window after click
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
@@ -59,10 +59,10 @@ package TeXCAD_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Cleanup_Dialog_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
-  type Param_Curve_2D_Dialog_Type is new Window_type with record
+  type Param_Curve_2D_Dialog_Type is new Window_Type with record
 
     -- Label: 0
     -- Label: 0
@@ -103,7 +103,7 @@ package TeXCAD_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Param_Curve_2D_Dialog_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      );
 
   package Version_info is
@@ -111,15 +111,14 @@ package TeXCAD_Resource_GUI is
     CompanyName: constant String:= "Free Software Foundation, Inc.";
     Authors: constant String:= "Georg Horn, Jörn Winkelmann, Gautier de Montmollin";
     FileDescription: constant String:= "TeXCAD, a LaTeX {picture} drawing program";
-    FileVersion: constant String:= "Ver. 4.3";
+    FileVersion: constant String:= "Ver. 4.5";
     InternalName: constant String:= "TeXCAD";
     LegalCopyright: constant String:= "© 2003 .. 2015 Free Software Foundation";
     OriginalFilename: constant String:= "TeXCAD.exe";
     ProductName: constant String:= "TeXCAD";
-    ProductVersion: constant String:= "4.3";
+    ProductVersion: constant String:= "4.5";
     Translation: constant:= 1033;
   end Version_info;
-
 
   ------------------------------------------------
   -- Defined resource symbols --> Ada constants --
@@ -150,7 +149,6 @@ package TeXCAD_Resource_GUI is
   procedure Use_GUI_Font(Window: in out GWindows.Base.Base_Window_Type'Class);
 
   function Num_resource(id: Natural) return GString;  --  Just turn 123 into "#123".
-
 
   -- Last line of resource script file: 149
 

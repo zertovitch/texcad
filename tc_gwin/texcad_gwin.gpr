@@ -21,22 +21,24 @@ project TeXCAD_GWin is
    end Ide;
 
    package Builder is
+      --   "If -j0 is used, then the maximum number of simultaneous compilation
+      --    jobs is the number of core processors on the platform."
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-j2");
+            for Default_Switches ("ada") use ("-j0");
          when "Optimize" =>
-            for Default_Switches ("ada") use ("-j2", "-s"); -- , "-a", "-x"
+            for Default_Switches ("ada") use ("-j0", "-s"); -- , "-a", "-x"
       end case;
    end Builder;
 
    package Compiler is
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatyhiknp",
+            for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatyhiknp",
                "-gnatec" & project'Project_Dir & "..\acu_debg\debug.pra", 
                "-gnatec" & project'Project_Dir & "..\acu_debg\tc_elim.pra");
          when "Optimize" =>
-            for Default_Switches ("ada") use ("-gnat05", "-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", 
+            for Default_Switches ("ada") use ("-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", 
                "-gnatec" & project'Project_Dir & "..\acu_debg\tc_elim.pra");
       end case;
    end Compiler;
@@ -51,9 +53,10 @@ project TeXCAD_GWin is
    end Linker;
 
    package Binder is
+      --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-E");
+            for Default_Switches ("ada") use ("-Es");
          when "Optimize" =>
       end case;
    end Binder;

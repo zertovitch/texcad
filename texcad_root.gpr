@@ -6,7 +6,7 @@ project TeXCAD_Root is
 
    for Source_Dirs use (".");
    for Exec_Dir use ".";
-   for Main use ("test_tc_io_gnat.ads");
+   for Main use ("test_tc_io.adb");
    type Build_Mode_Type is ("Optimize", "Debug");
    Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
    
@@ -22,11 +22,13 @@ project TeXCAD_Root is
    end Ide;
 
    package Builder is
+      --   "If -j0 is used, then the maximum number of simultaneous compilation
+      --    jobs is the number of core processors on the platform."
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-j2");
+            for Default_Switches ("ada") use ("-j0");
          when "Optimize" =>
-            for Default_Switches ("ada") use ("-j2", "-s"); -- , "-a", "-x"
+            for Default_Switches ("ada") use ("-j0", "-s"); -- , "-a", "-x"
       end case;
    end Builder;
 
@@ -43,9 +45,10 @@ project TeXCAD_Root is
    end Compiler;
 
    package Binder is
+      --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-E");
+            for Default_Switches ("ada") use ("-Es");
          when "Optimize" =>
       end case;
    end Binder;

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2015/09/08  15:01:30
+-- Transcription time: 2018/08/16  14:58:26
 -- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 05-Apr-2015
+-- RC Grammar version: 31-Oct-2017
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -20,7 +20,6 @@ with System;
 package body TeXCAD_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
-
 
   -- Dialog at resource line 67
 
@@ -67,7 +66,7 @@ package body TeXCAD_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Cleanup_Dialog_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -101,9 +100,8 @@ package body TeXCAD_Resource_GUI is
       Hide(Window.IDOK);
     end if;
     Dlg_to_Scn(  9, 7, 277, 77, x,y,w,h);
-    Create( Window.Detection_List, Window, x,y,w,h, MULTIPLE, REPORT_VIEW, NO_SORTING, False, ALIGN_LEFT);
-  end Create_Contents; -- Cleanup_Dialog_Type
-
+    Create( Window.Detection_List, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
+  end Create_Contents;  --  Cleanup_Dialog_Type
 
   -- Dialog at resource line 78
 
@@ -150,7 +148,7 @@ package body TeXCAD_Resource_GUI is
   procedure Create_Contents
      ( Window      : in out Param_Curve_2D_Dialog_Type;
        for_dialog  : in     Boolean; -- True: buttons do close the window
-       resize      : in     Boolean:= False -- optionnally resize Window as designed
+       resize      : in     Boolean:= False -- optionally resize Window as designed
      )
   is
     x,y,w,h: Integer;
@@ -162,27 +160,27 @@ package body TeXCAD_Resource_GUI is
     end if;
     Use_GUI_Font(Window);
     Dlg_to_Scn(  8, 12, 15, 12, x,y,w,h);
-    Create_label( Window, "x(t)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "x(t)", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  8, 31, 15, 12, x,y,w,h);
-    Create_label( Window, "y(t)", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "y(t)", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  26, 10, 297, 15, x,y,w,h);
     Create( Window.X_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => X_Form_Box);
     Dlg_to_Scn(  26, 29, 297, 15, x,y,w,h);
     Create( Window.Y_Form_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Y_Form_Box);
     Dlg_to_Scn(  14, 52, 25, 13, x,y,w,h);
-    Create_label( Window, "t_min", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "t_min", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  14, 71, 25, 13, x,y,w,h);
-    Create_label( Window, "t_max", x,y,w,h, GWindows.Static_Controls.LEFT, NONE);
+    Create_Label( Window, "t_max", x,y,w,h, GWindows.Static_Controls.Left, None);
     Dlg_to_Scn(  48, 50, 70, 14, x,y,w,h);
     Create( Window.T_Min_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => T_Min_Box);
     Dlg_to_Scn(  48, 69, 70, 14, x,y,w,h);
     Create( Window.T_Max_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => T_Max_Box);
     Dlg_to_Scn(  126, 52, 104, 10, x,y,w,h);
-    Create( Window.Segments_Label, Window, "SEGMENTS (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Segments_Label);
+    Create( Window.Segments_Label, Window, "SEGMENTS (0=auto)", x,y,w,h, GWindows.Static_Controls.Right, None, ID => Segments_Label);
     Dlg_to_Scn(  239, 50, 37, 12, x,y,w,h);
     Create( Window.Segments_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Segments_Box);
     Dlg_to_Scn(  126, 70, 104, 10, x,y,w,h);
-    Create( Window.Scale_Label, Window, "SCALE (0=auto)", x,y,w,h, GWindows.Static_Controls.RIGHT, NONE, ID => Scale_Label);
+    Create( Window.Scale_Label, Window, "SCALE (0=auto)", x,y,w,h, GWindows.Static_Controls.Right, None, ID => Scale_Label);
     Dlg_to_Scn(  239, 68, 37, 12, x,y,w,h);
     Create( Window.Scale_Box, Window, "", x,y,w,h, Horizontal_Scroll => True, Read_Only => False, ID => Scale_Box);
     Dlg_to_Scn(  210, 99, 50, 14, x,y,w,h);
@@ -207,8 +205,7 @@ package body TeXCAD_Resource_GUI is
     else -- hide the closing button
       Hide(Window.IDCANCEL);
     end if;
-  end Create_Contents; -- Param_Curve_2D_Dialog_Type
-
+  end Create_Contents;  --  Param_Curve_2D_Dialog_Type
 
   -- ** Generated code ends here /\ /\ /\.
 
@@ -254,7 +251,7 @@ package body TeXCAD_Resource_GUI is
   function Num_resource(id: Natural) return GString is
     img: constant String:= Integer'Image(id);
   begin
-    return To_GString_from_String('#' & img(img'first+1..img'Last));
+    return To_GString_From_String('#' & img(img'First+1..img'Last));
   end Num_resource;
 
   package body Common_Fonts is
@@ -288,13 +285,13 @@ package body TeXCAD_Resource_GUI is
      function GetObject
        (hgdiobj  : GWindows.Types.Handle  := GWindows.Drawing_Objects.Handle(GUI_Font);
         cbBufferl: Interfaces.C.int       := LOGFONT'Size / 8;
-        lpvObject: LPVOID                 := Log_of_Current_font'Address)
+        lpvObject: LPVOID                 := Log_of_current_font'Address)
        return Interfaces.C.int;
      pragma Import (StdCall, GetObject,
                       "GetObject" & Character_Mode_Identifier);
 
      function CreateFontIndirect
-       (lpvObject: LPVOID                 := Log_of_Current_font'Address)
+       (lpvObject: LPVOID                 := Log_of_current_font'Address)
        return GWindows.Types.Handle;
      pragma Import (StdCall, CreateFontIndirect,
                       "CreateFontIndirect" & Character_Mode_Identifier);
@@ -310,8 +307,8 @@ package body TeXCAD_Resource_GUI is
           14, Underline => True);
             -- !! ^ Not so nice (non-unsharpened font, size ~..., color ?)
       else
-        Log_of_Current_font.lfUnderline:= Interfaces.C.Char'Val(1);
-        GWindows.Drawing_Objects.Handle(URL_font, CreateFontIndirect);
+        Log_of_current_font.lfUnderline:= Interfaces.C.char'Val(1);
+        GWindows.Drawing_Objects.Handle(URL_Font, CreateFontIndirect);
       end if;
     end Create_Common_Fonts;
 
