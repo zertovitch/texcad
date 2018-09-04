@@ -69,6 +69,7 @@ package TC.GWin is
       translate, mirror, rotate, homoth,
       delete, cut_clip, copy_clip, save_macro,
       unselect, select_all,
+      tc_undo, tc_redo,
       paste_clip, load_macro,
       -- Line settings:
       thin, thick,
@@ -116,17 +117,23 @@ package TC.GWin is
   subtype MDI_main_cmd is Custom_cmd range gen_opt_dialog .. Custom_cmd'Last;
   -- Commands only for MDI mani
 
-  ID_custom: array(Custom_cmd) of Integer; -- initialized by this package
+  ID_custom : array (Custom_cmd) of Integer; -- initialized by this package
 
-  no_std_id: constant:= -1; -- Trap to avoid unexpectedly activating a command
+  no_std_id : constant := -1; -- Trap to avoid unexpectedly activating a command
 
-  ID_std: constant array(Custom_cmd) of Integer:=
+  --  These are standard Windows ID's that may do the same
+  --  thing as ID_custom above. Used in On_Menu_Select.
+  --  Probably it is not needed (those ID are not used for setting up
+  --  menus or toolbars). Note: 04-Sep-2018.
+  ID_std : constant array (Custom_cmd) of Integer:=
     (  select_all => ID_EDIT_SELECT_ALL,
        unselect   => ID_EDIT_CLEAR_ALL,
        delete     => ID_EDIT_CLEAR,
        copy_clip  => ID_EDIT_COPY,
        cut_clip   => ID_EDIT_CUT,
        paste_clip => ID_EDIT_PASTE,
+       tc_undo    => ID_EDIT_UNDO,
+       tc_redo    => ID_EDIT_REDO,
        save       => ID_FILE_SAVE,
        save_as    => ID_FILE_SAVE_AS,
        close      => ID_FILE_CLOSE,

@@ -335,6 +335,11 @@ package body TC.GWin.MDI_Picture_Child is
                                 top_entry : GString:= "" ) is
   begin
     Update_Common_Menus( Window.parent.all, top_entry );
+    --  !!  update on possible undo/redo
+    State (Window.Edit_menu, Command, ID_custom (tc_undo), Disabled);
+    State (Window.Edit_menu, Command, ID_custom (tc_redo), Disabled);
+    Window.parent.Tool_Bar.Enabled (ID_custom (tc_undo), False);
+    Window.parent.Tool_Bar.Enabled (ID_custom (tc_redo), False);
   end Update_Common_Menus;
 
   procedure Update_Permanent_Command(Window : in out MDI_Picture_Child_Type) is
@@ -545,6 +550,7 @@ package body TC.GWin.MDI_Picture_Child is
       Scroll_Position(Window, Vertical, Scroll_Maximum(Window, Vertical));
       Adjust_Draw_Control_Position(Window);
       Window.Use_Mouse_Wheel;
+      Update_Common_Menus (Window);
    end On_Create;
 
    procedure On_Picture_Options
@@ -1075,6 +1081,10 @@ package body TC.GWin.MDI_Picture_Child is
           else
             Message_Box(Window, Msg(error), Msg(fnotfound), Icon => Exclamation_Icon);
           end if;
+        when tc_undo =>
+          null;  --  !!
+        when tc_Redo =>
+          null;  --  !!
       end case;
       -- In any case, we don't want arrows with boxes. What a bad taste!
       if Window.Draw_Control.current_cmd in Box_cmd then

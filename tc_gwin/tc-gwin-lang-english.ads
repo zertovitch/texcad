@@ -44,6 +44,8 @@ package TC.GWin.Lang.English is
          ecopyclip  => U("&Copy to clipboard"),
          ecutclip   => U("&Cut to clipboard"),
          epasteclip => U("&Paste from clipboard"),
+         eundo      => U ("Undo"),
+         eredo      => U ("Redo"),
          esavemac   => U("&Save macro"),
          eloadmac   => U("&Load macro"),
          eedit      => U("&Edit"),

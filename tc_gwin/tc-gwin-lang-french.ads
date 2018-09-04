@@ -44,6 +44,8 @@ package TC.GWin.Lang.French is
          ecopyclip  => U("&Copier dans le presse-papier"),
          ecutclip   => U("&Couper dans le presse-papier"),
          epasteclip => U("&Coller du presse-papier"),
+         eundo      => U ("Annuler"),
+         eredo      => U ("Répéter"),
          esavemac   => U("&Ecrire macro"),
          eloadmac   => U("&Lire macro"),
          eedit      => U("&Edition"),
