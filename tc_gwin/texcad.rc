@@ -39,7 +39,7 @@ Tools_Icon      ICON DISCARDABLE	"tools.ico"
 // Bitmaps
 //
 
-Toolbar_Bmp		BITMAP DISCARDABLE	"TC_Tools.bmp"
+Toolbar_Bmp         BITMAP DISCARDABLE	"TC_Tools_32x32.bmp"
 Drawing_Toolbar_Bmp	BITMAP DISCARDABLE	"TC_Drawing_tools.bmp"
 Line_Toolbar_Bmp  	BITMAP DISCARDABLE	"TC_Line_settings.bmp"
 

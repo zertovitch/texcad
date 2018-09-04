@@ -58,7 +58,7 @@ package body TC.GWin.Toolbars is
     Create (tb, parent, 0, 0, 0, 40);
     Dock (tb, GWindows.Base.At_Top);
 
-    Create (il, "Toolbar_Bmp", 16);
+    Create (il, "Toolbar_Bmp", 32);
     Set_Image_List (tb, il);
     st:= Get_Style(tb);
     Set_Style(tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);

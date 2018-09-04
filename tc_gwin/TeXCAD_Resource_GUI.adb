@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2018/08/16  14:58:26
+-- Transcription time: 2018/09/04  15:27:42
 -- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 31-Oct-2017
+-- RC Grammar version: 30-Aug-2018
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -21,9 +21,9 @@ package body TeXCAD_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
 
-  -- Dialog at resource line 67
+  --  Dialog at resource line 67
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Cleanup_Dialog_Type;
@@ -60,8 +60,8 @@ package body TeXCAD_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Cleanup_Dialog_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Cleanup_Dialog_Type;
@@ -103,9 +103,9 @@ package body TeXCAD_Resource_GUI is
     Create( Window.Detection_List, Window, x,y,w,h, Multiple, Report_View, No_Sorting, False, Align_Left);
   end Create_Contents;  --  Cleanup_Dialog_Type
 
-  -- Dialog at resource line 78
+  --  Dialog at resource line 78
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Param_Curve_2D_Dialog_Type;
@@ -142,8 +142,8 @@ package body TeXCAD_Resource_GUI is
     Create_Contents(Window, True);
   end Create_Full_Dialog; -- Param_Curve_2D_Dialog_Type
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Param_Curve_2D_Dialog_Type;

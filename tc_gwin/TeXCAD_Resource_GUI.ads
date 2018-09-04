@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 -- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2018/08/16  14:58:26
+-- Transcription time: 2018/09/04  15:27:42
 -- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 31-Oct-2017
+-- RC Grammar version: 30-Aug-2018
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -38,9 +38,9 @@ package TeXCAD_Resource_GUI is
     Detection_List: List_View_Control_Type;
   end record; -- Cleanup_Dialog_Type
 
-  -- Dialog at resource line 71
+  --  Dialog at resource line 71
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Cleanup_Dialog_Type;
@@ -53,8 +53,8 @@ package TeXCAD_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Cleanup_Dialog_Type;
@@ -82,9 +82,9 @@ package TeXCAD_Resource_GUI is
     IDCANCEL_permanent: Button_Type; -- doesn't close parent window after click
   end record; -- Param_Curve_2D_Dialog_Type
 
-  -- Dialog at resource line 93
+  --  Dialog at resource line 93
 
-  --  a) Create_As_Dialog & create all contents -> ready-to-use dialog
+  --    a) Create_As_Dialog & create all contents -> ready-to-use dialog
   --
   procedure Create_Full_Dialog
      (Window      : in out Param_Curve_2D_Dialog_Type;
@@ -97,8 +97,8 @@ package TeXCAD_Resource_GUI is
       Help_Button : in     Boolean := False;
       Is_Dynamic  : in     Boolean := False);
 
-  --  b) Create all contents, not the window itself (must be
-  --      already created) -> can be used in/as any kind of window.
+  --    b) Create all contents, not the window itself (must be
+  --        already created) -> can be used in/as any kind of window.
   --
   procedure Create_Contents
      ( Window      : in out Param_Curve_2D_Dialog_Type;
