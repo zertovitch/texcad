@@ -18,6 +18,7 @@ Bugs to be fixed
 
 Improvements
 ============
+  - Undo & Redo system
   - anchors on selected objects for direct modifications
   - arcs
   - ellipses
@@ -27,8 +28,6 @@ Improvements
   - Unicode available ? (a TString subtype of String or Wide_String)
   - linked items (maybe <-> nested {picture}s)
   - grouped / nested {picture}s (maybe <-> linked items)
-  - Undo & Redo system
-  - parametric curves
   - some of these extensions supported by GNUPlot:
   	* eepic		EEPIC -- extended LaTeX picture environment
   	  epslatex	LaTeX (Text) and encapsulated PostScript
