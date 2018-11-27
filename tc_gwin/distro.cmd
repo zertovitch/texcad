@@ -1,6 +1,6 @@
 rem ***** VERSION: *****
-set tcver=45
-set tcref=a64
+set tcver=451
+set tcref=a74
 
 del tc_%tcver%_*.zip
 
@@ -10,7 +10,7 @@ call build_optim.cmd
 del TeXCAD_debug.exe
 call build_debug.cmd
 
-upx --ultra-brute TeXCAD_optim.exe
+rem upx --ultra-brute TeXCAD_optim.exe
 
 set distro=optim
 call pack_bin
