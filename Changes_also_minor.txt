@@ -1,6 +1,11 @@
 Major+minor changes in TeXCAD
 =============================
 
+Version 4.51
+============
+a75:
+- (Windows) Larger icons
+
 Version 4.5
 ===========
 a64:
