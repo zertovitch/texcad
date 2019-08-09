@@ -85,6 +85,8 @@ package TC.GWin.MDI_Main is
     switch    :        Boolean
   );
 
+  procedure Redraw_all (Window: in out MDI_Main_Type);
+
   -- 13-Aug-2004
   procedure Show_Dialog_with_Toolbars_off
     (Window : in     GWindows.Base.Base_Window_Type'Class;
