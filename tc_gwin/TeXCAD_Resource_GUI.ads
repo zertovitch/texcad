@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
--- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2018/11/27  19:06:31
+-- GUI contents of resource script file: texcad.rc
+-- Transcription time: 2019/08/09  11:33:08
 -- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 30-Aug-2018
+-- RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Base;                     use GWindows.Base;
@@ -27,7 +27,7 @@ with GWindows.Menus;                    use GWindows.Menus;
 use GWindows;
 with Interfaces.C;                      use Interfaces.C;
 
-package TeXCAD_Resource_GUI is
+package texcad_Resource_GUI is
 
   type Cleanup_Dialog_Type is new Window_Type with record
 
@@ -113,7 +113,7 @@ package TeXCAD_Resource_GUI is
     FileDescription: constant String:= "TeXCAD, a LaTeX {picture} drawing program";
     FileVersion: constant String:= "Ver. 4.51";
     InternalName: constant String:= "TeXCAD";
-    LegalCopyright: constant String:= "© 2003 .. 2018 Free Software Foundation";
+    LegalCopyright: constant String:= "© 2003 .. 2019 Free Software Foundation";
     OriginalFilename: constant String:= "TeXCAD.exe";
     ProductName: constant String:= "TeXCAD";
     ProductVersion: constant String:= "4.51";
@@ -152,4 +152,4 @@ package TeXCAD_Resource_GUI is
 
   -- Last line of resource script file: 149
 
-end TeXCAD_Resource_GUI;
+end texcad_Resource_GUI;

@@ -120,13 +120,6 @@ package TC.GWin.MDI_Picture_Child is
   procedure On_Create (Window : in out MDI_Picture_Child_Type);
   --  Handles creating window
 
-   procedure On_Picture_Options
-     (window  : in out GWindows.Base.Base_Window_Type'Class;
-      pic_opt : in out TC.Picture_options;
-      main    : in out MDI_Main_Type;
-      modified:    out Boolean;
-      title   : String );
-
   procedure On_Menu_Select
     (Window : in out MDI_Picture_Child_Type;
      Item   : in     Integer);

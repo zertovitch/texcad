@@ -133,7 +133,7 @@ BEGIN
             VALUE "FileDescription", "TeXCAD, a LaTeX {picture} drawing program"
             VALUE "FileVersion", "Ver. 4.51"
             VALUE "InternalName", "TeXCAD"
-            VALUE "LegalCopyright", "© 2003 .. 2018 Free Software Foundation"
+            VALUE "LegalCopyright", "© 2003 .. 2019 Free Software Foundation"
             VALUE "OriginalFilename", "TeXCAD.exe"
             VALUE "ProductName", "TeXCAD"
             VALUE "ProductVersion", "4.51"

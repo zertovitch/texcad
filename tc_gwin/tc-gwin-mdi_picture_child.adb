@@ -5,6 +5,7 @@ with TC.GWin.Lang;                      use TC.GWin.Lang;
 with TC.GWin.Display;                   use TC.GWin.Display;
 with TC.GWin.Mousing;                   use TC.GWin.Mousing;
 with TC.GWin.Menus;
+with TC.GWin.Options_Dialogs;
 with TC.GWin.Previewing;
 with TC.GWin.Tools;
 
@@ -553,201 +554,6 @@ package body TC.GWin.MDI_Picture_Child is
       Update_Common_Menus (Window);
    end On_Create;
 
-   procedure On_Picture_Options
-     (window  : in out GWindows.Base.Base_Window_Type'Class;
-      pic_opt : in out TC.Picture_options;
-      main    : in out MDI_Main_Type;
-      modified:    out Boolean;
-      title   : String )
-   is
-     pan: Window_Type;
-     subtype Tab_subject is Lang.Message range
-       pic_opt_tab_drawing ..  pic_opt_tab_latex;
-
-    package Tabbing is
-      new GWin_Util.Property_Tabs_Package(Tab_subject,Lang.Msg,"O&K",Msg(mcancel));
-
-     -- Snap group --
-     snap_group: Group_Box_Type;
-     snap: Check_Box_Type;
-     snap_asp : Edit_Box_Type;
-     -- Reduce group --
-     redu_group: Group_Box_Type;
-     reduce : Check_Box_Type;
-     -- Slope group --
-     slope_group: Group_Box_Type;
-     any_slope, ltx_slope: Radio_Button_Type; -- Push_
-     stdiff : Edit_Box_Type;
-     quality, zoom, origx, origy: Edit_Box_Type;
-     -- Basics group --
-     basics_group: Group_Box_Type;
-     ul, lw : Edit_Box_Type;
-     -- Compatibility group --
-     compat_group: Group_Box_Type;
-     sty_box: array(Supposing_sty) of Check_Box_Type;
-     compat_x: constant:= 5;
-     compat_y: constant:= 10;
-     -- Preview insertions --
-     preview_insert_box: Multi_Line_Edit_Box_Type;
-
-     -- Panel's variables
-     Result, y  : Integer;
-     wmax    : constant:= 420;
-     candidate: TC.Picture_Options:= pic_opt;
-     dum_str: String(1..20);
-
-     use TC.RIO;
-
-     procedure Get_Data
-       (Window : in out GWindows.Base.Base_Window_Type'Class)
-     is
-     begin
-       candidate.snapping:= State(snap)=checked;
-       candidate.snap_asp:= Integer'Value(Text(snap_asp));
-       candidate.zoom_fac:= TC.Real'Value(Text(zoom));
-       candidate.quality := TC.Real'Value(Text(quality));
-       candidate.reduce  := State(reduce)=checked;
-       candidate.steigung:= State(any_slope)=checked;
-       candidate.stdiff  := TC.Real'Value(Text(stdiff));
-       for s in sty_box'Range loop
-         candidate.sty(s):= State(sty_box(s)) = checked;
-       end loop;
-       --
-       candidate.unitlength:= To_Unbounded_String(Text(ul));
-       candidate.linewidth := To_Unbounded_String(Text(lw));
-       candidate.P0.x:= TC.Real'Value(Text(origx));
-       candidate.P0.y:= TC.Real'Value(Text(origy));
-       candidate.pv_insert := To_Unbounded_String(Text(preview_insert_box));
-     exception
-       when others =>
-         Message_Box(
-           Window,
-           "Invalid data", "Incomplete reading of your changes",
-           OK_Box, Error_Icon);
-     end Get_Data;
-
-  begin
-    Create_As_Dialog(pan, Window, title, Width => wmax + 50, Height => 330);
-    -- Fix_Dialog(pan); -- 2007. No effect, alas...
-    Center(pan);
-    Small_Icon (Pan, "Options_Icon");
-    On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
-
-    GWin_Util.Use_GUI_Font(pan);
-
-    Tabbing.Create(pan);
-
-    Create(basics_group, Tabbing.tab(pic_opt_tab_drawing), Msg(dimensions),
-        5,  10, 215, 65);
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing), Msg(unitlength),
-       20,  30, 130, 20);
-    Create (ul, Tabbing.tab(pic_opt_tab_drawing),
-            To_String(candidate.unitlength),
-      155,  30,  60, 20);
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing), Msg(linewidth),
-       20,  50, 140, 20);
-    Create (lw, Tabbing.tab(pic_opt_tab_drawing),
-            To_String(candidate.linewidth),
-      165,  50,  50, 20);
-
-    Create(redu_group, Tabbing.tab(pic_opt_tab_drawing), Msg(linechain),
-        5,  80, 215, 65);
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing), Msg(reduchain),
-       20, 100, 180, 20);
-    Create(reduce,Tabbing.tab(pic_opt_tab_drawing), "",
-      200, 100,  15, 15);
-    State(reduce,boolean_to_state(candidate.reduce));
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(slopetol),
-       20, 120, 155, 20);
-    Put(dum_str,candidate.stdiff,4,0);
-    Create (stdiff, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
-      175, 120,  40, 20);
-
-    Put(dum_str,candidate.zoom_fac,4,0);
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(zoom_fac),
-        5, 160, 165, 20);
-    Create (zoom, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
-      180, 160,  40, 20);
-
-    Put(dum_str,candidate.quality,4,0);
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(qualcirc),
-        5, 180, 165, 20);
-    Create (quality, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
-      180, 180,  40, 20);
-
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(origin),
-        5, 200, 125, 20);
-    Put(dum_str,candidate.P0.x,4,0);
-    Create (origx, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
-      130, 200,  40, 20);
-    Put(dum_str,candidate.P0.y,4,0);
-    Create (origy, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
-      180, 200,  40, 20);
-
-    Create(snap_group, Tabbing.tab(pic_opt_tab_drawing), Msg(Snapping),
-      235,  10, 200, 65);
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(activated),
-      250,  30,  90, 20);
-    Create(snap,Tabbing.tab(pic_opt_tab_drawing), "",
-      350,  30,  15, 15);
-    State(snap,boolean_to_state(candidate.snapping));
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(stepping),
-      250,  50,  90, 20);
-    Create (snap_asp, Tabbing.tab(pic_opt_tab_drawing),
-      Trim(Integer'Image(candidate.snap_asp),left),
-      350,  50,  30, 20);
-
-    Create(slope_group, Tabbing.tab(pic_opt_tab_drawing), Msg(slopes),
-      235,  80, 200, 65);
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(anyslope),
-      250,  100, 100, 20);
-    Create(any_slope,Tabbing.tab(pic_opt_tab_drawing), "",
-      350,  100,  15, 15);
-    State(any_slope,boolean_to_state(candidate.steigung));
-    Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(txslopes),
-      250,  120, 100, 20);
-    Create(ltx_slope,Tabbing.tab(pic_opt_tab_drawing), "",
-      350,  120,  15, 15);
-    State(ltx_slope,boolean_to_state(not candidate.steigung));
-
-    -- LaTeX tab --
-    -- .sty assumptions group
-    Create(compat_group, Tabbing.tab(pic_opt_tab_latex), Msg(compat),
-      compat_x,  compat_y, 200, 25 + 20 * sty_box'Length);
-
-    for s in sty_box'Range loop
-      y:= compat_y + 20 + 20 * Supposing_sty'Pos(s);
-      Create_Label (Tabbing.tab(pic_opt_tab_latex),  Sty_title(s), compat_x + 15,  y, 160, 20);
-      Create(sty_box(s),Tabbing.tab(pic_opt_tab_latex), "", compat_x + 180,  y,  15, 15);
-      State(sty_box(s), boolean_to_state(candidate.sty(s)));
-    end loop;
-
-    -- preview insertions
-    y:= y + 20 + 25;
-    Create_Label(
-      Tabbing.tab(pic_opt_tab_latex),
-      Msg(preview_insertions), compat_x,  y, wmax, 20
-    );
-    Create(
-      preview_insert_box,
-      Tabbing.tab(pic_opt_tab_latex),
-      To_GString_From_Unbounded(candidate.pv_insert),
-      compat_x, y + 25, wmax, 80
-    );
-
-    Show_Dialog_with_Toolbars_off(pan, window, main, result);
-
-    case Result is
-      when IDOK     =>
-        modified:= pic_opt /= candidate;
-        -- ^ try to do it so short in another language!
-        pic_opt:= candidate;
-      when others   =>
-        modified:= False; -- Contains IDCANCEL
-    end case;
-    GWindows.Base.Redraw(window);
-  end On_Picture_Options;
-
   procedure Preview( window : in out MDI_Picture_Child_Type ) is
     ttl: constant String:= Text(Window);
     ti: Integer;
@@ -982,7 +788,7 @@ package body TC.GWin.MDI_Picture_Child is
         when preview    => Preview(Window);
         when clean_pic  => TC.GWin.Tools.Cleanup_dialog(Window);
         when pic_opt_dialog =>
-          On_Picture_Options(
+          TC.GWin.Options_Dialogs.On_Picture_Options(
             Window,
             Window.Draw_Control.picture.opt,
             Window.parent.all,

@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
--- GUI contents of resource script file: TeXCAD.rc
--- Transcription time: 2018/11/27  19:06:31
+-- GUI contents of resource script file: texcad.rc
+-- Transcription time: 2019/08/09  11:33:08
 -- GWenerator project file: TeXCAD.gwen
 --
 -- Translated by the RC2GW or by the GWenerator tool.
@@ -8,7 +8,7 @@
 --
 -- This file contains only automatically generated code. Do not edit this.
 -- Rework the resource script instead, and re-run the translator.
--- RC Grammar version: 30-Aug-2018
+-- RC Grammar version: 20-Jul-2019
 ---------------------------------------------------------------------------
 
 with GWindows.Types;                    use GWindows.Types;
@@ -17,7 +17,7 @@ with GWindows.Drawing_Objects;
 with GWindows.GStrings;                 use GWindows.GStrings;
 with System;
 
-package body TeXCAD_Resource_GUI is
+package body texcad_Resource_GUI is
 
   -- ** Generated code begins here \/ \/ \/.
 
@@ -319,4 +319,4 @@ begin
 
   -- Last line of resource script file: 149
 
-end TeXCAD_Resource_GUI;
+end texcad_Resource_GUI;
