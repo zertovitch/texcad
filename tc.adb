@@ -467,35 +467,35 @@ package body TC is
   end TeX_Number;
 
   function TeX_Number( x: Real; prec: Positive:= Real'Digits ) return String is
-    s: String(1..30);
-    na,nb,np:Natural;
+    s : String (1 .. 15 + Real'Digits);
+    na, nb, np : Natural;
   begin
-    RIO.Put(s,x,prec,0);
-    -- return Trim(s,left);
-    na:= s'First;
-    nb:= s'Last;
-    np:= 0;
+    RIO.Put (s, x, Aft => prec, Exp => 0);
+    na := s'First;
+    nb := s'Last;
+    np := 0;
     for i in s'Range loop
       case s(i) is
-        when '.' => np:= i; exit;  --   Find a decimal point
-        when ' ' => na:= i+1;      -- * Trim spaces on left
+        when '.' => np := i; exit;    --  Find a decimal point
+        when ' ' => na := i + 1;      --  * Trim spaces on the left
         when others => null;
       end case;
     end loop;
-    if np>0 then
-      while nb > np and then s(nb)='0' loop
-        nb:= nb-1;                 -- * Remove extra '0's
+    if np > 0 then
+      --  In case of a decimal point.
+      while nb > np and then s (nb) = '0' loop
+        nb := nb - 1;                 --  * Remove extra '0's
       end loop;
       if nb = np then
-        nb:= nb-1;                 -- * Remove '.' if it is at the end
-      elsif s(na..np-1)= "-0" then
-        na:= na+1;
-        s(na):= '-';               -- * Reduce "-0.x" to "-.x"
-      elsif s(na..np-1)= "0" then
-        na:= na+1;                 -- * Reduce "0.x" to ".x"
+        nb := nb - 1;                 --  * Remove '.' if it is at the end
+      elsif s (na .. np - 1) = "-0" then
+        na := na + 1;
+        s (na) := '-';                --  * Reduce "-0.x" to "-.x"
+      elsif s (na .. np - 1) = "0" then
+        na := na + 1;                 --  * Reduce "0.x" to ".x"
       end if;
     end if;
-    return s(na..nb);
+    return s (na .. nb);
   end Tex_Number;
 
   function Image( o:Ovop ) return String is
