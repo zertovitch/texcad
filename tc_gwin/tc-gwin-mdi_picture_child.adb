@@ -873,7 +873,7 @@ package body TC.GWin.MDI_Picture_Child is
             declare
               n: constant String:= Clip_filename;
             begin
-              success:= GWin_Util.Exist(n);
+              success := Ada.Directories.Exists (n);
               if success then
                 Window.Macro_Name:= To_GString_unbounded(n);
               end if;
@@ -963,7 +963,9 @@ package body TC.GWin.MDI_Picture_Child is
                Success);
     if Success then
       if
-        GWin_Util.Exist(To_String (To_GString_From_Unbounded (New_File_Name)))
+        Ada.Directories.Exists (
+          To_String (To_GString_From_Unbounded (New_File_Name))
+        )
       then
          begin
             if Message_Box (Window,
@@ -1025,14 +1027,14 @@ package body TC.GWin.MDI_Picture_Child is
       -- the original file is untouched.
       --
       -- 1/ delete old backup
-      if Exist(backup_name) then
+      if Ada.Directories.Exists (backup_name) then
         Delete_File( backup_name, ok );
         if not ok then
           raise backup_error;
         end if;
       end if;
       -- 2/ file -> backup
-      if Exist(To_String(file_name)) then
+      if Ada.Directories.Exists (To_String(file_name)) then
         Rename_File(
           To_String(file_name),
           backup_name,

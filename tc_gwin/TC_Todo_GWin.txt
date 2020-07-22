@@ -13,8 +13,10 @@ Improvements
 - Rulers
 - Undo's (Ctrl-Z), Redo's (Ctrl-Y)
 - At most one instance of TC running on one PC
-- Unicode - resistant (a TString subtype of String or Wide_String)
+- Unicode - resistant (use GString of GWindows = String or Wide_String
+  depending on the mode)
 
 [For GWindows]
 - Choosecolor with custom colors open
 - Internationalize MsgBox (Win32: MessageBoxEx)
+- Use GWindows framework directly like AZip or LEA project files do

@@ -113,7 +113,6 @@ package body Floating_toolbars is
 
   procedure Change_status(tb: in out Floating_toolbar; to: Floating_TB_status)
   is
-    use GWindows.Base, GWindows.Common_Controls;
     from: constant Floating_TB_status:= tb.status;
   begin
     --   Message_Box("",
@@ -197,7 +196,7 @@ package body Floating_toolbars is
 
     procedure Create_tool_window is
       memo_geom: LTWH_Rectangle;
-      use GWindows.Base, GWindows.Common_Controls;
+      use GWindows.Base;
     begin
       -- a/ The tool window
       Control.window.belongs_to:= Control'Unrestricted_Access;

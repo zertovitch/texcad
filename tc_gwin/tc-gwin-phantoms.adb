@@ -7,8 +7,6 @@ pragma Elaborate_All(GWindows.Drawing_Objects); -- For Create_Pen
 
 package body TC.GWin.Phantoms is
 
-  use REF;
-
   phantom_pen: array(Pen_Style_Type) of Pen_type;
 
   procedure Invert_rubber_box(

@@ -100,7 +100,7 @@ package body TC.GWin.Display is
     end Ellipse;
 
     procedure Arc( x,y, a1,a2, r: Integer ) is
-      use TC, TC.REF;
+      use TC.REF;
       f: constant:= 2.0 * Pi / 360.0;
     begin
       Arc(Canvas, x-r,y-r,x+r,y+r,

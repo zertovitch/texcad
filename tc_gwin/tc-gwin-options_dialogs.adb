@@ -399,6 +399,7 @@ package body TC.GWin.Options_Dialogs is
   begin
     Create_As_Dialog(pan, Window, title, Width => wmax + 50, Height => 330);
     -- Fix_Dialog(pan); -- 2007. No effect, alas...
+    -- [Rem. 2020: Fix_Dialog was setting WS_EX_DLGMODALFRAME, no idea what the problem was.]
     Center(pan);
     Small_Icon (Pan, "Options_Icon");
     On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);

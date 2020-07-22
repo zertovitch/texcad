@@ -1,28 +1,25 @@
-with Ada.Integer_Text_IO;               use Ada.Integer_Text_IO;
-with Ada.Exceptions;                    use Ada.Exceptions;
+with GWindows.Application,
+     GWindows.Common_Controls,
+     GWindows.Constants,
+     GWindows.Drawing_Objects,
+     GWindows.Types;
 
-with Interfaces.C;                      use Interfaces.C;
-
-with GWindows.Application;
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Common_Controls;          use GWindows.Common_Controls;
-with GWindows.Constants;
-with GWindows.Drawing_Objects;
-
-with GWindows.Types;
+with Ada.Environment_Variables,
+     Ada.Integer_Text_IO,
+     Ada.Text_IO;
 
 with GNAT.OS_Lib;
-
+with Interfaces.C;
 with System;
 
-pragma Elaborate_All(GWindows.Drawing_Objects); -- For GUI_Font initialisation
+pragma Elaborate_All(GWindows.Drawing_Objects);  --  For GUI_Font initialisation
 
 package body GWin_Util is
 
-  function To_Lower(Value : GString) return GString is
-    s: GString:= Value;
+  function To_Lower (Value : GString) return GString is
+    s : GString := Value;
   begin
-    To_Lower(s);
+    GWindows.GStrings.To_Lower (s);
     return s;
   end To_Lower;
 
@@ -38,44 +35,45 @@ package body GWin_Util is
   package body Common_Fonts is
 
     procedure Create_Common_Fonts is
+      use Interfaces.C;
 
-     type Face_Name_Type is array(1..32) of GWindows.GChar_C;
+      type Face_Name_Type is array(1..32) of GWindows.GChar_C;
 
-     type LOGFONT is record
-       lfHeight: Interfaces.C.long;
-       lfWidth: Interfaces.C.long;
-       lfEscapement: Interfaces.C.long;
-       lfOrientation: Interfaces.C.long;
-       lfWeight: Interfaces.C.long;
-       lfItalic: Interfaces.C.char;
-       lfUnderline: Interfaces.C.char;
-       lfStrikeOut: Interfaces.C.char;
-       lfCharSet: Interfaces.C.char;
-       lfOutPrecision: Interfaces.C.char;
-       lfClipPrecision: Interfaces.C.char;
-       lfQuality: Interfaces.C.char;
-       lfPitchAndFamily: Interfaces.C.char;
-       lfFaceName: Face_Name_Type;
-     end record;
+      type LOGFONT is record
+        lfHeight: Interfaces.C.long;
+        lfWidth: Interfaces.C.long;
+        lfEscapement: Interfaces.C.long;
+        lfOrientation: Interfaces.C.long;
+        lfWeight: Interfaces.C.long;
+        lfItalic: Interfaces.C.char;
+        lfUnderline: Interfaces.C.char;
+        lfStrikeOut: Interfaces.C.char;
+        lfCharSet: Interfaces.C.char;
+        lfOutPrecision: Interfaces.C.char;
+        lfClipPrecision: Interfaces.C.char;
+        lfQuality: Interfaces.C.char;
+        lfPitchAndFamily: Interfaces.C.char;
+        lfFaceName: Face_Name_Type;
+      end record;
 
-     Log_of_current_font: aliased LOGFONT;
+      Log_of_current_font: aliased LOGFONT;
 
-     subtype PVOID   is System.Address;                      --  winnt.h
-     subtype LPVOID  is PVOID;                               --  windef.h
+      subtype PVOID   is System.Address;                      --  winnt.h
+      subtype LPVOID  is PVOID;                               --  windef.h
 
-     function GetObject
-       (hgdiobj  : GWindows.Types.Handle  := GWindows.Drawing_Objects.Handle(GUI_Font);
-        cbBufferl: Interfaces.C.int       := LOGFONT'Size / 8;
-        lpvObject: LPVOID                 := Log_of_Current_font'Address)
-       return Interfaces.C.int;
-     pragma Import (StdCall, GetObject,
-                      "GetObject" & Character_Mode_Identifier);
+      function GetObject
+        (hgdiobj  : GWindows.Types.Handle  := GWindows.Drawing_Objects.Handle(GUI_Font);
+         cbBufferl: Interfaces.C.int       := LOGFONT'Size / 8;
+         lpvObject: LPVOID                 := Log_of_current_font'Address)
+        return Interfaces.C.int;
+      pragma Import (StdCall, GetObject,
+                       "GetObject" & Character_Mode_Identifier);
 
-     function CreateFontIndirect
-       (lpvObject: LPVOID                 := Log_of_Current_font'Address)
-       return GWindows.Types.Handle;
-     pragma Import (StdCall, CreateFontIndirect,
-                      "CreateFontIndirect" & Character_Mode_Identifier);
+      function CreateFontIndirect
+        (lpvObject: LPVOID                 := Log_of_current_font'Address)
+        return GWindows.Types.Handle;
+      pragma Import (StdCall, CreateFontIndirect,
+                       "CreateFontIndirect" & Character_Mode_Identifier);
 
     begin
       GWindows.Drawing_Objects.Create_Stock_Font(
@@ -88,8 +86,8 @@ package body GWin_Util is
           14, Underline => True);
             -- !! ^ Not so nice (non-unsharpened font, size ~..., color ?)
       else
-        Log_of_Current_font.lfUnderline:= Interfaces.C.Char'Val(1);
-        GWindows.Drawing_Objects.Handle(URL_font, CreateFontIndirect);
+        Log_of_current_font.lfUnderline:= Interfaces.C.char'Val(1);
+        GWindows.Drawing_Objects.Handle(URL_Font, CreateFontIndirect);
       end if;
     end Create_Common_Fonts;
 
@@ -102,7 +100,6 @@ package body GWin_Util is
     GWindows.Base.Set_Font (Window, Common_Fonts.GUI_Font);
   end Use_GUI_Font;
 
-
   function To_URL_Encoding( s: String ) return String is
     p: Integer;
     r: String(1..s'Length*3);
@@ -113,7 +110,7 @@ package body GWin_Util is
     for i in s'Range loop
       p:= Character'Pos(s(i));
       if p <= 32 then
-        Put(hex,p + 16#100#,16); --  + 16#100#: ensure both digits!
+        Ada.Integer_Text_IO.Put(hex,p + 16#100#,16);  --  + 16#100#: ensure both digits!
         r(j+1..j+3):= '%' & hex(5..6);
         j:= j + 3;
       else
@@ -124,25 +121,22 @@ package body GWin_Util is
     return r(1..j);
   end To_URL_Encoding;
 
-  function Exist(Name : String) return Boolean
-    renames GNAT.OS_Lib.Is_Regular_File;
-
   -----------
   -- Start --
   -----------
 
-  procedure Start(
+  procedure Start (
     File       : in String;
-    Parameter  : in String := "";
-    Minimized  : in Boolean:= False
+    Parameter  : in String  := "";
+    Minimized  : in Boolean := False
   )
   is
 
-    C_Operation  : aliased Interfaces.C.Char_Array :=
+    C_Operation  : aliased Interfaces.C.char_array :=
                            Interfaces.C.To_C("open");
-    C_Executable : aliased Interfaces.C.Char_Array :=
+    C_Executable : aliased Interfaces.C.char_array :=
                            Interfaces.C.To_C(File);
-    C_Parameter  : aliased Interfaces.C.Char_Array :=
+    C_Parameter  : aliased Interfaces.C.char_array :=
                            Interfaces.C.To_C(Parameter);
     -- Parts from Win32Ada:
     subtype PVOID is System.Address;
@@ -153,8 +147,8 @@ package body GWin_Util is
     --
     Exe : HINSTANCE;
     pragma Warnings(Off, Exe);
-    SW_SHOWNORMAL    : constant := 1;
-    SW_SHOWMINIMIZED : constant := 2;
+    SW_ShowNormal    : constant := 1;
+    SW_ShowMinimized : constant := 2;
     sw: constant array( Boolean ) of INT:=
       (SW_ShowNormal,
        SW_ShowMinimized);
@@ -184,20 +178,20 @@ package body GWin_Util is
       return HINSTANCE
       renames ShellExecuteA;                       --  shellapi.h:54
   begin
-    Exe := Shellexecute
-     (Hwnd0        => Getfocus,
-      Lpoperation  => C_Operation (C_Operation'First)'Unchecked_Access,
-      Lpfile       => C_Executable(C_Executable'First)'Unchecked_Access,
-      Lpparameters => C_Parameter (C_Parameter'First)'Unchecked_Access,
-      Lpdirectory  => null,
-      Nshowcmd     => sw(minimized));
+    Exe := ShellExecute
+     (hwnd0        => GetFocus,
+      lpOperation  => C_Operation (C_Operation'First)'Unchecked_Access,
+      lpFile       => C_Executable(C_Executable'First)'Unchecked_Access,
+      lpParameters => C_Parameter (C_Parameter'First)'Unchecked_Access,
+      lpDirectory  => null,
+      nShowCmd     => sw(Minimized));
   end Start;
 
   -- EXEC improved by :
   --  Martin C. Carlisle, Asst Prof of Comp Sci,
   --  US Air Force Academy, mcc@cs.usafa.af.mil
 
-  procedure EXEC(name: String; param:String:="") is
+  procedure Exec(name: String; param:String:="") is
     num_params : Integer := 1;
     use GNAT.OS_Lib;
   begin
@@ -223,64 +217,45 @@ package body GWin_Util is
         new String'(param(last_start..param'Last));
       Spawn(name, a_param_list, ok);
       if not ok then
-        raise_exception(Exec_failed'Identity, name & " " & param);
+        raise Exec_failed with name & " " & param;
       end if;
     end;
-  end EXEC;
+  end Exec;
 
-  function GET_ENV_INFO(name:String) return String is
+  procedure Exec_Command (the_command : String) is
+    use Ada.Environment_Variables;
   begin
-    return GNAT.OS_Lib.getenv(name).all;
-  end GET_ENV_INFO;
-
-  procedure EXEC_COMMAND(the_command:String) is
-  begin
-    EXEC( GET_ENV_INFO("COMSPEC")     -- i.e."C:\COMMAND.COM" ou equiv.
+    Exec( Value ("ComSpec")     --  E.g. "C:\WINDOWS\system32\cmd.exe"
           , "/C " & the_command);
-  end EXEC_COMMAND;
+  end Exec_Command;
 
-  -- ** Moved to new GWindows.Static_Controls.Web
-
-  --  type URL_Type is new GWindows.Static_Controls.Label_Type with
-  --    record
-  --      URL: GWindows.GString_Unbounded;
-  --    end record;
-
-  --  type URL_Access is access all URL_Type;
-
-  --  procedure On_Click ( Window: in out URL_Type ) is
-  --  begin
-  --    Start(
-  --      GWindows.GStrings.To_String(
-  --        GWindows.GStrings.To_Gstring_From_Unbounded(Window.URL)
-  --      )
-  --    );
-  --  end On_Click;
-
-  --  procedure Create_URL
-  --    (Parent     : in out GWindows.Base.Base_Window_Type'Class;
-  --     Text       : in     GString;
-  --     URL        : in     GString;
-  --     Left       : in     Integer;
-  --     Top        : in     Integer;
-  --     Width      : in     Integer;
-  --     Height     : in     Integer;
-  --     Alignment  : in     Alignment_Type                       :=
-  --       GWindows.Static_Controls.Left;
-  --     ID         : in     Integer                              := 0;
-  --     Show       : in     Boolean                              := True)
-  --  is
-  --    Temp_Label : constant URL_Access := new URL_Type;
-  --  begin
-  --    Create (Temp_Label.all,
-  --            Parent, Text, Left, Top, Width, Height, Alignment, ID, Show,
-  --            Is_Dynamic => True);
-  --    Set_Font(Temp_Label.all, Common_Fonts.URL_Font);
-
-  --    Temp_Label.URL:= To_GString_Unbounded(URL);
-  --  end Create_URL;
-
-  -- End of URL label stuff --
+  procedure Create_Desktop_Shortcut (
+    Link_Name   : String;  --  Name without extension, e.g. "AZip".
+    Target_Path : String;  --  Full path. E.g. Ada.Command_Line.Command_Name
+    All_Users   : Boolean  --  When False, shortcut is created only on current user's desktop.
+  )
+  is
+    use Ada.Environment_Variables, Ada.Text_IO;
+    --  Code inspired by:
+    --  https://superuser.com/questions/455364/how-to-create-a-shortcut-using-a-batch-script
+    SCRIPT : constant String := Value ("TEMP") & "\make_shortcut_from_ada.vbs";
+    f : File_Type;
+    function User return String is
+      (if All_Users then Value ("PUBLIC") else Value ("USERPROFILE"));
+  begin
+    Create (f, Out_File, SCRIPT);
+    Put_Line (f, "Set oWS = WScript.CreateObject(""WScript.Shell"")");
+    Put_Line (f, "sLinkFile = """ & User & "\Desktop\" & Link_Name & ".lnk""");
+    Put_Line (f, "Set oLink = oWS.CreateShortcut(sLinkFile)");
+    Put_Line (f, "oLink.TargetPath = """ & Target_Path & '"');
+    Put_Line (f, "oLink.Save");
+    Close (f);
+    --
+    Exec_Command ("cscript /nologo " & SCRIPT);
+    --
+    Open (f, In_File, SCRIPT);
+    Delete (f);
+  end Create_Desktop_Shortcut;
 
   procedure Get_Windows_version(
     major, minor: out Integer;
@@ -410,50 +385,85 @@ package body GWin_Util is
     tabs: GWindows.Common_Controls.Tab_Window_Control_Type;
     --
     procedure Create(Parent: in out GWindows.Base.Base_Window_Type'Class) is
-      margin: constant:= 6;
+      margin : constant := 6;
     begin
       -- 1/ Create the tabs holder
-      Create (tabs, Parent,
+      tabs.Create (Parent,
         margin,
         margin,
-        Client_Area_Width(Parent) - margin * 2,
-        Client_Area_Height(Parent) - 30 - margin * 2
+        Parent.Client_Area_Width - margin * 2,
+        Parent.Client_Area_Height - 30 - margin * 2
       );
-      Set_As_Control_Parent (tabs); -- <- Avoid button press hanging the app.
+      tabs.Set_As_Control_Parent; -- <- Avoid button press hanging the app.
       -- 2/ Create each tab
       for s in Tab_enumeration loop
-        Insert_Tab (tabs, Tab_enumeration'Pos(s)-Tab_enumeration'Pos(Tab_enumeration'First), Title(s));
+        tabs.Insert_Tab (Tab_enumeration'Pos(s)-Tab_enumeration'Pos(Tab_enumeration'First), Title(s));
         GWindows.Windows.Create_As_Control (
           tab(s), tabs, "",
           0, 0,
-          Client_Area_Width(tabs),
-          Client_Area_Height(tabs), Show => False
+          tabs.Client_Area_Width,
+          tabs.Client_Area_Height,
+          Show => False
         );
         --  Link (tab(s), Handle(tab(s)), False, Control_Link);
         --  -- ^ for buttons from a resource file (André van Splunter)
-        Tab_Window (tabs, Tab_enumeration'Pos(s)-Tab_enumeration'Pos(Tab_enumeration'First), tab(s)'Unrestricted_Access);
+        tabs.Tab_Window (Tab_enumeration'Pos(s)-Tab_enumeration'Pos(Tab_enumeration'First), tab(s)'Unrestricted_Access);
       end loop;
       -- 3/ Create OK, Cancel buttons:
       Create (ok, Parent, ok_message,
-              Client_Area_Width(Parent) - 162,
-              Client_Area_Height (Parent) - 30, 75, 23,
+              Parent.Client_Area_Width - 162,
+              Parent.Client_Area_Height - 30, 75, 23,
               ID => GWindows.Constants.IDOK
       );
       Create (cancel, Parent, cancel_message,
-              Client_Area_Width(Parent) - 81,
-              Client_Area_Height (Parent) - 30, 75, 23,
+              Parent.Client_Area_Width - 81,
+              Parent.Client_Area_Height - 30, 75, 23,
               ID => GWindows.Constants.IDCANCEL
       );
     end Create;
   end Property_Tabs_Package;
 
-  --  procedure Fix_Dialog(Dialog: in GWindows.Windows.Window_Type) is
-  --    WS_EX_DLGMODALFRAME : constant := 16#00000001#;
-  --  begin
-  --    SetWindowLong (Handle (Base_Window_Type (Dialog)), GWL_EXSTYLE,
-  --       GetWindowLong (Handle (Base_Window_Type (Dialog))) or
-  --       WS_EX_DLGMODALFRAME );
-  --  end Fix_Dialog;
+  function "*"
+    (Left  : Natural;
+     Right : GString) return GString
+  is
+     Result : GString (1 .. Left * Right'Length);
+     Ptr    : Integer := 1;
+   begin
+     for J in 1 .. Left loop
+        Result (Ptr .. Ptr + Right'Length - 1) := Right;
+        Ptr := Ptr + Right'Length;
+     end loop;
+     return Result;
+  end "*";
+
+  overriding procedure Create
+     (Window     : in out Splitter_with_dashes;
+      Parent     : in out GWindows.Base.Base_Window_Type'Class;
+      Location   : in     GWindows.Base.Dock_Type;
+      Text       : in     GString                              := "";
+      Left       : in     Integer                              := 0;
+      Top        : in     Integer                              := 0;
+      Width      : in     Integer                              := 3;
+      Height     : in     Integer                              := 3;
+      Show       : in     Boolean                              := True;
+      Is_Dynamic : in     Boolean                              := False)
+  is
+    use GWindows.Base;
+  begin
+    --  Call parent method:
+    GWindows.GControls.GSize_Bars.GSize_Bar_Type (Window).Create (
+      Parent, Location, Text, Left, Top, Width, Height, Show, Is_Dynamic);
+    --  Add our goodies to make the splitter visible:
+    Window.Dashes.Create (
+      Window,
+      Alignment => GWindows.Static_Controls.Center,
+      --  A cheap grip design for the split bar...
+      Text =>  (if Location in At_Top | At_Bottom then 30 * "| " else 1000 * ". ")
+    );
+    Window.Dashes.Dock (Fill);
+    Window.Dashes.Enabled (False);  --  Just give a grey look...
+  end Create;
 
 begin
   Common_Fonts.Create_Common_Fonts;

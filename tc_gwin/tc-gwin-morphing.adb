@@ -16,8 +16,6 @@ with GWin_Util;                         use GWin_Util;
 
 package body TC.GWin.Morphing is
 
-  use TC.RIO;
-
   procedure Deformation_dialog(
     parent : in out MDI_Main_type;
     m      :        Morphart;
