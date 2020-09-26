@@ -554,7 +554,12 @@ package body TC.GWin.MDI_Main is
         On_About (Window);
       when Id_App_Exit  =>
         Close (Window);
-
+      when Id_File_Close =>
+        if Window.Count_MDI_Children = 0 then
+          Close (Window);  --  Ctrl-W when no subwindow is open.
+        else
+          On_Menu_Select (Window_Type (Window), Item);
+        end if;
       when Id_Window_Cascade   =>
         MDI_Cascade (Window);
       when Id_Window_Tile_Horz =>

@@ -40,7 +40,11 @@ package body TC.GWin.Menus is
        Id_Custom( Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - mru'First)) );
     end loop;
     Append_Separator (m);
-    Append_Item (m, Msg(fexit) & HT & "Alt+F4", ID_App_Exit);
+    if is_child then
+      Append_Item (m, Msg(fexit) & HT & "Alt+F4", ID_App_Exit);
+    else
+      Append_Item (m, Msg(fexit) & HT & "Ctrl+W / Alt+F4", ID_App_Exit);
+    end if;
     return m;
   end Create_File_Menu;
 
