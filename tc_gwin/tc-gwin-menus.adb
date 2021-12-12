@@ -11,7 +11,7 @@ package body TC.GWin.Menus is
                          Keys    : in GString:= "")
   is
     i: constant Integer:= ID_custom(Command);
-    s: constant String:= Msg(msg_for_command(Command));
+    s: constant GString:= Msg(msg_for_command(Command));
   begin
     if Keys = "" then
       Append_Item (Menu, s, i);

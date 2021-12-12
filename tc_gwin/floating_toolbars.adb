@@ -161,7 +161,7 @@ package body Floating_toolbars is
   -- Forces a smart resizing
   begin
     Size(Window, Width(Window), Height(Window));
-  end;
+  end Neutral_resize;
 
   ------------
   -- Create --

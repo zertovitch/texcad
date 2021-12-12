@@ -37,7 +37,7 @@ package body TC.GWin.Lang is
     return r(1..l);
   end Filter_amp;
 
-  function Language_rich_image( l: Language ) return String is
+  function Language_rich_image( l: Language ) return GString is
   begin
     case l is
       when l_english => return "English";

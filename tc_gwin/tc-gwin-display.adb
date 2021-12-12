@@ -119,9 +119,9 @@ package body TC.GWin.Display is
 
     procedure OutTextXY( x,y: Integer; t: String ) is
     begin
-      Background_Mode(Canvas, Transparent);
+      Background_Mode (Canvas, Transparent);
       Select_Object (Canvas, GUI_Font);
-      Put(Canvas,x,y,t);
+      Put (Canvas,x,y, S2G(t));
     end OutTextXY;
 
     package TC_Display_for_Windows is

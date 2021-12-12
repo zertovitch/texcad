@@ -24,6 +24,11 @@ package TC.GWin is
 
   use TC.Graphics;
 
+  function S2G (Value : String) return GString renames To_GString_From_String;
+  function G2S (Value : GString) return String renames To_String;
+  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
+  function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
+
   type Color_Set is array( Color_zone ) of Color_Type;
 
   color: Color_Set:=

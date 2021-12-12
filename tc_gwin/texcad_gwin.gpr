@@ -1,15 +1,41 @@
--- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the TeXCAD project ( http://texcad.sf.net/ )
--- Build me with "gnatmake -p -P texcad_gwin", or open me with GPS
+--  This is a GNAT, GCC or GNAT Studio project file
+--  for the TeXCAD project:
 --
+--      home page:     http://texcad.sf.net/
+--      project page:  http://sf.net/projects/texcad/
+--      mirror:        https://github.com/zertovitch/texcad
+--
+--  Build me with "gnatmake -P texcad_gwin", or open me with GNAT Studio
+--
+--  *** External libraries ***
+--  * 
+--  *     You need to make the following projects' source files visible to this project
+--  *     through the ad-hoc (not GNAT / AdaCore official) GNAT_SOURCE_PATH environment variable:
+--  *   
+--  *   * GWindows and contributions:
+--  *       [gnavi]\gwindows\framework
+--  *       [gnavi]\gwindows\contrib
+--  *       [gnavi]\gnatcom\framework
+--  *       Project URL: http://sf.net/projects/gnavi/
+--  *       Mirror URL: https://github.com/zertovitch/gwindows
+--  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
+--  * 
+--  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework
+--  *  =======
+
 project TeXCAD_GWin is
 
-   for Source_Dirs use ("..\", ".", "Windows_Stuff");
+   for Source_Dirs use ("..\", ".") & external_as_list("GNAT_SOURCE_PATH", ";");
+   
+   --  Caution: the "Windows_Stuff" subdirectory is no more used and will be deleted!
+   
    for Main use ("TeXCAD.adb");
-   type Build_Mode_Type is ("Optimize", "Debug");
-   Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
+   for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
 
-   case Build_Mode is
+   type TeXCAD_TeXCAD_Build_Mode_Type is ("Optimize", "Debug");
+   TeXCAD_Build_Mode : TeXCAD_TeXCAD_Build_Mode_Type := external ("TeXCAD_Build_Mode", "Debug");
+
+   case TeXCAD_Build_Mode is
       when "Debug" =>
          for Object_Dir use "..\ACU_Debg";
       when "Optimize" =>
@@ -23,7 +49,7 @@ project TeXCAD_GWin is
    package Builder is
       --   "If -j0 is used, then the maximum number of simultaneous compilation
       --    jobs is the number of core processors on the platform."
-      case Build_Mode is
+      case TeXCAD_Build_Mode is
          when "Debug" =>
             for Default_Switches ("ada") use ("-j0");
          when "Optimize" =>
@@ -31,20 +57,35 @@ project TeXCAD_GWin is
       end case;
    end Builder;
 
+   Common_Compiler_Options := (
+     "-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
+     --  "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
+     "-gnatwcijkmopruvz.c.p.t.w.x",    --  Warnings switches (run "gnatmake" for full list)
+     "-gnatf",  --  Full errors. Verbose details, all undefined references
+     "-gnatq",  --  Don't quit, try semantics, even if parse errors
+     "-gnatQ",  --  Don't quit, write ali/tree file even if compile errors
+     --
+     --  "-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+     --  "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+     "-gnatyx",       --  Style: check x:no extra parens
+     "-gnatye"        --  Style: check e:end/exit labels present
+     --  "-gnatyc"        --  Style: check c:comment format (two spaces)
+     --  "-gnatyt",       --  Style: check t:token separation rules
+   );
+   
    package Compiler is
-      case Build_Mode is
+      case TeXCAD_Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatyhiknp",
-               "-gnatec" & project'Project_Dir & "..\acu_debg\debug.pra", 
-               "-gnatec" & project'Project_Dir & "..\acu_debg\tc_elim.pra");
+            for Local_Configuration_Pragmas use project'Project_Dir & "..\acu_debg\debug.pra";
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-gnato", "-fstack-check", "-g", "-gnatVa");
          when "Optimize" =>
-            for Default_Switches ("ada") use ("-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", 
-               "-gnatec" & project'Project_Dir & "..\acu_debg\tc_elim.pra");
+            for Local_Configuration_Pragmas use project'Project_Dir & "..\acu_debg\tc_elim.pra";
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp", "-fno-strict-aliasing", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0");
       end case;
    end Compiler;
 
    package Linker is
-      case Build_Mode is
+      case TeXCAD_Build_Mode is
          when "Debug" =>
             for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-LWindows_Stuff");
          when "Optimize" =>
@@ -54,7 +95,7 @@ project TeXCAD_GWin is
 
    package Binder is
       --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
-      case Build_Mode is
+      case TeXCAD_Build_Mode is
          when "Debug" =>
             for Default_Switches ("ada") use ("-Es");
          when "Optimize" =>

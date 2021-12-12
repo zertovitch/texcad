@@ -14,12 +14,11 @@ package body TC.GWin.Phantoms is
     cz     :        Color_zone
   )
   is
+    pragma Unreferenced (cz);
     X1: constant Integer:= w.Xs;
     Y1: constant Integer:= w.Ys;
     X2: constant Integer:= w.X;
     Y2: constant Integer:= w.Y;
-    c: Color_Type:= Color(cz);
-    pragma Warnings(off,c); -- unused
   begin
     Set_Mix_Mode( w.Drawing_Area, R2_NOTXORPEN );
     Select_Object( w.Drawing_Area, phantom_pen(dot) );

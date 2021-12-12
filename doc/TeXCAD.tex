@@ -48,7 +48,7 @@ $$ $$
 %
     {\TC} is free software and is distributed, including its sources,
     under the GNU General Public License.
-    Copyright \copyright \, 2003..2015
+    Copyright \copyright \, 2003 .. 2021
     \href{http://www.fsf.org/}{Free Software Foundation.}
     Please read {\TC}.txt for Copyrights details.
 %
@@ -56,6 +56,7 @@ $$ $$
 %
 The latest version is (or should be, or might be) at the following URL:
 \hrefid{http://texcad.sf.net}.
+A mirror of sources is located at \hrefid{https://github.com/zertovitch/texcad}.
 
 \section{Presentation of {{\TC}} --- a few features}
 %
@@ -929,7 +930,8 @@ I (Gautier) am the maintainer of the current project.\\
 Contact me at \hrefid{http://sf.net/users/gdemont/}.
 
 Current {\TC} Web page is \hrefid{http://texcad.sf.net}.\\
-The development project is also hosted at SourceForge: \hrefid{http://sf.net/projects/texcad/}.
+The development project is also hosted at SourceForge: \hrefid{http://sf.net/projects/texcad/}
+and is fully mirrored at \hrefid{https://github.com/zertovitch/texcad}.
 %
 \section{Acknowledgements --- for tools, help, testing, ideas,
 remarks, asking questions}
@@ -938,7 +940,7 @@ Note that all wishes are not yet concretized. Be patient, it is a
 only question of time! So, thanks to:
 %
 \begin{itemize}
-  \item David Botton, for his GNAVI R.A.D. system, in
+  \item David Botton, for his GNAVI Rapid Application Development system, in
         particular his wonderful GWindows library (URL:
         \hrefid{http://sourceforge.net/projects/gnavi/})
         and his help to this project.
@@ -997,22 +999,28 @@ by the way! The core includes:
 \end{itemize}
 %
 As a test I build and run regularily the core with GNAT, on both Windows
-and Linux, as well as with another development system,
-ObjectAda 7.2.2 SE (free version), available at \hrefid{http://www.aonix.com/}.\\
+and Linux, as well as with another development system, ObjectAda.\\
 
-The Windows ``skin'' uses the open-source framework GWindows for the user interface.
+The Windows ``skin'' uses the open-source framework GWindows for the user interface.\\
 
-All you need to do for building {\TC} for Windows is to install 
+For building {\TC} for Windows you need a few things:
+
+\begin{enumerate}
+  \item First, install 
 a binary distribution of the {\bf GNAT Ada compiler} for Windows platforms
 (from AdaCore or MinGW, links above).
+  \item Then you need the GWindows framework that you'll find at one of the following places:
+  \hrefid{http://sourceforge.net/projects/gnavi/} or
+  \hrefid{https://github.com/zertovitch/gwindows}.
+Installation of the latter is optional, unpacking or getting sources via git or svn or
+extracted from a zip file is sufficient.
+  \item Third step is to set environment variables as explained in {\tt texcad\_gwin.gpr}
+(a project file in text format), located
+in the {\tt TC\_GWin} directory.
+  \item Then, go to the {\tt TC\_GWin} directory and run {\tt "build\_debug.cmd"},
+or open {\tt texcad\_gwin.gpr} with the GNAT Studio and press F4.
+\end{enumerate}
 
-Then, go to the {\tt TC\_GWin} directory and run {\tt "build\_debug.cmd"},
-or open {\tt texcad\_gwin.gpr} with GPS (the GNAT Programming Studio) and press F4.
-
-NB: a snapshot of the {\bf GWindows} library, ANSI mode, is included with
-{\TC}'s sources (in {\tt TC\_GWin/windows\_stuff/}), so you don't need to install it!
-If for whatever reason you need to update GWindows, you'll find it there:
-  \hrefid{http://sourceforge.net/projects/gnavi/}
 %
 $$ $$
 The principal directories are:\\

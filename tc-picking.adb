@@ -139,7 +139,7 @@ package body TC.Picking is
 
     procedure Scout_Bezier is new Bezier_curve(Near_to_target_Point);
 
-    procedure Do_Nothing is begin null; end;
+    procedure Do_Nothing is null;
 
     procedure Scout_Param_2D is new Parametric_curve_2D(Near_to_target_Point, Do_Nothing);
 
@@ -259,7 +259,7 @@ package body TC.Picking is
           found:= True;
         when pick_text =>
           if has_modifiable_info(a.art) then
-            if (a.art=box and then a.solid) then
+            if a.art=box and then a.solid then
               found:= False;
             else
               found:= Near_Point;

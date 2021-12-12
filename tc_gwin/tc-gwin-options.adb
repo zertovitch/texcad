@@ -1,6 +1,7 @@
-with GWindows.Registry;                 use GWindows.Registry;
+with GWindows.Registry;
 
 package body TC.GWin.Options is
+  use GWindows.Registry;
 
   kname: constant GString:= "Software\TeXCAD";
 
@@ -60,7 +61,7 @@ package body TC.GWin.Options is
     procedure Clear_for_one_user(user_key_name: GString) is
     begin
       for k in Key loop
-        Delete_Value( user_key_name, Key'Image(k), HKEY_USERS );
+        Delete_Value( user_key_name, S2G (Key'Image(k)), HKEY_USERS );
       end loop;
       Unregister( user_key_name, HKEY_USERS );
     exception
@@ -97,21 +98,21 @@ package body TC.GWin.Options is
     for k in key loop
       begin
         declare
-          ks: constant String:= key'Image(k);
-          s : constant String:= Get_Value( kname, ks, HKEY_CURRENT_USER );
+          ks: constant GString := S2G (key'Image(k));
+          s : constant String  := G2S (Get_Value( kname, ks, HKEY_CURRENT_USER ));
         begin
           case k is
             when pic  =>
               if s /= "" then
                 -- ^ Don't erase the default value when this key is missing
                 --   (no exception raised in that case)
-                o.tex_suff:= To_Unbounded_String(s);
+                o.tex_suff := To_Unbounded_String (s);
               end if;
             when bak  =>
               if s /= "" then
                 -- ^ Don't erase the default value when this key is missing
                 --   (no exception raised in that case)
-                o.bak_suff:= To_Unbounded_String(s);
+                o.bak_suff := To_Unbounded_String (s);
               end if;
             when bak_active =>
               o.bak_enabled:= Boolean'Value(s);
@@ -154,7 +155,9 @@ package body TC.GWin.Options is
                 p.linewidth:= To_Unbounded_String(s);
               end if;
             when Style_switch =>
-              p.sty(Supposing_sty'Value(ks(ks'First+style_switch_offset..ks'Last))):= Boolean'Value(s);
+              p.sty(Supposing_sty'Value(
+                GWindows.GStrings.To_String (ks(ks'First+style_switch_offset..ks'Last))
+              )) := Boolean'Value(s);
             when kleft    => wleft  := Integer'Value(s);
             when ktop     => wtop   := Integer'Value(s);
             when kwidth   => wwidth := Integer'Value(s);
@@ -181,7 +184,7 @@ package body TC.GWin.Options is
                   when others => null; -- Should not happen !
                 end case;
               end;
-            when mru1..mru9 => mru( Key'Pos(k)-Key'Pos(mru1)+1 ):= To_GString_Unbounded(s);
+            when mru1..mru9 => mru( Key'Pos(k)-Key'Pos(mru1)+1 ):= To_GString_Unbounded(S2G(s));
             when Colors   => color(
                                Color_zone'Val(Key'Pos(k)-Key'Pos(Colors'First))
                              ):= Color_Type'Value(s);
@@ -205,7 +208,7 @@ package body TC.GWin.Options is
 
     procedure R( v: String ) is
     begin
-      Register( kname, key'Image(zekey), v, HKEY_CURRENT_USER );
+      Register( kname, S2G (key'Image(zekey)), S2G (v), HKEY_CURRENT_USER );
     end R;
 
   begin
@@ -266,7 +269,11 @@ package body TC.GWin.Options is
               end case;
             end;
           when mru1..mru9 =>
-            R( To_GString_from_Unbounded(mru( Key'Pos(k)-Key'Pos(mru1)+1 )) );
+            R(
+              GWindows.GStrings.To_String (
+                To_GString_from_Unbounded(mru( Key'Pos(k)-Key'Pos(mru1)+1 ))
+              )
+            );
           when Colors   =>
             R( Color_Type'Image(
                  color(Color_zone'Val(Key'Pos(k)-Key'Pos(Colors'First)))

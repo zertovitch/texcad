@@ -150,7 +150,7 @@ package body TC is
     function Convert_0_1_to_min_t_max_t(z: Real) return Real is
     begin
       return z * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
-    end;
+    end Convert_0_1_to_min_t_max_t;
     sing: Boolean;
   begin
     sc:= o.data_2d.segments;

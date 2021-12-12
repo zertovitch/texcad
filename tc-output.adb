@@ -376,7 +376,7 @@ package body TC.Output is
       begin
         no_start:= False;
         restart:= True;
-      end;
+      end Singularity;
 
       procedure Draw_Paramcurve is new Parametric_curve_2D(PlotPoint, Singularity);
 
@@ -588,7 +588,7 @@ package body TC.Output is
           New_Line(tf);
           Put(tf, "%   ");
         end if;
-      end;
+      end Spacing;
     begin
       Put(tf, "%\paramcurvexy");
       if o.data_2d.segments > 0 then
@@ -984,7 +984,7 @@ package body TC.Output is
         end case;
       end loop;
       return s(fs..s'Last);
-    end;
+    end Short_name;
 
   begin -- Insert
     o:= pic.root;

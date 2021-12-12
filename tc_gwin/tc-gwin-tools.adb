@@ -39,9 +39,9 @@ package body TC.GWin.Tools is
     d.Detection_List.Insert_Column(Msg(first_pos), 2, 110);
     for topic in Detection loop
       d.Detection_List.Insert_Item(Msg(msg_for_cleanup(topic)), Detection'Pos(topic));
-      d.Detection_List.Set_Sub_Item(Integer'Image(stat(topic).number), Detection'Pos(topic), 1);
+      d.Detection_List.Set_Sub_Item(S2G (Integer'Image(stat(topic).number)), Detection'Pos(topic), 1);
       if stat(topic).number > 0 then
-        d.Detection_List.Set_Sub_Item(Integer'Image(stat(topic).first_obj_pos), Detection'Pos(topic), 2);
+        d.Detection_List.Set_Sub_Item(S2G (Integer'Image(stat(topic).first_obj_pos)), Detection'Pos(topic), 2);
       end if;
     end loop;
     Result:= Show_Dialog(d, Window);
@@ -56,6 +56,6 @@ package body TC.GWin.Tools is
       when others   =>
         null; -- Contains IDCANCEL
     end case;
-  end;
+  end Cleanup_dialog;
 
 end TC.GWin.Tools;

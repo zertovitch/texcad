@@ -53,8 +53,6 @@ package body TC.GWin.MDI_Picture_Child is
   procedure On_Size (Window : in out MDI_Picture_Child_Type;
                      Width  : in     Integer;
                      Height : in     Integer) is
-    pragma Warnings (Off, Width);
-    pragma Warnings (Off, Height);
   begin
     if user_maximize_restore then
       MDI_childen_maximized:= Zoom(Window);
@@ -150,9 +148,8 @@ package body TC.GWin.MDI_Picture_Child is
      Canvas : in out GWindows.Drawing.Canvas_Type;
      Area   : in     GWindows.Types.Rectangle_Type)
   is
-    pragma Warnings (Off, Window);
-    pragma Warnings (Off, Canvas);
-    pragma Warnings (Off, Area);
+    pragma Unmodified (Window);
+    pragma Unmodified (Canvas);
   begin
     null; -- Do nothing! Avoids the flickering background/canvas.
   end On_Erase_Background;
@@ -191,7 +188,6 @@ package body TC.GWin.MDI_Picture_Child is
                       Canvas : in out GWindows.Drawing.Canvas_Type;
                       Area   : in     GWindows.Types.Rectangle_Type) is
     pragma Warnings (Off, Canvas); -- Canvas == Window.Drawing_Area
-    pragma Warnings (Off, Area);
   begin
     Update_bitmap(Window);
     Display_saved_bitmap(Window,Area);
@@ -305,10 +301,11 @@ package body TC.GWin.MDI_Picture_Child is
                Special_Key : in     Special_Key_Type;
                Value       : in     GCharacter)
   is
+    pragma Unreferenced (Value);
+    --
     WW: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window);
     v_pos: constant Natural:= Scroll_Position (WW, Vertical);
     dy: constant Natural:= Scroll_Page_Size(WW, Vertical);
-    pragma Warnings (Off, Value);
     --
     procedure Move_mouse_cursor(dx,dy: Integer) is
       p: constant GWindows.Types.Point_Type:= Get_Cursor_Position;
@@ -418,7 +415,7 @@ package body TC.GWin.MDI_Picture_Child is
     direction:        Integer )
   is
     opt: TC.Picture_options renames Window.Draw_Control.picture.opt;
-    sf: GString(1..20);
+    sf: String(1..20);
   begin
     if direction /= 0 then
       opt.zoom_fac:= opt.zoom_fac * (zoom_factor ** direction);
@@ -426,7 +423,7 @@ package body TC.GWin.MDI_Picture_Child is
       Subtle_redraw(window.Draw_Control);
     end if;
     RIO.Put(sf,opt.zoom_fac,2,0);
-    Update_Status_Bar( window.parent.all, zoom, Trim(sf,left) );
+    Update_Status_Bar( window.parent.all, zoom, S2G (Trim(sf,left)) );
   end Zoom_picture;
 
   procedure Show_Totals( Window: in out MDI_Picture_Child_Type ) is
@@ -436,9 +433,9 @@ package body TC.GWin.MDI_Picture_Child is
       if t = 0 then
         return "";
       elsif th = 0 then
-        return pfx & Integer'Image(t);
+        return pfx & S2G (Integer'Image(t));
       else
-        return pfx & Integer'Image(t) & "  (h:" & Integer'Image(th) & ')';
+        return pfx & S2G (Integer'Image(t) & "  (h:" & Integer'Image(th) & ')');
       end if;
     end Stotal;
     Star: constant array(Boolean) of GCharacter:= (False => ' ',True => '*');
@@ -555,10 +552,8 @@ package body TC.GWin.MDI_Picture_Child is
    end On_Create;
 
   procedure Preview( window : in out MDI_Picture_Child_Type ) is
-    ttl: constant String:= Text(Window);
+    ttl : constant GString:= Text (Window);
     ti: Integer;
-    stop_char: constant array(Character) of Boolean:=
-      ( '\'|'/'|'-' => True, others => False);
   begin
     if Window.Draw_control.Picture.opt.sty(emlines) then
       case Message_Box (
@@ -577,12 +572,15 @@ package body TC.GWin.MDI_Picture_Child is
     end if;
     ti:= ttl'Last;
     for i in reverse ttl'Range loop
-      exit when stop_char(ttl(i));
+      case ttl (i) is
+        when '\'|'/'|'-' => exit;  --  stop character
+        when others => null;
+      end case;
       ti:= i;
     end loop;
     TC.GWin.Previewing.Create_files(
       pic   => Window.Draw_control.Picture,
-      title => ttl(ti..ttl'Last)
+      title => G2S (ttl(ti..ttl'Last))
     );
     TC.GWin.Previewing.Start;
   exception
@@ -590,7 +588,7 @@ package body TC.GWin.MDI_Picture_Child is
       Message_Box (
         Window,
         Msg(preview),
-        Msg(prev_fail) & NL & NL & Exception_Message(E),
+        Msg(prev_fail) & NL & NL & S2G (Exception_Message(E)),
         OK_Box, Exclamation_Icon);
       TC.GWin.Previewing.Cleanup;
   end Preview;
@@ -601,14 +599,14 @@ package body TC.GWin.MDI_Picture_Child is
   end Clip_filename;
 
   procedure Clipboard_to_Clip_file( Window : in Window_Type'Class ) is
-    contents: constant String:= GWindows.Clipboard.Clipboard_Text(Window_Type(Window));
+    contents : constant GString:= GWindows.Clipboard.Clipboard_Text(Window_Type(Window));
     f: File_Type;
   begin
     if contents = "" then
       null; -- do nothing, we still might have the clipboard file
     else
       Create(f, Out_File, Clip_filename);
-      Put_Line(f, contents);
+      Put_Line(f, G2S (contents));
       Close(f);
     end if;
   end Clipboard_to_Clip_file;
@@ -622,10 +620,10 @@ package body TC.GWin.MDI_Picture_Child is
     else
       Open(f, In_File, Clip_filename);
       while not End_Of_File(f) loop
-        contents:= contents & Get_Line(f) & NL;
+        contents := contents & Get_Line(f) & ASCII.LF;
       end loop;
       Close(f);
-      GWindows.Clipboard.Clipboard_Text(Window_Type(Window), contents);
+      GWindows.Clipboard.Clipboard_Text(Window_Type(Window), S2G (to_String (contents)));
     end if;
   end Clip_file_to_Clipboard;
 
@@ -648,11 +646,11 @@ package body TC.GWin.MDI_Picture_Child is
   begin
     Open_File (Window, Msg(Open),
       File_Name,
-      ((To_Gstring_Unbounded (Msg(Tcd_Mac) & " (*." & Mac_Suffix & ")"),
-          To_Gstring_Unbounded ("*." & Mac_Suffix )),
+      ((To_Gstring_Unbounded (Msg(Tcd_Mac) & " (*." & S2G (Mac_Suffix) & ")"),
+          To_Gstring_Unbounded ("*." & S2G (Mac_Suffix) )),
         (To_Gstring_Unbounded (Msg(All_Files) & " (*.*)"),
           To_Gstring_Unbounded ("*.*"))),
-      '.' & Mac_Suffix,
+      '.' & S2G (Mac_Suffix),
       File_Title,
       Success);
       if success then
@@ -667,7 +665,7 @@ package body TC.GWin.MDI_Picture_Child is
     mo:= pw.opt;
     pw.opt.P0:= Window.Draw_control.PU; -- origin on mouse cursor
     begin
-      TC.Input.Load( pw, True, To_GString_From_unbounded(Window.Macro_Name) );
+      TC.Input.Load( pw, True, G2S (To_GString_From_unbounded(Window.Macro_Name)));
     exception
       when E : TC.Input.Load_error =>
         Message_Box(
@@ -678,7 +676,7 @@ package body TC.GWin.MDI_Picture_Child is
           "is ill-formed." & NL &
           "Items were only partially loaded, or not at all." & NL &
           "--- Message ---" & NL &
-          Exception_Message(E),
+          S2G (Exception_Message(E)),
           Icon => Exclamation_Icon
         );
     end;
@@ -705,15 +703,15 @@ package body TC.GWin.MDI_Picture_Child is
     procedure Get_Box_Data
       (parent : in out GWindows.Base.Base_Window_Type'Class)
     is
-      pragma Warnings(off,parent);
+      pragma Unreferenced (parent);
     begin
       case candidate.pattern is
         when plain => null;
         when dot =>
-          candidate.dot_symbol:= To_Unbounded_String(GWindows.Edit_Boxes.Text(sym_eb));
-          candidate.dot_gap:= TC.Real'Value(Text(len_eb));
+          candidate.dot_symbol:= To_Unbounded_String(G2S(GWindows.Edit_Boxes.Text(sym_eb)));
+          candidate.dot_gap:= TC.Real'Value(G2S(Text(len_eb)));
         when dash =>
-          candidate.dash_length:= TC.Real'Value(Text(len_eb));
+          candidate.dash_length:= TC.Real'Value(G2S(Text(len_eb)));
       end case;
     end Get_Box_Data;
 
@@ -739,12 +737,12 @@ package body TC.GWin.MDI_Picture_Child is
       when plain => null;
       when dash =>
         Create_Label(pan,Msg(dash_size), 10,  y, 130, 20);
-        Create (len_eb, pan, TeX_Number(candidate.dash_length,2), 180, y,  40, 20);
+        Create (len_eb, pan, S2G(TeX_Number(candidate.dash_length,2)), 180, y,  40, 20);
       when dot =>
         Create_Label(pan,Msg(dot_gap), 10,  y, 130, 20);
-        Create(len_eb, pan, TeX_Number(candidate.dot_gap,2), 180, y,  40, 20);
+        Create(len_eb, pan, S2G(TeX_Number(candidate.dot_gap,2)), 180, y,  40, 20);
         Create_Label(pan,Msg(dot_symbol), 10,  y+30, 130, 20);
-        Create(sym_eb, pan, To_String(candidate.dot_symbol), 180, y+30, 80, 22);
+        Create(sym_eb, pan, S2G (To_String(candidate.dot_symbol)), 180, y+30, 80, 22);
     end case;
 
     Create (oki, pan, "O&K", 20,
@@ -793,7 +791,7 @@ package body TC.GWin.MDI_Picture_Child is
             Window.Draw_Control.picture.opt,
             Window.parent.all,
             modified,
-            Msg(opicopt) & " - '" & Shorten_filename(Text(Window)) & ''');
+            G2S (Msg(opicopt) & " - '" & Shorten_filename(Text(Window)) & '''));
           Window.Draw_Control.picture.saved:=
             Window.Draw_Control.picture.saved and not modified;
           if modified then
@@ -875,7 +873,7 @@ package body TC.GWin.MDI_Picture_Child is
             begin
               success := Ada.Directories.Exists (n);
               if success then
-                Window.Macro_Name:= To_GString_unbounded(n);
+                Window.Macro_Name:= To_GString_unbounded(S2G(n));
               end if;
             end;
           end if;
@@ -954,11 +952,11 @@ package body TC.GWin.MDI_Picture_Child is
     Save_File (Window, Msg(saveas_or_macro(macro)) & "...",
                New_File_Name,
                ((To_GString_Unbounded (Msg(file_kind(macro)) &
-                   " (*." & Suffix & ")"),
-                 To_GString_Unbounded ("*." & Suffix )),
+                   " (*." & S2G (Suffix) & ")"),
+                 To_GString_Unbounded ("*." & S2G (Suffix) )),
                 (To_GString_Unbounded (Msg(All_Files) & " (*.*)"),
                  To_GString_Unbounded ("*.*"))),
-               '.' & Suffix,
+               '.' & S2G (Suffix),
                File_Title,
                Success);
     if Success then
@@ -999,6 +997,7 @@ package body TC.GWin.MDI_Picture_Child is
                   File_Name : in     GWindows.GString;
                   macro     :        Boolean )
   is
+    use type GString_Unbounded;
     written_name: GString_Unbounded:=
       To_GString_Unbounded(File_Name);
     temp_ext: constant GString:= ".$$$";
@@ -1019,8 +1018,8 @@ package body TC.GWin.MDI_Picture_Child is
     TC.Output.Save(
       pic            => Window.Draw_control.Picture,
       macro          => macro,
-      file_name      => To_String(written_name),
-      displayed_name => To_String(file_name)
+      file_name      => G2S (GU2G(written_name)),
+      displayed_name => G2S (file_name)
     );
     if with_backup then
       -- If there was an exception at writing,
@@ -1046,8 +1045,8 @@ package body TC.GWin.MDI_Picture_Child is
       end if;
       -- 3/ new file -> file
       Rename_File(
-        To_String(written_name),
-        To_String(file_name),
+        G2S (GU2G (written_name)),
+        G2S (file_name),
         ok
       );
       if not ok then
@@ -1067,8 +1066,8 @@ package body TC.GWin.MDI_Picture_Child is
         Message_Box (Window,
                      Msg(save),
                      Msg(cannotbackup) &
-                       ASCII.LF & "-> " &
-                       To_GString_From_String(backup_name),
+                       NL & "-> " &
+                       S2G (backup_name),
                      OK_Box,
                      Exclamation_Icon);
       end;
@@ -1077,7 +1076,7 @@ package body TC.GWin.MDI_Picture_Child is
         Message_Box (Window,
                      Msg(save),
                      Msg(cannotsave) &
-                       ASCII.LF & "-> " &
+                       NL & "-> " &
                        file_name,
                      OK_Box,
                      Exclamation_Icon);

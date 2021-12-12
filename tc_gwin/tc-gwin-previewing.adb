@@ -72,12 +72,12 @@ package body TC.GWin.Previewing is
       cmd: constant String:= Ada.Environment_Variables.Value("COMSPEC");
       -- usually, cmd.exe
     begin
-      GWin_Util.Start(cmd, params, Minimized => True);
+      GWin_Util.Start (cmd, params, As_Minimized => True);
     end;
   exception
     when Constraint_Error => -- no "COMSPEC" set
       begin
-        GWin_Util.Start("cmd.exe", params, Minimized => True);
+        GWin_Util.Start ("cmd.exe", params, As_Minimized => True);
       exception
         when others =>
           raise Preview_error;

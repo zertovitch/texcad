@@ -19,4 +19,3 @@ Improvements
 [For GWindows]
 - Choosecolor with custom colors open
 - Internationalize MsgBox (Win32: MessageBoxEx)
-- Use GWindows framework directly like AZip or LEA project files do

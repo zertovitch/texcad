@@ -78,7 +78,7 @@ package body TC.GWin.Options_Dialogs is
 
     preview_group : Group_Box_Type;
     preview_radio : array(LaTeX_version) of Radio_Button_Type;
-    latver: constant array(LaTeX_version) of String(1..5):=
+    latver: constant array(LaTeX_version) of GString (1..5):=
       (v209 => "2.09 ", v2e => ">= 2e");
     preview_dir_group : Group_Box_Type;
     preview_dir_radio : array(Preview_directory_choice) of Radio_Button_Type;
@@ -96,9 +96,9 @@ package body TC.GWin.Options_Dialogs is
     procedure Get_Data ( pnl : in out Gwindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off,pnl);
     begin
-      Candidate.tex_suff:= To_Unbounded_String(Text(d_tex_suff));
-      Candidate.mac_suff:= To_Unbounded_String(Text(d_mac_suff));
-      Candidate.bak_suff:= To_Unbounded_String(Text(bak_check_box.edit_box));
+      Candidate.tex_suff:= To_Unbounded_String(G2S (Text(d_tex_suff)));
+      Candidate.mac_suff:= To_Unbounded_String(G2S (Text(d_mac_suff)));
+      Candidate.bak_suff:= To_Unbounded_String(G2S (Text(bak_check_box.edit_box)));
       candidate.bak_enabled:= State(bak_check_box) = Checked;
       for L in Language loop
         if Text(Lang) = Language_Rich_Image(L) then
@@ -149,7 +149,7 @@ package body TC.GWin.Options_Dialogs is
         btn, Candidate.Options_For_New,
         window,
         modified,
-        Msg(onewpicopt));
+        G2S (Msg(onewpicopt)));
     end Do_Display;
 
     col_btn: array(Color_zone) of Color_button;
@@ -189,14 +189,14 @@ package body TC.GWin.Options_Dialogs is
     Create_Label (Tabbing.tab(gen_opt_tab_miscellaneous), Msg(Ltx_Pic),
       45,  y, 250, 20);
     Create (D_Tex_Suff, Tabbing.tab(gen_opt_tab_miscellaneous),
-      To_GString_From_Unbounded(Candidate.Tex_Suff),
+      S2G (To_String (Candidate.Tex_Suff)),
      300,  y, 50, 20);
 
     y:= y + 25;
     Create(bak_check_box.label, Tabbing.tab(gen_opt_tab_miscellaneous), Msg(Ltx_Pic_bak),
       45,  y, 250, 20);
     Create(bak_check_box.edit_box, Tabbing.tab(gen_opt_tab_miscellaneous),
-      To_GString_From_Unbounded(Candidate.bak_suff),
+      S2G (To_String (Candidate.bak_suff)),
      300,  y, 50, 20);
     Create(bak_check_box,Tabbing.tab(gen_opt_tab_miscellaneous), "",
       25,  y,  15, 15);
@@ -206,7 +206,7 @@ package body TC.GWin.Options_Dialogs is
     Create_Label (Tabbing.tab(gen_opt_tab_miscellaneous), Msg(Tcd_Mac),
       45,  y, 250, 20);
     Create (D_Mac_Suff, Tabbing.tab(gen_opt_tab_miscellaneous),
-      To_GString_From_Unbounded(Candidate.Mac_Suff),
+      S2G (To_String (Candidate.Mac_Suff)),
      300,  y, 50, 20);
 
     -- Misc tab / Preview directory group
@@ -300,7 +300,7 @@ package body TC.GWin.Options_Dialogs is
             ( Window,
               Speak(Gen_Opt.Lang,lng_chg) & " - " &
               Speak(Candidate.Lang,lng_chg) ,
-              Speak(Gen_Opt.Lang,fx_restrt) & ASCII.LF &
+              Speak(Gen_Opt.Lang,fx_restrt) & NL &
               Speak(Candidate.Lang,fx_restrt),
               Icon => Information_Icon
             );
@@ -373,21 +373,21 @@ package body TC.GWin.Options_Dialogs is
      is
      begin
        candidate.snapping:= State(snap)=checked;
-       candidate.snap_asp:= Integer'Value(Text(snap_asp));
-       candidate.zoom_fac:= TC.Real'Value(Text(zoom));
-       candidate.quality := TC.Real'Value(Text(quality));
+       candidate.snap_asp:= Integer'Value(G2S (Text(snap_asp)));
+       candidate.zoom_fac:= TC.Real'Value(G2S (Text(zoom)));
+       candidate.quality := TC.Real'Value(G2S (Text(quality)));
        candidate.reduce  := State(reduce)=checked;
        candidate.steigung:= State(any_slope)=checked;
-       candidate.stdiff  := TC.Real'Value(Text(stdiff));
+       candidate.stdiff  := TC.Real'Value(G2S (Text(stdiff)));
        for s in sty_box'Range loop
          candidate.sty(s):= State(sty_box(s)) = checked;
        end loop;
        --
-       candidate.unitlength:= To_Unbounded_String(Text(ul));
-       candidate.linewidth := To_Unbounded_String(Text(lw));
-       candidate.P0.x:= TC.Real'Value(Text(origx));
-       candidate.P0.y:= TC.Real'Value(Text(origy));
-       candidate.pv_insert := To_Unbounded_String(Text(preview_insert_box));
+       candidate.unitlength:= To_Unbounded_String(G2S (Text(ul)));
+       candidate.linewidth := To_Unbounded_String(G2S (Text(lw)));
+       candidate.P0.x:= TC.Real'Value(G2S (Text(origx)));
+       candidate.P0.y:= TC.Real'Value(G2S (Text(origy)));
+       candidate.pv_insert := To_Unbounded_String(G2S (Text(preview_insert_box)));
      exception
        when others =>
          Message_Box(
@@ -397,7 +397,7 @@ package body TC.GWin.Options_Dialogs is
      end Get_Data;
 
   begin
-    Create_As_Dialog(pan, Window, title, Width => wmax + 50, Height => 330);
+    Create_As_Dialog(pan, Window, S2G (title), Width => wmax + 50, Height => 330);
     -- Fix_Dialog(pan); -- 2007. No effect, alas...
     -- [Rem. 2020: Fix_Dialog was setting WS_EX_DLGMODALFRAME, no idea what the problem was.]
     Center(pan);
@@ -413,12 +413,12 @@ package body TC.GWin.Options_Dialogs is
     Create_Label (Tabbing.tab(pic_opt_tab_drawing), Msg(unitlength),
        20,  30, 130, 20);
     Create (ul, Tabbing.tab(pic_opt_tab_drawing),
-            To_String(candidate.unitlength),
+            S2G (To_String(candidate.unitlength)),
       155,  30,  60, 20);
     Create_Label (Tabbing.tab(pic_opt_tab_drawing), Msg(linewidth),
        20,  50, 140, 20);
     Create (lw, Tabbing.tab(pic_opt_tab_drawing),
-            To_String(candidate.linewidth),
+            S2G (To_String(candidate.linewidth)),
       165,  50,  50, 20);
 
     Create(redu_group, Tabbing.tab(pic_opt_tab_drawing), Msg(linechain),
@@ -431,28 +431,28 @@ package body TC.GWin.Options_Dialogs is
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(slopetol),
        20, 120, 155, 20);
     Put(dum_str,candidate.stdiff,4,0);
-    Create (stdiff, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
+    Create (stdiff, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
       175, 120,  40, 20);
 
     Put(dum_str,candidate.zoom_fac,4,0);
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(zoom_fac),
         5, 160, 165, 20);
-    Create (zoom, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
+    Create (zoom, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
       180, 160,  40, 20);
 
     Put(dum_str,candidate.quality,4,0);
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(qualcirc),
         5, 180, 165, 20);
-    Create (quality, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
+    Create (quality, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
       180, 180,  40, 20);
 
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(origin),
         5, 200, 125, 20);
     Put(dum_str,candidate.P0.x,4,0);
-    Create (origx, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
+    Create (origx, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
       130, 200,  40, 20);
     Put(dum_str,candidate.P0.y,4,0);
-    Create (origy, Tabbing.tab(pic_opt_tab_drawing), Trim(dum_str,left),
+    Create (origy, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
       180, 200,  40, 20);
 
     Create(snap_group, Tabbing.tab(pic_opt_tab_drawing), Msg(Snapping),
@@ -465,7 +465,7 @@ package body TC.GWin.Options_Dialogs is
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(stepping),
       250,  50,  90, 20);
     Create (snap_asp, Tabbing.tab(pic_opt_tab_drawing),
-      Trim(Integer'Image(candidate.snap_asp),left),
+      S2G (Trim(Integer'Image(candidate.snap_asp),left)),
       350,  50,  30, 20);
 
     Create(slope_group, Tabbing.tab(pic_opt_tab_drawing), Msg(slopes),
@@ -488,7 +488,7 @@ package body TC.GWin.Options_Dialogs is
 
     for s in sty_box'Range loop
       y:= compat_y + 20 + 20 * Supposing_sty'Pos(s);
-      Create_Label (Tabbing.tab(pic_opt_tab_latex),  Sty_title(s), compat_x + 15,  y, 160, 20);
+      Create_Label (Tabbing.tab(pic_opt_tab_latex),  S2G (Sty_title(s)), compat_x + 15,  y, 160, 20);
       Create(sty_box(s),Tabbing.tab(pic_opt_tab_latex), "", compat_x + 180,  y,  15, 15);
       State(sty_box(s), boolean_to_state(candidate.sty(s)));
     end loop;
@@ -502,7 +502,7 @@ package body TC.GWin.Options_Dialogs is
     Create(
       preview_insert_box,
       Tabbing.tab(pic_opt_tab_latex),
-      To_GString_From_Unbounded(candidate.pv_insert),
+      S2G (To_String (candidate.pv_insert)),
       compat_x, y + 25, wmax, 80
     );
 

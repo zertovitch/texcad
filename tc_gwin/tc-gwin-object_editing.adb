@@ -60,7 +60,7 @@ package body TC.GWin.Object_editing is
     is
       pragma Warnings(off,window);
     begin
-      candidate.inhalt:= To_Unbounded_String(GWindows.Edit_Boxes.Text(text_eb));
+      candidate.inhalt:= To_Unbounded_String(G2S (GWindows.Edit_Boxes.Text(text_eb)));
       if t.art /= putaux then
         for h in H_Justify loop
           if State(h_radio(h))=checked then
@@ -75,7 +75,7 @@ package body TC.GWin.Object_editing is
         Images( h_just, v_just, candidate.adjust, candidate.adjust_len );
       end if;
       if t.ls.pattern = dash then
-        candidate.ls.dash_length:= TC.Real'Value(Text(dash_eb));
+        candidate.ls.dash_length:= TC.Real'Value(G2S (Text(dash_eb)));
       end if;
     end Get_Box_Data;
 
@@ -91,7 +91,7 @@ package body TC.GWin.Object_editing is
       y:= y + 30;
     end if;
 
-    Create_As_Dialog(pan, parent, Panel_title, Width => 630, Height => 110+y);
+    Create_As_Dialog(pan, parent, S2G (Panel_title), Width => 630, Height => 110+y);
 
     Center(pan);
     Small_Icon (Pan, "Options_Icon");
@@ -101,7 +101,7 @@ package body TC.GWin.Object_editing is
 
     w:= Client_Area_Width (pan) - 20;
 
-    Create(text_eb, pan, To_String(t.inhalt), 10, 8, w, 24);
+    Create(text_eb, pan, S2G (To_String(t.inhalt)), 10, 8, w, 24);
 
     if t.art /= putaux then
 
@@ -138,7 +138,7 @@ package body TC.GWin.Object_editing is
       when dash =>
         Create_Label(pan,Msg(dash_size), 10,  y, 130, 20);
         Put(dum_str,t.ls.dash_length,2,0);
-        Create (dash_eb, pan, Trim(dum_str,left), 180, y,  40, 20);
+        Create (dash_eb, pan, S2G (Trim(dum_str,left)), 180, y,  40, 20);
       when dot => null;
     end case;
 
@@ -240,7 +240,7 @@ package body TC.GWin.Object_editing is
         candidate:= 0;
       else
         Focus(pts_box);
-        i:= Integer'Value(Text(pts_box));
+        i:= Integer'Value(G2S (Text(pts_box)));
         if i >= 1 then
           candidate:= i;
         end if;
@@ -263,10 +263,10 @@ package body TC.GWin.Object_editing is
       i0:= candidate;
     end if;
 
-    Create(qbezier_radio(True),pan, "",       10,  20,  20, 20);
-    Create_Label( pan, "Auto  (\qbezier)",    40,  20, 140, 20);
-    Create(qbezier_radio(False),pan, "",     190,  20,  20, 20);
-    Create(pts_box, pan, Integer'Image(i0),  220,  20,  60, 20);
+    Create(qbezier_radio(True),pan, "",             10,  20,  20, 20);
+    Create_Label( pan, "Auto  (\qbezier)",          40,  20, 140, 20);
+    Create(qbezier_radio(False),pan, "",           190,  20,  20, 20);
+    Create(pts_box, pan, S2G (Integer'Image(i0)),  220,  20,  60, 20);
 
     State(qbezier_radio(True),boolean_to_state(candidate=0));
     State(qbezier_radio(False),boolean_to_state(candidate/=0));
@@ -307,12 +307,12 @@ package body TC.GWin.Object_editing is
 
     procedure Set_Data is
     begin
-      pan.Segments_Box.Text(Trim(Integer'Image(candidate.segments), Left));
-      pan.Scale_Box.Text(TeX_Number(candidate.scale));
-      pan.X_Form_Box.Text(To_String(candidate.form_x));
-      pan.Y_Form_Box.Text(To_String(candidate.form_y));
-      pan.T_Min_Box.Text(TeX_Number(candidate.min_t));
-      pan.T_Max_Box.Text(TeX_Number(candidate.max_t));
+      pan.Segments_Box.Text (S2G (Trim(Integer'Image(candidate.segments), Left)));
+      pan.Scale_Box.Text    (S2G (TeX_Number(candidate.scale)));
+      pan.X_Form_Box.Text   (S2G (To_String(candidate.form_x)));
+      pan.Y_Form_Box.Text   (S2G (To_String(candidate.form_y)));
+      pan.T_Min_Box.Text    (S2G (TeX_Number(candidate.min_t)));
+      pan.T_Max_Box.Text    (S2G (TeX_Number(candidate.max_t)));
     end Set_Data;
 
     procedure Get_Data
@@ -321,12 +321,12 @@ package body TC.GWin.Object_editing is
       pragma Warnings(off,window);
     begin
       candidate:=
-        ( segments => Natural'Value(pan.Segments_Box.Text),
-          scale    => TeX_Number(pan.Scale_Box.Text),
-          form_x   => U(pan.X_Form_Box.Text),
-          form_y   => U(pan.Y_Form_Box.Text),
-          min_t    => TeX_Number(pan.T_Min_Box.Text),
-          max_t    => TeX_Number(pan.T_Max_Box.Text)
+        ( segments => Natural'Value(G2S (pan.Segments_Box.Text)),
+          scale    => TeX_Number(   G2S (pan.Scale_Box.Text)),
+          form_x   => U(            G2S (pan.X_Form_Box.Text)),
+          form_y   => U(            G2S (pan.Y_Form_Box.Text)),
+          min_t    => TeX_Number(   G2S (pan.T_Min_Box.Text)),
+          max_t    => TeX_Number(   G2S (pan.T_Max_Box.Text))
         );
       px.Parse(candidate.form_x);
       py.Parse(candidate.form_y);
@@ -361,7 +361,7 @@ package body TC.GWin.Object_editing is
           else
             Message_Box(Parent,
               "Error",
-              "Error in data" & NL & "Details:" & NL & To_String(err)
+              "Error in data" & NL & "Details:" & NL & S2G (To_String(err))
             );
             modified:= False;
           end if;

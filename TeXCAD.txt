@@ -27,7 +27,7 @@ Licence and distribution
     TeXCAD is free software and is distributed, including its sources,
     under the GNU General Public License.
 
-    Copyright (C) 2003..2015 Free Software Foundation
+    Copyright (C) 2003 .. 2021 Free Software Foundation
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

@@ -34,14 +34,14 @@ package body TC.GWin.MDI_Main is
     cmd: Integer;
   begin
     for i in reverse mru'Range loop
-      cmd:= Id_Custom( Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - mru'First));
+      cmd:= ID_custom( Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - mru'First));
       Text(
-        m, command, cmd,
-         '&' & Trim(Integer'Image(i),left) &
+        m, Command, cmd,
+         '&' & S2G (Trim(Integer'Image(i), Left)) &
          ' ' &
-         Shorten_filename(To_GString_from_Unbounded(mru(i)))
+         Shorten_filename(To_GString_From_Unbounded(mru(i)))
       );
-      --State(m,command,cmd,Disabled);
+      --  State(m,command,cmd,Disabled);
     end loop;
   end Update_MRU_Menu;
 
@@ -49,7 +49,7 @@ package body TC.GWin.MDI_Main is
     use Floating_toolbars;
   begin
     for c in Floating_toolbar_categ loop
-      Check(m, Command, Id_Custom(c), tba(c).status /= invisible);
+      GWindows.Menus.Check(m, Command, ID_custom(c), tba(c).status /= invisible);
     end loop;
   end Update_Toolbar_Menu;
 
@@ -73,7 +73,7 @@ package body TC.GWin.MDI_Main is
       Add_MRU(top_entry);
     end if;
     Update_MRU_Menu(Window.File_menu);
-    Update_Toolbar_Menu(Window.View_menu, Window.Floating_toolbars);
+    Update_Toolbar_Menu(Window.View_Menu, Window.Floating_toolbars);
     GWindows.Base.Enumerate_Children(
       MDI_Client_Window (Window).all,
       Update_Common_Menus_Child'Access
@@ -85,11 +85,11 @@ package body TC.GWin.MDI_Main is
         Main: constant Menu_Type := Create_Menu;
   begin
     Window.File_menu:= TC.GWin.Menus.Create_File_Menu(is_child => False);
-    Update_MRU_Menu(Window.file_menu);
-    Append_Menu (Main, Msg(ffile), Window.file_menu);
+    Update_MRU_Menu(Window.File_menu);
+    Append_Menu (Main, Msg(ffile), Window.File_menu);
 
-    Window.View_menu:= TC.GWin.Menus.Create_View_Menu;
-    Append_Menu (Main, Msg(vview), Window.View_menu);
+    Window.View_Menu:= TC.GWin.Menus.Create_View_Menu;
+    Append_Menu (Main, Msg(vview), Window.View_Menu);
 
     Append_Menu (Main, Msg(oopt), TC.GWin.Menus.Create_Options_Menu(is_child => False));
     Append_Menu (Main, Msg(wwindow), TC.GWin.Menus.Create_Wndw_Menu);
@@ -100,11 +100,12 @@ package body TC.GWin.MDI_Main is
 
   procedure Focus_an_open_window(
     Window    : MDI_Main_Type;
-    file_name : Gstring_Unbounded;
+    file_name : GString_Unbounded;
     is_open   : out Boolean )
   is
     procedure Identify (Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
+      use type GString_Unbounded;
     begin
       if Window.all in MDI_Picture_Child_Type'Class then
         declare
@@ -130,8 +131,8 @@ package body TC.GWin.MDI_Main is
   is
   begin
     if Window.all in MDI_Picture_Child_Type'Class then
-      MDI_Picture_Child_Type(Window.all).Draw_Control.picture.refresh:= full;
-      -- ^ 17-Oct-2003 : otherwise the buffer is just copied to screen
+      MDI_Picture_Child_Type(Window.all).Draw_Control.Picture.refresh:= full;
+      --  ^ 17-Oct-2003 : otherwise the buffer is just copied to screen
       GWindows.Base.Redraw(Window.all);
     end if;
   end Redraw_Child;
@@ -139,8 +140,8 @@ package body TC.GWin.MDI_Main is
   procedure Redraw_all(Window: in out MDI_Main_Type) is
   begin
     Redraw(Window);
-    Redraw(Window.Tool_bar);
-    GWindows.Base.Enumerate_Children(MDI_Client_Window (Window).all,Redraw_child'Access);
+    Redraw(Window.Tool_Bar);
+    GWindows.Base.Enumerate_Children(MDI_Client_Window (Window).all,Redraw_Child'Access);
   end Redraw_all;
 
   procedure Close_extra_first_child(Window : GWindows.Base.Pointer_To_Base_Window_Class)
@@ -172,7 +173,7 @@ package body TC.GWin.MDI_Main is
       Zoom(c);
       Redraw_all(m);
     end if;
-    -- Show things in the main status bar - effective only after Thaw!
+    --  Show things in the main status bar - effective only after Thaw!
     Zoom_picture(c,0);
     Show_Totals(c);
     Update_Permanent_Command(c);
@@ -189,7 +190,7 @@ package body TC.GWin.MDI_Main is
     if is_open then
       return;        -- nothing to do, picture already in a window
     end if;
-    TC.Input.Load( Candidate, False, To_GString_From_Unbounded (File_Name));
+    TC.Input.Load( Candidate, False, G2S (To_GString_From_Unbounded (File_Name)));
     declare
       New_Window : constant MDI_Picture_Child_Access :=
         new MDI_Picture_Child_Type;
@@ -217,7 +218,7 @@ package body TC.GWin.MDI_Main is
       Message_Box(
         Window,
         "Error when loading picture data",
-        Ada.Exceptions.Exception_Message(E),
+        S2G (Ada.Exceptions.Exception_Message(E)),
         Icon => Exclamation_Icon
       );
     when Ada.Text_IO.Name_Error =>
@@ -297,7 +298,7 @@ package body TC.GWin.MDI_Main is
     for I in 1..Argument_Count loop
       Open_Child_Window_And_Load_Picture(
         Window,
-        To_Gstring_Unbounded(Argument(I))
+        To_Gstring_Unbounded(S2G (Argument(I)))
       );
     end loop;
     Accept_File_Drag_And_Drop(Window);
@@ -308,8 +309,6 @@ package body TC.GWin.MDI_Main is
   procedure On_Move (Window : in out MDI_Main_Type;
                      Left   : in     Integer;
                      Top    : in     Integer) is
-    pragma Warnings(Off,Top);
-    pragma Warnings(Off,Left);
   begin
     if Window.record_dimensions and
        not (Zoom(Window) or Minimized(Window))
@@ -397,11 +396,11 @@ package body TC.GWin.MDI_Main is
   begin
     Open_File (Window, Msg(Open),
       File_Name,
-      ((To_Gstring_Unbounded (Msg(Ltx_Pic) & " (*." & Pic_Suffix & ")"),
-          To_Gstring_Unbounded ("*." & Pic_Suffix )),
+      ((To_Gstring_Unbounded (Msg(Ltx_Pic) & " (*." & S2G (Pic_Suffix) & ")"),
+          To_Gstring_Unbounded ("*." & S2G (Pic_Suffix) )),
         (To_Gstring_Unbounded (Msg(All_Files) & " (*.*)"),
           To_Gstring_Unbounded ("*.*"))),
-      '.' & Pic_Suffix,
+      '.' & S2G (Pic_Suffix),
       File_Title,
       Success);
 
@@ -423,18 +422,18 @@ package body TC.GWin.MDI_Main is
     Gwin_Util.Use_Gui_Font(About);
     w:= Client_Area_Width (About)-32-10;
 
-    GWindows.Static_Controls.Web.Create_URL(About, "TeXCAD", web, 60, 15, 80, 16);
+    GWindows.Static_Controls.Web.Create_URL(About, "TeXCAD", S2G (web), 60, 15, 80, 16);
 
     Create_Label(About,
-      "* Version: " & Version & "   * Reference: " & Reference,
+      S2G ("* Version: " & Version & "   * Reference: " & Reference),
       140, 15, w-140-18, 25);
 
     Create_Icon (About, "AAA_Main_Icon", 10,10,32,32);
     Create_Icon (About, "Picture_Icon",   w,10,32,32);
     Create_Label (About, Msg(blurb), 60, 35, Wmax-92, 25);
-    Create_Label (About, TeXCAD_Resource_GUI.Version_info.LegalCopyright & " (cf COPYING.TXT)",
+    Create_Label (About, S2G (TeXCAD_Resource_GUI.Version_info.LegalCopyright) & " (cf COPYING.TXT)",
       60, 55, Wmax-92, 25);
-    Create_URL (About, "Internet: " & web, web,
+    Create_URL (About, S2G ("Internet: " & web), S2G (web),
       60, 75, Wmax-92, 25);
       --
     Create_Label (About, Msg(Authors), 10, 95, Wmax, 25);
@@ -510,8 +509,8 @@ package body TC.GWin.MDI_Main is
             Update_Common_Menus(Window);
         end case;
       when others =>
-        Message_Box(Window, "Main - Custom - not for main " , Custom_Cmd'
-          Image(C));
+        Message_Box(Window, "Main - Custom - not for main " ,
+          S2G (Custom_Cmd'Image(C)));
     end case;
   end Custom_Command;
 

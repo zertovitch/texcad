@@ -42,10 +42,10 @@ package body TC.GWin.Morphing is
       pragma Warnings(off,window);
     begin
       if m = homothethy then
-        L:= ( Real'Value(Text(bfx)), Real'Value(Text(bfy)) );
+        L:= ( Real'Value(G2S (Text(bfx))), Real'Value(G2S (Text(bfy))) );
       end if;
       if m /= symmetry then
-        iter:= Positive'Value(Text(biter));
+        iter:= Positive'Value(G2S (Text(biter)));
       end if;
       keep_o:= State(keep)=checked;
       -- Bug spotted by Dmitry Chistyakov, 2007-01-25-17-08-58:

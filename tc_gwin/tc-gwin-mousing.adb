@@ -20,12 +20,12 @@ package body TC.GWin.Mousing is
       function Coord(x,y: Integer; P: Point) return GString is
         pragma Warnings (Off, x);
         pragma Warnings (Off, y);
-        sx,sy: GString(1..20);
+        sx,sy : String (1..20);
       begin
         RIO.Put(sx,P.x,2,0);
         RIO.Put(sy,P.y,2,0);
         return
-          '(' & Trim(sx,left) & ',' & Trim(sy,left) & ')'
+          S2G ('(' & Trim(sx,left) & ',' & Trim(sy,left) & ')')
           --  & " = [" & integer'image(x) & ',' & integer'image(y) & ']'
           -- ^ Verification with mouse coords.
         ;

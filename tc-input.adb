@@ -552,7 +552,7 @@ package body TC.Input is
         while (ch = ',' or ch = '%' or ch = ' ' or ch = ASCII.HT) and not end_of_parsing loop
           Read_ch;
         end loop;
-      end;
+      end Skip_Stuff;
       --
     begin
       --  %\paramcurveplane[segments](orig_x, orig_y)(scale)(*form_x, *form_y, *min_t, *max_t)

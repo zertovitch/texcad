@@ -3,10 +3,10 @@
 --          /    /___/  _\    /      /---/ /    /
 --         /    /___   /  \  /____  /   / /____/
 
-----------------------------------------------------
--- Incarnation of TeXCAD as a Windows application --
-----------------------------------------------------
--- 17-Feb-2003, GdM
+------------------------------------------------------
+--  Incarnation of TeXCAD as a Windows application  --
+------------------------------------------------------
+--  17-Feb-2003, GdM
 
 with TC.GWin.MDI_Main;                  use TC.GWin.MDI_Main;
 with TC.GWin.Options;
@@ -14,7 +14,7 @@ with TC.GWin.Options;
 with GWindows;                          use GWindows;
 with GWindows.Base;
 with GWindows.Application;              use GWindows.Application;
-with GWindows.GStrings;                 use GWindows.GStrings;
+with GWindows.GStrings;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
 with GWin_Util;                         use GWin_Util;
@@ -41,7 +41,7 @@ procedure TeXCAD is
     x := x  /  60;
 
     declare
-      -- + 100: trick for obtaining 0x
+      --  + 100: trick for obtaining 0x
       sY : constant String:= Integer'Image( Year(T)       );
       sM : constant String:= Integer'Image( Month(T) + 100);
       sD : constant String:= Integer'Image(  Day(T)  + 100);
@@ -66,36 +66,35 @@ procedure TeXCAD is
     E: Ada.Exceptions.Exception_Occurrence)
   is
     pragma Unreferenced (Window);
-    small_insult: constant String:=
-        Ada.Exceptions.Exception_Name (E) & NL &
-        Ada.Exceptions.Exception_Message (E);
-    insult: constant String:=
+    small_insult: constant GString:=
+        S2G (Ada.Exceptions.Exception_Name (E)) & NL &
+        S2G (Ada.Exceptions.Exception_Message (E));
+    insult: constant GString:=
         small_insult & NL &
-        GNAT.Traceback.Symbolic.Symbolic_Traceback(E);
+        S2G (GNAT.Traceback.Symbolic.Symbolic_Traceback(E));
     tid: constant String:= Time_id;
     file_name: constant String:=
       "TeXCAD_crash_report_" & tid & ".txt";
     f: File_Type;
     pedigree: constant GString:=
       "TeXCAD/Windows, v." &
-      TC.version   & ", ref. " &
-      TC.reference;
+      S2G (TC.version   & ", ref. " & TC.reference);
     report: constant GString:=
       pedigree & NL &
       "Crash occurence: " & S2G(tid) & NL &
-      S2G(insult) & NL & NL &
+      insult & NL & NL &
       "I'm using Windows 95, 98, ME, NT, 2K, XP or ? :__." & NL &
       "I was doing ______ (with TeXCAD) when the crash happened" & NL &
       "and append files ______ to help you reproducing the bug.";
   begin
     Create(f,Out_File,file_name);
-    Put(f, To_String(report));
+    Put(f, GWindows.GStrings.To_String(report));
     Close(f);
     GWindows.Base.On_Exception_Handler (Handler => null); -- Avoid infinite recursion!
     case Message_Box
-      ("Crash in TeXCAD (Windows) version " & TC.version &
-        ", reference " & TC.reference,
-        S2G(insult) & NL &
+      ("Crash in TeXCAD (Windows) version " & S2G(TC.version) &
+        ", reference " & S2G(TC.reference),
+        insult & NL &
         "Do you want to try to e-mail a report ?" & NL &
         "In any case, the report is in file: " & S2G(file_name),
         Yes_No_Box
@@ -105,7 +104,8 @@ procedure TeXCAD is
         begin
           Start( To_URL_Encoding(
             "mailto:" & TC.mail & "?Subject=Bug in " &
-            pedigree & "&Body="  & report
+            GWindows.GStrings.To_String (pedigree) & "&Body="  &
+            GWindows.GStrings.To_String (report)
             )
           );
         exception

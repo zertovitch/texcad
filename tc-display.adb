@@ -337,7 +337,7 @@ package body TC.Display is
 
   procedure Draw_Bezier is new Bezier_curve(PlotPoint);
 
-  procedure Do_Nothing is begin null; end;
+  procedure Do_Nothing is null;
 
   procedure Draw_Param_Curve is new Parametric_curve_2D(PlotPoint, Do_Nothing);
 
