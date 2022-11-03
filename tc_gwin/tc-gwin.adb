@@ -1,4 +1,5 @@
-with GWin_Util;                         use GWin_Util;
+with GWindows.Application;
+with GWin_Util;
 
 pragma Elaborate(GWin_Util); -- Get_Windows_Version
 
@@ -8,41 +9,45 @@ package body TC.GWin is
   -- Add_MRU --
   -------------
 
-  procedure Add_MRU (name: GString) is
-    x: Integer:= mru'First-1;
-    up_name: GString:= name;
+  procedure Add_MRU (name : GString) is
+    x : Integer := mru'First - 1;
+    up_name : GString := name;
   begin
-    To_Upper(up_name);
+    --  Add name to the list in task bar or
+    --  elsewhere in Windows Explorer or Desktop.
+    GWindows.Application.Add_To_Recent_Documents (name);
 
-    -- Search for name in the list
+    To_Upper (up_name);
+
+    --  Search for name in the list.
     for m in mru'Range loop
       declare
-        up_mru_m: GString:= To_GString_From_Unbounded(mru(m));
+        up_mru_m : GString := To_GString_From_Unbounded (mru (m));
       begin
-        To_Upper(up_mru_m);
+        To_Upper (up_mru_m);
         if up_mru_m = up_name then -- case insensitive comparison (Jan-2007)
-          x:= m;
+          x := m;
           exit;
         end if;
       end;
     end loop;
 
-    -- name exists in list ?
+    --  Does item's name exist in list ?
     if x /= 0 then
-      -- roll up entries after it, erasing it
-      for i in x .. mru'Last-1 loop
-        mru(i):= mru(i+1);
+      --  Roll up entries after the item, erasing it.
+      for i in x .. mru'Last - 1 loop
+        mru (i) := mru (i+1);
       end loop;
-      mru(mru'Last):= To_GString_Unbounded("");
+      mru (mru'Last) := Null_GString_Unbounded;
     end if;
 
-    -- roll down the full list
+    --  Roll down the full list.
     for i in reverse mru'First .. mru'Last-1 loop
-      mru(i+1):= mru(i);
+      mru (i+1) := mru(i);
     end loop;
 
-    -- name exists in list
-    mru(mru'First):= To_GString_Unbounded(name);
+    --  At latest now, name will exist in the list.
+    mru (mru'First) := To_GString_Unbounded (name);
 
   end Add_MRU;
 
@@ -61,11 +66,12 @@ package body TC.GWin is
   end Shorten_filename;
 
   procedure Determine_version is
-    mi,ma: Integer;
-    f: Windows_family;
+    minor, major : Integer;
+    use GWin_Util;
+    f : Windows_family;
   begin
-    Get_Windows_version(ma,mi,f);
-    Windows_95:= f = Win9x and ma = 4 and mi = 0;
+    Get_Windows_version (major, minor, f);
+    Windows_95 := f = Win9x and major = 4 and minor = 0;
   end Determine_version;
 
 begin
