@@ -144,6 +144,8 @@ package TC.GWin is
        close      => ID_FILE_CLOSE,
        others     => no_std_id );
 
+  function Keyboard_Shortcut (c : Custom_cmd) return GString;
+
   Windows_95: Boolean; -- has a bug with hatch brush
 
   -- Floating toolbar window dimensions and status:

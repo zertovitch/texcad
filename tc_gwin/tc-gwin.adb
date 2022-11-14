@@ -5,6 +5,22 @@ pragma Elaborate(GWin_Util); -- Get_Windows_Version
 
 package body TC.GWin is
 
+  function Keyboard_Shortcut (c : Custom_cmd) return GString is
+  begin
+    case c is
+      when save       => return "Ctrl+S";
+      when save_as    => return "F12";
+      when close      => return "Ctrl+W / Ctrl+F4";
+      when delete     => return "[Ctrl+] Del";
+      when copy_clip  => return "Ctrl+C / Ctrl+Ins";
+      when cut_clip   => return "Ctrl+X / Shift+Del";
+      when paste_clip => return "Ctrl+V / Shift+Ins";
+      when select_all => return "Ctrl+A";
+      when unselect   => return "Ctrl+U";
+      when others     => return "";
+    end case;
+  end Keyboard_Shortcut;
+
   -------------
   -- Add_MRU --
   -------------

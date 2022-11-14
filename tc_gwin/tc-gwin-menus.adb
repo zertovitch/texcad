@@ -7,11 +7,11 @@ package body TC.GWin.Menus is
   use GWindows.Menus, GWin_Util;
 
   procedure Append_Item (Menu    : in Menu_Type;
-                         Command : in Custom_cmd;
-                         Keys    : in GString:= "")
+                         Command : in Custom_cmd)
   is
-    i: constant Integer:= ID_custom(Command);
-    s: constant GString:= Msg(msg_for_command(Command));
+    i    : constant Integer := ID_custom (Command);
+    s    : constant GString := Msg (msg_for_command (Command));
+    Keys : constant GString := Keyboard_Shortcut (Command);
   begin
     if Keys = "" then
       Append_Item (Menu, s, i);
@@ -27,9 +27,9 @@ package body TC.GWin.Menus is
     Append_Item (m, Msg(fopen) & HT & "Ctrl+O", Id_File_Open);
     Append_Separator (m);
     if is_child then
-      Append_Item (m, save, "Ctrl+S");
-      Append_Item (m, save_as, "F12");
-      Append_Item (m, close, "Ctrl+W / Ctrl+F4");
+      Append_Item (m, save);
+      Append_Item (m, save_as);
+      Append_Item (m, close);
       Append_Separator (m);
       Append_Item (m, preview);
       Append_Separator (m);
@@ -81,51 +81,51 @@ package body TC.GWin.Menus is
   function Create_Edit_Menu return GWindows.Menus.Menu_Type is
     m: constant Menu_Type:= Create_Popup;
   begin
-    Append_Item (m, change_text );
+    Append_Item (m, change_text);
     Append_Separator (m);
-    Append_Item (m, pick_obj );
-    Append_Item (m, select_all, "Ctrl+A" );
-    Append_Item (m, unselect, "Ctrl+U" );
+    Append_Item (m, pick_obj);
+    Append_Item (m, select_all);
+    Append_Item (m, unselect);
     Append_Separator (m);
-    Append_Item (m, translate );
-    Append_Item (m, mirror );
-    Append_Item (m, rotate );
-    Append_Item (m, homoth );
+    Append_Item (m, translate);
+    Append_Item (m, mirror);
+    Append_Item (m, rotate);
+    Append_Item (m, homoth);
     Append_Separator (m);
-    Append_Item (m, delete,     "[Ctrl+] Del" );
-    Append_Item (m, copy_clip,  "Ctrl+C / Ctrl+Ins" );
-    Append_Item (m, cut_clip,   "Ctrl+X / Shift+Del" );
-    Append_Item (m, paste_clip, "Ctrl+V / Shift+Ins" );
-    Append_Item (m, save_macro );
-    Append_Item (m, load_macro );
+    Append_Item (m, delete);
+    Append_Item (m, copy_clip);
+    Append_Item (m, cut_clip);
+    Append_Item (m, paste_clip);
+    Append_Item (m, save_macro);
+    Append_Item (m, load_macro);
     return m;
   end Create_Edit_Menu;
 
   function Create_Tools_Menu return GWindows.Menus.Menu_Type is
-    m: constant Menu_Type:= Create_Popup;
+    m : constant Menu_Type := Create_Popup;
   begin
-    Append_Item (m, Msg(tclean), ID_custom(clean_pic));
+    Append_Item (m, clean_pic);
     return m;
   end Create_Tools_Menu;
 
   function Create_View_Menu return GWindows.Menus.Menu_Type is
-    m: constant Menu_Type:= Create_Popup;
+    m : constant Menu_Type := Create_Popup;
   begin
     for c in Floating_toolbar_categ loop
       Append_Item (m, c);
       if Windows_95 then -- Button sizes are wrong; Win 98, 2K, XP: OK
-        State(m,Command,ID_custom(c),Grayed);
+        State (m, Command, ID_custom (c),Grayed);
       end if;
     end loop;
     return m;
   end Create_View_Menu;
 
   function Create_Options_Menu(is_child: Boolean) return GWindows.Menus.Menu_Type is
-    m: constant Menu_Type:= Create_Popup;
+    m : constant Menu_Type := Create_Popup;
   begin
-    Append_Item (m, Msg(ogenopt), ID_custom(gen_opt_dialog));
+    Append_Item (m, gen_opt_dialog);
     if is_child then
-      Append_Item (m, Msg(opicopt), ID_custom(pic_opt_dialog));
+      Append_Item (m, pic_opt_dialog);
     end if;
     return m;
   end Create_Options_Menu;

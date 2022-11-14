@@ -28,8 +28,20 @@ package body TC.GWin.Toolbars is
      Image_Index : in     Natural;
      Cmd_enu     : in     Custom_cmd)
   is
+    function Extended_Message return GString is
+      menu_msg : constant GString := Msg (msg_for_command (Cmd_enu));
+      keys     : constant GString := Keyboard_Shortcut (Cmd_enu);
+    begin
+      if keys = "" then
+        return menu_msg;
+      else
+        --  "GNAT-Studio-style" toolbar label.
+        return menu_msg & NL & NL & "Shortcut: " & keys;
+      end if;
+    end Extended_Message;
   begin
-    Add_Button_with_Tip(Control, Image_Index, ID_custom(Cmd_enu), Msg(msg_for_command(Cmd_enu)));
+    Add_Button_with_Tip
+      (Control, Image_Index, ID_custom (Cmd_enu), Extended_Message);
   end Add_Button_with_Tip;
 
   procedure Add_Button_for_Floating
