@@ -1053,9 +1053,9 @@ package body TC.GWin.MDI_Picture_Child is
         raise save_error;
       end if;
     end if;
-    Window.extra_first:= False;
+    Window.extra_first_doc := False;
     -- ^ even if it is the extra new window and is saved, we won't close
-    --   it now on next open
+    --   it now on opening of another document.
     if not macro then
       Update_Common_Menus(Window,File_Name);
     end if;
@@ -1086,10 +1086,8 @@ package body TC.GWin.MDI_Picture_Child is
   procedure On_Close (Window    : in out MDI_Picture_Child_Type;
                       Can_Close :    out Boolean) is
   begin
-    Can_close:= True;
-    if Window.Draw_Control.picture.saved then
-      Update_Common_Menus(Window,To_GString_from_Unbounded(Window.File_Name));
-    else
+    Can_close := True;
+    if Window.Is_Document_Modified then
       loop
         case Message_Box
                (Window,
@@ -1100,17 +1098,28 @@ package body TC.GWin.MDI_Picture_Child is
                 Yes_No_Cancel_Box,
                 Exclamation_Icon)
         is
-          when Yes    => On_Save(Window);
-                         exit when Window.Draw_Control.picture.saved;
-          when No     => exit;
-          when Cancel => Success_In_Enumerated_Close:= False;
-                         Can_close:= False;
-                         exit;
-          when others => null;
+          when Yes =>
+            On_Save (Window);
+            exit when not Window.Is_Document_Modified;
+          when No =>
+            exit;
+          when Cancel =>
+            Success_In_Enumerated_Close := False;
+            Can_close := False;
+            exit;
+          when others =>
+            null;
         end case;
       end loop;
+    else
+      Update_Common_Menus(Window,To_GString_from_Unbounded(Window.File_Name));
     end if;
   end On_Close;
+
+  overriding function Is_Document_Modified (Window : MDI_Picture_Child_Type) return Boolean is
+  begin
+    return not Window.Draw_Control.picture.saved;
+  end Is_Document_Modified;
 
   -- !! bad try !!
 

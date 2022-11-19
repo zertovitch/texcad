@@ -1,13 +1,14 @@
 with TC;
 with TC.GWin.MDI_Main;                  use TC.GWin.MDI_Main;
 
+with Office_Applications;
+
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Cursors;
 with GWindows.Drawing;                  use GWindows.Drawing;
 with GWindows.Drawing_Objects;          use GWindows.Drawing_Objects;
 with GWindows.Drawing_Panels;
 with GWindows.Menus;
-with GWindows.Windows.MDI;
 
 with GWindows.Types;
 
@@ -63,7 +64,7 @@ package TC.GWin.MDI_Picture_Child is
                       Area   : in     GWindows.Types.Rectangle_Type);
 
   type MDI_Picture_Child_Type is
-    new GWindows.Windows.MDI.MDI_Child_Window_Type with
+    new Office_Applications.Classic_Document_Window_Type with
       record
         File_Name    : GString_Unbounded;
         Short_Name   : GString_Unbounded;
@@ -77,8 +78,6 @@ package TC.GWin.MDI_Picture_Child is
         Edit_menu,
         View_menu    : Gwindows.Menus.Menu_Type;
         parent       : MDI_Main_Access; -- -> access to the containing window
-        extra_first  : Boolean:= False;
-        -- ^ new picture closed if kept virgin when opening another one.
       end record;
 
   procedure On_Horizontal_Scroll
@@ -127,6 +126,8 @@ package TC.GWin.MDI_Picture_Child is
 
   procedure On_Close (Window    : in out MDI_Picture_Child_Type;
                       Can_Close :    out Boolean);
+
+  overriding function Is_Document_Modified (Window : MDI_Picture_Child_Type) return Boolean;
 
   -- !! bad try !!
 

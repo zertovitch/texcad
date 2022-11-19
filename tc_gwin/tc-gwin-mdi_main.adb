@@ -20,7 +20,6 @@ with GWindows.Menus;                    use GWindows.Menus;
 with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 with GWindows.Static_Controls;          use GWindows.Static_Controls;
 with GWindows.Windows;                  use GWindows.Windows;
-with GWindows.Windows.MDI;              use GWindows.Windows.MDI;
 
 with GWin_Util;                         use GWin_Util;
 with GWindows.Static_Controls.Web;      use GWindows.Static_Controls.Web;
@@ -144,25 +143,6 @@ package body TC.GWin.MDI_Main is
     GWindows.Base.Enumerate_Children(MDI_Client_Window (Window).all,Redraw_Child'Access);
   end Redraw_all;
 
-  procedure Close_extra_first_child(Window : GWindows.Base.Pointer_To_Base_Window_Class)
-  is
-  begin
-    if Window.all in MDI_Picture_Child_Type'Class then
-      declare
-        w: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window.all);
-      begin
-        if w.extra_first and w.draw_control.picture.saved then
-          Close(Window.all);
-        end if;
-      end;
-    end if;
-  end Close_extra_first_child;
-
-  procedure Close_extra_first_child(Window: in out MDI_Main_Type) is
-  begin
-    GWindows.Base.Enumerate_Children(MDI_Client_Window (Window).all,Close_extra_first_child'Access);
-  end Close_extra_first_child;
-
   procedure Finish_subwindow_opening(
     m : in out MDI_Main_Type;
     c : in out MDI_Picture_Child_Type )
@@ -196,7 +176,7 @@ package body TC.GWin.MDI_Main is
         new MDI_Picture_Child_Type;
     begin
       -- We do here like Excel or Word: close the unused blank window
-      Close_extra_first_child(Window);
+      Window.Close_Initial_Document;
       user_maximize_restore:= False;
       New_Window.Draw_Control.Picture:= Candidate;
       Refresh_size_dependent_parameters(
@@ -362,16 +342,16 @@ package body TC.GWin.MDI_Main is
     File_Title: constant GString:= Msg(New_Pic) & Suffix;
 
   begin
-    New_Window.extra_first:= extra_first;
-    user_maximize_restore:= False;
+    New_Window.Extra_First_Doc := extra_first;
+    user_maximize_restore := False;
     Create_MDI_Child (New_Window.all,
       Window, File_Title, Is_Dynamic => True);
-    New_Window.Short_Name:= To_GString_Unbounded(File_Title);
+    New_Window.Short_Name := To_GString_Unbounded (File_Title);
 
     MDI_Active_Window (Window, New_Window.all);
 
     -- Transfer user-defined default options:
-    New_Window.Draw_Control.Picture.Opt:= Gen_Opt.Options_For_New;
+    New_Window.Draw_Control.Picture.Opt := Gen_Opt.Options_For_New;
     Refresh_size_dependent_parameters(
       New_Window.Draw_Control.Picture,
       objects => True
@@ -380,9 +360,9 @@ package body TC.GWin.MDI_Main is
     Current_MDI_Window := Current_MDI_Window + 1;
 
     -- This is just to set the MRUs in the new window's menu:
-    Update_Common_Menus(Window);
+    Update_Common_Menus (Window);
 
-    Finish_subwindow_opening(Window, New_Window.all);
+    Finish_subwindow_opening (Window, New_Window.all);
   end On_File_New;
 
   ------------------

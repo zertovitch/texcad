@@ -1,9 +1,12 @@
-with GWindows.Base;
-with GWindows.Windows.MDI;
-with GWindows.Common_Controls;
-with GWindows.Image_Lists;
-with GWindows.Menus;
+with Office_Applications;
+
 with Floating_toolbars;
+
+with GWindows.Base,
+     GWindows.Common_Controls,
+     GWindows.Image_Lists,
+     GWindows.Menus,
+     GWindows.Windows;
 
 package TC.GWin.MDI_Main is
 
@@ -23,7 +26,7 @@ package TC.GWin.MDI_Main is
   --  Handle click on toolbar
 
   type MDI_Main_Type is
-    new GWindows.Windows.MDI.MDI_Main_Window_Type with
+    new Office_Applications.Classic_Main_Window_Type with
       record
         Tool_Bar               : MDI_Toolbar_Type;
         Images                 : GWindows.Image_Lists.Image_List_Type;
