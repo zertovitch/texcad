@@ -66,6 +66,8 @@ package TC.GWin.MDI_Picture_Child is
   type MDI_Picture_Child_Type is
     new Office_Applications.Classic_Document_Window_Type with
       record
+        --  Access to the main, containing window:
+        MDI_Root     : MDI_Main_Access;
         File_Name    : GString_Unbounded;
         Short_Name   : GString_Unbounded;
         -- ^Window title = Short_Name & {""|" *"}
@@ -77,7 +79,6 @@ package TC.GWin.MDI_Picture_Child is
         Line_menu,
         Edit_menu,
         View_menu    : Gwindows.Menus.Menu_Type;
-        parent       : MDI_Main_Access; -- -> access to the containing window
       end record;
 
   procedure On_Horizontal_Scroll

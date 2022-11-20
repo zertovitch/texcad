@@ -60,7 +60,7 @@ package body TC.GWin.MDI_Main is
         cw: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window.all);
       begin
         Update_MRU_Menu(cw.File_menu);
-        Update_Toolbar_Menu(cw.View_menu, cw.parent.Floating_toolbars);
+        Update_Toolbar_Menu(cw.View_menu, cw.MDI_Root.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
@@ -239,32 +239,32 @@ package body TC.GWin.MDI_Main is
     Small_Icon (Window, "AAA_Main_Icon");
     Large_Icon (Window, "AAA_Main_Icon");
 
-    -- ** Menus and accelerators:
+    --  ** Menus and accelerators:
 
     Create_Menus(Window);
     Accelerator_Table (Window, "Main_Menu");
 
-    -- ** Status bar at bottom of the main window:
+    --  ** Status bar at bottom of the main window:
 
     Create(Window.Status_Bar, Window, "");
     Parts(Window.Status_Bar,(10,210,410,640,680,-1));
     Dock (Window.Status_Bar, Gwindows.Base.At_Bottom);
 
-    -- ** Main tool bar (new/open/save/...) at top left of the main window:
+    --  ** Main tool bar (new/open/save/...) at top left of the main window:
 
     TC.GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Images, Window);
 
-    -- ** Floating tool bars:
+    --  ** Floating tool bars:
     TC.GWin.Toolbars.Init_Floating_toolbars(Window.Floating_toolbars, Window);
 
-    -- ** Resize according to options:
+    --  ** Resize according to options:
 
-    if Valid_Left_Top(Wleft, Wtop) then
-      Left(Window, Wleft);
-      Top( Window, Wtop);
+    if Screen_Visibility ((Wleft, Wtop)) = Good then
+      Left (Window, Wleft);
+      Top  (Window, Wtop);
     end if;
-    Size(Window, Integer'Max(400,Wwidth), Integer'Max(200,Wheight));
-    Zoom(Window,Wmaxi);
+    Size (Window, Integer'Max(400,Wwidth), Integer'Max(200,Wheight));
+    Zoom (Window,Wmaxi);
 
     Dock_Children(Window);
     Show (Window);

@@ -328,16 +328,16 @@ package body TC.GWin.MDI_Picture_Child is
     end case;
   end Do_Key_Down;
 
-  -- This will update file menu of parent and all brothers
+  -- This will update file menu of MDI_Root and all brothers
   procedure Update_Common_Menus(Window : MDI_Picture_Child_Type;
                                 top_entry : GString:= "" ) is
   begin
-    Update_Common_Menus( Window.parent.all, top_entry );
+    Update_Common_Menus( Window.MDI_Root.all, top_entry );
     --  !!  update on possible undo/redo
     State (Window.Edit_menu, Command, ID_custom (tc_undo), Disabled);
     State (Window.Edit_menu, Command, ID_custom (tc_redo), Disabled);
-    Window.parent.Tool_Bar.Enabled (ID_custom (tc_undo), False);
-    Window.parent.Tool_Bar.Enabled (ID_custom (tc_redo), False);
+    Window.MDI_Root.Tool_Bar.Enabled (ID_custom (tc_undo), False);
+    Window.MDI_Root.Tool_Bar.Enabled (ID_custom (tc_redo), False);
   end Update_Common_Menus;
 
   procedure Update_Permanent_Command(Window : in out MDI_Picture_Child_Type) is
@@ -403,7 +403,7 @@ package body TC.GWin.MDI_Picture_Child is
       when change_text => Change_Cursor(Window.Draw_Control, cur_chg_text);
       when others      => Change_Cursor(Window.Draw_Control, cur_arrow);
     end case;
-    Update_Status_Bar( Window.parent.all, command,
+    Update_Status_Bar( Window.MDI_Root.all, command,
       Filter_amp(Msg(msg_for_command(Window.Draw_Control.current_cmd)))
     );
   end Update_Permanent_Command;
@@ -423,7 +423,7 @@ package body TC.GWin.MDI_Picture_Child is
       Subtle_redraw(window.Draw_Control);
     end if;
     RIO.Put(sf,opt.zoom_fac,2,0);
-    Update_Status_Bar( window.parent.all, zoom, S2G (Trim(sf,left)) );
+    Update_Status_Bar( window.MDI_Root.all, zoom, S2G (Trim(sf,left)) );
   end Zoom_picture;
 
   procedure Show_Totals( Window: in out MDI_Picture_Child_Type ) is
@@ -440,11 +440,11 @@ package body TC.GWin.MDI_Picture_Child is
     end Stotal;
     Star: constant array(Boolean) of GCharacter:= (False => ' ',True => '*');
   begin
-    Update_Status_Bar(Window.parent.all,stat_objects,
+    Update_Status_Bar(Window.MDI_Root.all,stat_objects,
       Stotal("Objects:", p.total, p.total_hidden) &
       Stotal("; picked:", p.picked, p.picked_hidden)
     );
-    Update_Status_Bar(Window.parent.all,modified,(1=>Star(not p.saved)));
+    Update_Status_Bar(Window.MDI_Root.all,modified,(1=>Star(not p.saved)));
   end Show_Totals;
 
    ---------------
@@ -466,10 +466,10 @@ package body TC.GWin.MDI_Picture_Child is
       Window.Draw_Control.Picture.refresh:= full;
 
       -- Filial feelings:
-      Window.parent:= MDI_Main_Access(Controlling_Parent(Window));
+      Window.MDI_Root:= MDI_Main_Access(Controlling_Parent(Window));
       Window.Draw_Control.parent:=
         MDI_Picture_Child_Access(Controlling_Parent(Window.Draw_Control));
-      Window.Draw_Control.main:= Window.parent;
+      Window.Draw_Control.main:= Window.MDI_Root;
 
       Use_GUI_Font(Window.Draw_Control);
 
@@ -534,14 +534,14 @@ package body TC.GWin.MDI_Picture_Child is
         memo_unmaximized_children: constant Boolean:= not MDI_childen_maximized;
       begin
         if memo_unmaximized_children then
-          Freeze(Window.parent.all);
+          Freeze(Window.MDI_Root.all);
           Zoom(Window);
         end if;
         On_Size(Window,Width(Window),Height(window));
         if memo_unmaximized_children then
-          Thaw(Window.parent.all); -- Before Zoom, otherwise uncomplete draw.
+          Thaw(Window.MDI_Root.all); -- Before Zoom, otherwise uncomplete draw.
           Zoom(Window, False);
-          Window.parent.Tool_Bar.Redraw;
+          Window.MDI_Root.Tool_Bar.Redraw;
         end if;
       end;
 
@@ -719,7 +719,7 @@ package body TC.GWin.MDI_Picture_Child is
     y:= 30;
 
     Create_As_Dialog(
-      pan, window.parent.all,
+      pan, window.MDI_Root.all,
       Filter_amp(Msg(vtogltb)),
       Width => 300, Height => 140+y
     );
@@ -756,7 +756,7 @@ package body TC.GWin.MDI_Picture_Child is
       when dash  =>  Focus(len_eb);
     end case;
 
-    Show_Dialog_with_Toolbars_off(pan, window.parent.all, window.parent.all, result);
+    Show_Dialog_with_Toolbars_off(pan, window.MDI_Root.all, window.MDI_Root.all, result);
 
     case Result is
       when IDOK     => Window.Draw_Control.current_ls:= candidate;
@@ -789,7 +789,7 @@ package body TC.GWin.MDI_Picture_Child is
           TC.GWin.Options_Dialogs.On_Picture_Options(
             Window,
             Window.Draw_Control.picture.opt,
-            Window.parent.all,
+            Window.MDI_Root.all,
             modified,
             G2S (Msg(opicopt) & " - '" & Shorten_filename(Text(Window)) & '''));
           Window.Draw_Control.picture.saved:=
@@ -1125,13 +1125,13 @@ package body TC.GWin.MDI_Picture_Child is
 
   --  procedure On_Focus (Window : in out MDI_Picture_Child_Type) is
   --  begin
-  --    Parent(Window.parent.Drawing_toolbar,Window);
+  --    Parent(Window.MDI_Root.Drawing_toolbar,Window);
   --  end;
 
   --  procedure On_Lost_Focus (Window : in out MDI_Picture_Child_Type) is
   --  begin
   --    --GWindows.Base.  Base_Window_Type(
-  --    Parent(Window.parent.Drawing_toolbar,Window.parent.all);
+  --    Parent(Window.MDI_Root.Drawing_toolbar,Window.MDI_parent.all);
   --  end;
 
 end TC.GWin.MDI_Picture_Child;
