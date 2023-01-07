@@ -72,8 +72,8 @@ package TC is
   end record;
 
   type Language is ( l_english, l_french );
-  type Grid_display is (none, points, lines);
-  type Solid_Bezier_points_mode is (auto, suggest);
+  type Grid_Display is (none, points, lines);
+  type Solid_Bezier_Points_Mode is (auto, suggest);
   -- ^ "auto" is for \qbezier only,
   --   "suggest" uses \bezier and a proposed amount of points
 
@@ -97,8 +97,8 @@ package TC is
     mac_suff          : Unbounded_String:= To_Unbounded_String("mac");
                         --  Suffix fuer Macro-Dateien
     lang              : Language := l_english;
-    grid              : Grid_display := points;
-    solid_bez         : Solid_Bezier_points_mode:= auto;
+    grid              : Grid_Display := points;
+    solid_bez         : Solid_Bezier_Points_Mode:= auto;
     options_for_new   : Picture_Options;
     preview_mode      : LaTeX_version:= v2e; -- +10-Jan-2007
     preview_directory : Preview_directory_choice:= temporary; -- +22-Jan-2007
@@ -229,13 +229,13 @@ package TC is
 
   package Graphics is
 
-    type Color_zone is (background, normal, picked, shadow);
+    type Color_Zone is (background, normal, picked, shadow);
 
-    type H_justify is (lefttext, centertext, righttext);
-    type V_justify is (toptext,  centertext, bottomtext);
+    type H_Justify is (lefttext, centertext, righttext);
+    type V_Justify is (toptext,  centertext, bottomtext);
 
-    procedure Images( hj: H_justify; vj: V_justify; s: out String; sl: out Natural);
-    procedure Values( s: String; hj: out H_justify; vj: out V_justify);
+    procedure Images( hj: H_Justify; vj: V_Justify; s: out String; sl: out Natural);
+    procedure Values( s: String; hj: out H_Justify; vj: out V_Justify);
 
     text_cutting: constant:= 15;
 
@@ -341,8 +341,8 @@ package TC is
 
   end Units;
 
-  function Almost_zero(X: Real) return Boolean;
-  pragma Inline(Almost_zero);
+  function Almost_Zero(X: Real) return Boolean;
+  pragma Inline(Almost_Zero);
 
   arrow_length_pt: constant:= 4.0; -- in pt (measured 11-Jan-2004)
 

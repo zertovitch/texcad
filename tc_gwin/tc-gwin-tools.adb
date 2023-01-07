@@ -33,7 +33,7 @@ package body TC.GWin.Tools is
     d.Center;
     d.Small_Icon("Tools_Icon");
     d.On_Destroy_Handler(Get_Data'Unrestricted_Access);
-    Detect(Window.Draw_Control.picture, stat);
+    Detect(Window.Draw_Control.Picture, stat);
     d.Detection_List.Insert_Column(Msg(topic), 0, 210);
     d.Detection_List.Insert_Column(Msg(occurrences), 1, 90);
     d.Detection_List.Insert_Column(Msg(first_pos), 2, 110);
@@ -48,9 +48,9 @@ package body TC.GWin.Tools is
     case Result is
       when IDOK     =>
         if action /= no_cleanup_action then
-          Clean(Window.Draw_Control.picture, action);
-          Window.Draw_Control.picture.saved:= False;
-          Window.Draw_Control.picture.refresh:= full;
+          Clean(Window.Draw_Control.Picture, action);
+          Window.Draw_Control.Picture.saved:= False;
+          Window.Draw_Control.Picture.refresh:= full;
           Show_Totals(Window); -- show the '*' for modified
         end if;
       when others   =>

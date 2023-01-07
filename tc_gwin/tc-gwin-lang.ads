@@ -174,8 +174,8 @@ package TC.GWin.Lang is
       gen_opt_dialog   => ogenopt,
       pic_opt_dialog   => opicopt,
       clean_pic        => tclean,
-      TB_drawing       => vtogdtb,
-      TB_line_settings => vtogltb,
+      TB_Drawing       => vtogdtb,
+      TB_Line_settings => vtogltb,
       others => empty);
 
   msg_for_cleanup: constant array(TC.Tools.Detection) of Message:=

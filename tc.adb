@@ -49,16 +49,16 @@ package body TC is
 
   package body Graphics is
 
-    procedure Images( hj: H_justify; vj: V_justify; s: out String; sl: out Natural) is
-      ch: constant array(H_justify) of Character:= "lcr";
-      cv: constant array(V_justify) of Character:= "tcb";
+    procedure Images( hj: H_Justify; vj: V_Justify; s: out String; sl: out Natural) is
+      ch: constant array(H_Justify) of Character:= "lcr";
+      cv: constant array(V_Justify) of Character:= "tcb";
     begin
       s(s'First)  := ch(hj);
       s(s'First+1):= cv(vj);
       sl:= s'First+1;
     end Images;
 
-    procedure Values( s: String; hj: out H_justify; vj: out V_justify) is
+    procedure Values( s: String; hj: out H_Justify; vj: out V_Justify) is
     begin
       hj:= centertext;
       vj:= centertext;
@@ -75,8 +75,8 @@ package body TC is
     end Values;
 
     function Position_of_text( o: Obj_type ) return Point is
-      h_just: H_justify;
-      v_just: V_justify;
+      h_just: H_Justify;
+      v_just: V_Justify;
       sz, P: Point;
     begin
       case o.art is
@@ -238,7 +238,7 @@ package body TC is
     d,d1,angle: Real;
     s: Positive;
   begin
-    if Almost_zero(df.x) then
+    if Almost_Zero(df.x) then
       sl(h):= 0;
       if df.y<0.0 then
         sl(v):=-1;
@@ -332,7 +332,7 @@ package body TC is
         -- Newton's algorithm: t_{n+1} = t_n - f(t_n) / f'(t_n)
         fp:= 2.0 * PV.x * (2.0 * tm * PA.x + PB.x) +
              2.0 * PV.y * (2.0 * tm * PA.y + PB.y);
-        ko:= Almost_zero(fp); -- algo not usable
+        ko:= Almost_Zero(fp); -- algo not usable
         exit when ko;
         tm:= tm - f / fp;
         it:= it + 1;
@@ -496,7 +496,7 @@ package body TC is
       end if;
     end if;
     return s (na .. nb);
-  end Tex_Number;
+  end TeX_Number;
 
   function Image( o:Ovop ) return String is
   begin
@@ -575,10 +575,10 @@ package body TC is
   --  abs X <= abs X * Float_Type'Model_Epsilon            -- (3)
   --  abs X <= abs X * Float_Type'Base'Model_Epsilon       -- (4)
 
-  function Almost_zero(X: Real) return Boolean is
+  function Almost_Zero(X: Real) return Boolean is
   begin
     return  abs X <= Real'Base'Model_Small;
-  end Almost_zero;
+  end Almost_Zero;
 
   procedure Improve_linvec(o: in out Obj_type; ul_pt: Real) is
     dx,dy: Real;
@@ -592,7 +592,7 @@ package body TC is
     then
       dx:= abs(o.P2.x-o.P1.x);
       dy:= abs(o.P2.y-o.P1.y);
-      if Almost_zero(dx) or Almost_zero(dy) then
+      if Almost_Zero(dx) or Almost_Zero(dy) then
          -- Horizontal or vertical are always OK
         LaTeX_displays:= True;
       else
@@ -608,7 +608,7 @@ package body TC is
             Set_slope_of_linvec(olatex);
             dpt:= Norm(olatex.P2 - o.P2) * ul_pt;
             -- Distance between end points
-            if Almost_zero(dpt) then
+            if Almost_Zero(dpt) then
               -- not too different -> change to \line or \vector
               o:= olatex;
             end if;
@@ -674,7 +674,7 @@ package body TC is
   max_radius_pt: constant array(circ..disc) of Real:= (20.0,7.5);
   function Max_radius(a: Obj_art_type; ul_in_pt: Real) return Real is
   begin
-    if Almost_zero(ul_in_pt) then
+    if Almost_Zero(ul_in_pt) then
       return max_radius_pt(a);
     else
       return max_radius_pt(a) / ul_in_pt;
@@ -688,7 +688,7 @@ package body TC is
       nx, ny, ns, tmp: Integer;
       gap: Real;
     begin
-      if Almost_zero(dotgap) then
+      if Almost_Zero(dotgap) then
         gap:= 1.0;
       else
         gap:= dotgap;

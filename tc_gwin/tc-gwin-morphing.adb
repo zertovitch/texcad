@@ -17,7 +17,7 @@ with GWin_Util;                         use GWin_Util;
 package body TC.GWin.Morphing is
 
   procedure Deformation_dialog(
-    parent : in out MDI_Main_type;
+    parent : in out MDI_Main_Type;
     m      :        Morphart;
     subcmd :    out Natural;
     iter   :    out Positive;
@@ -47,13 +47,13 @@ package body TC.GWin.Morphing is
       if m /= symmetry then
         iter:= Positive'Value(G2S (Text(biter)));
       end if;
-      keep_o:= State(keep)=checked;
+      keep_o:= State(keep)=Checked;
       -- Bug spotted by Dmitry Chistyakov, 2007-01-25-17-08-58:
       -- numbers can be invalid, then the following exception part
     exception
       when others =>
         Message_Box(
-          Window,
+          window,
           "Invalid number(s) given", "Operation cancelled",
           OK_Box, Error_Icon
         );
@@ -75,7 +75,7 @@ package body TC.GWin.Morphing is
   begin
     Create_As_Dialog(pan, parent, "", Width => 450, Height => max_sub(m)*30+130);
     Center(pan);
-    Small_Icon (Pan, "Options_Icon");
+    Small_Icon (pan, "Options_Icon");
     GWin_Util.Use_GUI_Font(pan);
 
     case m is
@@ -150,7 +150,7 @@ package body TC.GWin.Morphing is
     keep_o: Boolean;
     L     : Point;    -- Diagonal linear transformation
   begin
-    if w.picture.picked = 0 then
+    if w.Picture.picked = 0 then
       Message_Box(w,"",Msg(no_picked), OK_Box, Error_Icon); -- usually doesn't happen...
     else
       mo:= m( w.current_cmd );
@@ -164,18 +164,18 @@ package body TC.GWin.Morphing is
       --    "keep_o=" & boolean'image(keep_o) );
       if subcmd /= 0 then
         Morphit(
-          w.picture, mo,
+          w.Picture, mo,
           w.PS, L,
           keep_o,
           iter,
           subcmd
         );
         -- Refresh Bezier midpoints:
-        Refresh_size_dependent_parameters(w.picture, objects => True);
+        Refresh_size_dependent_parameters(w.Picture, objects => True);
         if keep_o then -- 14-Oct-2003
-          w.picture.refresh:= shadows_and_objects; -- Only added objects
+          w.Picture.refresh:= shadows_and_objects; -- Only added objects
         else
-          w.picture.refresh:= full;                -- Original disappears
+          w.Picture.refresh:= full;                -- Original disappears
         end if;
         Redraw(w);
       end if;

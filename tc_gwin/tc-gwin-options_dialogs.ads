@@ -15,7 +15,7 @@ package TC.GWin.Options_Dialogs is
 
   procedure On_Picture_Options
      (window  : in out GWindows.Base.Base_Window_Type'Class;
-      pic_opt : in out TC.Picture_options;
+      pic_opt : in out TC.Picture_Options;
       main    : in out TC.GWin.MDI_Main.MDI_Main_Type;
       modified:    out Boolean;
       title   : String );

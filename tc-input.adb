@@ -574,10 +574,10 @@ package body TC.Input is
       Skip_Stuff;
       Read_real(o.data_2d.min_t);
       -- Put_Line("min= " & Real'Image(o.min_t));
-      Skip_stuff;
+      Skip_Stuff;
       Read_real(o.data_2d.max_t);
       -- Put_Line("max= " & Real'Image(o.max_t));
-      Skip_stuff;
+      Skip_Stuff;
       Seek_ch(')');
       Skip_until_end_of_emulation;  --  skip until reaching: %\end
     end Read_paramcurve2d;

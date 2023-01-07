@@ -7,11 +7,11 @@ pragma Elaborate_All(GWindows.Drawing_Objects); -- For Create_Pen
 
 package body TC.GWin.Phantoms is
 
-  phantom_pen: array(Pen_Style_Type) of Pen_type;
+  phantom_pen: array(Pen_Style_Type) of Pen_Type;
 
   procedure Invert_rubber_box(
     w      : in out TC_Picture_Panel;
-    cz     :        Color_zone
+    cz     :        Color_Zone
   )
   is
     pragma Unreferenced (cz);
@@ -21,11 +21,11 @@ package body TC.GWin.Phantoms is
     Y2: constant Integer:= w.Y;
   begin
     Set_Mix_Mode( w.Drawing_Area, R2_NOTXORPEN );
-    Select_Object( w.Drawing_Area, phantom_pen(dot) );
-    Line( w.Drawing_Area, x1,y1,x2,y1 );
-    Line( w.Drawing_Area, x2,y1,x2,y2 );
-    Line( w.Drawing_Area, x1,y2,x2,y2 );
-    Line( w.Drawing_Area, x1,y1,x1,y2 );
+    Select_Object( w.Drawing_Area, phantom_pen(Dot) );
+    Line( w.Drawing_Area, X1,Y1,X2,Y1 );
+    Line( w.Drawing_Area, X2,Y1,X2,Y2 );
+    Line( w.Drawing_Area, X1,Y2,X2,Y2 );
+    Line( w.Drawing_Area, X1,Y1,X1,Y2 );
   end Invert_rubber_box;
 
   procedure Invert_phantom( w: in out TC_Picture_Panel ) is
@@ -137,12 +137,12 @@ package body TC.GWin.Phantoms is
         o.PE:= w.PE;
         Set_control_point(o.all,w.PU);
         o.num:= 0;
-        Set_slope_of_bezvec(o.all, w.picture.ul_in_pt);
-        o.num:= Good_num_of_bezier_points(o.all,w.picture.ul_in_pt) / 9;
+        Set_slope_of_bezvec(o.all, w.Picture.ul_in_pt);
+        o.num:= Good_num_of_bezier_points(o.all,w.Picture.ul_in_pt) / 9;
       when others=> null;
     end case;
     Set_Mix_Mode( w.Drawing_Area, R2_NOTXORPEN );
-    Select_Object( w.Drawing_Area, phantom_pen(solid) );
+    Select_Object( w.Drawing_Area, phantom_pen(Solid) );
     Draw_one( o );
     case w.phantomart is
       when circ | oval =>
@@ -167,7 +167,7 @@ package body TC.GWin.Phantoms is
         Circle_or_Oval_frame_and_cross; -- 14-Oct-2005, show frame
         Dispose(l);
       when bezier =>
-        Select_Object( w.Drawing_Area, phantom_pen( dash_dot_dot ) );
+        Select_Object( w.Drawing_Area, phantom_pen( Dash_Dot_Dot ) );
         l:= new Obj_type(line);
         l.ls:= normal_line_settings;
         l.P1:= o.PC;
@@ -175,7 +175,7 @@ package body TC.GWin.Phantoms is
         Draw_one( l );
         l.P2:= o.PE + more * (o.PE-o.PC);
         Draw_one( l );
-        Select_Object( w.Drawing_Area, phantom_pen( solid ) );
+        Select_Object( w.Drawing_Area, phantom_pen( Solid ) );
         Ortholine(o.P1, o.P1-o.PC);
         Ortholine(o.PE, o.PE-o.PC);
         Dispose(l);

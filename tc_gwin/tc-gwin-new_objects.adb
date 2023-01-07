@@ -41,7 +41,7 @@ package body TC.GWin.New_objects is
     ls:= t.ls; -- possible current dot/dash change by Text_Change
     -- Box is kept even if Change_Text cancelled (modif=False)
     Insert(p, t, at_end);
-  end New_Boxoval;
+  end New_boxoval;
 
   procedure New_linvec(
     p           : in out Picture;
@@ -105,7 +105,7 @@ package body TC.GWin.New_objects is
     parent  : in out Base_Window_Type'Class;
     main    : in out MDI_Main_Type;
     P1      :        Point;
-    art     :        obj_art_type;
+    art     :        Obj_art_type;
     ls      :        Line_settings  -- useless, just avoid thickness swapping
   )
   is

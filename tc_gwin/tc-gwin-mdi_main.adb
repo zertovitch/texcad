@@ -29,7 +29,7 @@ with Ada.Strings.Fixed;                 use Ada.Strings.Fixed, Ada.Strings;
 
 package body TC.GWin.MDI_Main is
 
-  procedure Update_MRU_Menu( m: in Menu_type) is
+  procedure Update_MRU_Menu( m: in Menu_Type) is
     cmd: Integer;
   begin
     for i in reverse mru'Range loop
@@ -44,8 +44,8 @@ package body TC.GWin.MDI_Main is
     end loop;
   end Update_MRU_Menu;
 
-  procedure Update_Toolbar_Menu( m: in Menu_type; tba: Floating_toolbar_array) is
-    use Floating_toolbars;
+  procedure Update_Toolbar_Menu( m: in Menu_Type; tba: Floating_toolbar_array) is
+    use Floating_Toolbars;
   begin
     for c in Floating_toolbar_categ loop
       GWindows.Menus.Check(m, Command, ID_custom(c), tba(c).status /= invisible);
@@ -59,8 +59,8 @@ package body TC.GWin.MDI_Main is
       declare
         cw: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window.all);
       begin
-        Update_MRU_Menu(cw.File_menu);
-        Update_Toolbar_Menu(cw.View_menu, cw.MDI_Root.Floating_toolbars);
+        Update_MRU_Menu(cw.File_Menu);
+        Update_Toolbar_Menu(cw.View_Menu, cw.MDI_Root.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
@@ -110,7 +110,7 @@ package body TC.GWin.MDI_Main is
         declare
           pw: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window.all);
         begin
-          if pw.file_name = file_name then
+          if pw.File_Name = file_name then
             is_open:= True;
             Focus(pw);
           end if;
@@ -162,7 +162,8 @@ package body TC.GWin.MDI_Main is
   procedure Open_Child_Window_And_Load_Picture (
         Window     : in out MDI_Main_Type;
         File_Name,
-        File_Title :        Gwindows.Gstring_Unbounded ) is
+        File_Title :        GWindows.GString_Unbounded )
+  is
     Candidate              : TC.Picture;
     is_open: Boolean;
   begin
@@ -186,15 +187,15 @@ package body TC.GWin.MDI_Main is
       New_Window.File_Name:= File_Name;
       Create_MDI_Child (New_Window.all,
         Window,
-        To_GString_from_Unbounded(File_Title),
+        To_GString_From_Unbounded(File_Title),
         Is_Dynamic => True);
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus(Window, To_GString_from_Unbounded(New_Window.File_Name));
+      Update_Common_Menus(Window, To_GString_From_Unbounded(New_Window.File_Name));
       Finish_subwindow_opening(Window, New_Window.all);
     end;
   exception
-    when E : TC.Input.Load_Error =>
+    when E : TC.Input.Load_error =>
       Message_Box(
         Window,
         "Error when loading picture data",
@@ -207,7 +208,7 @@ package body TC.GWin.MDI_Main is
 
   procedure Open_Child_Window_And_Load_Picture (
         Window     : in out MDI_Main_Type;
-        File_Name  :        Gwindows.Gstring_Unbounded ) is
+        File_Name  :        GWindows.GString_Unbounded ) is
   begin
     Open_Child_Window_And_Load_Picture(
       Window,
@@ -234,7 +235,7 @@ package body TC.GWin.MDI_Main is
     TC.GWin.Options.Load;
     TC.startup_language:= TC.gen_opt.lang;
 
-    Gwin_Util.Use_Gui_Font(Window);
+    GWin_Util.Use_GUI_Font(Window);
 
     Small_Icon (Window, "AAA_Main_Icon");
     Large_Icon (Window, "AAA_Main_Icon");
@@ -248,7 +249,7 @@ package body TC.GWin.MDI_Main is
 
     Create(Window.Status_Bar, Window, "");
     Parts(Window.Status_Bar,(10,210,410,640,680,-1));
-    Dock (Window.Status_Bar, Gwindows.Base.At_Bottom);
+    Dock (Window.Status_Bar, GWindows.Base.At_Bottom);
 
     --  ** Main tool bar (new/open/save/...) at top left of the main window:
 
@@ -259,18 +260,18 @@ package body TC.GWin.MDI_Main is
 
     --  ** Resize according to options:
 
-    if Screen_Visibility ((Wleft, Wtop)) = Good then
-      Left (Window, Wleft);
-      Top  (Window, Wtop);
+    if Screen_Visibility ((wleft, wtop)) = Good then
+      Left (Window, wleft);
+      Top  (Window, wtop);
     end if;
-    Size (Window, Integer'Max(400,Wwidth), Integer'Max(200,Wheight));
-    Zoom (Window,Wmaxi);
+    Size (Window, Integer'Max(400,wwidth), Integer'Max(200,wheight));
+    Zoom (Window,wmaxi);
 
     Dock_Children(Window);
     Show (Window);
     --!!Redraw(Window.Drawing_toolbar.bar,True,True);
 
-    if Argument_count=0 then
+    if Argument_Count=0 then
       On_File_New (Window, extra_first => True);
       -- ^ The MS Office-like first doc.
     end if;
@@ -278,11 +279,11 @@ package body TC.GWin.MDI_Main is
     for I in 1..Argument_Count loop
       Open_Child_Window_And_Load_Picture(
         Window,
-        To_Gstring_Unbounded(S2G (Argument(I)))
+        To_GString_Unbounded(S2G (Argument(I)))
       );
     end loop;
     Accept_File_Drag_And_Drop(Window);
-    Redraw(Window.Tool_bar); -- 2007: sometimes the buttons do not appear...
+    Redraw(Window.Tool_Bar); -- 2007: sometimes the buttons do not appear...
     Window.record_dimensions:= True;
   end On_Create;
 
@@ -298,8 +299,8 @@ package body TC.GWin.MDI_Main is
       -- We call the function since the Top/Left arguments are reversed -
       -- bug of GWindows <= 2003; workaround compatible with fixes.
       -- bug fixed on 5-Jan-2012, gnavi rev. 109 !
-      TC.Gwin.Wleft  := TC.GWin.MDI_Main.Left(Window);
-      TC.Gwin.Wtop   := TC.GWin.MDI_Main.Top(Window);
+      TC.GWin.wleft  := TC.GWin.MDI_Main.Left(Window);
+      TC.GWin.wtop   := TC.GWin.MDI_Main.Top(Window);
       -- Will remember position if moved, maximized and closed
     end if;
   end On_Move;
@@ -314,8 +315,8 @@ package body TC.GWin.MDI_Main is
     then
       -- ^ Avoids recording dimensions before restoring them
       --   from previous session.
-      TC.Gwin.Wwidth := Width;
-      TC.Gwin.Wheight:= Height;
+      TC.GWin.wwidth := Width;
+      TC.GWin.wheight:= Height;
       -- Will remember position if sized, maximized and closed
     end if;
   end On_Size;
@@ -330,7 +331,7 @@ package body TC.GWin.MDI_Main is
   is
     New_Window : constant MDI_Picture_Child_Access := new MDI_Picture_Child_Type;
 
-    function Suffix return GWindows.Gstring is
+    function Suffix return GWindows.GString is
     begin
       if Current_MDI_Window = 0 then
         return "";
@@ -339,7 +340,7 @@ package body TC.GWin.MDI_Main is
       end if;
     end Suffix;
 
-    File_Title: constant GString:= Msg(New_Pic) & Suffix;
+    File_Title: constant GString:= Msg(new_pic) & Suffix;
 
   begin
     New_Window.Extra_First_Doc := extra_first;
@@ -351,7 +352,7 @@ package body TC.GWin.MDI_Main is
     MDI_Active_Window (Window, New_Window.all);
 
     -- Transfer user-defined default options:
-    New_Window.Draw_Control.Picture.Opt := Gen_Opt.Options_For_New;
+    New_Window.Draw_Control.Picture.opt := gen_opt.options_for_new;
     Refresh_size_dependent_parameters(
       New_Window.Draw_Control.Picture,
       objects => True
@@ -374,13 +375,13 @@ package body TC.GWin.MDI_Main is
     File_Name, File_Title : GString_Unbounded;
     Success    : Boolean;
   begin
-    Open_File (Window, Msg(Open),
+    Open_File (Window, Msg(open),
       File_Name,
-      ((To_Gstring_Unbounded (Msg(Ltx_Pic) & " (*." & S2G (Pic_Suffix) & ")"),
-          To_Gstring_Unbounded ("*." & S2G (Pic_Suffix) )),
-        (To_Gstring_Unbounded (Msg(All_Files) & " (*.*)"),
-          To_Gstring_Unbounded ("*.*"))),
-      '.' & S2G (Pic_Suffix),
+      ((To_GString_Unbounded (Msg(ltx_pic) & " (*." & S2G (Pic_suffix) & ")"),
+          To_GString_Unbounded ("*." & S2G (Pic_suffix) )),
+        (To_GString_Unbounded (Msg(all_files) & " (*.*)"),
+          To_GString_Unbounded ("*.*"))),
+      '.' & S2G (Pic_suffix),
       File_Title,
       Success);
 
@@ -399,13 +400,13 @@ package body TC.GWin.MDI_Main is
     Create_As_Dialog(About, Window, "TeXCAD", Width => Wmax + 50, Height => 300);
     Center(About);
     Small_Icon (About, "Grid_Icon");
-    Gwin_Util.Use_Gui_Font(About);
+    GWin_Util.Use_GUI_Font(About);
     w:= Client_Area_Width (About)-32-10;
 
     GWindows.Static_Controls.Web.Create_URL(About, "TeXCAD", S2G (web), 60, 15, 80, 16);
 
     Create_Label(About,
-      S2G ("* Version: " & Version & "   * Reference: " & Reference),
+      S2G ("* Version: " & version & "   * Reference: " & reference),
       140, 15, w-140-18, 25);
 
     Create_Icon (About, "AAA_Main_Icon", 10,10,32,32);
@@ -416,26 +417,26 @@ package body TC.GWin.MDI_Main is
     Create_URL (About, S2G ("Internet: " & web), S2G (web),
       60, 75, Wmax-92, 25);
       --
-    Create_Label (About, Msg(Authors), 10, 95, Wmax, 25);
+    Create_Label (About, Msg(authors), 10, 95, Wmax, 25);
     Create_Label (About, "Georg Horn, Jörn Winkelmann: " --  &&
-      & Msg(Original),       30,  115, Wmax, 25);
+      & Msg(original),       30,  115, Wmax, 25);
 
     Create_URL(
       About,
       "Gautier de Montmollin: Ada-ptation, " &
-      Msg(tc4) & ", " & Msg(Windoze_Version),
+      Msg(tc4) & ", " & Msg(windoze_version),
       "http://sf.net/users/gdemont/",
       30, 135, Wmax, 16);
 
-    Create_Label (About, Msg(Thanks), 10, 155, Wmax, 25);
+    Create_Label (About, Msg(thanks), 10, 155, Wmax, 25);
     Create_URL(
       About,
-      "David Botton: " & Msg(Gwind),
+      "David Botton: " & Msg(gwind),
       "http://sf.net/projects/gnavi/",
       30, 175, Wmax, 16);
 
     Create (Oki, About, "O&K", 20, Client_Area_Height (About) - 40, 60, 25,
-      Id => Idok);
+      ID => IDOK);
     Show_Dialog_with_Toolbars_off(About, Window, Window, Result);
   end On_About;
 
@@ -446,16 +447,16 @@ package body TC.GWin.MDI_Main is
   procedure On_Menu_Hover (
         Window : in out MDI_Main_Type;
         Item   : in     Integer;
-        Kind   : in     Gwindows.Windows.Hover_Item_Type )
+        Kind   : in     GWindows.Windows.Hover_Item_Type )
   is
     m: Message:= ready;
   begin
-    if Kind = Gwindows.Windows.Menu_Item and Item > 0 then
+    if Kind = GWindows.Windows.Menu_Item and Item > 0 then
       case Item is
         when ID_FILE_NEW =>
           m:= new_pic;
         when others =>
-          for cust in custom_cmd loop
+          for cust in Custom_cmd loop
             if Item = ID_custom(cust) then
               case cust is
                 when pick_obj =>
@@ -472,25 +473,25 @@ package body TC.GWin.MDI_Main is
 
   procedure Custom_Command (
         Window : in out MDI_Main_Type;
-        C      :        Custom_Cmd     ) is
+        C      :        Custom_cmd     ) is
   begin
     case C is
       when MDI_main_cmd =>
         case MDI_main_cmd(C) is
-          when Gen_Opt_Dialog =>
+          when gen_opt_dialog =>
             TC.GWin.Options_Dialogs.On_General_Options (Window);
           when mru1 .. mru9 =>
             Open_Child_Window_And_Load_Picture(
               Window,
-              mru( 1 + Custom_Cmd'Pos(c)-Custom_Cmd'Pos(mru1) )
+              mru( 1 + Custom_cmd'Pos(C)-Custom_cmd'Pos(mru1) )
             );
           when Floating_toolbar_categ =>
-            Floating_toolbars.Rotate_status( Window.Floating_toolbars(C) );
+            Floating_Toolbars.Rotate_status( Window.Floating_toolbars(C) );
             Update_Common_Menus(Window);
         end case;
       when others =>
         Message_Box(Window, "Main - Custom - not for main " ,
-          S2G (Custom_Cmd'Image(C)));
+          S2G (Custom_cmd'Image(C)));
     end case;
   end Custom_Command;
 
@@ -503,7 +504,7 @@ package body TC.GWin.MDI_Main is
   is
   begin
     if Window.all in MDI_Picture_Child_Type'Class and then
-       MDI_Picture_Child.Success_In_Enumerated_Close
+       MDI_Picture_Child.success_in_enumerated_close
     then -- no [cancel] up to now
       GWindows.Base.Close (Window.all);
     end if;
@@ -511,7 +512,7 @@ package body TC.GWin.MDI_Main is
 
   procedure My_MDI_Close_All (Window : in out MDI_Main_Type) is
   begin
-    MDI_Picture_Child.Success_In_Enumerated_Close:= True;
+    MDI_Picture_Child.success_in_enumerated_close:= True;
     GWindows.Base.Enumerate_Children (MDI_Client_Window (Window).all,
                                       My_Close_Win'Access);
   end My_MDI_Close_All;
@@ -525,27 +526,27 @@ package body TC.GWin.MDI_Main is
         Item   : in     Integer        ) is
   begin
     case Item is
-      when Id_File_New  =>
+      when ID_FILE_NEW  =>
         On_File_New (Window, extra_first => False);
-      when Id_File_Open =>
+      when ID_FILE_OPEN =>
         On_File_Open (Window);
-      when Id_App_About =>
+      when ID_APP_ABOUT =>
         On_About (Window);
-      when Id_App_Exit  =>
+      when ID_APP_EXIT  =>
         Close (Window);
-      when Id_File_Close =>
+      when ID_FILE_CLOSE =>
         if Window.Count_MDI_Children = 0 then
           Close (Window);  --  Ctrl-W when no subwindow is open.
         else
           On_Menu_Select (Window_Type (Window), Item);
         end if;
-      when Id_Window_Cascade   =>
+      when ID_WINDOW_CASCADE   =>
         MDI_Cascade (Window);
-      when Id_Window_Tile_Horz =>
+      when ID_WINDOW_TILE_HORZ =>
         MDI_Tile_Horizontal (Window);
-      when Id_Window_Tile_Vert =>
+      when ID_WINDOW_TILE_VERT =>
         MDI_Tile_Vertical (Window);
-      when Id_Window_Close_All =>
+      when ID_WINDOW_CLOSE_ALL =>
         My_MDI_Close_All(Window);
       when others =>
         for c in MDI_main_cmd loop
@@ -635,9 +636,9 @@ package body TC.GWin.MDI_Main is
   begin
     for t in Floating_toolbar_categ loop
       if switch then
-        Floating_toolbars.Enable(window.Floating_toolbars(t).window);
+        Floating_Toolbars.Enable(window.Floating_toolbars(t).window);
       else
-        Floating_toolbars.Disable(window.Floating_toolbars(t).window);
+        Floating_Toolbars.Disable(window.Floating_toolbars(t).window);
       end if;
     end loop;
   end Toolbar_enabling;

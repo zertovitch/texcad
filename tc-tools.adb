@@ -11,23 +11,23 @@ package body TC.Tools is
            possible(empty_text):= True;
          end if;
        when box =>
-         if Almost_zero(Norm2(o.size)) then
+         if Almost_Zero(Norm2(o.size)) then
            possible(zero_sized_object):= True;
          end if;
        when line =>
-         if Almost_zero(Norm2(o.P2-o.P1)) then
+         if Almost_Zero(Norm2(o.P2-o.P1)) then
            possible(zero_sized_object):= True;
          end if;
        when circ | disc =>
-         if Almost_zero(o.rad) then
+         if Almost_Zero(o.rad) then
            possible(zero_sized_object):= True;
          end if;
        when oval =>
-         if Almost_zero(Norm2(o.osize)) then
+         if Almost_Zero(Norm2(o.osize)) then
            possible(zero_sized_object):= True;
          end if;
        when bezier =>
-         if Almost_zero(Norm2(o.PE-o.P1)) then
+         if Almost_Zero(Norm2(o.PE-o.P1)) then
            possible(zero_sized_object):= True;
          end if;
        when aux =>

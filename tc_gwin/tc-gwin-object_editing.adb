@@ -20,7 +20,7 @@ package body TC.GWin.Object_editing is
   procedure Change_Text(
     parent  : in out Base_Window_Type'Class;
     main    : in out MDI_Main_Type;
-    t       : in out obj_type;
+    t       : in out Obj_type;
     modified:    out Boolean ) is
 
     pan                : Window_Type;
@@ -35,7 +35,7 @@ package body TC.GWin.Object_editing is
 
     h_just: H_Justify;
     v_just: V_Justify;
-    candidate: obj_type(t.art);
+    candidate: Obj_type(t.art);
     dum_str: String(1..20);
 
     h_adj_groups: constant:= 95;
@@ -51,24 +51,24 @@ package body TC.GWin.Object_editing is
             when dot   => return "%\dottedbox(){...}";
             when dash  => return "\dashbox(){...}";
           end case;
-        when others => return obj_art_type'Image(t.art); -- should not happen!
+        when others => return Obj_art_type'Image(t.art); -- should not happen!
       end case;
     end Panel_title;
 
     procedure Get_Box_Data
       (Window : in out GWindows.Base.Base_Window_Type'Class)
     is
-      pragma Warnings(off,window);
+      pragma Warnings(off,Window);
     begin
       candidate.inhalt:= To_Unbounded_String(G2S (GWindows.Edit_Boxes.Text(text_eb)));
       if t.art /= putaux then
         for h in H_Justify loop
-          if State(h_radio(h))=checked then
+          if State(h_radio(h))=Checked then
             h_just:= h;
           end if;
         end loop;
         for v in V_Justify loop
-          if State(v_radio(v))=checked then
+          if State(v_radio(v))=Checked then
             v_just:= v;
           end if;
         end loop;
@@ -94,7 +94,7 @@ package body TC.GWin.Object_editing is
     Create_As_Dialog(pan, parent, S2G (Panel_title), Width => 630, Height => 110+y);
 
     Center(pan);
-    Small_Icon (Pan, "Options_Icon");
+    Small_Icon (pan, "Options_Icon");
     On_Destroy_Handler (pan, Get_Box_Data'Unrestricted_Access);
 
     GWin_Util.Use_GUI_Font(pan);
@@ -110,9 +110,9 @@ package body TC.GWin.Object_editing is
       Create(h_group, pan, "", 10, 30, wprop - 5, h_adj_groups);
 
       for h in H_Justify loop
-        x:= 20 + 120* H_justify'Pos(h);
+        x:= 20 + 120* H_Justify'Pos(h);
         Create_Label (pan,
-          Msg(message'Val(message'Pos(left)+H_justify'Pos(h))),
+          Msg(Message'Val(Message'Pos(left)+H_Justify'Pos(h))),
           x,  70, 120, 40);
         Create(h_radio(h),pan, "",  x,  45,  80, 15);
         State(h_radio(h),boolean_to_state(h=h_just));
@@ -123,9 +123,9 @@ package body TC.GWin.Object_editing is
       Create(v_group, pan, "", x, 30, (w-wprop) - 10, h_adj_groups);
 
       for v in V_Justify loop
-        y:= 45 + 25* V_justify'Pos(v);
+        y:= 45 + 25* V_Justify'Pos(v);
         Create_Label (pan,
-           Msg(message'Val(message'Pos(top)+V_justify'Pos(v))),
+           Msg(Message'Val(Message'Pos(top)+V_Justify'Pos(v))),
            x + 50,  y, 130, 20);
         Create(v_radio(v),pan, "",  x+10,  y,  30, 15);
         State(v_radio(v),boolean_to_state(v=v_just));
@@ -138,7 +138,7 @@ package body TC.GWin.Object_editing is
       when dash =>
         Create_Label(pan,Msg(dash_size), 10,  y, 130, 20);
         Put(dum_str,t.ls.dash_length,2,0);
-        Create (dash_eb, pan, S2G (Trim(dum_str,left)), 180, y,  40, 20);
+        Create (dash_eb, pan, S2G (Trim(dum_str,Left)), 180, y,  40, 20);
       when dot => null;
     end case;
 
@@ -151,7 +151,7 @@ package body TC.GWin.Object_editing is
 
     Focus(text_eb);
 
-    Show_Dialog_with_Toolbars_off(pan, parent, main, result);
+    Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
 
     case Result is
       when IDOK     =>
@@ -171,7 +171,7 @@ package body TC.GWin.Object_editing is
   procedure Change_Oval(
     parent  : in out Base_Window_Type'Class;
     main    : in out MDI_Main_Type;
-    t       : in out obj_type;
+    t       : in out Obj_type;
     modified:    out Boolean ) is
 
     pan      : Window_Type;
@@ -183,7 +183,7 @@ package body TC.GWin.Object_editing is
   begin
     Create_As_Dialog(pan, parent, "\oval", Width => 460, Height => 225);
     Center(pan);
-    Small_Icon (Pan, "Options_Icon");
+    Small_Icon (pan, "Options_Icon");
     GWin_Util.Use_GUI_Font(pan);
 
     for o in Ovop loop
@@ -207,7 +207,7 @@ package body TC.GWin.Object_editing is
       if i in Ovop'Pos(Ovop'First) .. Ovop'Pos(Ovop'Last) then
         nov:= Ovop'Val(i);
       else
-        nov:= Entire;
+        nov:= entire;
       end if;
       modified:= t.part /= nov;
       t.part:= nov;
@@ -233,10 +233,10 @@ package body TC.GWin.Object_editing is
     procedure Get_Data
       (Window : in out GWindows.Base.Base_Window_Type'Class)
     is
-      pragma Warnings(off,window);
+      pragma Warnings(off,Window);
       i   : Integer;
     begin
-      if State(qbezier_radio(True))=checked then
+      if State(qbezier_radio(True))=Checked then
         candidate:= 0;
       else
         Focus(pts_box);
@@ -252,7 +252,7 @@ package body TC.GWin.Object_editing is
   begin
     Create_As_Dialog(pan, parent, "\qbezier, \bezier", Width => 320, Height => 140);
     Center(pan);
-    Small_Icon (Pan, "Options_Icon");
+    Small_Icon (pan, "Options_Icon");
     On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
     GWin_Util.Use_GUI_Font(pan);
 
@@ -278,7 +278,7 @@ package body TC.GWin.Object_editing is
 
     Focus(pts_box);
 
-    Show_Dialog_with_Toolbars_off(pan, parent, main, result);
+    Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
 
     case Result is
       when IDOK     => modified:= candidate /= t.num;
@@ -318,7 +318,7 @@ package body TC.GWin.Object_editing is
     procedure Get_Data
       (Window : in out GWindows.Base.Base_Window_Type'Class)
     is
-      pragma Warnings(off,window);
+      pragma Warnings(off,Window);
     begin
       candidate:=
         ( segments => Natural'Value(G2S (pan.Segments_Box.Text)),
@@ -338,16 +338,16 @@ package body TC.GWin.Object_editing is
 
   begin
     loop
-      Create_Full_Dialog(pan, Parent, Msg(param2d_title));
+      Create_Full_Dialog(pan, parent, Msg(param2d_title));
       Center(pan);
-      Small_Icon (Pan, "Options_Icon");
+      Small_Icon (pan, "Options_Icon");
       On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
       Set_Data;
       pan.Segments_Label.Text(Msg(param2d_segments));
       pan.Scale_Label.Text(Msg(param2d_scale));
       pan.IDCANCEL.Text(Msg(mcancel));
 
-      Show_Dialog_with_Toolbars_off(pan, parent, main, result);
+      Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
       case Result is
         when IDOK     =>
           if valid then
@@ -359,7 +359,7 @@ package body TC.GWin.Object_editing is
             end if;
             exit;
           else
-            Message_Box(Parent,
+            Message_Box(parent,
               "Error",
               "Error in data" & NL & "Details:" & NL & S2G (To_String(err))
             );

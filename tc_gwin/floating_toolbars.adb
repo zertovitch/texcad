@@ -9,9 +9,9 @@ with GWindows.GStrings;
 
 -- !! For test: with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
 
-package body Floating_toolbars is
+package body Floating_Toolbars is
 
-   function Correct_bar_width(tb: Floating_toolbar) return Integer is
+   function Correct_bar_width(tb: Floating_Toolbar) return Integer is
      w: Integer;
    begin
      -- Windows' estimation for Toolbar's width can be...
@@ -22,7 +22,7 @@ package body Floating_toolbars is
      return w;
    end Correct_bar_width;
 
-   function Correct_bar_height(tb: Floating_toolbar) return Integer is
+   function Correct_bar_height(tb: Floating_Toolbar) return Integer is
      h: Integer;
    begin
      -- Windows' estimation for Toolbar's width can be...
@@ -33,7 +33,7 @@ package body Floating_toolbars is
      return h;
    end Correct_bar_height;
 
-  procedure Memorize_dimensions(tb: in out Floating_toolbar) is
+  procedure Memorize_dimensions(tb: in out Floating_Toolbar) is
   begin
     tb.window.geom.l:= Left(tb.window);
     tb.window.geom.t:= Top(tb.window);
@@ -43,7 +43,7 @@ package body Floating_toolbars is
     tb.bar.h:= Client_Area_Height(tb.bar);
   end Memorize_dimensions;
 
-  procedure Best_Size (Window : in out Floating_window) is
+  procedure Best_Size (Window : in out Floating_Window) is
   begin
     Client_Area_Size(Window,
       Correct_bar_width(Window.belongs_to.all),
@@ -56,30 +56,30 @@ package body Floating_toolbars is
   -- Overriden methods --
   -----------------------
 
-  procedure On_Size (Window : in out Floating_window;
+  procedure On_Size (Window : in out Floating_Window;
                      Width  : in     Integer;
                      Height : in     Integer) is
     use GWindows.Windows;
   begin
     -- Freeze(Window);
-    On_Size(Window_type(Window),Width,Height); -- Ancestor method
+    On_Size(Window_Type(Window),Width,Height); -- Ancestor method
     Best_Size(Window);
     Dock_Children(Window);
     -- Thaw(Window);
     Redraw(Window);
   end On_Size;
 
-  procedure On_Move (Window : in out Floating_window;
+  procedure On_Move (Window : in out Floating_Window;
                       Left  : in     Integer;
                       Top   : in     Integer) is
     use GWindows.Windows;
   begin
-    On_Move( Window_type(Window), Left=> Left, Top=> Top );
+    On_Move( Window_Type(Window), Left=> Left, Top=> Top );
     -- GW bug until 5-Jan-2012, gnavi rev. 109: On_Move inverted Left & Top !!
     Memorize_dimensions(Window.belongs_to.all);
   end On_Move;
 
-  procedure On_Close (Window    : in out Floating_window;
+  procedure On_Close (Window    : in out Floating_Window;
                       Can_Close :    out Boolean)
   is
   begin
@@ -111,9 +111,9 @@ package body Floating_toolbars is
   -- Change_status --
   -------------------
 
-  procedure Change_status(tb: in out Floating_toolbar; to: Floating_TB_status)
+  procedure Change_status(tb: in out Floating_Toolbar; to: Floating_TB_Status)
   is
-    from: constant Floating_TB_status:= tb.status;
+    from: constant Floating_TB_Status:= tb.status;
   begin
     --   Message_Box("",
     --     "From " &  Floating_TB_status'Image(from) & ASCII.CR &
@@ -146,18 +146,18 @@ package body Floating_toolbars is
     end if;
   end Change_status;
 
-  procedure Rotate_status(tb: in out Floating_toolbar) is
-    ns: Floating_TB_status:= tb.status;
+  procedure Rotate_status(tb: in out Floating_Toolbar) is
+    ns: Floating_TB_Status:= tb.status;
   begin
-    if ns = Floating_TB_status'Last then
-      ns:= Floating_TB_status'First;
+    if ns = Floating_TB_Status'Last then
+      ns:= Floating_TB_Status'First;
     else
-      ns:= Floating_TB_status'Succ(ns);
+      ns:= Floating_TB_Status'Succ(ns);
     end if;
     Change_status(tb,ns);
   end Rotate_status;
 
-  procedure Neutral_resize(Window : in out Floating_window) is
+  procedure Neutral_resize(Window : in out Floating_Window) is
   -- Forces a smart resizing
   begin
     Size(Window, Width(Window), Height(Window));
@@ -168,7 +168,7 @@ package body Floating_toolbars is
   ------------
 
   procedure Create
-   (Control    : in out Floating_toolbar;
+   (Control    : in out Floating_Toolbar;
     Parent     : in out GWindows.Base.Base_Window_Type'Class;
     Title      : in     GWindows.GString;
     Left       : in     Integer;
@@ -179,7 +179,7 @@ package body Floating_toolbars is
     Max_Height : in     Integer;
     Notify     : in     Notify_status_changed_proc)
   is
-    memo: constant Floating_TB_status:= Control.status;
+    memo: constant Floating_TB_Status:= Control.status;
 
     procedure Create_bar(GUI_parent: in out GWindows.Base.Base_Window_Type'Class) is
     begin
@@ -254,5 +254,5 @@ package body Floating_toolbars is
     Change_status(Control, memo);
   end Create;
 
-end Floating_toolbars;
+end Floating_Toolbars;
 

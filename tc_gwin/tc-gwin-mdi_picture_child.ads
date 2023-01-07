@@ -57,7 +57,7 @@ package TC.GWin.MDI_Picture_Child is
         phantom_ls   : Line_settings; -- sometimes /= current_ls (e.g. translation vector)
       end record;
 
-  procedure Subtle_redraw (Window : in out TC_Picture_Panel );
+  procedure Subtle_Redraw (Window : in out TC_Picture_Panel );
 
   procedure On_Paint (Window : in out TC_Picture_Panel;
                       Canvas : in out GWindows.Drawing.Canvas_Type;
@@ -74,11 +74,11 @@ package TC.GWin.MDI_Picture_Child is
         Macro_Name   : GString_Unbounded; -- a macro to be loaded
         --Scroll_Panel : GWindows.Scroll_Panels.Scroll_Panel_Type;
         Draw_Control : TC_Picture_Panel;
-        File_menu,
-        Draw_menu,
-        Line_menu,
-        Edit_menu,
-        View_menu    : Gwindows.Menus.Menu_Type;
+        File_Menu,
+        Draw_Menu,
+        Line_Menu,
+        Edit_Menu,
+        View_Menu    : GWindows.Menus.Menu_Type;
       end record;
 
   procedure On_Horizontal_Scroll
@@ -147,6 +147,6 @@ package TC.GWin.MDI_Picture_Child is
 
   procedure Update_Permanent_Command(Window : in out MDI_Picture_Child_Type);
 
-  procedure Load_macro(Window: in out MDI_Picture_Child_Type);
+  procedure Load_Macro(Window: in out MDI_Picture_Child_Type);
 
 end TC.GWin.MDI_Picture_Child;

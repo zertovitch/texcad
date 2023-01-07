@@ -295,7 +295,7 @@ package body TC.Picking is
       if a.pick_swap_candidate then
         case op is
           when pick | pick_area | pick_all | pick_text =>
-            if op /= pick or else Almost_zero(a.pick_distance - min_dist) then
+            if op /= pick or else Almost_Zero(a.pick_distance - min_dist) then
               a.picked:= True;
               p.picked:= p.picked + 1;
               if hidden( a.art ) then
@@ -305,7 +305,7 @@ package body TC.Picking is
               exit when op = pick_text or op = pick;
             end if;
         when unpick | unpick_area | unpick_all =>
-          if op /= unpick or else Almost_zero(a.pick_distance - min_dist) then
+          if op /= unpick or else Almost_Zero(a.pick_distance - min_dist) then
             a.picked:= False;
             p.picked:= p.picked - 1;
             if hidden( a.art ) then

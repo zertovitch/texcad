@@ -14,7 +14,7 @@ with GWindows.Colors;                   use GWindows.Colors;
 
 with Standard_IDs;                      use Standard_IDs;
 
-with Floating_toolbars;
+with Floating_Toolbars;
 
 pragma Elaborate_All(GWindows.GStrings); -- "To_GString_Unbounded"
 
@@ -29,7 +29,7 @@ package TC.GWin is
   function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
   function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
 
-  type Color_Set is array( Color_zone ) of Color_Type;
+  type Color_Set is array( Color_Zone ) of Color_Type;
 
   color: Color_Set:=
     ( background => White,
@@ -152,14 +152,14 @@ package TC.GWin is
 
   subtype Floating_toolbar_categ is Custom_cmd range TB_Drawing .. TB_Line_settings;
   type FT_memo is record
-    geom: Floating_toolbars.LTWH_Rectangle;
-    stat: Floating_toolbars.Floating_TB_status;
+    geom: Floating_Toolbars.LTWH_Rectangle;
+    stat: Floating_Toolbars.Floating_TB_Status;
   end record;
 
   TC_FT_memo: array(Floating_toolbar_categ) of FT_memo;
   -- ^ Initialized by TC.GWin.Toolbars .
 
   type Floating_toolbar_array is
-    array(Floating_toolbar_categ) of Floating_toolbars.Floating_toolbar;
+    array(Floating_toolbar_categ) of Floating_Toolbars.Floating_Toolbar;
 
 end TC.GWin;

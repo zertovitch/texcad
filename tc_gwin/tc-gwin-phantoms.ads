@@ -4,7 +4,7 @@ package TC.GWin.Phantoms is
 
   procedure Invert_rubber_box(
     w      : in out TC_Picture_Panel;
-    cz     :        Color_zone
+    cz     :        Color_Zone
   );
 
   procedure Invert_phantom( w: in out TC_Picture_Panel );

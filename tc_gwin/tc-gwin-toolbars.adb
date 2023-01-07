@@ -9,7 +9,7 @@ with Interfaces.C;
 
 package body TC.GWin.Toolbars is
 
-  use Floating_toolbars, GWindows.Image_Lists, Interfaces.C;
+  use Floating_Toolbars, GWindows.Image_Lists, Interfaces.C;
 
   procedure Add_Button_with_Tip
     (Control     : in out GUI_toolbar'Class;
@@ -19,7 +19,7 @@ package body TC.GWin.Toolbars is
   is
   begin
     Control.Add_String(Tip);
-    Control.Add_button(Image_Index, Command_ID, Control.string_count);
+    Control.Add_Button(Image_Index, Command_ID, Control.string_count);
     Control.string_count:= Control.string_count + 1;
   end Add_Button_with_Tip;
 
@@ -60,7 +60,7 @@ package body TC.GWin.Toolbars is
   sep_w: constant:= 8;
 
   procedure Init_Main_toolbar(
-    tb    : in out Floating_toolbars.GUI_toolbar'Class;
+    tb    : in out Floating_Toolbars.GUI_toolbar'Class;
     il    : in out GWindows.Image_Lists.Image_List_Type;
     parent: in out GWindows.Base.Base_Window_Type'Class)
   is
@@ -77,8 +77,8 @@ package body TC.GWin.Toolbars is
     -- Attempted TBSTYLE_AUTOSIZE to stop flickering, in vain...
     Set_Extended_Style(tb, TBSTYLE_EX_MIXEDBUTTONS);
 
-    Add_Button_with_Tip (tb,  0, ID_File_New, Msg(fnew));
-    Add_Button_with_Tip (tb,  1, ID_File_Open, Msg(fopen));
+    Add_Button_with_Tip (tb,  0, ID_FILE_NEW, Msg(fnew));
+    Add_Button_with_Tip (tb,  1, ID_FILE_OPEN, Msg(fopen));
     Add_Button_with_Tip (tb,  2, save);
 
     Add_Separator(tb, sep_w);
@@ -106,17 +106,17 @@ package body TC.GWin.Toolbars is
 
     Add_Separator(tb, sep_w);
 
-    Add_Button_with_Tip (tb, 14, ID_App_About, Msg(habout));
+    Add_Button_with_Tip (tb, 14, ID_APP_ABOUT, Msg(habout));
 
   end Init_Main_toolbar;
 
-  procedure Reset_Drawing_toolbar(tb: in out Floating_toolbar) is
+  procedure Reset_Drawing_toolbar(tb: in out Floating_Toolbar) is
   begin
     Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT);
     -- Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST);
     -- Set_Extended_Style(tb.bar, TBSTYLE_EX_MIXEDBUTTONS);
     -- The wrapping with tool tip doesn't work (Windows 7)
-    Dock(tb.bar, Gwindows.Base.At_Top);
+    Dock(tb.bar, GWindows.Base.At_Top);
     Create(tb.images, "Drawing_Toolbar_Bmp", 28);
     Set_Image_List(tb.bar, tb.images);
     -- Order: as in menu.
@@ -131,13 +131,13 @@ package body TC.GWin.Toolbars is
     end loop;
   end Reset_Drawing_toolbar;
 
-  procedure Reset_Line_toolbar(tb: in out Floating_toolbar) is
+  procedure Reset_Line_toolbar(tb: in out Floating_Toolbar) is
   begin
     Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT);
     -- Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST);
     -- Set_Extended_Style(tb.bar, TBSTYLE_EX_MIXEDBUTTONS);
     -- The wrapping with tool tip doesn't work (Windows 7)
-    Dock(tb.bar, Gwindows.Base.At_Top);
+    Dock(tb.bar, GWindows.Base.At_Top);
     Create(tb.images, "Line_Toolbar_Bmp", 56);
     Set_Image_List(tb.bar, tb.images);
     -- Order: as in menu.
@@ -152,7 +152,7 @@ package body TC.GWin.Toolbars is
     end loop;
   end Reset_Line_toolbar;
 
-  procedure Notify_any_toolbar(tb: in Floating_toolbar) is
+  procedure Notify_any_toolbar(tb: in Floating_Toolbar) is
     use TC.GWin.MDI_Main;
   begin
     if tb.parent.all in MDI_Main_Type'Class then
@@ -178,7 +178,7 @@ package body TC.GWin.Toolbars is
 
   begin
     for cat in tbs'Range loop
-      Create(tbs(cat), parent, Filter_Amp(Msg(title(cat))),
+      Create(tbs(cat), parent, Filter_amp(Msg(title(cat))),
         TC_FT_memo(cat).geom.l,
         TC_FT_memo(cat).geom.t,
         TC_FT_memo(cat).geom.w,
@@ -195,7 +195,7 @@ package body TC.GWin.Toolbars is
     end loop;
   end Init_Floating_toolbars;
 
-  default_stat: Floating_TB_status;
+  default_stat: Floating_TB_Status;
 
 begin
   if Windows_95 then

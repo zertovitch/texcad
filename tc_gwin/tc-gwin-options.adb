@@ -65,7 +65,7 @@ package body TC.GWin.Options is
       end loop;
       Unregister( user_key_name, HKEY_USERS );
     exception
-      when Registry_Error => raise Clear_failed;
+      when REGISTRY_ERROR => raise Clear_failed;
     end Clear_for_one_user;
 
     list: constant Key_Name_Array:= Get_Sub_Keys ("", HKEY_USERS);
@@ -82,7 +82,7 @@ package body TC.GWin.Options is
           Clear_for_one_user(user_tc);
         end;
       exception
-        when Registry_Error => null; -- None of ours keys for that user
+        when REGISTRY_ERROR => null; -- None of ours keys for that user
       end;
     end loop;
   end Clear;
@@ -95,10 +95,10 @@ package body TC.GWin.Options is
     o: General_Options renames TC.gen_opt;
     p: Picture_Options renames o.options_for_new;
   begin
-    for k in key loop
+    for k in Key loop
       begin
         declare
-          ks: constant GString := S2G (key'Image(k));
+          ks: constant GString := S2G (Key'Image(k));
           s : constant String  := G2S (Get_Value( kname, ks, HKEY_CURRENT_USER ));
         begin
           case k is
@@ -123,8 +123,8 @@ package body TC.GWin.Options is
                 o.mac_suff:= To_Unbounded_String(s);
               end if;
             when lng  => o.lang:= TC.Language'Value(s);
-            when grid => o.grid:= TC.Grid_display'Value(s);
-            when bez  => o.solid_bez:= TC.Solid_Bezier_points_mode'Value(s);
+            when grid => o.grid:= TC.Grid_Display'Value(s);
+            when bez  => o.solid_bez:= TC.Solid_Bezier_Points_Mode'Value(s);
             when preview_latex_version =>
               o.preview_mode:= LaTeX_version'Value(s);
             when preview_insert =>
@@ -180,18 +180,18 @@ package body TC.GWin.Options is
                   when 'T' => TC_FT_memo(cat).geom.t:= Integer'Value(s);
                   when 'W' => TC_FT_memo(cat).geom.w:= Integer'Value(s);
                   when 'H' => TC_FT_memo(cat).geom.h:= Integer'Value(s);
-                  when 'S' => TC_FT_memo(cat).stat:= Floating_toolbars.Floating_TB_status'Value(s);
+                  when 'S' => TC_FT_memo(cat).stat:= Floating_Toolbars.Floating_TB_Status'Value(s);
                   when others => null; -- Should not happen !
                 end case;
               end;
             when mru1..mru9 => mru( Key'Pos(k)-Key'Pos(mru1)+1 ):= To_GString_Unbounded(S2G(s));
             when Colors   => color(
-                               Color_zone'Val(Key'Pos(k)-Key'Pos(Colors'First))
+                               Color_Zone'Val(Key'Pos(k)-Key'Pos(Colors'First))
                              ):= Color_Type'Value(s);
           end case;
         end;
       exception
-        when Registry_Error => null; -- This key is missing
+        when REGISTRY_ERROR => null; -- This key is missing
         when others         => null; -- Data_Error or something else
       end;
     end loop;
@@ -208,14 +208,14 @@ package body TC.GWin.Options is
 
     procedure R( v: String ) is
     begin
-      Register( kname, S2G (key'Image(zekey)), S2G (v), HKEY_CURRENT_USER );
+      Register( kname, S2G (Key'Image(zekey)), S2G (v), HKEY_CURRENT_USER );
     end R;
 
   begin
     for k in Key loop
       zekey:= k;
       declare
-        ks: constant String:= key'Image(k);
+        ks: constant String:= Key'Image(k);
       begin
         case k is
           when pic  => R( To_String(o.tex_suff) );
@@ -223,8 +223,8 @@ package body TC.GWin.Options is
           when bak_active => R( Boolean'Image(o.bak_enabled) );
           when mac  => R( To_String(o.mac_suff) );
           when lng  => R( TC.Language'Image(o.lang) );
-          when grid => R( TC.Grid_display'Image(o.grid) );
-          when bez  => R( TC.Solid_Bezier_points_mode'Image(o.solid_bez) );
+          when grid => R( TC.Grid_Display'Image(o.grid) );
+          when bez  => R( TC.Solid_Bezier_Points_Mode'Image(o.solid_bez) );
           when preview_latex_version =>
                        R( LaTeX_version'Image(o.preview_mode) );
           when preview_insert =>
@@ -264,19 +264,19 @@ package body TC.GWin.Options is
                 when 'T' => R( Integer'Image(TC_FT_memo(cat).geom.t) );
                 when 'W' => R( Integer'Image(TC_FT_memo(cat).geom.w) );
                 when 'H' => R( Integer'Image(TC_FT_memo(cat).geom.h) );
-                when 'S' => R( Floating_toolbars.Floating_TB_status'Image(TC_FT_memo(cat).stat) );
+                when 'S' => R( Floating_Toolbars.Floating_TB_Status'Image(TC_FT_memo(cat).stat) );
                 when others => null; -- Should not happen !
               end case;
             end;
           when mru1..mru9 =>
             R(
               GWindows.GStrings.To_String (
-                To_GString_from_Unbounded(mru( Key'Pos(k)-Key'Pos(mru1)+1 ))
+                To_GString_From_Unbounded(mru( Key'Pos(k)-Key'Pos(mru1)+1 ))
               )
             );
           when Colors   =>
             R( Color_Type'Image(
-                 color(Color_zone'Val(Key'Pos(k)-Key'Pos(Colors'First)))
+                 color(Color_Zone'Val(Key'Pos(k)-Key'Pos(Colors'First)))
                )
             );
         end case;

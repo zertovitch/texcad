@@ -16,16 +16,16 @@ package body TC.GWin.Display is
   -- Ressources shared by all windows, to be renewed as few as possible
   -- due to brush / pen leak in Windows 95/98/ME.
 
-  brush, hatch: array( Color_zone ) of Brush_Type;
-  pen         : array( Color_zone ) of Pen_Type;
+  brush, hatch: array( Color_Zone ) of Brush_Type;
+  pen         : array( Color_Zone ) of Pen_Type;
   GUI_Font    : Font_Type;
 
   -- Conversions from TC.Graphics styles to GWindows.Drawing styles :
 
-  h_align: constant array(H_justify) of Horizontal_Alignment_Type:=
+  h_align: constant array(H_Justify) of Horizontal_Alignment_Type:=
     (Left,Center,Right);
 
-  v_align: constant array(V_justify) of Vertical_Alignment_Type:=
+  v_align: constant array(V_Justify) of Vertical_Alignment_Type:=
     (Top,Base_Line,Bottom);
 
   procedure Draw(
@@ -36,7 +36,7 @@ package body TC.GWin.Display is
     height : Integer)
   is
     current_color    : Color_Type;
-    current_zone     : TC.Graphics.Color_zone:= normal;
+    current_zone     : TC.Graphics.Color_Zone:= normal;
 
     whole_picture: constant Boolean:= an_obj = null;
 
@@ -48,7 +48,7 @@ package body TC.GWin.Display is
         brush( background ) );
     end ClearScreen;
 
-    procedure SetColor( zone: TC.Graphics.Color_zone ) is
+    procedure SetColor( zone: TC.Graphics.Color_Zone ) is
     begin
       if whole_picture then
         current_zone:= zone;
@@ -111,7 +111,7 @@ package body TC.GWin.Display is
           );
     end Arc;
 
-    procedure SetTextJustify( h: H_justify; v: V_justify ) is
+    procedure SetTextJustify( h: H_Justify; v: V_Justify ) is
     begin
       Horizontal_Text_Alignment( Canvas, h_align(h) );
       Vertical_Text_Alignment  ( Canvas, v_align(v) );
@@ -147,7 +147,7 @@ package body TC.GWin.Display is
       Set_Mix_Mode(Canvas,R2_COPYPEN);
 
       if recreate_drawing_objects then
-        for z in Color_zone loop
+        for z in Color_Zone loop
           Create_Solid_Brush( brush(z), color(z) );
           if Windows_95 then
             -- Windows 95 has a bug that makes the hatch
@@ -157,7 +157,7 @@ package body TC.GWin.Display is
             Create_Hatch_Brush( hatch(z), Diagonal_Cross, color(z) );
           end if;
         end loop;
-        for z in Color_zone loop
+        for z in Color_Zone loop
           Create_Pen( pen(z), Solid, 1, color(z) );
         end loop;
         recreate_drawing_objects:= False;

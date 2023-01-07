@@ -19,8 +19,8 @@ with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
 
 package body TC.GWin.Options_Dialogs is
 
-  type Color_button is new Gwindows.Buttons.Button_Type with record
-    z: Color_zone;
+  type Color_Button is new GWindows.Buttons.Button_Type with record
+    z: Color_Zone;
   end record;
 
   ------------------------------
@@ -74,7 +74,7 @@ package body TC.GWin.Options_Dialogs is
     redraw_again             : Boolean  := False;
 
     qbez_group : Group_Box_Type;
-    q_radio    : array(Solid_Bezier_points_mode) of Radio_Button_Type;
+    q_radio    : array(Solid_Bezier_Points_Mode) of Radio_Button_Type;
 
     preview_group : Group_Box_Type;
     preview_radio : array(LaTeX_version) of Radio_Button_Type;
@@ -91,23 +91,23 @@ package body TC.GWin.Options_Dialogs is
 
     original  : constant TC.General_Options := gen_opt;
     candidate :          TC.General_Options := original;
-    orig_col  : constant TC.GWin.Color_set  := color;
+    orig_col  : constant TC.GWin.Color_Set  := color;
 
-    procedure Get_Data ( pnl : in out Gwindows.Base.Base_Window_Type'Class ) is
+    procedure Get_Data ( pnl : in out GWindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off,pnl);
     begin
-      Candidate.tex_suff:= To_Unbounded_String(G2S (Text(d_tex_suff)));
-      Candidate.mac_suff:= To_Unbounded_String(G2S (Text(d_mac_suff)));
-      Candidate.bak_suff:= To_Unbounded_String(G2S (Text(bak_check_box.edit_box)));
+      candidate.tex_suff:= To_Unbounded_String(G2S (Text(D_tex_suff)));
+      candidate.mac_suff:= To_Unbounded_String(G2S (Text(D_mac_suff)));
+      candidate.bak_suff:= To_Unbounded_String(G2S (Text(bak_check_box.edit_box)));
       candidate.bak_enabled:= State(bak_check_box) = Checked;
       for L in Language loop
-        if Text(Lang) = Language_Rich_Image(L) then
-          candidate.lang:= l;
+        if Text(Lang) = Language_rich_image(L) then
+          candidate.lang:= L;
           exit;
         end if;
       end loop;
       for g in Grid_Display loop
-        if State(g_radio(g))=checked then
+        if State(g_radio(g))=Checked then
           if candidate.grid /= g then
             gen_opt.grid:= g;
             -- ^ On change aussi les options pour faire joli,
@@ -118,18 +118,18 @@ package body TC.GWin.Options_Dialogs is
           end if;
         end if;
       end loop;
-      for q in Solid_Bezier_points_mode loop
-        if State(q_radio(q))=checked then
+      for q in Solid_Bezier_Points_Mode loop
+        if State(q_radio(q))=Checked then
           candidate.solid_bez:= q;
         end if;
       end loop;
       for l in LaTeX_version loop
-        if State(preview_radio(l))=checked then
+        if State(preview_radio(l))=Checked then
           candidate.preview_mode:= l;
         end if;
       end loop;
       for d in Preview_directory_choice loop
-        if State(preview_dir_radio(d))=checked then
+        if State(preview_dir_radio(d))=Checked then
           candidate.preview_directory:= d;
         end if;
       end loop;
@@ -141,23 +141,23 @@ package body TC.GWin.Options_Dialogs is
           OK_Box, Error_Icon);
     end Get_Data;
 
-    procedure Do_Display (btn : in out Gwindows.Base.Base_Window_Type'Class)
+    procedure Do_Display (btn : in out GWindows.Base.Base_Window_Type'Class)
     is
       modified: Boolean; -- dumped since not related to a specific picture
     begin
       On_Picture_Options(
-        btn, Candidate.Options_For_New,
-        window,
+        btn, candidate.options_for_new,
+        Window,
         modified,
         G2S (Msg(onewpicopt)));
     end Do_Display;
 
-    col_btn: array(Color_zone) of Color_button;
+    col_btn: array(Color_Zone) of Color_Button;
 
-    procedure CColor (btn : in out Gwindows.Base.Base_Window_Type'Class ) is
+    procedure CColor (btn : in out GWindows.Base.Base_Window_Type'Class ) is
       c : Color_Type;
       ok: Boolean;
-      z : Color_zone;
+      z : Color_Zone;
     begin
       z:= Color_Button(btn).z;
       c:= color(z);
@@ -176,9 +176,9 @@ package body TC.GWin.Options_Dialogs is
     Small_Icon (Pan, "Options_Icon");
     On_Destroy_Handler (Pan, Get_Data'Unrestricted_Access);
 
-    GWin_Util.Use_Gui_Font(Pan);
+    GWin_Util.Use_GUI_Font(Pan);
 
-    Tabbing.Create(pan);
+    Tabbing.Create(Pan);
 
     -- Misc tab / Suffix group --
     y:= y0;
@@ -186,27 +186,27 @@ package body TC.GWin.Options_Dialogs is
       5,   y, wmax-5, 95);
 
     y:= y + 20;
-    Create_Label (Tabbing.tab(gen_opt_tab_miscellaneous), Msg(Ltx_Pic),
+    Create_Label (Tabbing.tab(gen_opt_tab_miscellaneous), Msg(ltx_pic),
       45,  y, 250, 20);
-    Create (D_Tex_Suff, Tabbing.tab(gen_opt_tab_miscellaneous),
-      S2G (To_String (Candidate.Tex_Suff)),
+    Create (D_tex_suff, Tabbing.tab(gen_opt_tab_miscellaneous),
+      S2G (To_String (candidate.tex_suff)),
      300,  y, 50, 20);
 
     y:= y + 25;
-    Create(bak_check_box.label, Tabbing.tab(gen_opt_tab_miscellaneous), Msg(Ltx_Pic_bak),
+    Create(bak_check_box.label, Tabbing.tab(gen_opt_tab_miscellaneous), Msg(ltx_pic_bak),
       45,  y, 250, 20);
     Create(bak_check_box.edit_box, Tabbing.tab(gen_opt_tab_miscellaneous),
-      S2G (To_String (Candidate.bak_suff)),
+      S2G (To_String (candidate.bak_suff)),
      300,  y, 50, 20);
     Create(bak_check_box,Tabbing.tab(gen_opt_tab_miscellaneous), "",
       25,  y,  15, 15);
     State(bak_check_box, boolean_to_state(candidate.bak_enabled));
 
     y:= y + 25;
-    Create_Label (Tabbing.tab(gen_opt_tab_miscellaneous), Msg(Tcd_Mac),
+    Create_Label (Tabbing.tab(gen_opt_tab_miscellaneous), Msg(tcd_mac),
       45,  y, 250, 20);
-    Create (D_Mac_Suff, Tabbing.tab(gen_opt_tab_miscellaneous),
-      S2G (To_String (Candidate.Mac_Suff)),
+    Create (D_mac_suff, Tabbing.tab(gen_opt_tab_miscellaneous),
+      S2G (To_String (candidate.mac_suff)),
      300,  y, 50, 20);
 
     -- Misc tab / Preview directory group
@@ -228,9 +228,9 @@ package body TC.GWin.Options_Dialogs is
     Create( Lang, Tabbing.tab(gen_opt_tab_miscellaneous),
      140,  y, 150, 200, Sort => False, Is_Dynamic => False);
     for L in Language loop
-      Add( Lang, Language_Rich_Image(L) );
+      Add( Lang, Language_rich_image(L) );
     end loop;
-    Text(lang, Language_Rich_Image(candidate.lang));
+    Text(Lang, Language_rich_image(candidate.lang));
 
     y:= y + 35;
     Create (New_Pic_Opt, Tabbing.tab(gen_opt_tab_miscellaneous), "&" & Msg(onewpicopt),
@@ -239,14 +239,14 @@ package body TC.GWin.Options_Dialogs is
 
     -- Display tab / Colours
     y:= y0;
-    yy:= 30 * (2+Color_zone'Pos(Color_zone'Last));
+    yy:= 30 * (2+Color_Zone'Pos(Color_Zone'Last));
     Create( color_group, Tabbing.tab(gen_opt_tab_display), Msg(gcolors), 5,   y, wmax-5, yy );
 
-    for z in Color_zone loop
-      i:= y + 30 * (Color_zone'Pos(z)+1);
+    for z in Color_Zone loop
+      i:= y + 30 * (Color_Zone'Pos(z)+1);
       Create_Label(
         Tabbing.tab(gen_opt_tab_display),
-        Msg(Message'Val(Message'Pos(background)+Color_zone'Pos(z))),
+        Msg(Message'Val(Message'Pos(background)+Color_Zone'Pos(z))),
         25, i, 125, 25);
       Create (col_btn(z), Tabbing.tab(gen_opt_tab_display), Msg(choose), 190, i, 90, 22);
       On_Click_Handler (col_btn(z), CColor'Unrestricted_Access);
@@ -260,7 +260,7 @@ package body TC.GWin.Options_Dialogs is
     for g in Grid_Display loop
       x:= 20 + 100* Grid_Display'Pos(g);
       Create_Label (Tabbing.tab(gen_opt_tab_display),
-        Msg(message'Val(message'Pos(gridnone)+Grid_Display'Pos(g))),
+        Msg(Message'Val(Message'Pos(gridnone)+Grid_Display'Pos(g))),
         x,  y+40, 100, 22);
       Create(g_radio(g),Tabbing.tab(gen_opt_tab_display), "",  x,  y+20,  60, 15);
       On_Click_Handler(g_radio(g),Get_Data'Unrestricted_Access);
@@ -271,10 +271,10 @@ package body TC.GWin.Options_Dialogs is
     y:= y0;
     yy:= 65;
     Create(qbez_group, Tabbing.tab(gen_opt_tab_latex), Msg(bezpts), 5, y, wmax-5, yy);
-    for q in Solid_Bezier_points_mode loop
-      x:= 10 + 180* Solid_Bezier_points_mode'Pos(q);
+    for q in Solid_Bezier_Points_Mode loop
+      x:= 10 + 180* Solid_Bezier_Points_Mode'Pos(q);
       Create_Label (Tabbing.tab(gen_opt_tab_latex),
-        Msg(message'Val(message'Pos(bezauto)+Solid_Bezier_points_mode'Pos(q))),
+        Msg(Message'Val(Message'Pos(bezauto)+Solid_Bezier_Points_Mode'Pos(q))),
         x,  y+40, 175, 22);
       Create(q_radio(q),Tabbing.tab(gen_opt_tab_latex), "",  x,  y+20,  60, 15);
       State(q_radio(q),boolean_to_state(q=candidate.solid_bez));
@@ -294,14 +294,14 @@ package body TC.GWin.Options_Dialogs is
     TC.GWin.MDI_Main.Show_Dialog_with_Toolbars_off(Pan, Window, Window, Result);
 
     case Result is
-      when Idok     =>
-        if Candidate.Lang /= Gen_Opt.Lang then
-          Gwindows.Message_Boxes.Message_Box
+      when IDOK     =>
+        if candidate.lang /= gen_opt.lang then
+          GWindows.Message_Boxes.Message_Box
             ( Window,
-              Speak(Gen_Opt.Lang,lng_chg) & " - " &
-              Speak(Candidate.Lang,lng_chg) ,
-              Speak(Gen_Opt.Lang,fx_restrt) & NL &
-              Speak(Candidate.Lang,fx_restrt),
+              Speak(gen_opt.lang,lng_chg) & " - " &
+              Speak(candidate.lang,lng_chg) ,
+              Speak(gen_opt.lang,fx_restrt) & NL &
+              Speak(candidate.lang,fx_restrt),
               Icon => Information_Icon
             );
         end if;
@@ -325,7 +325,7 @@ package body TC.GWin.Options_Dialogs is
 
   procedure On_Picture_Options
      (window  : in out GWindows.Base.Base_Window_Type'Class;
-      pic_opt : in out TC.Picture_options;
+      pic_opt : in out TC.Picture_Options;
       main    : in out TC.GWin.MDI_Main.MDI_Main_Type;
       modified:    out Boolean;
       title   : String )
@@ -372,15 +372,15 @@ package body TC.GWin.Options_Dialogs is
        (Window : in out GWindows.Base.Base_Window_Type'Class)
      is
      begin
-       candidate.snapping:= State(snap)=checked;
+       candidate.snapping:= State(snap)=Checked;
        candidate.snap_asp:= Integer'Value(G2S (Text(snap_asp)));
        candidate.zoom_fac:= TC.Real'Value(G2S (Text(zoom)));
        candidate.quality := TC.Real'Value(G2S (Text(quality)));
-       candidate.reduce  := State(reduce)=checked;
-       candidate.steigung:= State(any_slope)=checked;
+       candidate.reduce  := State(reduce)=Checked;
+       candidate.steigung:= State(any_slope)=Checked;
        candidate.stdiff  := TC.Real'Value(G2S (Text(stdiff)));
        for s in sty_box'Range loop
-         candidate.sty(s):= State(sty_box(s)) = checked;
+         candidate.sty(s):= State(sty_box(s)) = Checked;
        end loop;
        --
        candidate.unitlength:= To_Unbounded_String(G2S (Text(ul)));
@@ -397,11 +397,11 @@ package body TC.GWin.Options_Dialogs is
      end Get_Data;
 
   begin
-    Create_As_Dialog(pan, Window, S2G (title), Width => wmax + 50, Height => 330);
+    Create_As_Dialog(pan, window, S2G (title), Width => wmax + 50, Height => 330);
     -- Fix_Dialog(pan); -- 2007. No effect, alas...
     -- [Rem. 2020: Fix_Dialog was setting WS_EX_DLGMODALFRAME, no idea what the problem was.]
     Center(pan);
-    Small_Icon (Pan, "Options_Icon");
+    Small_Icon (pan, "Options_Icon");
     On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
 
     GWin_Util.Use_GUI_Font(pan);
@@ -431,31 +431,31 @@ package body TC.GWin.Options_Dialogs is
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(slopetol),
        20, 120, 155, 20);
     Put(dum_str,candidate.stdiff,4,0);
-    Create (stdiff, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
+    Create (stdiff, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,Left)),
       175, 120,  40, 20);
 
     Put(dum_str,candidate.zoom_fac,4,0);
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(zoom_fac),
         5, 160, 165, 20);
-    Create (zoom, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
+    Create (zoom, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,Left)),
       180, 160,  40, 20);
 
     Put(dum_str,candidate.quality,4,0);
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(qualcirc),
         5, 180, 165, 20);
-    Create (quality, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
+    Create (quality, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,Left)),
       180, 180,  40, 20);
 
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(origin),
         5, 200, 125, 20);
     Put(dum_str,candidate.P0.x,4,0);
-    Create (origx, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
+    Create (origx, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,Left)),
       130, 200,  40, 20);
     Put(dum_str,candidate.P0.y,4,0);
-    Create (origy, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,left)),
+    Create (origy, Tabbing.tab(pic_opt_tab_drawing), S2G (Trim(dum_str,Left)),
       180, 200,  40, 20);
 
-    Create(snap_group, Tabbing.tab(pic_opt_tab_drawing), Msg(Snapping),
+    Create(snap_group, Tabbing.tab(pic_opt_tab_drawing), Msg(snapping),
       235,  10, 200, 65);
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(activated),
       250,  30,  90, 20);
@@ -465,7 +465,7 @@ package body TC.GWin.Options_Dialogs is
     Create_Label (Tabbing.tab(pic_opt_tab_drawing),  Msg(stepping),
       250,  50,  90, 20);
     Create (snap_asp, Tabbing.tab(pic_opt_tab_drawing),
-      S2G (Trim(Integer'Image(candidate.snap_asp),left)),
+      S2G (Trim(Integer'Image(candidate.snap_asp),Left)),
       350,  50,  30, 20);
 
     Create(slope_group, Tabbing.tab(pic_opt_tab_drawing), Msg(slopes),
@@ -506,7 +506,7 @@ package body TC.GWin.Options_Dialogs is
       compat_x, y + 25, wmax, 80
     );
 
-    TC.GWin.MDI_Main.Show_Dialog_with_Toolbars_off(pan, window, main, result);
+    TC.GWin.MDI_Main.Show_Dialog_with_Toolbars_off(pan, window, main, Result);
 
     case Result is
       when IDOK     =>

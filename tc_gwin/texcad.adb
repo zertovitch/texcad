@@ -8,22 +8,21 @@
 ------------------------------------------------------
 --  17-Feb-2003, GdM
 
-with TC.GWin.MDI_Main;                  use TC.GWin.MDI_Main;
-with TC.GWin.Options;
+with TC.GWin.MDI_Main,
+     TC.GWin.Options;
 
-with GWindows;                          use GWindows;
-with GWindows.Base;
-with GWindows.Application;              use GWindows.Application;
-with GWindows.GStrings;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.GStrings,
+     GWindows.Message_Boxes;
 
-with GWin_Util;                         use GWin_Util;
+with GWin_Util;
 
-with Ada.Calendar;                      use Ada.Calendar;
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
-with Ada.Command_Line;                  use Ada.Command_Line;
-with Ada.Exceptions;
-with Ada.Text_IO;                       use Ada.Text_IO;
+with Ada.Calendar,
+     Ada.Characters.Handling,
+     Ada.Command_Line,
+     Ada.Exceptions,
+     Ada.Text_IO;
 
 with GNAT.Traceback.Symbolic;
 
@@ -32,6 +31,7 @@ procedure TeXCAD is
   Top: TC.GWin.MDI_Main.MDI_Main_Type;
 
   function Time_id return String is
+    use Ada.Calendar;
     T     : constant Time:= Clock;
     x, sc : Natural;
 
@@ -61,11 +61,14 @@ procedure TeXCAD is
 
   end Time_id;
 
+  use GWindows.Message_Boxes, GWin_Util;
+
   procedure Interactive_crash(
     Window : in out GWindows.Base.Base_Window_Type'Class;
     E: Ada.Exceptions.Exception_Occurrence)
   is
     pragma Unreferenced (Window);
+    use Ada.Text_IO, GWindows;
     small_insult: constant GString:=
         S2G (Ada.Exceptions.Exception_Name (E)) & NL &
         S2G (Ada.Exceptions.Exception_Message (E));
@@ -120,7 +123,9 @@ procedure TeXCAD is
     end case;
   end Interactive_crash;
 
-  uninst: constant GString:= "Uninstall TeXCAD";
+  uninst: constant GWindows.GString:= "Uninstall TeXCAD";
+
+  use Ada.Characters.Handling, Ada.Command_Line;
 
 begin
   if Argument_Count=1 and then To_Upper(Argument(1))="/UNINSTALL" then
@@ -134,9 +139,10 @@ begin
       Message_Box(uninst,"Options cleared. You can remove TeXCAD.exe");
     end if;
   else
-    Create_MDI_Top (Top, "TeXCAD");
     GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-    Message_Loop;
+    Top.Create_MDI_Top ("TeXCAD");
+    Top.Focus;
+    GWindows.Application.Message_Loop;
   end if;
 exception
   when TC.GWin.Options.Clear_failed =>

@@ -122,7 +122,7 @@ package body TC.Display is
     PutPoint( x,y );
   end PlotPoint;
 
-  angle_vect: constant Real:= pi - 0.25;
+  angle_vect: constant Real:= Pi - 0.25;
   cos_angle_vect: constant Real:= Cos(angle_vect);
   sin_angle_vect: constant Real:= Sin(angle_vect);
 
@@ -137,8 +137,8 @@ package body TC.Display is
     f_shrink: constant:= 1.0/16.0;
   begin
     luv:= Sqrt(Real(u*u+v*v));
-    if Almost_zero(luv * f_shrink) then
-      Ellipse(a,b, 3,3, Fill=> False);
+    if Almost_Zero(luv * f_shrink) then
+      Ellipse(a,b, 3,3, fill=> False);
     else
       iv_luv:= 1.0 / luv;
       un:= iv_luv * Real(u);
@@ -236,7 +236,7 @@ package body TC.Display is
     sx,sy: Integer;
   begin
     Trans(o.P1, sx,sy);
-    Ellipse(sx,sy,Integer(h_mag*o.rad+0.5),Integer(v_mag*o.rad+0.5), Fill=> o.art=disc);
+    Ellipse(sx,sy,Integer(h_mag*o.rad+0.5),Integer(v_mag*o.rad+0.5), fill=> o.art=disc);
   end Draw_circ;
 
   procedure Draw_oval(o: Obj_type) is  --  GH
@@ -256,45 +256,45 @@ package body TC.Display is
     Trans( o.LL + 0.5 * o.osize, xp,yp );
     case o.part is
       when entire =>
-        line(x2,y1,x3,y1);
-        line(x4,y2,x4,y3);
-        line(x3,y4,x2,y4);
-        line(x1,y3,x1,y2);
-        arc(x2,y2,180,270,arc_rad);
-        arc(x3,y2,270,360,arc_rad);
-        arc(x3,y3,0,90,arc_rad);
-        arc(x2,y3,90,180,arc_rad);
+        Line(x2,y1,x3,y1);
+        Line(x4,y2,x4,y3);
+        Line(x3,y4,x2,y4);
+        Line(x1,y3,x1,y2);
+        Arc(x2,y2,180,270,arc_rad);
+        Arc(x3,y2,270,360,arc_rad);
+        Arc(x3,y3,0,90,arc_rad);
+        Arc(x2,y3,90,180,arc_rad);
       when L =>
-        line(x2,y1,xp,y1); line(xp,y4,x2,y4); line(x1,y3,x1,y2);
-        arc(x2,y2,180,270,arc_rad); arc(x2,y3,90,180,arc_rad);
+        Line(x2,y1,xp,y1); Line(xp,y4,x2,y4); Line(x1,y3,x1,y2);
+        Arc(x2,y2,180,270,arc_rad); Arc(x2,y3,90,180,arc_rad);
 
       when R =>
-        line(xp,y1,x3,y1); line(x4,y2,x4,y3); line(x3,y4,xp,y4);
-        arc(x3,y2,270,360,arc_rad); arc(x3,y3,0,90,arc_rad);
+        Line(xp,y1,x3,y1); Line(x4,y2,x4,y3); Line(x3,y4,xp,y4);
+        Arc(x3,y2,270,360,arc_rad); Arc(x3,y3,0,90,arc_rad);
 
       when T =>
-        line(x4,yp,x4,y3); line(x3,y4,x2,y4); line(x1,y3,x1,yp);
-        arc(x3,y3,0,90,arc_rad); arc(x2,y3,90,180,arc_rad);
+        Line(x4,yp,x4,y3); Line(x3,y4,x2,y4); Line(x1,y3,x1,yp);
+        Arc(x3,y3,0,90,arc_rad); Arc(x2,y3,90,180,arc_rad);
 
       when B =>
-        line(x2,y1,x3,y1); line(x4,y2,x4,yp); line(x1,yp,x1,y2);
-        arc(x2,y2,180,270,arc_rad); arc(x3,y2,270,360,arc_rad);
+        Line(x2,y1,x3,y1); Line(x4,y2,x4,yp); Line(x1,yp,x1,y2);
+        Arc(x2,y2,180,270,arc_rad); Arc(x3,y2,270,360,arc_rad);
 
       when LT =>
-        line(xp,y4,x2,y4); line(x1,y3,x1,yp);
-        arc(x2,y3,90,180,arc_rad);
+        Line(xp,y4,x2,y4); Line(x1,y3,x1,yp);
+        Arc(x2,y3,90,180,arc_rad);
 
       when LB =>
-        line(x2,y1,xp,y1); line(x1,yp,x1,y2);
-        arc(x2,y2,180,270,arc_rad);
+        Line(x2,y1,xp,y1); Line(x1,yp,x1,y2);
+        Arc(x2,y2,180,270,arc_rad);
 
       when RT =>
-        line(x4,yp,x4,y3); line(x3,y4,xp,y4);
-        arc(x3,y3,0,90,arc_rad);
+        Line(x4,yp,x4,y3); Line(x3,y4,xp,y4);
+        Arc(x3,y3,0,90,arc_rad);
 
       when RB =>
-        line(xp,y1,x3,y1); line(x4,y2,x4,yp);
-        arc(x3,y2,270,360,arc_rad);
+        Line(xp,y1,x3,y1); Line(x4,y2,x4,yp);
+        Arc(x3,y2,270,360,arc_rad);
 
     end case;
   end Draw_oval;
@@ -344,7 +344,7 @@ package body TC.Display is
   procedure Bezier_and_arrows(o: Obj_type) is
     x,y: Integer;
   begin
-    Draw_bezier(o, ulpt);
+    Draw_Bezier(o, ulpt);
     case o.ls.arrows is
       when no_arrow =>
         null;
@@ -418,7 +418,7 @@ package body TC.Display is
     end case;
   end Shadow;
 
-  pick_to_zone: constant array( Boolean ) of Color_zone:=
+  pick_to_zone: constant array( Boolean ) of Color_Zone:=
     (False=> normal, True=> picked);
 
   procedure Draw (o: Obj_type) is
@@ -443,7 +443,7 @@ package body TC.Display is
     if p.refresh = no then return; end if;
     -- ^ NB: for performance sake, it is a good idea to treat that case
     -- as soon as possible (before calling Draw or instantiating TC.display)
-    Set_origin( p.opt.P0 );
+    Set_Origin( p.opt.P0 );
     Set_ul( p.ul_in_pt );
     if p.refresh = full then
       -- Rulers; -- !!

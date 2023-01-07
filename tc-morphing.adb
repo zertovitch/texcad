@@ -37,12 +37,12 @@ package body TC.Morphing is
 
   function Text_align_to_oval_corner(o: Obj_type) return Ovop is
     use TC.Graphics;
-    conv: constant array( H_justify, V_justify ) of Ovop :=
+    conv: constant array( H_Justify, V_Justify ) of Ovop :=
       ( lefttext   => (toptext => LT, centertext => L,      bottomtext => LB),
         centertext => (toptext =>  T, centertext => entire, bottomtext =>  B),
         righttext  => (toptext => RT, centertext => R,      bottomtext => RB) );
-    h: H_justify;
-    v: V_justify;
+    h: H_Justify;
+    v: V_Justify;
   begin
     Values( o.adjust(1..o.adjust_len), h, v );
     return conv( h,v );
@@ -364,7 +364,7 @@ package body TC.Morphing is
   -- 28-May-2003 -- Affine transformation where Diag.x and Diag.y are >= 0
   procedure Affine_positive( o: in out Obj_type; Center, Diag: Point; pt_scale: Real ) is
     D1: constant Point:= (1.0,1.0) - Diag;
-    is_an_homothethy: constant Boolean:= Almost_zero( Diag.y - Diag.x );
+    is_an_homothethy: constant Boolean:= Almost_Zero( Diag.y - Diag.x );
 
     procedure Move( P: in out Point ) is
     begin

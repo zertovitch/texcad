@@ -245,14 +245,14 @@ package body TC.Output is
     begin
       if pic.opt.sty(epic) then
         if last_command.k = cdrawline
-          and then Almost_zero(Norm2(M - last_command.P))
+          and then Almost_Zero(Norm2(M - last_command.P))
           and then last_command.stretch = stretch
         then -- can chain, then just output end point
           Pack_Line;
           Put_Line(tf, Pt(PP));
           last_command.P:= PP;
         elsif last_command.k = cdrawline
-          and then Almost_zero(Norm2(PP - last_command.P))
+          and then Almost_Zero(Norm2(PP - last_command.P))
           and then last_command.stretch = stretch
         then -- can chain this segment reversed
           Pack_Line;
@@ -291,7 +291,7 @@ package body TC.Output is
           f:= Real'Floor(f + 0.99999999999);
           -- Pascal: f:=round(min/genauigkeit+0.5);
           D:= (1.0/f) * DQ;
-          numprec:= numprec + Integer'Max(0,Integer(log(f)));
+          numprec:= numprec + Integer'Max(0,Integer(Log(f)));
           Put(tf,
             "\multiput" & Pt(M) & Pt(D,numprec) & Br(Integer(f)) &
             "{\line");
@@ -409,7 +409,7 @@ package body TC.Output is
         M:= C + (o.rad,0.0);
         while t < pid loop
           PP:= o.rad * ( Cos(t), Sin(t) ) + o.P1;
-          Write_reduced_any_lines( M, Q, PP, not Almost_zero(t) );
+          Write_reduced_any_lines( M, Q, PP, not Almost_Zero(t) );
           t:= t+dt;
         end loop;
         Write_line_any_slope( M, o.P1 - Pmin + (o.rad,0.0), 0);
@@ -469,11 +469,11 @@ package body TC.Output is
           if Real'Min(abs(P1.x-P2.x),abs(P1.y-P2.y)) >= pad then
             -- Draw rectangles by symmetry on the 4 quadrants,
             -- avoiding drawing twins:
-            if Almost_zero( Norm2(P1) ) then
+            if Almost_Zero( Norm2(P1) ) then
               Rect( -P2, P2 );
-            elsif Almost_zero(P1.x) then
+            elsif Almost_Zero(P1.x) then
               Rect( (-P2.x, P1.y), (P2.x,P2.y), double, (-P2.x,-P2.y) );
-            elsif Almost_zero(P1.y) then
+            elsif Almost_Zero(P1.y) then
               Rect( (P1.x,-P2.y), (P2.x,P2.y), double, (-P2.x,-P2.y) );
             else
               Rect( P1,P2, quadruple, (-P2.x,P1.y), (P1.x,-P2.y));
@@ -678,8 +678,8 @@ package body TC.Output is
         if put_cmd then
           if can_chain
             and then last_command.k = cdottedline1
-            and then Almost_zero(Norm2(E1 - last_command.P))
-            and then Almost_zero(last_command.gap - gap)
+            and then Almost_Zero(Norm2(E1 - last_command.P))
+            and then Almost_Zero(last_command.gap - gap)
             and then last_command.symbol = sym
           then -- can chain, then just output end point
             Pack_Line;
@@ -782,10 +782,10 @@ package body TC.Output is
         if stretch /= 0 then
           Put(tf,'[' & I(stretch) & ']');
         end if;
-        if not Almost_zero(length) then
+        if not Almost_Zero(length) then
           Put(tf, Br(length));
         end if;
-        if not Almost_zero(gap) then
+        if not Almost_Zero(gap) then
           Put(tf, Br(gap));
         end if;
         Put_Line(tf, Pt(E1) & Pt(E2));
@@ -795,9 +795,9 @@ package body TC.Output is
         if put_cmd then
           if can_chain
             and then last_command.k = cdashline1
-            and then Almost_zero(Norm2(E1 - last_command.P))
-            and then Almost_zero(last_command.gap - gap)
-            and then Almost_zero(last_command.length - length)
+            and then Almost_Zero(Norm2(E1 - last_command.P))
+            and then Almost_Zero(last_command.gap - gap)
+            and then Almost_Zero(last_command.length - length)
           then -- can chain, then just output end point
             Pack_Line;
             Put_Line(tf, Pt(E2));

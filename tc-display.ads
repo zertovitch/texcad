@@ -7,13 +7,13 @@ generic
   h_mag, v_mag: Real;
 
   with procedure ClearScreen;
-  with procedure SetColor( zone: Graphics.Color_zone );
+  with procedure SetColor( zone: Graphics.Color_Zone );
   with procedure PutPoint( x,y: Integer );
   with procedure Line( x1,y1,x2,y2: Integer );
   with procedure Full_rectangle( x1,y1,x2,y2: Integer );
   with procedure Ellipse( x,y, rx,ry: Integer; fill: Boolean );
   with procedure Arc( x,y, a1,a2, r: Integer );
-  with procedure SetTextJustify( h: Graphics.H_justify; v: Graphics.V_justify );
+  with procedure SetTextJustify( h: Graphics.H_Justify; v: Graphics.V_Justify );
   with procedure OutTextXY( x,y: Integer; t: String );
 
 package TC.Display is

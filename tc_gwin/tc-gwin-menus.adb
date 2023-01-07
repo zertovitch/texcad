@@ -23,8 +23,8 @@ package body TC.GWin.Menus is
   function Create_File_Menu(is_child: Boolean) return GWindows.Menus.Menu_Type is
     m: constant Menu_Type:= Create_Popup;
   begin
-    Append_Item (m, Msg(fnew)  & HT & "Ctrl+N", Id_File_New);
-    Append_Item (m, Msg(fopen) & HT & "Ctrl+O", Id_File_Open);
+    Append_Item (m, Msg(fnew)  & HT & "Ctrl+N", ID_FILE_NEW);
+    Append_Item (m, Msg(fopen) & HT & "Ctrl+O", ID_FILE_OPEN);
     Append_Separator (m);
     if is_child then
       Append_Item (m, save);
@@ -37,13 +37,13 @@ package body TC.GWin.Menus is
     for i in mru'Range loop
       Append_Item (m,
        "",
-       Id_Custom( Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - mru'First)) );
+       ID_custom( Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - mru'First)) );
     end loop;
     Append_Separator (m);
     if is_child then
-      Append_Item (m, Msg(fexit) & HT & "Alt+F4", ID_App_Exit);
+      Append_Item (m, Msg(fexit) & HT & "Alt+F4", ID_APP_EXIT);
     else
-      Append_Item (m, Msg(fexit) & HT & "Ctrl+W / Alt+F4", ID_App_Exit);
+      Append_Item (m, Msg(fexit) & HT & "Ctrl+W / Alt+F4", ID_APP_EXIT);
     end if;
     return m;
   end Create_File_Menu;
@@ -143,7 +143,7 @@ package body TC.GWin.Menus is
   function Create_Help_Menu return GWindows.Menus.Menu_Type is
     m: constant Menu_Type:= Create_Popup;
   begin
-    Append_Item (m, Msg(habout), Id_App_About);
+    Append_Item (m, Msg(habout), ID_APP_ABOUT);
     return m;
   end Create_Help_Menu;
 

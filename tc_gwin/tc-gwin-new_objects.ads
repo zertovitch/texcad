@@ -10,7 +10,7 @@ package TC.GWin.New_objects is
     parent  : in out Base_Window_Type'Class;
     main    : in out MDI_Main_Type;
     P1      :        Point;
-    art     :        obj_art_type;
+    art     :        Obj_art_type;
     ls      :        Line_settings  -- useless, just avoid thickness swapping
   );
 
