@@ -3,19 +3,22 @@ To do list - TC.GWin (MS Windows skin):
 Bugs to be fixed
 ================
   - by resizing the window the vertical "lift" quits the bottom
-
+  - when two subwindows are open, swapping subwindows messes the "Window" an "Options" menus
+    (seems tough: other applications using the GWindows framework haven't this issue:
+     AZip, LEA or the mdi_example sample)
 
 Improvements
 ============
+- Tabs
+- "Snap on / off" button
+- Undo's (Ctrl-Z), Redo's (Ctrl-Y)
 - show thick lines as thick
 - Big cross cursor (optional)
 - See size of pasted object when pointing left-bottom corner
 - Rulers
-- Undo's (Ctrl-Z), Redo's (Ctrl-Y)
 - At most one instance of TC running on one PC
 - Unicode - resistant (use GString of GWindows = String or Wide_String
   depending on the mode)
 
-[For GWindows]
-- Choosecolor with custom colors open
+[For the GWindows framework]
 - Internationalize MsgBox (Win32: MessageBoxEx)

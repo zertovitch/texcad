@@ -153,7 +153,7 @@ procedure Test_TC_IO is
   exception
     when Name_Error =>
       Test_one(To_Lower(name), across_sty);
-  end;
+  end Test;
 
   use TC.Units;
 

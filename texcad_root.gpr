@@ -1,6 +1,11 @@
--- This is a GNAT, GCC or GNAT Programming Studio (GPS) project file
--- for the TeXCAD project ( http://sf.net/projects/texcad/ )
--- Build me with "gnatmake -P texcad_root", or open me with GPS
+--  This is a GNAT, GCC or GNAT Studio project file
+--  for the TeXCAD project:
+--
+--      home page:     http://texcad.sf.net/
+--      project page:  http://sf.net/projects/texcad/
+--      mirror:        https://github.com/zertovitch/texcad
+--
+--  Build me with "gnatmake -P texcad_root", or open me with GNAT Studio
 --
 project TeXCAD_Root is
 
@@ -32,15 +37,30 @@ project TeXCAD_Root is
       end case;
    end Builder;
 
+   Common_Compiler_Options := (
+     "-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
+     --  "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
+     "-gnatwcijkmopruvz.c.p.t.w.x",    --  Warnings switches (run "gnatmake" for full list)
+     "-gnatf",  --  Full errors. Verbose details, all undefined references
+     "-gnatq",  --  Don't quit, try semantics, even if parse errors
+     "-gnatQ",  --  Don't quit, write ali/tree file even if compile errors
+     --
+     "-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+     --  "-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+     "-gnatyx",       --  Style: check x:no extra parens
+     "-gnatye"        --  Style: check e:end/exit labels present
+     --  "-gnatyc"        --  Style: check c:comment format (two spaces)
+     --  "-gnatyt",       --  Style: check t:token separation rules
+   );
+
    package Compiler is
       case Build_Mode is
          when "Debug" =>
-            for Default_Switches ("ada") use ("-gnat05", "-gnato", "-fstack-check", "-g", "-gnatwa", "-gnatVa", "-gnatyhiknp", 
-               "-gnatec" & project'Project_Dir & "acu_debg/debug.pra", 
-               "-gnatec" & project'Project_Dir & "acu_debg/tc_elim.pra");
+            for Local_Configuration_Pragmas use project'Project_Dir & "acu_debg/debug.pra";
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-gnato", "-fstack-check", "-g", "-gnatVa");
          when "Optimize" =>
-            for Default_Switches ("ada") use ("-gnat05", "-Os", "-gnatp", "-gnatwkmpz", "-fno-strict-aliasing", "-march=i386", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0", "-mpreferred-stack-boundary=2", 
-               "-gnatec" & project'Project_Dir & "acu_debg/tc_elim.pra");
+            for Local_Configuration_Pragmas use project'Project_Dir & "acu_debg/tc_elim.pra";
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp"); 
       end case;
    end Compiler;
 
