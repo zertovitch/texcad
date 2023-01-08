@@ -19,17 +19,9 @@ package TC.GWin.MDI_Main is
   procedure On_Right_Click (Control : in out MDI_Status_Bar_Type);
   --  Handle right clicks on status bar
 
-  type MDI_Toolbar_Type is new Floating_Toolbars.GUI_toolbar with null record;
-
-  procedure On_Button_Select (Control : in out MDI_Toolbar_Type;
-                              Item    : in     Integer);
-  --  Handle click on toolbar
-
   type MDI_Main_Type is
     new Office_Applications.Classic_Main_Window_Type with
       record
-        Tool_Bar               : MDI_Toolbar_Type;
-        Images                 : GWindows.Image_Lists.Image_List_Type;
         Floating_toolbars      : Floating_toolbar_array;
         Status_Bar             : MDI_Status_Bar_Type;
         File_menu,

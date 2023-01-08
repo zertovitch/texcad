@@ -1,9 +1,8 @@
-with
-  GWindows.Base,
-  GWindows.Common_Controls,
-  GWindows.Constants,
-  GWindows.Image_Lists,
-  GWindows.Windows;
+with GWindows.Base,
+     GWindows.Constants,
+     GWindows.Windows;
+
+with Office_Applications;
 
 package Floating_Toolbars is
 
@@ -41,11 +40,10 @@ package Floating_Toolbars is
   -- ***** GUI_toolbar: the "bare-bones" toolbar, in the GUI sense
 
   type GUI_toolbar is
-    new GWindows.Common_Controls.Toolbar_Control_Type with
+    new Office_Applications.Classic_Main_Tool_Bar_Type with
   record
     w,mw,h,mh    : Integer:= GWindows.Constants.Use_Default;
     belongs_to   : p_Floating_Toolbar;
-    string_count : Natural:= 0;
   end record;
 
   procedure On_Button_Select (Control : in out GUI_toolbar;
@@ -59,7 +57,6 @@ package Floating_Toolbars is
     -- tagged limited
     bar          : GUI_toolbar;     -- the visible bar (if any)
     window       : Floating_Window; -- the visible window (if any)
-    images       : GWindows.Image_Lists.Image_List_Type;
     parent       : GWindows.Base.Pointer_To_Base_Window_Class;
     title        : GWindows.GString_Unbounded;
     status       : Floating_TB_Status:= invisible;

@@ -1,30 +1,31 @@
-with GWin_Util;                         use GWin_Util;
+with GWin_Util;
+with GWindows.Image_Lists;
 
 with TC.GWin.Lang;                      use TC.GWin.Lang;
 with TC.GWin.MDI_Main;
 
-pragma Elaborate(TC.Gwin); -- Windows_95 flag needed
+pragma Elaborate (TC.Gwin);  --  Windows_95 flag needed
 
 with Interfaces.C;
 
 package body TC.GWin.Toolbars is
 
-  use Floating_Toolbars, GWindows.Image_Lists, Interfaces.C;
+  use Floating_Toolbars, GWin_Util, Interfaces.C;
 
   procedure Add_Button_with_Tip
-    (Control     : in out GUI_toolbar'Class;
+    (Control     : in out Office_Applications.Classic_Main_Tool_Bar_Type'Class;
      Image_Index : in     Natural;
      Command_ID  : in     Integer;
      Tip         : in     GString)
   is
   begin
     Control.Add_String(Tip);
-    Control.Add_Button(Image_Index, Command_ID, Control.string_count);
-    Control.string_count:= Control.string_count + 1;
+    Control.Add_Button(Image_Index, Command_ID, Control.String_Count);
+    Control.String_Count:= Control.String_Count + 1;
   end Add_Button_with_Tip;
 
   procedure Add_Button_with_Tip
-    (Control     : in out GUI_toolbar'Class;
+    (Control     : in out Office_Applications.Classic_Main_Tool_Bar_Type'Class;
      Image_Index : in     Natural;
      Cmd_enu     : in     Custom_cmd)
   is
@@ -59,29 +60,27 @@ package body TC.GWin.Toolbars is
   TBSTYLE_EX_MIXEDBUTTONS     : constant:= 16#00000008#;
   sep_w: constant:= 8;
 
-  procedure Init_Main_toolbar(
-    tb    : in out Floating_Toolbars.GUI_toolbar'Class;
-    il    : in out GWindows.Image_Lists.Image_List_Type;
-    parent: in out GWindows.Base.Base_Window_Type'Class)
+  procedure Init_Main_Tool_Bar
+    (tb     : in out Office_Applications.Classic_Main_Tool_Bar_Type'Class;
+     parent : in out GWindows.Base.Base_Window_Type'Class)
   is
---    use GWindows.Common_Controls;
-    st: Interfaces.C.unsigned;
+    st : Interfaces.C.unsigned;
   begin
-    Create (tb, parent, 0, 0, 0, 40);
-    Dock (tb, GWindows.Base.At_Top);
+    tb.Create (parent, 0, 0, 0, 40);
+    tb.Dock (GWindows.Base.At_Top);
 
-    Create (il, "Toolbar_Bmp", 32);
-    Set_Image_List (tb, il);
-    st:= Get_Style(tb);
-    Set_Style(tb, TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);
+    tb.Images.Create ("Toolbar_Bmp", 32);
+    tb.Set_Image_List (tb.Images);
+    st := tb.Get_Style;
+    tb.Set_Style (TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST or st);
     -- Attempted TBSTYLE_AUTOSIZE to stop flickering, in vain...
-    Set_Extended_Style(tb, TBSTYLE_EX_MIXEDBUTTONS);
+    tb.Set_Extended_Style (TBSTYLE_EX_MIXEDBUTTONS);
 
     Add_Button_with_Tip (tb,  0, ID_FILE_NEW, Msg(fnew));
     Add_Button_with_Tip (tb,  1, ID_FILE_OPEN, Msg(fopen));
     Add_Button_with_Tip (tb,  2, save);
 
-    Add_Separator(tb, sep_w);
+    tb.Add_Separator (sep_w);
 
     Add_Button_with_Tip (tb, 13, pick_obj);
     Add_Button_with_Tip (tb, 18, change_text);
@@ -89,26 +88,26 @@ package body TC.GWin.Toolbars is
     Add_Button_with_Tip (tb,  4, copy_clip);
     Add_Button_with_Tip (tb,  5, paste_clip);
 
-    Add_Separator (tb, sep_w);
+    tb.Add_Separator (sep_w);
 
     Add_Button_with_Tip (tb, 19, tc_undo);
     Add_Button_with_Tip (tb, 20, tc_redo);
 
-    Add_Separator (tb, sep_w);
+    tb.Add_Separator (sep_w);
 
     Add_Button_with_Tip (tb, 12, preview);
     Add_Button_with_Tip (tb,  9, zoom_plus);
     Add_Button_with_Tip (tb, 10, zoom_minus);
 
-    Add_Separator(tb, sep_w);
+    tb.Add_Separator (sep_w);
 
     Add_Button_with_Tip (tb, 15, pic_opt_dialog);
 
-    Add_Separator(tb, sep_w);
+    tb.Add_Separator (sep_w);
 
     Add_Button_with_Tip (tb, 14, ID_APP_ABOUT, Msg(habout));
 
-  end Init_Main_toolbar;
+  end Init_Main_Tool_Bar;
 
   procedure Reset_Drawing_toolbar(tb: in out Floating_Toolbar) is
   begin
@@ -117,8 +116,8 @@ package body TC.GWin.Toolbars is
     -- Set_Extended_Style(tb.bar, TBSTYLE_EX_MIXEDBUTTONS);
     -- The wrapping with tool tip doesn't work (Windows 7)
     Dock(tb.bar, GWindows.Base.At_Top);
-    Create(tb.images, "Drawing_Toolbar_Bmp", 28);
-    Set_Image_List(tb.bar, tb.images);
+    tb.bar.Images.Create ("Drawing_Toolbar_Bmp", 28);
+    Set_Image_List (tb.bar, tb.bar.Images);
     -- Order: as in menu.
     for c in Drawing_cmd loop
       Add_Button_for_Floating(tb,
@@ -133,13 +132,13 @@ package body TC.GWin.Toolbars is
 
   procedure Reset_Line_toolbar(tb: in out Floating_Toolbar) is
   begin
-    Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT);
+    Set_Style (tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT);
     -- Set_Style(tb.bar, TBSTYLE_WRAPABLE or TBSTYLE_FLAT or TBSTYLE_TOOLTIPS or TBSTYLE_LIST);
     -- Set_Extended_Style(tb.bar, TBSTYLE_EX_MIXEDBUTTONS);
     -- The wrapping with tool tip doesn't work (Windows 7)
-    Dock(tb.bar, GWindows.Base.At_Top);
-    Create(tb.images, "Line_Toolbar_Bmp", 56);
-    Set_Image_List(tb.bar, tb.images);
+    Dock (tb.bar, GWindows.Base.At_Top);
+    tb.bar.Images.Create ("Line_Toolbar_Bmp", 56);
+    Set_Image_List (tb.bar, tb.bar.Images);
     -- Order: as in menu.
     for c in Line_setting_cmd loop
       Add_Button_for_Floating(tb,
@@ -160,9 +159,9 @@ package body TC.GWin.Toolbars is
     end if;
   end Notify_any_toolbar;
 
-  procedure Init_Floating_toolbars(
-    tbs   : in out Floating_toolbar_array;
-    parent: in out GWindows.Base.Base_Window_Type'Class)
+  procedure Init_Floating_Tool_Bars
+    (tbs    : in out Floating_toolbar_array;
+     parent : in out GWindows.Base.Base_Window_Type'Class)
   is
     min_width: constant array(Floating_toolbar_categ) of Integer:=
       (TB_Drawing       => 28+7,
@@ -193,7 +192,7 @@ package body TC.GWin.Toolbars is
     for cat in tbs'Range loop
       Change_status(tbs(cat), TC_FT_memo(cat).stat);
     end loop;
-  end Init_Floating_toolbars;
+  end Init_Floating_Tool_Bars;
 
   default_stat: Floating_TB_Status;
 

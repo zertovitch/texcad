@@ -138,8 +138,8 @@ package body TC.GWin.MDI_Main is
 
   procedure Redraw_all(Window: in out MDI_Main_Type) is
   begin
-    Redraw(Window);
-    Redraw(Window.Tool_Bar);
+    Window.Redraw;
+    Window.Tool_Bar.Redraw;
     GWindows.Base.Enumerate_Children(MDI_Client_Window (Window).all,Redraw_Child'Access);
   end Redraw_all;
 
@@ -217,14 +217,6 @@ package body TC.GWin.MDI_Main is
     );
   end Open_Child_Window_And_Load_Picture;
 
-  procedure On_Button_Select (
-        Control : in out MDI_Toolbar_Type;
-        Item    : in     Integer           ) is
-    Parent : constant MDI_Main_Access := MDI_Main_Access (Controlling_Parent (Control));
-  begin
-    On_Menu_Select (Parent.all, Item);
-  end On_Button_Select;
-
   ---------------
   -- On_Create --
   ---------------
@@ -253,10 +245,10 @@ package body TC.GWin.MDI_Main is
 
     --  ** Main tool bar (new/open/save/...) at top left of the main window:
 
-    TC.GWin.Toolbars.Init_Main_toolbar(Window.Tool_Bar, Window.Images, Window);
+    TC.GWin.Toolbars.Init_Main_Tool_Bar (Window.Tool_Bar, Window);
 
     --  ** Floating tool bars:
-    TC.GWin.Toolbars.Init_Floating_toolbars(Window.Floating_toolbars, Window);
+    TC.GWin.Toolbars.Init_Floating_Tool_Bars (Window.Floating_toolbars, Window);
 
     --  ** Resize according to options:
 
@@ -283,7 +275,7 @@ package body TC.GWin.MDI_Main is
       );
     end loop;
     Accept_File_Drag_And_Drop(Window);
-    Redraw(Window.Tool_Bar); -- 2007: sometimes the buttons do not appear...
+    Window.Tool_Bar.Redraw;  --  2007: sometimes the buttons do not appear...
     Window.record_dimensions:= True;
   end On_Create;
 
