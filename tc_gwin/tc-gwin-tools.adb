@@ -51,7 +51,7 @@ package body TC.GWin.Tools is
           Clean(Window.Draw_Control.Picture, action);
           Window.Draw_Control.Picture.saved:= False;
           Window.Draw_Control.Picture.refresh:= full;
-          Show_Totals(Window); -- show the '*' for modified
+          Update_Information(Window); -- show the '*' for modified
         end if;
       when others   =>
         null; -- Contains IDCANCEL

@@ -63,11 +63,11 @@ package TC.GWin.MDI_Main is
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     GWindows.Windows.Array_Of_File_Names);
 
-  procedure On_Close (Window    : in out MDI_Main_Type;
-                      Can_Close :    out Boolean);
+  overriding procedure On_Close (Window    : in out MDI_Main_Type;
+                                 Can_Close :    out Boolean);
 
-  procedure Update_Common_Menus(Window    : in out MDI_Main_Type;
-                                top_entry : GString:= "" );
+  procedure Update_Common_Menus (Window        : in out MDI_Main_Type;
+                                 top_mru_entry :        GString := "" );
 
   procedure Update_Status_Bar(
     Window    : in out MDI_Main_Type;

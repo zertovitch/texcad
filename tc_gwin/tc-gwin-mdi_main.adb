@@ -65,18 +65,18 @@ package body TC.GWin.MDI_Main is
     end if;
   end Update_Common_Menus_Child;
 
-  procedure Update_Common_Menus(Window    : in out MDI_Main_Type;
-                                top_entry : GString:= "" ) is
+  procedure Update_Common_Menus (Window        : in out MDI_Main_Type;
+                                 top_mru_entry :        GString := "" )
+  is
   begin
-    if top_entry /= "" then
-      Add_MRU(top_entry);
+    if top_mru_entry /= "" then
+      Add_MRU (top_mru_entry);
     end if;
-    Update_MRU_Menu(Window.File_menu);
-    Update_Toolbar_Menu(Window.View_Menu, Window.Floating_toolbars);
-    GWindows.Base.Enumerate_Children(
-      MDI_Client_Window (Window).all,
-      Update_Common_Menus_Child'Access
-    );
+    Update_MRU_Menu (Window.File_menu);
+    Update_Toolbar_Menu (Window.View_Menu, Window.Floating_toolbars);
+    GWindows.Base.Enumerate_Children
+      (MDI_Client_Window (Window).all,
+       Update_Common_Menus_Child'Access);
   end Update_Common_Menus;
 
   procedure Create_Menus (
@@ -155,7 +155,7 @@ package body TC.GWin.MDI_Main is
     end if;
     --  Show things in the main status bar - effective only after Thaw!
     Zoom_picture(c,0);
-    Show_Totals(c);
+    Update_Information(c);
     Update_Permanent_Command(c);
   end Finish_subwindow_opening;
 
@@ -191,7 +191,8 @@ package body TC.GWin.MDI_Main is
         Is_Dynamic => True);
       New_Window.Short_Name:= File_Title;
       MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus(Window, To_GString_From_Unbounded(New_Window.File_Name));
+      Update_Common_Menus (Window, To_GString_From_Unbounded (New_Window.File_Name));
+      Update_Information (New_Window.all);
       Finish_subwindow_opening(Window, New_Window.all);
     end;
   exception
@@ -343,7 +344,7 @@ package body TC.GWin.MDI_Main is
 
     MDI_Active_Window (Window, New_Window.all);
 
-    -- Transfer user-defined default options:
+    --  Transfer user-defined default options:
     New_Window.Draw_Control.Picture.opt := gen_opt.options_for_new;
     Refresh_size_dependent_parameters(
       New_Window.Draw_Control.Picture,
@@ -352,8 +353,11 @@ package body TC.GWin.MDI_Main is
 
     Current_MDI_Window := Current_MDI_Window + 1;
 
-    -- This is just to set the MRUs in the new window's menu:
+    --  This is just to set the MRUs in the new window's menu:
     Update_Common_Menus (Window);
+
+    --  Refresh File menu ("Save"), tool bar, ...
+    Update_Information (New_Window.all);
 
     Finish_subwindow_opening (Window, New_Window.all);
   end On_File_New;
@@ -579,31 +583,31 @@ package body TC.GWin.MDI_Main is
     end loop;
   end On_File_Drop;
 
-  procedure On_Close (
-        Window    : in out MDI_Main_Type;
-        Can_Close :    out Boolean        ) is
+  overriding procedure On_Close (Window    : in out MDI_Main_Type;
+                                 Can_Close :    out Boolean)
+  is
   begin
     begin
-      wmaxi:= Zoom(Window);
+      wmaxi := Zoom (Window);
       if not (wmaxi or Minimized(Window)) then
-        wleft  := Left(Window);
-        wtop   := Top(Window);
-        wwidth := Width(Window);
-        wheight:= Height(Window);
+        wleft  := Left (Window);
+        wtop   := Top (Window);
+        wwidth := Width (Window);
+        wheight:= Height (Window);
       end if;
       for c in Floating_toolbar_categ loop
-        TC_FT_memo(c).geom  := Window.Floating_toolbars(c).window.geom;
-        TC_FT_memo(c).stat  := Window.Floating_toolbars(c).status;
+        TC_FT_memo (c).geom  := Window.Floating_toolbars (c).window.geom;
+        TC_FT_memo (c).stat  := Window.Floating_toolbars (c).status;
       end loop;
     end;
 
     TC.GWin.Options.Save;
     TC.GWin.Previewing.Cleanup;
 
-    My_MDI_Close_All(Window);
+    My_MDI_Close_All (Window);
     -- ^ Don't forget to save unsaved pictures !
     -- Operation can be cancelled by user for one unsaved picture.
-    Can_Close:= MDI_Picture_Child.success_in_enumerated_close;
+    Can_Close := MDI_Picture_Child.success_in_enumerated_close;
     --
     if Can_Close then
       GWindows.Base.On_Exception_Handler (Handler => null);

@@ -435,8 +435,8 @@ package body TC.GWin.Mousing is
         w.PS:= w.PU; -- \line has modified w.PU
         w.capture:= click_2;
     end case;
-    Show_Totals(w.parent.all);
-    Show_mouse_mode(w);
+    Update_Information (w.parent.all);
+    Show_mouse_mode (w);
     case Capture_mem is
       when click_2 | figure_2 =>
         Invert_phantom(w); -- hide

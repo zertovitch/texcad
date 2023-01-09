@@ -120,20 +120,20 @@ package TC.GWin.MDI_Picture_Child is
   procedure On_Create (Window : in out MDI_Picture_Child_Type);
   --  Handles creating window
 
-  procedure On_Menu_Select
+  overriding procedure On_Menu_Select
     (Window : in out MDI_Picture_Child_Type;
      Item   : in     Integer);
   --  Handles menu selections
 
-  procedure On_Close (Window    : in out MDI_Picture_Child_Type;
-                      Can_Close :    out Boolean);
+  overriding procedure On_Close (Window    : in out MDI_Picture_Child_Type;
+                                 Can_Close :    out Boolean);
 
   overriding function Is_Document_Modified (Window : MDI_Picture_Child_Type) return Boolean;
 
   -- !! bad try !!
-
+  --
   -- procedure On_Focus (Window : in out MDI_Picture_Child_Type);
-
+  --
   -- procedure On_Lost_Focus (Window : in out MDI_Picture_Child_Type);
 
   -- For when the MDI parent tries to close its children.
@@ -143,7 +143,7 @@ package TC.GWin.MDI_Picture_Child is
     Window   : in out MDI_Picture_Child_Type;
     direction:        Integer );
 
-  procedure Show_Totals( Window: in out MDI_Picture_Child_Type );
+  procedure Update_Information (Window: in out MDI_Picture_Child_Type);
 
   procedure Update_Permanent_Command(Window : in out MDI_Picture_Child_Type);
 

@@ -278,18 +278,18 @@ package body TC.GWin.MDI_Picture_Child is
                            Z_Delta : in Integer)
   is
     pragma Unreferenced (X, Y);
-    WW: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window);
-    v_pos: constant Natural:= Scroll_Position (WW, Vertical);
-    dy: constant Natural:= Scroll_Page_Size(WW, Vertical);
-    z: Integer;
+    WW : MDI_Picture_Child_Type renames MDI_Picture_Child_Type (Window);
+    v_pos : constant Natural := Scroll_Position (WW, Vertical);
+    dy : constant Natural := Scroll_Page_Size (WW, Vertical);
+    z : Integer;
   begin
     if Z_Delta /= 0 then
-      z:= Z_Delta / abs Z_Delta;
-      if Keys(Control) then
-        Zoom_picture(WW, z);
+      z := Z_Delta / abs Z_Delta;
+      if Keys (Control) then
+        Zoom_picture (WW, z);
       else
-        Scroll_Position(WW, Vertical, v_pos - dy * z);
-        Adjust_Draw_Control_Position(WW);
+        Scroll_Position (WW, Vertical, v_pos - dy * z);
+        Adjust_Draw_Control_Position (WW);
       end if;
     end if;
   end Do_Mouse_Wheel;
@@ -328,80 +328,69 @@ package body TC.GWin.MDI_Picture_Child is
     end case;
   end Do_Key_Down;
 
-  -- This will update file menu of MDI_Root and all brothers
-  procedure Update_Common_Menus(Window : MDI_Picture_Child_Type;
-                                top_entry : GString:= "" ) is
+  -- This will update file menu of MDI_Root and all of this windows' brothers.
+  procedure Update_Common_Menus (Window        : MDI_Picture_Child_Type;
+                                 top_mru_entry : GString := "" )
+  is
   begin
-    Update_Common_Menus( Window.MDI_Root.all, top_entry );
-    --  !!  update on possible undo/redo
-    State (Window.Edit_Menu, Command, ID_custom (tc_undo), Disabled);
-    State (Window.Edit_Menu, Command, ID_custom (tc_redo), Disabled);
-    Window.MDI_Root.Tool_Bar.Enabled (ID_custom (tc_undo), False);
-    Window.MDI_Root.Tool_Bar.Enabled (ID_custom (tc_redo), False);
+    Update_Common_Menus (Window.MDI_Root.all, top_mru_entry);
   end Update_Common_Menus;
 
-  procedure Update_Permanent_Command(Window : in out MDI_Picture_Child_Type) is
+  procedure Update_Permanent_Command (Window : in out MDI_Picture_Child_Type) is
 
-    procedure Radio_Check_Custom(
-      m                 : in Menu_Type;
-      first, last, check: Custom_cmd)
+    procedure Radio_Check_Custom
+      (m                  : in Menu_Type;
+       first, last, check :    Custom_cmd)
     is
     begin
-      Radio_Check(
-        m, Command,
-        ID_custom(first), ID_custom(last), ID_custom(check)
-      );
+      Radio_Check
+        (m, Command,
+         ID_custom(first), ID_custom(last), ID_custom(check));
     end Radio_Check_Custom;
 
-    procedure Update_cmd(m: in Menu_Type) is
+    procedure Update_cmd (m : in Menu_Type) is
     begin
-      Radio_Check_Custom(
-        m,
-        Permanent_cmd'First, Permanent_cmd'Last, Window.Draw_Control.current_cmd
-      );
+      Radio_Check_Custom
+        (m,
+         Permanent_cmd'First, Permanent_cmd'Last, Window.Draw_Control.current_cmd);
     end Update_cmd;
 
     procedure Update_ls is
       c: Custom_cmd;
     begin
-      Radio_Check_Custom(
-        Window.Line_Menu,
-        Line_thickness_cmd'First,
-        Line_thickness_cmd'Last,
-        Custom_cmd'Val(
-          Custom_cmd'Pos(Line_thickness_cmd'First) +
-          Line_thickness'Pos(Window.Draw_Control.current_ls.thickness)
-        )
-      );
-      c:= Custom_cmd'Val(
-            Custom_cmd'Pos(Line_pattern_cmd'First) +
-            Line_pattern'Pos(Window.Draw_Control.current_ls.pattern)
-          );
+      Radio_Check_Custom
+        (Window.Line_Menu,
+         Line_thickness_cmd'First,
+         Line_thickness_cmd'Last,
+         Custom_cmd'Val
+           (Custom_cmd'Pos (Line_thickness_cmd'First) +
+            Line_thickness'Pos (Window.Draw_Control.current_ls.thickness)));
+      c := Custom_cmd'Val
+            (Custom_cmd'Pos (Line_pattern_cmd'First) +
+             Line_pattern'Pos (Window.Draw_Control.current_ls.pattern));
       if c = dot_param then
-        c:= dash;
+        c := dash;
       end if;
-      Radio_Check_Custom(
-        Window.Line_Menu,
-        Line_pattern_cmd'First, Line_pattern_cmd'Last, c
-      );
-      Radio_Check_Custom(Window.Line_Menu,
-        Line_arrows_cmd'First,
-        Line_arrows_cmd'Last,
-        Custom_cmd'Val(
-          Custom_cmd'Pos(Line_arrows_cmd'First) +
-          Line_arrows'Pos(Window.Draw_Control.current_ls.arrows)
-        )
-      );
+      Radio_Check_Custom
+        (Window.Line_Menu,
+         Line_pattern_cmd'First, Line_pattern_cmd'Last, c);
+      Radio_Check_Custom
+        (Window.Line_Menu,
+         Line_arrows_cmd'First,
+         Line_arrows_cmd'Last,
+         Custom_cmd'Val
+           (Custom_cmd'Pos (Line_arrows_cmd'First) +
+            Line_arrows'Pos (Window.Draw_Control.current_ls.arrows)));
     end Update_ls;
 
   begin
-    Update_cmd(Window.Draw_Menu);
-    Update_cmd(Window.Edit_Menu);
+    Update_cmd (Window.Draw_Menu);
+    Update_cmd (Window.Edit_Menu);
     Update_ls;
     case Window.Draw_Control.current_cmd is
-      when pick_obj    => Change_Cursor(Window.Draw_Control, cur_picking);
-      when change_text => Change_Cursor(Window.Draw_Control, cur_chg_text);
-      when others      => Change_Cursor(Window.Draw_Control, cur_arrow);
+      when pick_obj    => Change_Cursor (Window.Draw_Control, cur_picking);
+      when change_text => Change_Cursor (Window.Draw_Control, cur_chg_text);
+      when others      => Change_Cursor (Window.Draw_Control, cur_arrow);
     end case;
     Update_Status_Bar( Window.MDI_Root.all, command,
       Filter_amp(Msg(msg_for_command(Window.Draw_Control.current_cmd)))
@@ -426,26 +415,59 @@ package body TC.GWin.MDI_Picture_Child is
     Update_Status_Bar( Window.MDI_Root.all, zoom, S2G (Trim(sf,Left)) );
   end Zoom_picture;
 
-  procedure Show_Totals( Window: in out MDI_Picture_Child_Type ) is
-    p: TC.Picture renames Window.Draw_Control.Picture;
-    function Stotal( pfx: GString; t, th: Integer ) return GString is
+  procedure Update_Information (Window : in out MDI_Picture_Child_Type) is
+    p : TC.Picture renames Window.Draw_Control.Picture;
+    is_modified : constant Boolean := not p.saved;
+    bool_to_state: constant array (Boolean) of State_Type := (Disabled, Enabled);
+    Star : constant array (Boolean) of GCharacter := (False => ' ', True => '*');
+
+    procedure Update_Tool_Bar is
+      bar : Office_Applications.Classic_Main_Tool_Bar_Type
+        renames Window.MDI_Root.Tool_Bar;
+    begin
+      bar.Enabled (ID_custom (save), is_modified);
+      --  !!  update on possible undo/redo
+      bar.Enabled (ID_custom (tc_undo), False);
+      bar.Enabled (ID_custom (tc_redo), False);
+    end Update_Tool_Bar;
+
+    procedure Update_Menus is
+    begin
+      State (Window.File_Menu, Command, ID_custom (save), bool_to_state (is_modified));
+      --  !!  update on possible undo/redo
+      State (Window.Edit_Menu, Command, ID_custom (tc_undo), Disabled);
+      State (Window.Edit_Menu, Command, ID_custom (tc_redo), Disabled);
+    end Update_Menus;
+
+    function Show_Total (pfx : GString; t, th : Integer) return GString is
     begin
       if t = 0 then
         return "";
       elsif th = 0 then
-        return pfx & S2G (Integer'Image(t));
+        return pfx & S2G (t'Image);
       else
-        return pfx & S2G (Integer'Image(t) & "  (h:" & Integer'Image(th) & ')');
+        return pfx & S2G (t'Image & "  (h:" & th'Image & ')');
       end if;
-    end Stotal;
-    Star: constant array(Boolean) of GCharacter:= (False => ' ',True => '*');
+    end Show_Total;
+
   begin
-    Update_Status_Bar(Window.MDI_Root.all,stat_objects,
-      Stotal("Objects:", p.total, p.total_hidden) &
-      Stotal("; picked:", p.picked, p.picked_hidden)
-    );
-    Update_Status_Bar(Window.MDI_Root.all,modified,(1=>Star(not p.saved)));
-  end Show_Totals;
+    --  Update window title.
+    if is_modified then
+      Window.Text ("* " & GU2G (Window.Short_Name));
+    else
+      Window.Text (GU2G (Window.Short_Name));
+    end if;
+    --  Update statistics
+    Update_Status_Bar
+      (Window.MDI_Root.all, stat_objects,
+       Show_Total ("Objects:", p.total, p.total_hidden) &
+       Show_Total ("; picked:", p.picked, p.picked_hidden));
+    --  Put a '*' if picture is modified.
+    Update_Status_Bar (Window.MDI_Root.all, modified, (1 => Star (is_modified)));
+    --  Update state of "Save" button, "Save " menu entry and window title.
+    Update_Tool_Bar;
+    Update_Menus;
+  end Update_Information;
 
    ---------------
    -- On_Create --
@@ -549,6 +571,7 @@ package body TC.GWin.MDI_Picture_Child is
       Adjust_Draw_Control_Position(Window);
       Window.Use_Mouse_Wheel;
       Update_Common_Menus (Window);
+      Update_Information (Window);
    end On_Create;
 
   procedure Preview( window : in out MDI_Picture_Child_Type ) is
@@ -561,12 +584,12 @@ package body TC.GWin.MDI_Picture_Child is
         Yes_No_Cancel_Box, Question_Icon)
       is
         when Yes =>
-          window.Draw_Control.Picture.opt.sty(emlines):= False;
-          window.Draw_Control.Picture.saved:= False;
-          Show_Totals(window); -- show the '*' for modified 2-Aug-2005
+          window.Draw_Control.Picture.opt.sty (emlines) := False;
+          window.Draw_Control.Picture.saved := False;
+          Update_Information (window);  --  Show the '*' for modified. 2-Aug-2005.
         when Cancel =>
           return;
-        when others => -- includes No
+        when others => -- includes the "No" choice.
           null;
       end case;
     end if;
@@ -769,22 +792,22 @@ package body TC.GWin.MDI_Picture_Child is
   -- On_Menu_Select --
   --------------------
 
-  procedure On_Menu_Select
+  overriding procedure On_Menu_Select
     (Window : in out MDI_Picture_Child_Type;
      Item   : in     Integer)
   is
 
-    procedure Command( c: MDI_child_cmd ) is
-      modified, success: Boolean;
+    procedure Command (c : MDI_child_cmd) is
+      modified, success : Boolean;
     begin
       case c is
         when save       => On_Save (Window);
         when save_as    => On_Save_As (Window, macro=> False);
         when close      => Close (Window);
-        when zoom_minus => Zoom_picture(Window,-2);
-        when zoom_plus  => Zoom_picture(Window,+2);
-        when preview    => Preview(Window);
-        when clean_pic  => TC.GWin.Tools.Cleanup_dialog(Window);
+        when zoom_minus => Zoom_picture (Window, -2);
+        when zoom_plus  => Zoom_picture (Window, +2);
+        when preview    => Preview (Window);
+        when clean_pic  => TC.GWin.Tools.Cleanup_dialog (Window);
         when pic_opt_dialog =>
           TC.GWin.Options_Dialogs.On_Picture_Options(
             Window,
@@ -799,9 +822,9 @@ package body TC.GWin.MDI_Picture_Child is
               Window.Draw_Control.Picture,
               objects => True
             );
-            Zoom_picture(Window,0); -- Show new zoom factor
-            Window.Draw_Control.Picture.refresh:= full; -- 14-Oct-2003
-            Show_Totals(Window); -- show the '*' for modified 2-Aug-2005
+            Zoom_picture (Window, 0);  --  Show new zoom factor.
+            Window.Draw_Control.Picture.refresh := full;  --  14-Oct-2003
+            Update_Information (Window);  --  Show the '*' for modified. 2-Aug-2005.
           end if;
 
         when Permanent_direct_cmd =>
@@ -838,7 +861,7 @@ package body TC.GWin.MDI_Picture_Child is
           Window.Draw_Control.current_cmd:= pick_obj;
           Update_Permanent_Command(Window);
           Subtle_Redraw(Window.Draw_Control);
-          Show_Totals(Window);
+          Update_Information (Window);
 
         when Action_on_picked_cmd =>
           if Window.Draw_Control.Picture.picked = 0 then
@@ -859,8 +882,8 @@ package body TC.GWin.MDI_Picture_Child is
               when copy_clip  => Copy_clip( Window );
               when save_macro => On_Save_As (Window, macro=> True);
             end case;
-            Subtle_Redraw(Window.Draw_Control);
-            Show_Totals(Window);
+            Subtle_Redraw (Window.Draw_Control);
+            Update_Information (Window);
           end if;
 
         when paste_clip | load_macro  =>
@@ -979,13 +1002,14 @@ package body TC.GWin.MDI_Picture_Child is
          end;
       end if;
 
+      Save (Window, To_GString_From_Unbounded (New_File_Name), macro => macro);
+
       if not macro then
         Window.File_Name := New_File_Name;
-        Text (Window, To_GString_From_Unbounded (File_Title));
-        Window.Short_Name:= File_Title;
-        Update_Common_Menus(Window,To_GString_From_Unbounded(New_File_Name));
+        Window.Short_Name := File_Title;
+        Update_Common_Menus (Window,To_GString_From_Unbounded (New_File_Name));
+        Update_Information (Window);  --  Refresh window title, menus, ...
       end if;
-      Save (Window, To_GString_From_Unbounded (New_File_Name), macro=> macro);
     end if;
   end On_Save_As;
 
@@ -1057,9 +1081,9 @@ package body TC.GWin.MDI_Picture_Child is
     -- ^ even if it is the extra new window and is saved, we won't close
     --   it now on opening of another document.
     if not macro then
-      Update_Common_Menus(Window,File_Name);
+      Update_Common_Menus (Window,File_Name);
     end if;
-    Show_Totals(Window);
+    Update_Information (Window);
   exception
     when backup_error =>
       begin
@@ -1083,8 +1107,8 @@ package body TC.GWin.MDI_Picture_Child is
       end;
   end Save;
 
-  procedure On_Close (Window    : in out MDI_Picture_Child_Type;
-                      Can_Close :    out Boolean) is
+  overriding procedure On_Close (Window    : in out MDI_Picture_Child_Type;
+                                 Can_Close :    out Boolean) is
   begin
     Can_Close := True;
     if Window.Is_Document_Modified then
@@ -1112,7 +1136,7 @@ package body TC.GWin.MDI_Picture_Child is
         end case;
       end loop;
     else
-      Update_Common_Menus(Window,To_GString_From_Unbounded(Window.File_Name));
+      Update_Common_Menus (Window, To_GString_From_Unbounded(Window.File_Name));
     end if;
   end On_Close;
 
