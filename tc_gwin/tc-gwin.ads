@@ -46,14 +46,6 @@ package TC.GWin is
   -- We are only interested in user-caused maximize-restore operations
   user_maximize_restore: Boolean:= True;
 
-  -- MRU (Most recently used) files:
-  mru: array(1..9) of GString_Unbounded:=
-    (others=> To_GString_Unbounded(""));
-
-  procedure Add_MRU( name: GString );
-
-  function Shorten_filename( s: GString ) return GString;
-
   ----------------
   -- Commands : --
   ----------------

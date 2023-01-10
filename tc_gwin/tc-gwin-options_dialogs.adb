@@ -306,7 +306,7 @@ package body TC.GWin.Options_Dialogs is
             );
         end if;
         gen_opt:= candidate;
-        TC.GWin.Options.Save;
+        TC.GWin.Options.Save (Window.MRU);
       when others   =>       -- contains Idcancel
         gen_opt:= original;
         if color /= orig_col then -- 17-Oct-2003: Cancel after colour change!

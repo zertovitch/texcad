@@ -139,14 +139,14 @@ package TC.GWin.MDI_Picture_Child is
   -- For when the MDI parent tries to close its children.
   success_in_enumerated_close: Boolean;
 
-  procedure Zoom_picture(
-    Window   : in out MDI_Picture_Child_Type;
-    direction:        Integer );
+  procedure Zoom_Picture
+    (Window    : in out MDI_Picture_Child_Type;
+     direction :        Integer);
 
   procedure Update_Information (Window: in out MDI_Picture_Child_Type);
 
-  procedure Update_Permanent_Command(Window : in out MDI_Picture_Child_Type);
+  procedure Update_Permanent_Command (Window : in out MDI_Picture_Child_Type);
 
-  procedure Load_Macro(Window: in out MDI_Picture_Child_Type);
+  procedure Load_Macro (Window: in out MDI_Picture_Child_Type);
 
 end TC.GWin.MDI_Picture_Child;

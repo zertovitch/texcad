@@ -1,9 +1,11 @@
+with Office_Applications;
+
 package TC.GWin.Options is
 
   -- * Loads and Saves options for the CURRENT_USER :
 
-  procedure Load;
-  procedure Save;
+  procedure Load (mru : out Office_Applications.MRU_Info);
+  procedure Save (mru : in Office_Applications.MRU_Info);
 
   -- * Clears options for ALL USERS :
 

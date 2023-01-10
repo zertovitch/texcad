@@ -29,21 +29,6 @@ with Ada.Strings.Fixed;                 use Ada.Strings.Fixed, Ada.Strings;
 
 package body TC.GWin.MDI_Main is
 
-  procedure Update_MRU_Menu( m: in Menu_Type) is
-    cmd: Integer;
-  begin
-    for i in reverse mru'Range loop
-      cmd:= ID_custom( Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - mru'First));
-      Text(
-        m, Command, cmd,
-         '&' & S2G (Trim(Integer'Image(i), Left)) &
-         ' ' &
-         Shorten_filename(To_GString_From_Unbounded(mru(i)))
-      );
-      --  State(m,command,cmd,Disabled);
-    end loop;
-  end Update_MRU_Menu;
-
   procedure Update_Toolbar_Menu( m: in Menu_Type; tba: Floating_toolbar_array) is
     use Floating_Toolbars;
   begin
@@ -54,13 +39,14 @@ package body TC.GWin.MDI_Main is
 
   procedure Update_Common_Menus_Child (Window : GWindows.Base.Pointer_To_Base_Window_Class)
   is
+    use Office_Applications;
   begin
     if Window.all in MDI_Picture_Child_Type'Class then
       declare
         cw: MDI_Picture_Child_Type renames MDI_Picture_Child_Type(Window.all);
       begin
-        Update_MRU_Menu(cw.File_Menu);
-        Update_Toolbar_Menu(cw.View_Menu, cw.MDI_Root.Floating_toolbars);
+        Update_MRU_Menu (cw.MDI_Root.MRU, cw.File_Menu);
+        Update_Toolbar_Menu (cw.View_Menu, cw.MDI_Root.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
@@ -68,31 +54,32 @@ package body TC.GWin.MDI_Main is
   procedure Update_Common_Menus (Window        : in out MDI_Main_Type;
                                  top_mru_entry :        GString := "" )
   is
+    use Office_Applications;
   begin
     if top_mru_entry /= "" then
-      Add_MRU (top_mru_entry);
+      Add_MRU (Window.MRU, top_mru_entry);
     end if;
-    Update_MRU_Menu (Window.File_menu);
+    Update_MRU_Menu (Window.MRU, Window.File_menu);
     Update_Toolbar_Menu (Window.View_Menu, Window.Floating_toolbars);
     GWindows.Base.Enumerate_Children
       (MDI_Client_Window (Window).all,
        Update_Common_Menus_Child'Access);
   end Update_Common_Menus;
 
-  procedure Create_Menus (
-        Window : in out MDI_Main_Type ) is
-        Main: constant Menu_Type := Create_Menu;
+  procedure Create_Menus (Window : in out MDI_Main_Type) is
+    Main : constant Menu_Type := Create_Menu;
+    use Office_Applications;
   begin
-    Window.File_menu:= TC.GWin.Menus.Create_File_Menu(is_child => False);
-    Update_MRU_Menu(Window.File_menu);
-    Append_Menu (Main, Msg(ffile), Window.File_menu);
+    Window.File_menu:= TC.GWin.Menus.Create_File_Menu (is_child => False);
+    Update_MRU_Menu (Window.MRU, Window.File_menu);
+    Append_Menu (Main, Msg (ffile), Window.File_menu);
 
-    Window.View_Menu:= TC.GWin.Menus.Create_View_Menu;
-    Append_Menu (Main, Msg(vview), Window.View_Menu);
+    Window.View_Menu := TC.GWin.Menus.Create_View_Menu;
+    Append_Menu (Main, Msg (vview), Window.View_Menu);
 
-    Append_Menu (Main, Msg(oopt), TC.GWin.Menus.Create_Options_Menu(is_child => False));
-    Append_Menu (Main, Msg(wwindow), TC.GWin.Menus.Create_Wndw_Menu);
-    Append_Menu (Main, Msg(hhelp), TC.GWin.Menus.Create_Help_Menu);
+    Append_Menu (Main, Msg (oopt), TC.GWin.Menus.Create_Options_Menu (is_child => False));
+    Append_Menu (Main, Msg (wwindow), TC.GWin.Menus.Create_Wndw_Menu);
+    Append_Menu (Main, Msg (hhelp), TC.GWin.Menus.Create_Help_Menu);
 
     MDI_Menu (Window, Main, Window_Menu => 4);
   end Create_Menus;
@@ -150,13 +137,13 @@ package body TC.GWin.MDI_Main is
   begin
     user_maximize_restore:= True;
     if MDI_childen_maximized then
-      Zoom(c);
-      Redraw_all(m);
+      c.Zoom;
+      m.Redraw_all;
     end if;
     --  Show things in the main status bar - effective only after Thaw!
-    Zoom_picture(c,0);
-    Update_Information(c);
-    Update_Permanent_Command(c);
+    c.Zoom_Picture (0);
+    c.Update_Information;
+    c.Update_Permanent_Command;
   end Finish_subwindow_opening;
 
   procedure Open_Child_Window_And_Load_Picture (
@@ -222,10 +209,10 @@ package body TC.GWin.MDI_Main is
   -- On_Create --
   ---------------
 
-  procedure On_Create ( Window : in out MDI_Main_Type ) is
+  procedure On_Create (Window : in out MDI_Main_Type) is
     use Ada.Command_Line;
   begin
-    TC.GWin.Options.Load;
+    TC.GWin.Options.Load (Window.MRU);
     TC.startup_language:= TC.gen_opt.lang;
 
     GWin_Util.Use_GUI_Font(Window);
@@ -235,8 +222,12 @@ package body TC.GWin.MDI_Main is
 
     --  ** Menus and accelerators:
 
-    Create_Menus(Window);
+    Create_Menus (Window);
     Accelerator_Table (Window, "Main_Menu");
+    for i in Window.MRU.ID_Menu'Range loop
+      Window.MRU.ID_Menu (i) :=
+        ID_custom (Custom_cmd'Val (Custom_cmd'Pos (mru1) + i - Window.MRU.ID_Menu'First));
+    end loop;
 
     --  ** Status bar at bottom of the main window:
 
@@ -477,10 +468,9 @@ package body TC.GWin.MDI_Main is
           when gen_opt_dialog =>
             TC.GWin.Options_Dialogs.On_General_Options (Window);
           when mru1 .. mru9 =>
-            Open_Child_Window_And_Load_Picture(
-              Window,
-              mru( 1 + Custom_cmd'Pos(C)-Custom_cmd'Pos(mru1) )
-            );
+            Open_Child_Window_And_Load_Picture
+              (Window,
+               Window.MRU.Item ( 1 + Custom_cmd'Pos(C)-Custom_cmd'Pos(mru1) ).Name);
           when Floating_toolbar_categ =>
             Floating_Toolbars.Rotate_status( Window.Floating_toolbars(C) );
             Update_Common_Menus(Window);
@@ -601,7 +591,7 @@ package body TC.GWin.MDI_Main is
       end loop;
     end;
 
-    TC.GWin.Options.Save;
+    TC.GWin.Options.Save (Window.MRU);
     TC.GWin.Previewing.Cleanup;
 
     My_MDI_Close_All (Window);

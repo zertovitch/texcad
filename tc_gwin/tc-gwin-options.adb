@@ -91,7 +91,7 @@ package body TC.GWin.Options is
   -- Load --
   ----------
 
-  procedure Load is
+  procedure Load (mru : out Office_Applications.MRU_Info) is
     o: General_Options renames TC.gen_opt;
     p: Picture_Options renames o.options_for_new;
   begin
@@ -184,7 +184,9 @@ package body TC.GWin.Options is
                   when others => null; -- Should not happen !
                 end case;
               end;
-            when mru1..mru9 => mru( Key'Pos(k)-Key'Pos(mru1)+1 ):= To_GString_Unbounded(S2G(s));
+            when mru1 .. mru9 =>
+              mru.Item (Key'Pos (k) - Key'Pos (mru1) + 1).Name :=
+                To_GString_Unbounded (S2G (s));
             when Colors   => color(
                                Color_Zone'Val(Key'Pos(k)-Key'Pos(Colors'First))
                              ):= Color_Type'Value(s);
@@ -201,7 +203,7 @@ package body TC.GWin.Options is
   -- Save --
   ----------
 
-  procedure Save is
+  procedure Save (mru : in Office_Applications.MRU_Info) is
     o: General_Options renames TC.gen_opt;
     p: Picture_Options renames o.options_for_new;
     zekey: Key;
@@ -269,16 +271,11 @@ package body TC.GWin.Options is
               end case;
             end;
           when mru1..mru9 =>
-            R(
-              GWindows.GStrings.To_String (
-                To_GString_From_Unbounded(mru( Key'Pos(k)-Key'Pos(mru1)+1 ))
-              )
-            );
-          when Colors   =>
-            R( Color_Type'Image(
-                 color(Color_Zone'Val(Key'Pos(k)-Key'Pos(Colors'First)))
-               )
-            );
+            R (GWindows.GStrings.To_String
+                 (To_GString_From_Unbounded (mru.Item (Key'Pos (k) - Key'Pos (mru1) + 1).Name)));
+          when Colors =>
+            R (Color_Type'Image
+                 (color (Color_Zone'Val (Key'Pos (k) - Key'Pos (Colors'First)))));
         end case;
       end;
     end loop;

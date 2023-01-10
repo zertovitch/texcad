@@ -2,6 +2,8 @@ with TC.GWin.Lang;                      use TC.GWin.Lang;
 
 with GWin_Util;
 
+with Office_Applications;
+
 package body TC.GWin.Menus is
 
   use GWindows.Menus, GWin_Util;
@@ -34,10 +36,11 @@ package body TC.GWin.Menus is
       Append_Item (m, preview);
       Append_Separator (m);
     end if;
-    for i in mru'Range loop
-      Append_Item (m,
-       "",
-       ID_custom( Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - mru'First)) );
+    for i in Office_Applications.MRU_Range loop
+      Append_Item
+        (m,
+         "",
+         ID_custom (Custom_cmd'Val( Custom_cmd'Pos(mru1) + i - Office_Applications.MRU_Range'First)));
     end loop;
     Append_Separator (m);
     if is_child then
