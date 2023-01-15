@@ -43,7 +43,7 @@ package TC.GWin.MDI_Picture_Child is
         PE           : Point;        -- Point 2 for Bezier in picture units
         Disp_W,
         Disp_H       : Integer;      -- Size of displayed area (=client area of parent)
-        parent       : MDI_Picture_Child_Access; -- -> containing window
+        pic_parent   : MDI_Picture_Child_Access; -- -> containing window
         main         : MDI_Main_Access;          -- -> main window
         hor_splitt,
         ver_splitt,             --  Aufteilung des Bildschirms

@@ -212,6 +212,7 @@ package body TC.GWin.MDI_Main is
   procedure On_Create (Window : in out MDI_Main_Type) is
     use Ada.Command_Line;
   begin
+    GWindows.Base.Mouse_Wheel_Target := Mouse_Window;
     TC.GWin.Options.Load (Window.MRU);
     TC.startup_language:= TC.gen_opt.lang;
 
@@ -222,12 +223,12 @@ package body TC.GWin.MDI_Main is
 
     --  ** Menus and accelerators:
 
-    Create_Menus (Window);
-    Accelerator_Table (Window, "Main_Menu");
     for i in Window.MRU.ID_Menu'Range loop
       Window.MRU.ID_Menu (i) :=
         ID_custom (Custom_cmd'Val (Custom_cmd'Pos (mru1) + i - Window.MRU.ID_Menu'First));
     end loop;
+    Create_Menus (Window);
+    Accelerator_Table (Window, "Main_Menu");
 
     --  ** Status bar at bottom of the main window:
 

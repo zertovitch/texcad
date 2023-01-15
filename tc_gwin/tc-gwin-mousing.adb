@@ -204,15 +204,15 @@ package body TC.GWin.Mousing is
       X00:= w.X0;
       Y00:= w.Y0;
       if X < w.X0 then
-        On_Horizontal_Scroll( w.parent.all, Previous_Unit, null);
+        On_Horizontal_Scroll( w.pic_parent.all, Previous_Unit, null);
       elsif X > w.Disp_W + w.X0 then
-        On_Horizontal_Scroll( w.parent.all, Next_Unit, null);
+        On_Horizontal_Scroll( w.pic_parent.all, Next_Unit, null);
       end if;
 
       if  Y < w.Y0 then
-        On_Vertical_Scroll( w.parent.all, Previous_Unit, null);
+        On_Vertical_Scroll( w.pic_parent.all, Previous_Unit, null);
       elsif Y > w.Disp_H + w.Y0 then
-        On_Vertical_Scroll( w.parent.all, Next_Unit, null);
+        On_Vertical_Scroll( w.pic_parent.all, Next_Unit, null);
       end if;
       if X00 /= w.X0 or Y00 /= w.Y0 then
         Redraw(w,Redraw_Now=> True);
@@ -310,17 +310,17 @@ package body TC.GWin.Mousing is
       when none => null;
       when paste0 => null; -- shoudn't happen...
       when paste1 =>
-        Load_Macro(w.parent.all);
+        Load_Macro (w.pic_parent.all);
         Change_Cursor(w, cur_picking);
       when click_1 =>
         Release_Mouse;
         case w.current_cmd is
           when text          =>
-            New_text( w.Picture, w.parent.all, w.main.all, w.PU, txt, w.current_ls );
+            New_text( w.Picture, w.pic_parent.all, w.main.all, w.PU, txt, w.current_ls );
           when put           =>
-            New_text( w.Picture, w.parent.all, w.main.all, w.PU, putaux, w.current_ls );
+            New_text( w.Picture, w.pic_parent.all, w.main.all, w.PU, putaux, w.current_ls );
           when par_cur_2d_cmd  =>
-            New_paramcurve_2d( w.Picture, w.parent.all, w.main.all, w.PU, w.current_ls );
+            New_paramcurve_2d( w.Picture, w.pic_parent.all, w.main.all, w.PU, w.current_ls );
           when Deformation_cmd =>
             Deformation(w);
           when others =>
@@ -337,16 +337,16 @@ package body TC.GWin.Mousing is
               Change_Cursor(w, cur_arrow);
               case w.Picture.memo.art is
                 when txt | putaux | box =>
-                  Change_Text( w.parent.all, w.main.all, w.Picture.memo.all, modif );
+                  Change_Text( w.pic_parent.all, w.main.all, w.Picture.memo.all, modif );
                 when oval =>
-                  Change_Oval( w.parent.all, w.main.all, w.Picture.memo.all, modif );
+                  Change_Oval( w.pic_parent.all, w.main.all, w.Picture.memo.all, modif );
                 when bezier =>
                   Change_Bezier(
-                    w.parent.all, w.main.all, w.Picture.ul_in_pt,
+                    w.pic_parent.all, w.main.all, w.Picture.ul_in_pt,
                     w.Picture.memo.all, modif);
                 when paramcurve2d =>
                   Change_Param_2D(
-                    w.parent.all, w.main.all,
+                    w.pic_parent.all, w.main.all,
                     w.Picture.memo.all, modif);
                 when others =>
                   modif:= False;
@@ -391,7 +391,7 @@ package body TC.GWin.Mousing is
           case w.current_cmd is
             when Box_cmd | oval =>
               Release_Mouse;
-              New_boxoval( w.Picture, w.parent.all, w.main.all,
+              New_boxoval( w.Picture, w.pic_parent.all, w.main.all,
                 (Real'Min(w.PU.x,w.PS.x),Real'Min(w.PU.y,w.PS.y)),
                 (Real'Max(w.PU.x,w.PS.x),Real'Max(w.PU.y,w.PS.y)),
                 w.current_ls, w.current_cmd );
@@ -435,7 +435,7 @@ package body TC.GWin.Mousing is
         w.PS:= w.PU; -- \line has modified w.PU
         w.capture:= click_2;
     end case;
-    Update_Information (w.parent.all);
+    Update_Information (w.pic_parent.all);
     Show_mouse_mode (w);
     case Capture_mem is
       when click_2 | figure_2 =>

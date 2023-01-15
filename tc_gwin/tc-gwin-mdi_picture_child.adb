@@ -274,14 +274,17 @@ package body TC.GWin.MDI_Picture_Child is
     end if;
   end Do_Mouse_Move;
 
-  procedure Do_Mouse_Wheel(Window  : in out Base_Window_Type'Class;
-                           X       : in     Integer;
-                           Y       : in     Integer;
-                           Keys    : in     Mouse_Key_States;
-                           Z_Delta : in Integer)
+  procedure Do_Mouse_Wheel (Window  : in out Base_Window_Type'Class;
+                            X       : in     Integer;
+                            Y       : in     Integer;
+                            Keys    : in     Mouse_Key_States;
+                            Z_Delta : in Integer)
   is
     pragma Unreferenced (X, Y);
-    WW : MDI_Picture_Child_Type renames MDI_Picture_Child_Type (Window);
+    --  NB: Since GWindows rev. 472, the handler could be defined
+    --  for a MDI_Picture_Child_Type and work correctly.
+    pn : TC_Picture_Panel renames TC_Picture_Panel (Window);
+    WW : MDI_Picture_Child_Type renames pn.pic_parent.all;
     v_pos : constant Natural := Scroll_Position (WW, Vertical);
     dy : constant Natural := Scroll_Page_Size (WW, Vertical);
     z : Integer;
@@ -496,7 +499,7 @@ package body TC.GWin.MDI_Picture_Child is
 
       -- Filial feelings:
       Window.MDI_Root:= MDI_Main_Access (Controlling_Parent (Window));
-      Window.Draw_Control.parent :=
+      Window.Draw_Control.pic_parent :=
         MDI_Picture_Child_Access (Controlling_Parent (Window.Draw_Control));
       Window.Draw_Control.main := Window.MDI_Root;
 
@@ -514,7 +517,7 @@ package body TC.GWin.MDI_Picture_Child is
       On_Left_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
       On_Right_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
       On_Mouse_Move_Handler (Window.Draw_Control, Do_Mouse_Move'Access);
-      On_Mouse_Wheel_Handler (Window, Do_Mouse_Wheel'Access);
+      On_Mouse_Wheel_Handler (Window.Draw_Control, Do_Mouse_Wheel'Access);
       --
       On_Character_Down_Handler (Window, Do_Key_Down'Access); -- 14-Oct-2005
 
@@ -576,7 +579,6 @@ package body TC.GWin.MDI_Picture_Child is
 
       Scroll_Position(Window, Vertical, Scroll_Maximum(Window, Vertical));
       Adjust_Draw_Control_Position(Window);
-      Window.Use_Mouse_Wheel;
       Update_Common_Menus (Window);
       Update_Information (Window);
    end On_Create;
@@ -1164,13 +1166,13 @@ package body TC.GWin.MDI_Picture_Child is
 
   --  procedure On_Focus (Window : in out MDI_Picture_Child_Type) is
   --  begin
-  --    Parent(Window.MDI_Root.Drawing_toolbar,Window);
+  --    parent(Window.MDI_Root.Drawing_toolbar,Window);
   --  end;
 
   --  procedure On_Lost_Focus (Window : in out MDI_Picture_Child_Type) is
   --  begin
   --    --GWindows.Base.  Base_Window_Type(
-  --    Parent(Window.MDI_Root.Drawing_toolbar,Window.MDI_parent.all);
+  --    parent(Window.MDI_Root.Drawing_toolbar,Window.MDI_parent.all);
   --  end;
 
 end TC.GWin.MDI_Picture_Child;
