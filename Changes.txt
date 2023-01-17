@@ -3,33 +3,32 @@ Major changes in TeXCAD
 
 Version 4.5
 ===========
-a64:
+64:
 - Added 2D parametric curves
 
 Version 4.4
 ===========
-a48:
+48:
 - (Windows) Added a Tools menu, with cleanup entry
 - TC.Tools added, with picture cleanup
 
 Version 4.3
 ===========
-105:
+x105:
 - (Windows) Using Windows clipboard for copy/cut/paste
 - (Windows) Using the mouse wheel for scrolling/zooming
 - (Windows) Using the Page Up/Down keys for scrolling
 
 Version 4.2
 ===========
-
-099, Upload 14-Aug-2007:
+x099, Upload 14-Aug-2007:
 - More refined algorithm to pick / unpick single objects: when the pointer touches several objects,
     at most one is considered at a time
 - (Windows) Fixed case of non-maximized sub-windows: any new window, even on a next session,
     was invisible, making TC unusable without fiddling the registry!
 
 
-096, 097, Upload 2-Feb-2007:
+x096, x097, Upload 2-Feb-2007:
 - TC.Output automatically chains epic's lines (\drawline, \dashline, \dottedline)
     whenever possible
 - TC.Input treats H-Tabs as blanks, understands unary "+"
@@ -37,7 +36,7 @@ Version 4.2
     commands, also with N > 2 points, and the eepic \path command
 - line "\usepackage{epic}" for LaTeX2e previewing (is \documentstyle[epic] in 2.09 mode)
 
-095, Upload 14-Jan-2007:
+x095, Upload 14-Jan-2007:
 - LaTeX code insertions for previewing (e.g. \usepackage, \renewcommand, \input, ...)
 - Can select, instead of 2.09, LaTeX 2e for preview (now default) 
 - Use of Unbounded_String's for options and figure contents -> no more limitation to 255 characters
