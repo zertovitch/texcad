@@ -1,37 +1,38 @@
-with TC.GWin.Lang;                      use TC.GWin.Lang;
-with TeXCAD_Resource_GUI;               use TeXCAD_Resource_GUI;
+with TC.GWin.Lang;
 
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Static_Controls;          use GWindows.Static_Controls;
-with GWindows.Windows;                  use GWindows.Windows;
+with TeXCAD_Resource_GUI;
 
-with GWin_Util;                         use GWin_Util;
+with GWindows.Buttons,
+     GWindows.Constants,
+     GWindows.Edit_Boxes,
+     GWindows.Message_Boxes,
+     GWindows.Static_Controls,
+     GWindows.Windows;
 
-with Ada.Exceptions;                    use Ada.Exceptions;
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with GWin_Util;
 
-package body TC.GWin.Object_editing is
+with Ada.Exceptions,
+     Ada.Strings.Fixed;
 
-  use TC.RIO;
+package body TC.GWin.Object_Editing is
 
-  procedure Change_Text(
-    parent  : in out Base_Window_Type'Class;
-    main    : in out MDI_Main_Type;
-    t       : in out Obj_type;
-    modified:    out Boolean ) is
+  use Ada.Strings, Ada.Strings.Fixed, TC.RIO;
 
-    pan                : Window_Type;
-    text_eb, dash_eb   : Edit_Box_Type;
-    h_group            : Group_Box_Type;
-    h_radio            : array(H_Justify) of Radio_Button_Type;
-    v_group            : Group_Box_Type;
-    v_radio            : array(V_Justify) of Radio_Button_Type;
-    oki                : Default_Button_Type;
-    cancel             : Button_Type;
-    Result,w,x,y,wprop : Integer;
+  procedure Change_Text
+    (parent   : in out GWindows.Base.Base_Window_Type'Class;
+     main     : in out MDI_Main.MDI_Main_Type;
+     t        : in out Obj_type;
+     modified :    out Boolean)
+  is
+    pan                     : GWindows.Windows.Window_Type;
+    text_eb, dash_length_eb : GWindows.Edit_Boxes.Edit_Box_Type;
+    h_group                 : GWindows.Buttons.Group_Box_Type;
+    h_radio                 : array (H_Justify) of GWindows.Buttons.Radio_Button_Type;
+    v_group                 : GWindows.Buttons.Group_Box_Type;
+    v_radio                 : array (V_Justify) of GWindows.Buttons.Radio_Button_Type;
+    oki                     : GWindows.Buttons.Default_Button_Type;
+    cancel                  : GWindows.Buttons.Button_Type;
+    Result, w, x, y, wprop  : Integer;
 
     h_just: H_Justify;
     v_just: V_Justify;
@@ -58,26 +59,29 @@ package body TC.GWin.Object_editing is
     procedure Get_Box_Data
       (Window : in out GWindows.Base.Base_Window_Type'Class)
     is
-      pragma Warnings(off,Window);
+      pragma Warnings (off, Window);
+      use GWindows.Buttons;
     begin
-      candidate.inhalt:= To_Unbounded_String(G2S (GWindows.Edit_Boxes.Text(text_eb)));
+      candidate.inhalt := To_Unbounded_String (G2S (text_eb.Text));
       if t.art /= putaux then
         for h in H_Justify loop
-          if State(h_radio(h))=Checked then
-            h_just:= h;
+          if h_radio(h).State = Checked then
+            h_just := h;
           end if;
         end loop;
         for v in V_Justify loop
-          if State(v_radio(v))=Checked then
-            v_just:= v;
+          if v_radio(v).State = Checked then
+            v_just := v;
           end if;
         end loop;
-        Images( h_just, v_just, candidate.adjust, candidate.adjust_len );
+        Images (h_just, v_just, candidate.adjust, candidate.adjust_len);
       end if;
       if t.ls.pattern = dash then
-        candidate.ls.dash_length:= TC.Real'Value(G2S (Text(dash_eb)));
+        candidate.ls.dash_length := TC.Real'Value (G2S (dash_length_eb.Text));
       end if;
     end Get_Box_Data;
+
+    use GWindows.Constants, GWindows.Static_Controls, GWin_Util, Lang;
 
   begin
     Values( t.adjust(1..t.adjust_len), h_just, v_just );
@@ -91,44 +95,44 @@ package body TC.GWin.Object_editing is
       y:= y + 30;
     end if;
 
-    Create_As_Dialog(pan, parent, S2G (Panel_title), Width => 630, Height => 110+y);
+    pan.Create_As_Dialog (parent, S2G (Panel_title), Width => 630, Height => 110+y);
 
-    Center(pan);
-    Small_Icon (pan, "Options_Icon");
-    On_Destroy_Handler (pan, Get_Box_Data'Unrestricted_Access);
+    pan.Center;
+    pan.Small_Icon ("Options_Icon");
+    pan.On_Destroy_Handler (Get_Box_Data'Unrestricted_Access);
 
-    GWin_Util.Use_GUI_Font(pan);
+    GWin_Util.Use_GUI_Font (pan);
 
-    w:= Client_Area_Width (pan) - 20;
+    w := pan.Client_Area_Width - 20;
 
-    Create(text_eb, pan, S2G (To_String(t.inhalt)), 10, 8, w, 24);
+    text_eb.Create (pan, S2G (To_String (t.inhalt)), 10, 8, w, 24);
 
     if t.art /= putaux then
 
       wprop:= (w*2)/3;
 
-      Create(h_group, pan, "", 10, 30, wprop - 5, h_adj_groups);
+      h_group.Create (pan, "", 10, 30, wprop - 5, h_adj_groups);
 
       for h in H_Justify loop
         x:= 20 + 120* H_Justify'Pos(h);
         Create_Label (pan,
           Msg(Message'Val(Message'Pos(left)+H_Justify'Pos(h))),
           x,  70, 120, 40);
-        Create(h_radio(h),pan, "",  x,  45,  80, 15);
-        State(h_radio(h),boolean_to_state(h=h_just));
+        h_radio (h).Create (pan, "",  x,  45,  80, 15);
+        h_radio (h).State (boolean_to_state(h=h_just));
       end loop;
 
       x:= 10 + 5 + wprop + 5;
 
-      Create(v_group, pan, "", x, 30, (w-wprop) - 10, h_adj_groups);
+      v_group.Create (pan, "", x, 30, (w-wprop) - 10, h_adj_groups);
 
       for v in V_Justify loop
         y:= 45 + 25* V_Justify'Pos(v);
         Create_Label (pan,
            Msg(Message'Val(Message'Pos(top)+V_Justify'Pos(v))),
            x + 50,  y, 130, 20);
-        Create(v_radio(v),pan, "",  x+10,  y,  30, 15);
-        State(v_radio(v),boolean_to_state(v=v_just));
+        v_radio (v).Create (pan, "",  x+10,  y,  30, 15);
+        v_radio (v).State (boolean_to_state(v = v_just));
       end loop;
 
     end if;
@@ -136,22 +140,22 @@ package body TC.GWin.Object_editing is
     case t.ls.pattern is
       when plain => null;
       when dash =>
-        Create_Label(pan,Msg(dash_size), 10,  y, 130, 20);
-        Put(dum_str,t.ls.dash_length,2,0);
-        Create (dash_eb, pan, S2G (Trim(dum_str,Left)), 180, y,  40, 20);
+        Create_Label (pan,Msg(dash_size), 10,  y, 130, 20);
+        Put (dum_str,t.ls.dash_length,2,0);
+        dash_length_eb.Create (pan, S2G (Trim(dum_str,Left)), 180, y,  40, 20);
       when dot => null;
     end case;
 
-    Create (oki, pan, "O&K", 20,
-            Client_Area_Height (pan) - 40, 60, 25, ID => IDOK);
-    Create (cancel, pan, Msg(mcancel), 100,
-            Client_Area_Height (pan) - 40, 60, 25, ID => IDCANCEL);
+    oki.Create (pan, "O&K", 20,
+            pan.Client_Area_Height - 40, 60, 25, ID => IDOK);
+    cancel.Create (pan, Msg(mcancel), 100,
+            pan.Client_Area_Height - 40, 60, 25, ID => IDCANCEL);
 
-    candidate:= t;
+    candidate := t;
 
-    Focus(text_eb);
+    text_eb.Focus;
 
-    Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
+    MDI_Main.Show_Dialog_with_Toolbars_off (pan, parent, main, Result);
 
     case Result is
       when IDOK     =>
@@ -168,93 +172,96 @@ package body TC.GWin.Object_editing is
 
   end Change_Text;
 
-  procedure Change_Oval(
-    parent  : in out Base_Window_Type'Class;
-    main    : in out MDI_Main_Type;
-    t       : in out Obj_type;
-    modified:    out Boolean ) is
-
-    pan      : Window_Type;
-    bordcoin : array( Ovop ) of Dialog_Button_Type;
-    result,i : Integer;
-    nov      : Ovop;
-    ID_offset: constant:= 10000;
+  procedure Change_Oval
+    (parent   : in out GWindows.Base.Base_Window_Type'Class;
+     main     : in out MDI_Main.MDI_Main_Type;
+     t        : in out Obj_type;
+     modified :    out Boolean)
+  is
+    pan       : GWindows.Windows.Window_Type;
+    bordcoin  : array (Ovop) of GWindows.Buttons.Dialog_Button_Type;
+    result, i : Integer;
+    nov       : Ovop;
+    ID_offset : constant := 10000;
 
   begin
-    Create_As_Dialog(pan, parent, "\oval", Width => 460, Height => 225);
-    Center(pan);
-    Small_Icon (pan, "Options_Icon");
-    GWin_Util.Use_GUI_Font(pan);
+    pan.Create_As_Dialog (parent, "\oval", Width => 460, Height => 225);
+    pan.Center;
+    pan.Small_Icon ("Options_Icon");
+    GWin_Util.Use_GUI_Font (pan);
 
     for o in Ovop loop
-      i:= Ovop'Pos(o);
-      Create(
-        bordcoin(o), pan,
-        To_Lower( S2G(Ovop'Image(o)) ),
-        100 + (i mod 3) * 100,
-        30  + (i / 3) * 50,
-        60, 25, ID => i+ID_offset );
+      i := Ovop'Pos(o);
+      bordcoin (o).Create
+        (pan,
+         GWin_Util.To_Lower( S2G (Ovop'Image(o)) ),
+         100 + (i mod 3) * 100,
+         30  + (i / 3) * 50,
+         60, 25, ID => i+ID_offset );
     end loop;
-    Focus(bordcoin(t.part));
+    bordcoin (t.part).Focus;
 
-    Show_Dialog_with_Toolbars_off(pan, parent, main, result);
+    MDI_Main.Show_Dialog_with_Toolbars_off (pan, parent, main, result);
 
-    if result = IDCANCEL then
-      modified:= False;
+    if result = GWindows.Constants.IDCANCEL then
+      modified := False;
     else
-      i:= result-ID_offset;
+      i := result-ID_offset;
       -- 13-Jan-2004: sometimes command outside of range.
-      if i in Ovop'Pos(Ovop'First) .. Ovop'Pos(Ovop'Last) then
-        nov:= Ovop'Val(i);
+      if i in Ovop'Pos (Ovop'First) .. Ovop'Pos (Ovop'Last) then
+        nov := Ovop'Val (i);
       else
-        nov:= entire;
+        nov := entire;
       end if;
-      modified:= t.part /= nov;
-      t.part:= nov;
+      modified := t.part /= nov;
+      t.part := nov;
     end if;
 
   end Change_Oval;
 
-  procedure Change_Bezier(
-    parent  : in out Base_Window_Type'Class;
-    main    : in out MDI_Main_Type;
-    ul_in_pt:        Real;
-    t       : in out Obj_type;
-    modified:    out Boolean ) is
-
-    pan                : Window_Type;
-    pts_box            : Edit_Box_Type;
-    qbezier_radio      : array( Boolean ) of Radio_Button_Type;
-    oki                : Default_Button_Type;
-    cancel             : Button_Type;
+  procedure Change_Bezier
+    (parent   : in out GWindows.Base.Base_Window_Type'Class;
+     main     : in out MDI_Main.MDI_Main_Type;
+     ul_in_pt :        Real;
+     t        : in out Obj_type;
+     modified :    out Boolean)
+  is
+    pan                : GWindows.Windows.Window_Type;
+    pts_box            : GWindows.Edit_Boxes.Edit_Box_Type;
+    qbezier_radio      : array( Boolean ) of GWindows.Buttons.Radio_Button_Type;
+    oki                : GWindows.Buttons.Default_Button_Type;
+    cancel             : GWindows.Buttons.Button_Type;
     Result             : Integer;
     candidate, i0      : Natural;
 
     procedure Get_Data
       (Window : in out GWindows.Base.Base_Window_Type'Class)
     is
-      pragma Warnings(off,Window);
-      i   : Integer;
+      pragma Warnings (off, Window);
+      i : Integer;
+      use GWindows.Buttons;
     begin
-      if State(qbezier_radio(True))=Checked then
-        candidate:= 0;
+      if State (qbezier_radio (True)) = Checked then
+        candidate := 0;
       else
-        Focus(pts_box);
-        i:= Integer'Value(G2S (Text(pts_box)));
+        pts_box.Focus;
+        i := Integer'Value (G2S (pts_box.Text));
         if i >= 1 then
-          candidate:= i;
+          candidate := i;
         end if;
       end if;
     exception
-      when others => null; -- Wrong data
+      when others => null;  --  Wrong data
     end Get_Data;
 
+    use GWindows.Constants, GWindows.Static_Controls, GWin_Util, Lang;
+
   begin
-    Create_As_Dialog(pan, parent, "\qbezier, \bezier", Width => 320, Height => 140);
-    Center(pan);
-    Small_Icon (pan, "Options_Icon");
-    On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
-    GWin_Util.Use_GUI_Font(pan);
+    pan.Create_As_Dialog(parent, "\qbezier, \bezier", Width => 320, Height => 140);
+    pan.Center;
+    pan.Small_Icon ("Options_Icon");
+    pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
+    GWin_Util.Use_GUI_Font (pan);
 
     candidate:= t.num;
     if candidate = 0 then
@@ -263,22 +270,22 @@ package body TC.GWin.Object_editing is
       i0:= candidate;
     end if;
 
-    Create(qbezier_radio(True),pan, "",             10,  20,  20, 20);
-    Create_Label( pan, "Auto  (\qbezier)",          40,  20, 140, 20);
-    Create(qbezier_radio(False),pan, "",           190,  20,  20, 20);
-    Create(pts_box, pan, S2G (Integer'Image(i0)),  220,  20,  60, 20);
+    qbezier_radio (True).Create (pan, "",             10,  20,  20, 20);
+    Create_Label (pan, "Auto  (\qbezier)",            40,  20, 140, 20);
+    qbezier_radio (False).Create (pan, "",           190,  20,  20, 20);
+    pts_box.Create (pan, S2G (Integer'Image (i0)),   220,  20,  60, 20);
 
-    State(qbezier_radio(True),boolean_to_state(candidate=0));
-    State(qbezier_radio(False),boolean_to_state(candidate/=0));
+    qbezier_radio (True).State  (boolean_to_state (candidate = 0));
+    qbezier_radio (False).State (boolean_to_state (candidate /= 0));
 
-    Create (oki, pan, "O&K", 20,
-            Client_Area_Height (pan) - 40, 60, 25, ID => IDOK);
-    Create (cancel, pan, Msg(mcancel), 100,
-            Client_Area_Height (pan) - 40, 60, 25, ID => IDCANCEL);
+    oki.Create (pan, "O&K", 20,
+            pan.Client_Area_Height - 40, 60, 25, ID => IDOK);
+    cancel.Create (pan, Msg (mcancel), 100,
+            pan.Client_Area_Height - 40, 60, 25, ID => IDCANCEL);
 
-    Focus(pts_box);
+    pts_box.Focus;
 
-    Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
+    MDI_Main.Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
 
     case Result is
       when IDOK     => modified:= candidate /= t.num;
@@ -292,11 +299,11 @@ package body TC.GWin.Object_editing is
   --  2D parametric curve properties dialog  --
   ---------------------------------------------
 
-  procedure Change_Param_2D(
-    parent  : in out Base_Window_Type'Class;
-    main    : in out MDI_Main_Type;
-    t       : in out Obj_type;
-    modified:    out Boolean )
+  procedure Change_Param_2D
+    (parent   : in out GWindows.Base.Base_Window_Type'Class;
+     main     : in out MDI_Main.MDI_Main_Type;
+     t        : in out Obj_type;
+     modified :    out Boolean)
   is
     pan       : TeXCAD_Resource_GUI.Param_Curve_2D_Dialog_Type;
     Result    : Integer;
@@ -315,10 +322,13 @@ package body TC.GWin.Object_editing is
       pan.T_Max_Box.Text    (S2G (TeX_Number(candidate.max_t)));
     end Set_Data;
 
+    use GWin_Util, Lang;
+
     procedure Get_Data
       (Window : in out GWindows.Base.Base_Window_Type'Class)
     is
-      pragma Warnings(off,Window);
+      pragma Warnings (off, Window);
+      use Ada.Exceptions;
     begin
       candidate:=
         ( segments => Natural'Value(G2S (pan.Segments_Box.Text)),
@@ -333,44 +343,46 @@ package body TC.GWin.Object_editing is
       valid:= True;
     exception
       when E: others =>
-        err:= U(Exception_Name(E) & ASCII.CR & ASCII.LF & Exception_Message(E)); -- Wrong data
+        err := U(Exception_Name(E) &
+               ASCII.CR & ASCII.LF &
+               Exception_Message(E));  --  Wrong data
     end Get_Data;
 
   begin
     loop
-      Create_Full_Dialog(pan, parent, Msg(param2d_title));
-      Center(pan);
-      Small_Icon (pan, "Options_Icon");
-      On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
+      pan.Create_Full_Dialog (parent, Msg (param2d_title));
+      pan.Center;
+      pan.Small_Icon ("Options_Icon");
+      pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
       Set_Data;
       pan.Segments_Label.Text(Msg(param2d_segments));
       pan.Scale_Label.Text(Msg(param2d_scale));
       pan.IDCANCEL.Text(Msg(mcancel));
 
-      Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
+      MDI_Main.Show_Dialog_with_Toolbars_off(pan, parent, main, Result);
       case Result is
-        when IDOK     =>
+        when GWindows.Constants.IDOK =>
           if valid then
             modified:= candidate /= t.data_2d;
             if modified then
               t.data_2d:= candidate;
-              t.parsed_2d_x:= px;
-              t.parsed_2d_y:= py;
+              t.parsed_2d_x := px;
+              t.parsed_2d_y := py;
             end if;
             exit;
           else
-            Message_Box(parent,
-              "Error",
-              "Error in data" & NL & "Details:" & NL & S2G (To_String(err))
-            );
-            modified:= False;
+            GWindows.Message_Boxes.Message_Box
+              (parent,
+               "Error",
+               "Error in data" & NL & "Details:" & NL & S2G (To_String(err)));
+            modified := False;
           end if;
-        when others   =>
-          modified:= False; -- Contains IDCANCEL
+        when others =>  --  Contains the IDCANCEL case.
+          modified := False;
           exit;
       end case;
 
     end loop;
     end Change_Param_2D;
 
-end TC.GWin.Object_editing;
+end TC.GWin.Object_Editing;

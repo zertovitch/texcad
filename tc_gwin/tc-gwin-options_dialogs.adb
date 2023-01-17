@@ -1,26 +1,27 @@
-with TC.GWin.Lang;                      use TC.GWin.Lang;
-
-with TC.GWin.Display,
+with TC.GWin.Lang,
+     TC.GWin.Display,
      TC.GWin.Options;
 
 with GWindows.Base;                     use GWindows.Base;
 with GWindows.Buttons;                  use GWindows.Buttons;
 with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Combo_Boxes;              use GWindows.Combo_Boxes;
-with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Static_Controls;          use GWindows.Static_Controls;
-with GWindows.Windows;                  use GWindows.Windows;
+with GWindows.Constants;
+with GWindows.Combo_Boxes;
+with GWindows.Edit_Boxes;
+with GWindows.Message_Boxes;
+with GWindows.Static_Controls;
+with GWindows.Windows;
 
-with GWin_Util;                         use GWin_Util;
+with GWin_Util;
 
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Fixed;
 
 package body TC.GWin.Options_Dialogs is
 
+  use GWindows.Message_Boxes;
+
   type Color_Button is new GWindows.Buttons.Button_Type with record
-    z: Color_Zone;
+    z : Color_Zone;
   end record;
 
   ------------------------------
@@ -28,25 +29,25 @@ package body TC.GWin.Options_Dialogs is
   ------------------------------
 
   type Special_Check_Box_Type is new Check_Box_Type with record
-    label   : Label_Type;
-    edit_box: Edit_Box_Type;
+    label    : GWindows.Static_Controls.Label_Type;
+    edit_box : GWindows.Edit_Boxes.Edit_Box_Type;
   end record;
 
   procedure On_Click (Button : in out Special_Check_Box_Type);
 
-  procedure State (Button : in out Special_Check_Box_Type;
-                   State  : in     Check_State_Type)
+  procedure State (Button    : in out Special_Check_Box_Type;
+                   New_State : in     Check_State_Type)
   is
   begin
-    GWindows.Buttons.State(Check_Box_Type(Button),State);
-    Enabled(Button.label,State=Checked);
-    Enabled(Button.edit_box,State=Checked);
+    Check_Box_Type (Button).State (New_State);
+    Button.label.Enabled (New_State = Checked);
+    Button.edit_box.Enabled (New_State = Checked);
   end State;
 
   procedure On_Click (Button : in out Special_Check_Box_Type) is
   begin
-    On_Click(Check_Box_Type(Button));
-    State(Button, State(Button));
+    On_Click (Check_Box_Type (Button));
+    State (Button, State (Button));
   end On_Click;
 
   ------------------------
@@ -55,7 +56,9 @@ package body TC.GWin.Options_Dialogs is
 
   procedure On_General_Options (Window : in out TC.GWin.MDI_Main.MDI_Main_Type)
   is
-    Pan                      : Window_Type;
+    pan : GWindows.Windows.Window_Type;
+
+    use Lang;
 
     subtype Tab_subject is Lang.Message range
       gen_opt_tab_display .. gen_opt_tab_miscellaneous;
@@ -63,10 +66,10 @@ package body TC.GWin.Options_Dialogs is
       new GWin_Util.Property_Tabs_Package(Tab_subject,Lang.Msg,"O&K",Msg(mcancel));
 
     New_Pic_Opt              : Button_Type;
-    Lang                     : Drop_Down_List_Box_Type;
+    language_box             : GWindows.Combo_Boxes.Drop_Down_List_Box_Type;
     Result, i,x,y,yy         : Integer;
     D_tex_suff,
-    D_mac_suff               : Edit_Box_Type;
+    D_mac_suff               : GWindows.Edit_Boxes.Edit_Box_Type;
     color_group, suffix_group: Group_Box_Type;
     bak_check_box            : Special_Check_Box_Type;
     g_group                  : Group_Box_Type;
@@ -93,16 +96,18 @@ package body TC.GWin.Options_Dialogs is
     candidate :          TC.General_Options := original;
     orig_col  : constant TC.GWin.Color_Set  := color;
 
+    use GWin_Util, GWindows.Edit_Boxes, GWindows.Static_Controls;
+
     procedure Get_Data ( pnl : in out GWindows.Base.Base_Window_Type'Class ) is
       pragma Warnings(off,pnl);
     begin
-      candidate.tex_suff:= To_Unbounded_String(G2S (Text(D_tex_suff)));
-      candidate.mac_suff:= To_Unbounded_String(G2S (Text(D_mac_suff)));
-      candidate.bak_suff:= To_Unbounded_String(G2S (Text(bak_check_box.edit_box)));
+      candidate.tex_suff:= To_Unbounded_String(G2S (D_tex_suff.Text));
+      candidate.mac_suff:= To_Unbounded_String(G2S (D_mac_suff.Text));
+      candidate.bak_suff:= To_Unbounded_String(G2S (bak_check_box.edit_box.Text));
       candidate.bak_enabled:= State(bak_check_box) = Checked;
       for L in Language loop
-        if Text(Lang) = Language_rich_image(L) then
-          candidate.lang:= L;
+        if language_box.Text = Language_rich_image (L) then
+          candidate.lang := L;
           exit;
         end if;
       end loop;
@@ -171,14 +176,14 @@ package body TC.GWin.Options_Dialogs is
     end CColor;
 
   begin
-    Create_As_Dialog(Pan, Window, Msg(ogenopt), Width => wmax + 30, Height => 400);
-    Center(Pan);
-    Small_Icon (Pan, "Options_Icon");
-    On_Destroy_Handler (Pan, Get_Data'Unrestricted_Access);
+    pan.Create_As_Dialog (Window, Msg(ogenopt), Width => wmax + 30, Height => 400);
+    pan.Center;
+    pan.Small_Icon ("Options_Icon");
+    pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
 
-    GWin_Util.Use_GUI_Font(Pan);
+    GWin_Util.Use_GUI_Font (pan);
 
-    Tabbing.Create(Pan);
+    Tabbing.Create (pan);
 
     -- Misc tab / Suffix group --
     y:= y0;
@@ -225,12 +230,12 @@ package body TC.GWin.Options_Dialogs is
     y:= y + 70;
     Create_Label (Tabbing.tab(gen_opt_tab_miscellaneous), Msg(lng),
       10,  y, 150, 25);
-    Create( Lang, Tabbing.tab(gen_opt_tab_miscellaneous),
+    language_box.Create (Tabbing.tab (gen_opt_tab_miscellaneous),
      140,  y, 150, 200, Sort => False, Is_Dynamic => False);
     for L in Language loop
-      Add( Lang, Language_rich_image(L) );
+      language_box.Add (Language_rich_image (L) );
     end loop;
-    Text(Lang, Language_rich_image(candidate.lang));
+    language_box.Text (Language_rich_image (candidate.lang));
 
     y:= y + 35;
     Create (New_Pic_Opt, Tabbing.tab(gen_opt_tab_miscellaneous), "&" & Msg(onewpicopt),
@@ -291,10 +296,10 @@ package body TC.GWin.Options_Dialogs is
       State(preview_radio(l),boolean_to_state(l=candidate.preview_mode));
     end loop;
 
-    TC.GWin.MDI_Main.Show_Dialog_with_Toolbars_off(Pan, Window, Window, Result);
+    TC.GWin.MDI_Main.Show_Dialog_with_Toolbars_off(pan, Window, Window, Result);
 
     case Result is
-      when IDOK     =>
+      when GWindows.Constants.IDOK =>
         if candidate.lang /= gen_opt.lang then
           GWindows.Message_Boxes.Message_Box
             ( Window,
@@ -305,14 +310,14 @@ package body TC.GWin.Options_Dialogs is
               Icon => Information_Icon
             );
         end if;
-        gen_opt:= candidate;
+        gen_opt := candidate;
         TC.GWin.Options.Save (Window.MRU);
-      when others   =>       -- contains Idcancel
-        gen_opt:= original;
-        if color /= orig_col then -- 17-Oct-2003: Cancel after colour change!
-          TC.GWin.Display.recreate_drawing_objects:= True;
+      when others =>       --  Contains the IDCANCEL case.
+        gen_opt := original;
+        if color /= orig_col then  --  17-Oct-2003: Cancel after colour change!
+          TC.GWin.Display.recreate_drawing_objects := True;
         end if;
-        color:= orig_col;
+        color := orig_col;
     end case;
     if redraw_again then
       Window.Redraw_all;
@@ -330,7 +335,10 @@ package body TC.GWin.Options_Dialogs is
       modified:    out Boolean;
       title   : String )
    is
-     pan: Window_Type;
+     pan : GWindows.Windows.Window_Type;
+
+     use GWindows.Edit_Boxes, Lang;
+
      subtype Tab_subject is Lang.Message range
        pic_opt_tab_drawing ..  pic_opt_tab_latex;
 
@@ -396,13 +404,15 @@ package body TC.GWin.Options_Dialogs is
            OK_Box, Error_Icon);
      end Get_Data;
 
+     use Ada.Strings, Ada.Strings.Fixed, GWindows.Static_Controls, GWin_Util;
+
   begin
-    Create_As_Dialog(pan, window, S2G (title), Width => wmax + 50, Height => 330);
+    pan.Create_As_Dialog (window, S2G (title), Width => wmax + 50, Height => 330);
     -- Fix_Dialog(pan); -- 2007. No effect, alas...
     -- [Rem. 2020: Fix_Dialog was setting WS_EX_DLGMODALFRAME, no idea what the problem was.]
-    Center(pan);
-    Small_Icon (pan, "Options_Icon");
-    On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
+    pan.Center;
+    pan.Small_Icon ("Options_Icon");
+    pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
 
     GWin_Util.Use_GUI_Font(pan);
 
@@ -509,14 +519,14 @@ package body TC.GWin.Options_Dialogs is
     TC.GWin.MDI_Main.Show_Dialog_with_Toolbars_off(pan, window, main, Result);
 
     case Result is
-      when IDOK     =>
-        modified:= pic_opt /= candidate;
-        -- ^ try to do it so short in another language!
-        pic_opt:= candidate;
-      when others   =>
-        modified:= False; -- Contains IDCANCEL
+      when GWindows.Constants.IDOK =>
+        modified := pic_opt /= candidate;
+        --  ^ try to do it so short in another language!
+        pic_opt := candidate;
+      when others =>  --  Contains the IDCANCEL case.
+        modified := False;
     end case;
-    GWindows.Base.Redraw(window);
+    window.Redraw;
   end On_Picture_Options;
 
 end TC.GWin.Options_Dialogs;

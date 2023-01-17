@@ -1,4 +1,4 @@
-with TC.GWin.Lang;                      use TC.GWin.Lang;
+with TC.GWin.Lang;
 
 with GWin_Util;
 
@@ -6,7 +6,7 @@ with Office_Applications;
 
 package body TC.GWin.Menus is
 
-  use GWindows.Menus, GWin_Util;
+  use GWindows.Menus, GWin_Util, Lang;
 
   procedure Append_Item (Menu    : in Menu_Type;
                          Command : in Custom_cmd)

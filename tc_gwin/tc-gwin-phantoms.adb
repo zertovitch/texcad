@@ -9,10 +9,9 @@ package body TC.GWin.Phantoms is
 
   phantom_pen: array(Pen_Style_Type) of Pen_Type;
 
-  procedure Invert_rubber_box(
-    w      : in out TC_Picture_Panel;
-    cz     :        Color_Zone
-  )
+  procedure Invert_Rubber_Box
+    (w  : in out MDI_Picture_Child.TC_Picture_Panel;
+     cz :        Color_Zone)
   is
     pragma Unreferenced (cz);
     X1: constant Integer:= w.Xs;
@@ -26,22 +25,22 @@ package body TC.GWin.Phantoms is
     Line( w.Drawing_Area, X2,Y1,X2,Y2 );
     Line( w.Drawing_Area, X1,Y2,X2,Y2 );
     Line( w.Drawing_Area, X1,Y1,X1,Y2 );
-  end Invert_rubber_box;
+  end Invert_Rubber_Box;
 
-  procedure Invert_phantom( w: in out TC_Picture_Panel ) is
+  procedure Invert_Phantom( w: in out MDI_Picture_Child.TC_Picture_Panel ) is
     procedure Draw_one( p: ptr_Obj_type ) is
     begin
-      Draw(w.Drawing_Area, w.Picture, p, Width(w), Height(w));
+      Draw (w.Drawing_Area, w.Picture, p, w.Width, w.Height);
     end Draw_one;
 
     o,l: ptr_Obj_type;
 
     procedure Ortholine( P, D: Point ) is
-      V     : Point;
-      nV    : Real;
+      V  : Point;
+      nV : Real;
     begin
-      V:= Ortho(D);
-      nV:= Norm(V) * w.Picture.opt.zoom_fac;
+      V := Ortho(D);
+      nV := Norm(V) * w.Picture.opt.zoom_fac;
       if nV > 0.01 then
         V:= 15.0 * (1.0/nV) * V;
         l.P1:= P - V;
@@ -51,19 +50,19 @@ package body TC.GWin.Phantoms is
     end Ortholine;
 
     procedure Circle_or_Oval_frame_and_cross is -- 14-Oct-2005
-      f: constant:= 0.05;
-      fx,fy: Real;
-      hd, vd: Point;
+      f : constant := 0.05;
+      fx, fy : Real;
+      hd, vd : Point;
     begin
       if o.art = oval then
-        fx:= o.osize.x * 0.5;
-        fy:= o.osize.y * 0.5;
+        fx := o.osize.x * 0.5;
+        fy := o.osize.y * 0.5;
       else
-        fx:= o.rad;
-        fy:= fx;
+        fx := o.rad;
+        fy := fx;
       end if;
-      hd:= (f*fx,0.0);
-      vd:= (0.0,f*fy);
+      hd := (f*fx,0.0);
+      vd := (0.0,f*fy);
       -- Frame:
       l.P1:= o.P1 + (-fx,-fy);
       l.P2:= l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
@@ -189,7 +188,7 @@ package body TC.GWin.Phantoms is
       when others=> null;
     end case;
     Dispose(o);
-  end Invert_phantom;
+  end Invert_Phantom;
 
 begin
   -- 17-Jun-2003 : moved from Invert_[rubber_]box and Invert_phantom

@@ -1,12 +1,11 @@
-with TC.GWin.MDI_Picture_Child;         use TC.GWin.MDI_Picture_Child;
+with TC.GWin.MDI_Picture_Child;
 
 package TC.GWin.Phantoms is
 
-  procedure Invert_rubber_box(
-    w      : in out TC_Picture_Panel;
-    cz     :        Color_Zone
-  );
+  procedure Invert_Rubber_Box
+    (w  : in out MDI_Picture_Child.TC_Picture_Panel;
+     cz :        Color_Zone);
 
-  procedure Invert_phantom( w: in out TC_Picture_Panel );
+  procedure Invert_Phantom (w : in out MDI_Picture_Child.TC_Picture_Panel);
 
 end TC.GWin.Phantoms;

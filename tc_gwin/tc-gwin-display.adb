@@ -1,14 +1,14 @@
 with TC.Display;
 
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Drawing_Objects;          use GWindows.Drawing_Objects;
+with GWindows.Application,
+     GWindows.Drawing_Objects;
 
-with Ada.Numerics;                      use Ada.Numerics;
+with Ada.Numerics;
 
-pragma Elaborate_All(GWindows.Drawing_Objects); -- For GUI_Font initialisation
+pragma Elaborate_All (GWindows.Drawing_Objects); -- For GUI_Font initialisation
 
 package body TC.GWin.Display is
-  use GWindows.Drawing;
+  use GWindows.Drawing, GWindows.Drawing_Objects;
 
   zcount: Natural:= 0;
 
@@ -35,12 +35,13 @@ package body TC.GWin.Display is
     width  : Integer;
     height : Integer)
   is
-    current_color    : Color_Type;
-    current_zone     : TC.Graphics.Color_Zone:= normal;
+    current_color : Color_Type;
+    current_zone  : TC.Graphics.Color_Zone:= normal;
 
     whole_picture: constant Boolean:= an_obj = null;
 
     procedure ClearScreen is
+      use GWindows.Application;
     begin
       Fill_Rectangle (
         Canvas,
@@ -52,63 +53,65 @@ package body TC.GWin.Display is
     begin
       if whole_picture then
         current_zone:= zone;
-        current_color:= color( current_zone );
-        Text_Color(Canvas,current_color);
+        current_color:= color (current_zone);
+        Text_Color (Canvas,current_color);
       end if;
     end SetColor;
 
-    procedure PutPoint( x,y: Integer ) is
+    procedure PutPoint (x, y : Integer) is
     begin
-      GWindows.Drawing.Point(Canvas,x,y, current_color);
+      GWindows.Drawing.Point (Canvas, x, y, current_color);
     end PutPoint;
 
-    procedure Line(x1,y1,x2,y2: Integer) is
+    procedure Line (x1, y1, x2, y2 : Integer) is
     begin
       if whole_picture then
-       Select_Object( Canvas, pen(current_zone) );
+       Select_Object (Canvas, pen(current_zone));
       end if;
       if x1 /= x2 or y1 /= y2 then
-        Line(Canvas,x1,y1,x2,y2);
+        Line (Canvas,x1,y1,x2,y2);
       else
-        GWindows.Drawing.Point(Canvas,x1,y1, current_color);
+        GWindows.Drawing.Point (Canvas,x1,y1, current_color);
       end if;
     end Line;
 
     procedure Full_rectangle( x1,y1,x2,y2: Integer ) is
     begin
-      Background_Mode(Canvas, Transparent);
-      Fill_Rectangle( Canvas, (x1,y1,x2,y2), hatch(current_zone) );
+      Background_Mode (Canvas, Transparent);
+      Fill_Rectangle (Canvas, (x1,y1,x2,y2), hatch(current_zone));
     end Full_rectangle;
 
     procedure Ellipse( x,y, rx,ry: Integer; fill: Boolean ) is
-      l,t,r,b: Integer;
+      l, t, r, b : Integer;
     begin
-      l:= x-rx;
-      t:= y-ry;
-      r:= x+rx;
-      b:= y+ry;
+      l := x - rx;
+      t := y - ry;
+      r := x + rx;
+      b := y + ry;
       if whole_picture then
-        Select_Object( Canvas, pen(current_zone) );
+        Select_Object (Canvas, pen(current_zone));
       end if;
       if fill then
-        Background_Mode(Canvas, Transparent);
-        Select_Object( Canvas, hatch(current_zone) );
-        Ellipse(Canvas, l,t,r,b);
+        Background_Mode (Canvas, Transparent);
+        Select_Object (Canvas, hatch(current_zone));
+        Ellipse (Canvas, l, t, r, b);
       else
-        Arc(Canvas, l,t,r,b, r,y,r,y);
+        Arc (Canvas, l,t,r,b, r,y,r,y);
       end if;
     end Ellipse;
 
-    procedure Arc( x,y, a1,a2, r: Integer ) is
-      use TC.REF;
-      f: constant:= 2.0 * Pi / 360.0;
+    procedure Arc (x, y, a1, a2, r : Integer) is
+      use Ada.Numerics, TC.REF;
+      deg_to_rad : constant := 2.0 * Pi / 360.0;
+      rr : constant Real := Real (r);
     begin
-      Arc(Canvas, x-r,y-r,x+r,y+r,
-          Integer(Real(x)+Real(r)*Cos(Real(a1)*f)),
-          Integer(Real(y)-Real(r)*Sin(Real(a1)*f)),
-          Integer(Real(x)+Real(r)*Cos(Real(a2)*f)),
-          Integer(Real(y)-Real(r)*Sin(Real(a2)*f))
-          );
+      Arc (Canvas,
+           x - r, y - r,
+           x + r, y + r,
+           Integer (Real (x) + rr * Cos (Real (a1) * deg_to_rad)),
+           Integer (Real (y) - rr * Sin (Real (a1) * deg_to_rad)),
+           Integer (Real (x) + rr * Cos (Real (a2) * deg_to_rad)),
+           Integer (Real (y) - rr * Sin (Real (a2) * deg_to_rad)));
     end Arc;
 
     procedure SetTextJustify( h: H_Justify; v: V_Justify ) is
@@ -144,7 +147,7 @@ package body TC.GWin.Display is
   begin
     if whole_picture then
 
-      Set_Mix_Mode(Canvas,R2_COPYPEN);
+      Set_Mix_Mode (Canvas, R2_COPYPEN);
 
       if recreate_drawing_objects then
         for z in Color_Zone loop

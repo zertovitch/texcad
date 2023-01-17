@@ -1,8 +1,8 @@
+with TC.GWin.Lang,
+     TC.GWin.MDI_Main;
+
 with GWin_Util;
 with GWindows.Image_Lists;
-
-with TC.GWin.Lang;                      use TC.GWin.Lang;
-with TC.GWin.MDI_Main;
 
 pragma Elaborate (TC.Gwin);  --  Windows_95 flag needed
 
@@ -10,7 +10,7 @@ with Interfaces.C;
 
 package body TC.GWin.Toolbars is
 
-  use Floating_Toolbars, GWin_Util, Interfaces.C;
+  use Floating_Toolbars, GWin_Util, Interfaces.C, Lang;
 
   procedure Add_Button_with_Tip
     (Control     : in out Office_Applications.Classic_Main_Tool_Bar_Type'Class;

@@ -40,7 +40,7 @@ package TC.GWin.MDI_Main is
   procedure On_About (Window : in out MDI_Main_Type);
   --  Help|About event
 
-  procedure On_Create (Window : in out MDI_Main_Type);
+  overriding procedure On_Create (Window : in out MDI_Main_Type);
   --  Handles setting up icons, menus, etc.
 
   procedure On_Size (Window : in out MDI_Main_Type;
@@ -51,14 +51,13 @@ package TC.GWin.MDI_Main is
                      Left   : in     Integer;
                      Top    : in     Integer);
 
-  procedure On_Menu_Hover (Window  : in out MDI_Main_Type;
-                           Item    : in     Integer;
-                           Kind    : in     GWindows.Windows.Hover_Item_Type);
-  --  Handle setting status bar
+  overriding procedure On_Menu_Hover
+    (Window  : in out MDI_Main_Type;
+     Item    : in     Integer;
+     Kind    : in     GWindows.Windows.Hover_Item_Type);
 
   procedure On_Menu_Select (Window : in out MDI_Main_Type;
                             Item   : in     Integer);
-  --  Handle standard menu selections
 
   procedure On_File_Drop (Window     : in out MDI_Main_Type;
                           File_Names : in     GWindows.Windows.Array_Of_File_Names);

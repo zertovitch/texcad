@@ -1,14 +1,37 @@
-with TC.GWin.Object_editing;            use TC.GWin.Object_editing;
+with TC.GWin.Object_Editing;
 
 package body TC.GWin.New_objects is
 
-  procedure New_boxoval(
-    p           : in out Picture;
-    parent      : in out Base_Window_Type'Class;
-    main        : in out MDI_Main_Type;
-    P1, P2      :        Point;
-    ls          : in out Line_settings; -- possible current dot/dash change
-    cmd         :        Drawing_cmd )
+  procedure New_text
+    (p      : in out Picture;
+     parent : in out GWindows.Base.Base_Window_Type'Class;
+     main   : in out MDI_Main.MDI_Main_Type;
+     P1     :        Point;
+     art    :        Obj_art_type;
+     ls     :        Line_settings)
+  is
+    t : constant ptr_Obj_type := new Obj_type (art);
+    modif : Boolean;
+  begin
+    t.P1:= P1;
+    t.inhalt:= Null_Unbounded_String;
+    t.adjust_len:= 0;
+    t.solid:= False;
+    t.ls:= ls;
+    Object_Editing.Change_Text (parent, main, t.all, modif);
+    if modif then
+      Insert(p, t, at_end);
+      p.refresh:= only_last; -- 30-Apr-2004
+    end if;
+  end New_text;
+
+  procedure New_boxoval
+    (p           : in out Picture;
+     parent      : in out GWindows.Base.Base_Window_Type'Class;
+     main        : in out MDI_Main.MDI_Main_Type;
+     P1, P2      :        Point;
+     ls          : in out Line_settings;  --  Possible current dot/dash change
+     cmd         :        Drawing_cmd)
   is
     t : ptr_Obj_type;
     modif: Boolean;
@@ -30,11 +53,11 @@ package body TC.GWin.New_objects is
     case cmd is
       when framebox   =>
         t.solid:= False;
-        Change_Text(parent, main, t.all, modif);
+        Object_Editing.Change_Text (parent, main, t.all, modif);
       when filled_box =>
         t.solid:= True;
       when oval =>
-        Change_Oval(parent, main, t.all, modif);
+        Object_Editing.Change_Oval (parent, main, t.all, modif);
       when others =>
         null;
     end case;
@@ -43,13 +66,13 @@ package body TC.GWin.New_objects is
     Insert(p, t, at_end);
   end New_boxoval;
 
-  procedure New_linvec(
-    p           : in out Picture;
-    P1          :        Point;
-    P2          : in out Point;        -- moved by setting limited \line slope
-    ls          :        Line_settings)
+  procedure New_linvec
+    (p  : in out Picture;
+     P1 :        Point;
+     P2 : in out Point;        --  Moved by setting limited \line slope
+     ls :        Line_settings)
   is
-    t : constant ptr_Obj_type:= new Obj_type(line);
+    t : constant ptr_Obj_type := new Obj_type (line);
   begin
     t.P1:= P1;
     t.P2:= P2;
@@ -61,12 +84,12 @@ package body TC.GWin.New_objects is
     P2:= t.P2;
   end New_linvec;
 
-  procedure New_bezier(
-    p        : in out Picture;
-    P1,PE,PG :        Point;
-    ls       :        Line_settings)
+  procedure New_bezier
+    (p        : in out Picture;
+     P1,PE,PG :        Point;
+     ls       :        Line_settings)
   is
-    t : constant ptr_Obj_type:= new Obj_type(bezier);
+    t : constant ptr_Obj_type := new Obj_type (bezier);
   begin
     t.P1:= P1;
     t.PE:= PE;
@@ -80,18 +103,17 @@ package body TC.GWin.New_objects is
     Insert(p, t, at_end);
   end New_bezier;
 
-  procedure New_circdisc(
-    p           : in out Picture;
-    P1, P2      :        Point;
-    cmd         :        Drawing_cmd;
-    ls          :        Line_settings
-  )
+  procedure New_circdisc
+    (p      : in out Picture;
+     P1, P2 :        Point;
+     cmd    :        Drawing_cmd;
+     ls     :        Line_settings)
   is
     t : ptr_Obj_type;
   begin
     case cmd is
-      when circle        => t:= new Obj_type(circ);
-      when filled_circle => t:= new Obj_type(disc);
+      when circle        => t := new Obj_type (circ);
+      when filled_circle => t := new Obj_type (disc);
       when others        => null;
     end case;
     t.ls:= ls;
@@ -100,39 +122,14 @@ package body TC.GWin.New_objects is
     Insert(p, t, at_end);
   end New_circdisc;
 
-  procedure New_text(
-    p       : in out Picture;
-    parent  : in out Base_Window_Type'Class;
-    main    : in out MDI_Main_Type;
-    P1      :        Point;
-    art     :        Obj_art_type;
-    ls      :        Line_settings  -- useless, just avoid thickness swapping
-  )
+  procedure New_paramcurve_2d
+    (p      : in out Picture;
+     parent : in out GWindows.Base.Base_Window_Type'Class;
+     main   : in out MDI_Main.MDI_Main_Type;
+     orig   :        Point;
+     ls     : in out Line_settings)
   is
-    t : constant ptr_Obj_type:= new Obj_type(art);
-    modif: Boolean;
-  begin
-    t.P1:= P1;
-    t.inhalt:= Null_Unbounded_String;
-    t.adjust_len:= 0;
-    t.solid:= False;
-    t.ls:= ls;
-    Change_Text(parent, main, t.all, modif);
-    if modif then
-      Insert(p, t, at_end);
-      p.refresh:= only_last; -- 30-Apr-2004
-    end if;
-  end New_text;
-
-  procedure New_paramcurve_2d(
-    p       : in out Picture;
-    parent  : in out Base_Window_Type'Class;
-    main    : in out MDI_Main_Type;
-    orig    :        Point;
-    ls      : in out Line_settings
-  )
-  is
-    t : constant ptr_Obj_type:= new Obj_type(paramcurve2d);
+    t : constant ptr_Obj_type := new Obj_type (paramcurve2d);
     modif: Boolean;
   begin
     t.P1:= orig;
@@ -141,7 +138,7 @@ package body TC.GWin.New_objects is
     t.data_2d.scale    := 1.0;
     t.data_2d.min_t    := 0.0;
     t.data_2d.max_t    := 1.0;
-    Change_Param_2D(parent, main, t.all, modif);
+    Object_Editing.Change_Param_2D (parent, main, t.all, modif);
     if modif then
       Insert(p, t, at_end);
       p.refresh:= only_last;

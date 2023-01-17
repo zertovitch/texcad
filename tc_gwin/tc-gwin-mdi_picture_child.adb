@@ -36,7 +36,7 @@ package body TC.GWin.MDI_Picture_Child is
 
   use TC.REF;
   use TC.GWin.Lang;
-  use GWindows.Menus, GWindows.Message_Boxes, GWindows.Windows;
+  use GWindows.Base, GWindows.Menus, GWindows.Message_Boxes, GWindows.Windows;
   use GWin_Util;
 
   -- Adjust the Draw control's position to those of the scroll controls.
@@ -161,13 +161,16 @@ package body TC.GWin.MDI_Picture_Child is
     area   :        GWindows.Types.Rectangle_Type)
   is
   begin
-    BitBlt( window.Drawing_Area,
-            area.Left, area.Top, area.Right-area.Left, area.Bottom-area.Top,
-            window.Saved_Area,
-            area.Left,area.Top
-          );
-    --### For monitoring (interesting!): ###
-    -- Line(window.Drawing_Area,Area.Left,Area.Top,Area.Right,Area.Bottom);
+    window.Drawing_Area.BitBlt
+      (area.Left,
+       area.Top,
+       area.Right - area.Left,
+       area.Bottom - area.Top,
+       window.Saved_Area,
+       area.Left,
+       area.Top);
+    --  ### For monitoring (interesting!): ###
+    --  Line(window.Drawing_Area,Area.Left,Area.Top,Area.Right,Area.Bottom);
   end Display_saved_bitmap;
 
   procedure Update_bitmap (Window : in out TC_Picture_Panel) is
@@ -347,7 +350,7 @@ package body TC.GWin.MDI_Picture_Child is
                                  top_mru_entry : GString := "" )
   is
   begin
-    Update_Common_Menus (Window.MDI_Root.all, top_mru_entry);
+    Window.MDI_Root.Update_Common_Menus (top_mru_entry);
   end Update_Common_Menus;
 
   procedure Update_Permanent_Command (Window : in out MDI_Picture_Child_Type) is
@@ -397,7 +400,7 @@ package body TC.GWin.MDI_Picture_Child is
             Line_arrows'Pos (Window.Draw_Control.current_ls.arrows)));
     end Update_ls;
 
-    use Mousing;
+    use MDI_Main, Mousing;
 
   begin
     Update_cmd (Window.Draw_Menu);
@@ -408,9 +411,9 @@ package body TC.GWin.MDI_Picture_Child is
       when change_text => Change_Cursor (Window.Draw_Control, cur_chg_text);
       when others      => Change_Cursor (Window.Draw_Control, cur_arrow);
     end case;
-    Update_Status_Bar( Window.MDI_Root.all, command,
-      Filter_amp(Msg(msg_for_command(Window.Draw_Control.current_cmd)))
-    );
+    Window.MDI_Root.Update_Status_Bar
+      (command,
+       Filter_amp(Msg(msg_for_command(Window.Draw_Control.current_cmd))));
   end Update_Permanent_Command;
 
   zoom_factor : constant Real := 2.0 ** (1.0 / 8.0);
@@ -421,15 +424,15 @@ package body TC.GWin.MDI_Picture_Child is
   is
     opt : TC.Picture_Options renames Window.Draw_Control.Picture.opt;
     sf : String (1 .. 20);
-    use Ada.Strings, Ada.Strings.Fixed;
+    use Ada.Strings, Ada.Strings.Fixed, MDI_Main;
   begin
     if direction /= 0 then
       opt.zoom_fac := opt.zoom_fac * (zoom_factor ** direction);
       Window.Draw_Control.Picture.refresh := full;
       Subtle_Redraw (Window.Draw_Control);
     end if;
-    RIO.Put (sf,opt.zoom_fac, 2, 0);
-    Update_Status_Bar (Window.MDI_Root.all, zoom, S2G (Trim (sf,Left)));
+    RIO.Put (sf, opt.zoom_fac, 2, 0);
+    Window.MDI_Root.Update_Status_Bar (zoom, S2G (Trim (sf,Left)));
   end Zoom_Picture;
 
   procedure Update_Information (Window : in out MDI_Picture_Child_Type) is
@@ -467,6 +470,8 @@ package body TC.GWin.MDI_Picture_Child is
       end if;
     end Show_Total;
 
+    use MDI_Main;
+
   begin
     --  Update window title.
     if is_modified then
@@ -475,12 +480,12 @@ package body TC.GWin.MDI_Picture_Child is
       Window.Text (GU2G (Window.Short_Name));
     end if;
     --  Update statistics
-    Update_Status_Bar
-      (Window.MDI_Root.all, stat_objects,
+    Window.MDI_Root.Update_Status_Bar
+      (stat_objects,
        Show_Total ("Objects:", p.total, p.total_hidden) &
        Show_Total ("; picked:", p.picked, p.picked_hidden));
     --  Put a '*' if picture is modified.
-    Update_Status_Bar (Window.MDI_Root.all, modified, (1 => Star (is_modified)));
+    Window.MDI_Root.Update_Status_Bar (modified, (1 => Star (is_modified)));
     --  Update state of "Save" button, "Save " menu entry and window title.
     Update_Tool_Bar;
     Update_Menus;
@@ -493,7 +498,8 @@ package body TC.GWin.MDI_Picture_Child is
   procedure On_Create (Window : in out MDI_Picture_Child_Type) is
     win_asp_x, win_asp_y : Interfaces.C.unsigned;
     use type Interfaces.C.unsigned;
-    use GWindows.Application, GWindows.Drawing.Capabilities;
+    use GWindows.Application, GWindows.Drawing, GWindows.Drawing.Capabilities;
+    use MDI_Main;
   begin
     Small_Icon (Window, "Picture_Icon");
 
@@ -516,8 +522,8 @@ package body TC.GWin.MDI_Picture_Child is
       -- Dock (Window.Draw_Control, GWindows.Base.Fill);
       -- Auto_Resize(Window.Draw_Control);
       -- Dock_Children (Window.Scroll_Panel.Panel);
-      Background_Mode (Window.Draw_Control.Drawing_Area, Transparent);
-      Background_Mode (Window.Draw_Control.Saved_Area, Transparent);
+      Window.Draw_Control.Drawing_Area.Background_Mode (Transparent);
+      Window.Draw_Control.Saved_Area.Background_Mode (Transparent);
 
       On_Change_Cursor_Handler (Window.Draw_Control, Do_Change_Cursor'Access);
       On_Left_Mouse_Button_Down_Handler(Window.Draw_Control, Do_Left_Mouse_Down'Access);
@@ -531,14 +537,14 @@ package body TC.GWin.MDI_Picture_Child is
       On_Character_Down_Handler (Window, Do_Key_Down'Access);  --  14-Oct-2005
 
       Get_Canvas (Window.Draw_Control, Window.Draw_Control.Drawing_Area);
-      Create_Memory_Canvas (Window.Draw_Control.Saved_Area, Window.Draw_Control.Drawing_Area);
+      Window.Draw_Control.Saved_Area.Create_Memory_Canvas (Window.Draw_Control.Drawing_Area);
 
-      Create_Compatible_Bitmap (Window.Draw_Control.Drawing_Area,
-                                Window.Draw_Control.Saved_Bitmap,
-                                Desktop_Width,
-                                Desktop_Height);
-      Select_Object (Window.Draw_Control.Saved_Area,
-                     Window.Draw_Control.Saved_Bitmap);
+      Window.Draw_Control.Drawing_Area.Create_Compatible_Bitmap
+        (Window.Draw_Control.Saved_Bitmap,
+         Desktop_Width,
+         Desktop_Height);
+      Window.Draw_Control.Saved_Area.Select_Object
+        (Window.Draw_Control.Saved_Bitmap);
 
       Refresh_size_dependent_parameters
         (Window.Draw_Control.Picture,
@@ -799,12 +805,12 @@ package body TC.GWin.MDI_Picture_Child is
       when dash  => len_eb.Focus;
     end case;
 
-    Show_Dialog_with_Toolbars_off
+    MDI_Main.Show_Dialog_with_Toolbars_off
       (pan, Window.MDI_Root.all, Window.MDI_Root.all, Result);
 
     case Result is
-      when IDOK     => Window.Draw_Control.current_ls := candidate;
-      when others   => null;  --  Contains the IDCANCEL case.
+      when IDOK   => Window.Draw_Control.current_ls := candidate;
+      when others => null;  --  Contains the IDCANCEL case.
     end case;
 
   end Change_Pattern_Params;
@@ -829,7 +835,7 @@ package body TC.GWin.MDI_Picture_Child is
         when zoom_minus => Window.Zoom_Picture (-2);
         when zoom_plus  => Window.Zoom_Picture (+2);
         when preview    => Preview (Window);
-        when clean_pic  => TC.GWin.Tools.Cleanup_dialog (Window);
+        when clean_pic  => TC.GWin.Tools.Cleanup_Dialog (Window);
         when pic_opt_dialog =>
           TC.GWin.Options_Dialogs.On_Picture_Options
             (Window,

@@ -1,4 +1,4 @@
-with TC.Tools;                          use TC.Tools;
+with TC.Tools;
 
 with Ada.Strings.Unbounded;
 
@@ -178,11 +178,11 @@ package TC.GWin.Lang is
       TB_Line_settings => vtogltb,
       others => empty);
 
-  msg_for_cleanup: constant array(TC.Tools.Detection) of Message:=
-    ( empty_text         =>  clean_empty_text,
-      zero_sized_object  =>  clean_zero_sized_object,
-      unknown_command    =>  clean_unknown_command,
-      comment            =>  clean_comment
+  msg_for_cleanup : constant array (Tools.Detection) of Message:=
+    ( Tools.empty_text         =>  clean_empty_text,
+      Tools.zero_sized_object  =>  clean_zero_sized_object,
+      Tools.unknown_command    =>  clean_unknown_command,
+      Tools.comment            =>  clean_comment
     );
 
   function U (Source : String) return Ada.Strings.Unbounded.Unbounded_String

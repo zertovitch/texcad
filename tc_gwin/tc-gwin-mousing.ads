@@ -1,11 +1,14 @@
-with TC.GWin.MDI_Picture_Child;         use TC.GWin.MDI_Picture_Child;
+with TC.GWin.MDI_Picture_Child;
 
-with GWindows.Cursors;                  use GWindows.Cursors;
-with GWindows.Windows;                  use GWindows.Windows;
+with GWindows.Cursors,
+     GWindows.Windows;
 
-pragma Elaborate_All(GWindows.Cursors); -- Load_Cursor
+pragma Elaborate_All (GWindows.Cursors); -- Load_Cursor
 
 package TC.GWin.Mousing is
+
+  use TC.GWin.MDI_Picture_Child;
+  use GWindows.Cursors;
 
   cur_select    : Cursor_Type:= Load_Cursor("Select_cursor");
   cur_unselect  : Cursor_Type:= Load_Cursor("Unselect_cursor");
@@ -25,7 +28,7 @@ package TC.GWin.Mousing is
 
   procedure Mouse_Down (w    : in out TC_Picture_Panel;
                         X, Y : in     Integer;
-                        Btn  : in     Mouse_Keys );
+                        Btn  : in     GWindows.Windows.Mouse_Keys);
 
   procedure Mouse_Move (w    : in out TC_Picture_Panel;
                         X, Y : in     Integer);

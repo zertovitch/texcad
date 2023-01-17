@@ -1,20 +1,23 @@
 --  Picture tools
 
-with TC.Tools;                          use TC.Tools;
-with TC.GWin.Lang;                      use TC.GWin.Lang;
-with TeXCAD_Resource_GUI;               use TeXCAD_Resource_GUI;
+with TC.Tools;
 
-with GWindows.Application;              use GWindows.Application;
-with GWindows.Base;
-with GWindows.Constants;                use GWindows.Constants;
+with TC.GWin.Lang;
+
+with TeXCAD_Resource_GUI;
+
+with GWindows.Application,
+     GWindows.Base,
+     GWindows.Constants;
 
 package body TC.GWin.Tools is
 
-  procedure Cleanup_dialog(Window: in out MDI_Picture_Child_Type) is
-    d: TeXCAD_Resource_GUI.Cleanup_Dialog_Type;
-    Result: Integer;
-    stat: Detection_stat;
-    action: Cleanup_action:= no_cleanup_action;
+  procedure Cleanup_Dialog (Window : in out MDI_Picture_Child.MDI_Picture_Child_Type) is
+    d : TeXCAD_Resource_GUI.Cleanup_Dialog_Type;
+    Result : Integer;
+    use TC.Tools;
+    stat : Detection_stat;
+    action : Cleanup_action := no_cleanup_action;
 
     procedure Get_Data
       (Window : in out GWindows.Base.Base_Window_Type'Class)
@@ -26,14 +29,16 @@ package body TC.GWin.Tools is
       end loop;
     end Get_Data;
 
+    use Lang;
+
   begin
-    Create_Full_Dialog(d, Window, Msg(cleanup));
-    d.IDOK.Text(Msg(cleanup_selected));
+    TeXCAD_Resource_GUI.Create_Full_Dialog (d, Window, Msg (cleanup));
+    d.IDOK.Text (Msg (cleanup_selected));
     d.IDCANCEL.Text(Msg(mcancel));
     d.Center;
-    d.Small_Icon("Tools_Icon");
-    d.On_Destroy_Handler(Get_Data'Unrestricted_Access);
-    Detect(Window.Draw_Control.Picture, stat);
+    d.Small_Icon ("Tools_Icon");
+    d.On_Destroy_Handler (Get_Data'Unrestricted_Access);
+    Detect (Window.Draw_Control.Picture, stat);
     d.Detection_List.Insert_Column(Msg(topic), 0, 210);
     d.Detection_List.Insert_Column(Msg(occurrences), 1, 90);
     d.Detection_List.Insert_Column(Msg(first_pos), 2, 110);
@@ -44,18 +49,18 @@ package body TC.GWin.Tools is
         d.Detection_List.Set_Sub_Item(S2G (Integer'Image(stat(topic).first_obj_pos)), Detection'Pos(topic), 2);
       end if;
     end loop;
-    Result:= Show_Dialog(d, Window);
+    Result := GWindows.Application.Show_Dialog (d, Window);
     case Result is
-      when IDOK     =>
+      when GWindows.Constants.IDOK =>
         if action /= no_cleanup_action then
-          Clean(Window.Draw_Control.Picture, action);
-          Window.Draw_Control.Picture.saved:= False;
-          Window.Draw_Control.Picture.refresh:= full;
-          Update_Information(Window); -- show the '*' for modified
+          Clean (Window.Draw_Control.Picture, action);
+          Window.Draw_Control.Picture.saved := False;
+          Window.Draw_Control.Picture.refresh := full;
+          Window.Update_Information;  --  Show the '*', for modified
         end if;
-      when others   =>
-        null; -- Contains IDCANCEL
+      when others =>
+        null;  --  Contains the IDCANCEL case
     end case;
-  end Cleanup_dialog;
+  end Cleanup_Dialog;
 
 end TC.GWin.Tools;

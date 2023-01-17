@@ -1,23 +1,25 @@
-with TC.Morphing;                       use TC.Morphing;
+with TC.Morphing;
 
-with TC.GWin.Lang;                      use TC.GWin.Lang;
-with TC.GWin.MDI_Main;                  use TC.GWin.MDI_Main;
+with TC.GWin.Lang,
+     TC.GWin.MDI_Main;
 
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Constants;                use GWindows.Constants;
-with GWindows.Edit_Boxes;               use GWindows.Edit_Boxes;
-with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
-with GWindows.Static_Controls;          use GWindows.Static_Controls;
-with GWindows.Windows;                  use GWindows.Windows;
-with GWin_Util;                         use GWin_Util;
+with GWindows.Base,
+     GWindows.Buttons,
+     GWindows.Constants,
+     GWindows.Edit_Boxes,
+     GWindows.Message_Boxes,
+     GWindows.Static_Controls,
+     GWindows.Windows;
 
---with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with GWin_Util;
 
 package body TC.GWin.Morphing is
 
+  use TC.Morphing;
+  use GWindows.Message_Boxes;
+
   procedure Deformation_dialog(
-    parent : in out MDI_Main_Type;
+    parent : in out MDI_Main.MDI_Main_Type;
     m      :        Morphart;
     subcmd :    out Natural;
     iter   :    out Positive;
@@ -25,16 +27,18 @@ package body TC.GWin.Morphing is
     L      :    out Point      -- Diagonal linear transformation
   )
   is
-    biter,bfx,bfy : Edit_Box_Type;
-    keep          : Check_Box_Type;
-    oki           : Default_Button_Type;
-    cancel        : Button_Type;
-    pan           : Window_Type;
-    bt_choix      : array( 1..4 ) of Dialog_Button_Type;
+    biter,bfx,bfy : GWindows.Edit_Boxes.Edit_Box_Type;
+    keep          : GWindows.Buttons.Check_Box_Type;
+    oki           : GWindows.Buttons.Default_Button_Type;
+    cancel        : GWindows.Buttons.Button_Type;
+    pan           : GWindows.Windows.Window_Type;
+    bt_choix      : array (1 .. 4) of GWindows.Buttons.Dialog_Button_Type;
     result, x     : Integer;
-    aborting      : Boolean:= False;
+    aborting      : Boolean := False;
 
-    ID_offset: constant:= 10000;
+    ID_offset : constant := 10000;
+
+    use GWindows.Buttons;
 
     procedure Get_Data
       (window : in out GWindows.Base.Base_Window_Type'Class)
@@ -42,10 +46,10 @@ package body TC.GWin.Morphing is
       pragma Warnings(off,window);
     begin
       if m = homothethy then
-        L:= ( Real'Value(G2S (Text(bfx))), Real'Value(G2S (Text(bfy))) );
+        L := ( Real'Value(G2S (bfx.Text)), Real'Value(G2S (bfy.Text)) );
       end if;
       if m /= symmetry then
-        iter:= Positive'Value(G2S (Text(biter)));
+        iter := Positive'Value (G2S (biter.Text));
       end if;
       keep_o:= State(keep)=Checked;
       -- Bug spotted by Dmitry Chistyakov, 2007-01-25-17-08-58:
@@ -72,10 +76,11 @@ package body TC.GWin.Morphing is
           "  180°  ",
           " 90° -> ",
           "        " ) );
+    use GWindows.Constants, GWindows.Edit_Boxes, GWindows.Static_Controls, Lang;
   begin
-    Create_As_Dialog(pan, parent, "", Width => 450, Height => max_sub(m)*30+130);
-    Center(pan);
-    Small_Icon (pan, "Options_Icon");
+    pan.Create_As_Dialog (parent, "", Width => 450, Height => max_sub (m) * 30 + 130);
+    pan.Center;
+    pan.Small_Icon ("Options_Icon");
     GWin_Util.Use_GUI_Font(pan);
 
     case m is
@@ -112,16 +117,16 @@ package body TC.GWin.Morphing is
     if m in symmetry..rotation then -- specific exit buttons
       x:= 20;
     else
-      Create (oki, pan, "O&K", 20,
-              Client_Area_Height (pan) - 40, 60, 25, ID => IDOK);
+      oki.Create (pan, "O&K", 20,
+              pan.Client_Area_Height - 40, 60, 25, ID => IDOK);
       x:= 100;
     end if;
-    Create (cancel, pan, Msg(mcancel), x,
-            Client_Area_Height (pan) - 40, 60, 25, ID => IDCANCEL);
+    cancel.Create (pan, Msg(mcancel), x,
+            pan.Client_Area_Height - 40, 60, 25, ID => IDCANCEL);
 
-    On_Destroy_Handler (pan, Get_Data'Unrestricted_Access);
+    pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
 
-    Show_Dialog_with_Toolbars_off(pan, parent, parent, result);
+    MDI_Main.Show_Dialog_with_Toolbars_off (pan, parent, parent, result);
 
     if aborting then
       subcmd:= 0;
@@ -138,8 +143,8 @@ package body TC.GWin.Morphing is
     end if;
   end Deformation_dialog;
 
-  procedure Deformation(w: in out TC_Picture_Panel) is
-    m: constant array(Deformation_cmd) of Morphart :=
+  procedure Deformation (w : in out MDI_Picture_Child.TC_Picture_Panel) is
+    m : constant array (Deformation_cmd) of Morphart :=
       ( translate => translation,
         mirror    => symmetry,
         rotate    => rotation,
@@ -149,6 +154,7 @@ package body TC.GWin.Morphing is
     subcmd: Natural;
     keep_o: Boolean;
     L     : Point;    -- Diagonal linear transformation
+    use Lang;
   begin
     if w.Picture.picked = 0 then
       Message_Box(w,"",Msg(no_picked), OK_Box, Error_Icon); -- usually doesn't happen...
@@ -177,7 +183,7 @@ package body TC.GWin.Morphing is
         else
           w.Picture.refresh:= full;                -- Original disappears
         end if;
-        Redraw(w);
+        w.Redraw;
       end if;
     end if;
   end Deformation;

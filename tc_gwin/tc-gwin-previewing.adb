@@ -3,8 +3,9 @@
 
 with TC.Output;
 
-with Ada.Text_IO;
-with Ada.Directories, Ada.Environment_Variables;
+with Ada.Directories,
+     Ada.Environment_Variables,
+     Ada.Text_IO;
 
 with GWin_Util;
 pragma Elaborate_All(GWin_Util);

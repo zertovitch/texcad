@@ -1,17 +1,16 @@
-with TC.Picking;                        use TC.Picking;
+with TC.Picking;
 
-with TC.GWin.Display;                   use TC.GWin.Display;
-with TC.GWin.Lang;                      use TC.GWin.Lang;
-with TC.GWin.MDI_Main;                  use TC.GWin.MDI_Main;
-with TC.GWin.Morphing;                  use TC.GWin.Morphing;
-with TC.GWin.New_objects;               use TC.GWin.New_objects;
-with TC.GWin.Object_editing;            use TC.GWin.Object_editing;
-with TC.GWin.Phantoms;                  use TC.GWin.Phantoms;
+with TC.GWin.Display,
+     TC.GWin.Lang,
+     TC.GWin.MDI_Main,
+     TC.GWin.Morphing,
+     TC.GWin.New_objects,
+     TC.GWin.Object_Editing,
+     TC.GWin.Phantoms;
 
-with GWindows.Base;                     use GWindows.Base;
---  with GWindows.Message_Boxes;            use GWindows.Message_Boxes;
+with GWindows.Base;
 
-with Ada.Strings.Fixed;                 use Ada.Strings, Ada.Strings.Fixed;
+with Ada.Strings.Fixed;
 
 package body TC.GWin.Mousing is
 
@@ -21,6 +20,7 @@ package body TC.GWin.Mousing is
         pragma Warnings (Off, x);
         pragma Warnings (Off, y);
         sx,sy : String (1..20);
+        use Ada.Strings, Ada.Strings.Fixed;
       begin
         RIO.Put(sx,P.x,2,0);
         RIO.Put(sy,P.y,2,0);
@@ -40,12 +40,14 @@ package body TC.GWin.Mousing is
       end if;
     end FullCoord;
   begin
-    Update_Status_Bar( w.main.all, coords, FullCoord );
+    w.main.Update_Status_Bar (MDI_Main.coords, FullCoord );
   end Show_coordinates;
 
-  last_shown_mode: Capture_mode:= none;
+  last_shown_mode : Capture_mode := none;
 
-  msg_for_mode: constant array(Capture_mode) of Message:=
+  use Lang;
+
+  msg_for_mode : constant array (Capture_mode) of Message :=
     (none            => ready,
      pick | unpick   => expl_pick,
      area | unarea   => mouse_drag,
@@ -62,7 +64,7 @@ package body TC.GWin.Mousing is
   begin
     if last_shown_mode /= w.capture then
       last_shown_mode:= w.capture;
-      Update_Status_Bar( w.main.all, comment, Msg(msg_for_mode(w.capture)) );
+      w.main.Update_Status_Bar (MDI_Main.comment, Msg(msg_for_mode(w.capture)) );
     end if;
   end Show_mouse_mode;
 
@@ -76,7 +78,7 @@ package body TC.GWin.Mousing is
 
     procedure P2U( px,py: Integer; PU: out TC.Point) is
     begin
-      Pixels_to_Units( w.Picture, px,py, YM, PU );
+      Display.Pixels_to_Units (w.Picture, px,py, YM, PU);
       if snap then
         PU:= s * ( Real'Floor(PU.x * ivs), Real'Floor(PU.y * ivs) );
       end if;
@@ -102,9 +104,10 @@ package body TC.GWin.Mousing is
 
   procedure Mouse_Down (w    : in out TC_Picture_Panel;
                         X, Y : in     Integer;
-                        Btn  : in     Mouse_Keys )
+                        Btn  : in     GWindows.Windows.Mouse_Keys )
   is
     new_Capture: Capture_mode;
+    use GWindows.Windows, Phantoms;
   begin
     Capture_Mouse (w);
     w.X:= X;
@@ -164,12 +167,12 @@ package body TC.GWin.Mousing is
                 w.phantomart:= txt;
             end case;
             if new_Capture in click_1 .. figure_2 then
-              Invert_phantom(w); -- show
+              Invert_Phantom (w);  --  Show
             end if;
             w.capture:= new_Capture;
           elsif Btn = Right_Button then -- Cancel draw operation
             w.capture:= none;
-            Release_Mouse;
+            GWindows.Base.Release_Mouse;
             Redraw(w);
           end if;
         when change_text =>
@@ -188,21 +191,22 @@ package body TC.GWin.Mousing is
                 w.capture:= click_1;
                 w.phantomart:= txt;
             end case;
-            Invert_phantom(w); -- show
+            Invert_Phantom (w);  --  Show
           end if;
       end case;
     end if;
-    Show_mouse_mode(w);
+    Show_mouse_mode (w);
   end Mouse_Down;
 
   procedure Mouse_Move (w    : in out TC_Picture_Panel;
                         X, Y : in     Integer)
   is
     procedure Scroll_if_needed is
-      X00,Y00: Integer;
+      X00, Y00 : Integer;
+      use GWindows.Base;
     begin
-      X00:= w.X0;
-      Y00:= w.Y0;
+      X00 := w.X0;
+      Y00 := w.Y0;
       if X < w.X0 then
         On_Horizontal_Scroll( w.pic_parent.all, Previous_Unit, null);
       elsif X > w.Disp_W + w.X0 then
@@ -220,17 +224,18 @@ package body TC.GWin.Mousing is
       end if;
     end Scroll_if_needed;
 
-    dist: Integer;
-    dist_max: constant:= 3**2;
+    dist : Integer;
+    dist_max : constant := 3**2;
+    use Phantoms;
 
-  begin -- Mouse_Move
+  begin  --  Mouse_Move
     case w.capture is
-      when area       => Invert_rubber_box(w,picked);    -- hide
-      when unarea     => Invert_rubber_box(w,normal);    -- hide
+      when area       => Invert_Rubber_Box (w, picked);  --  Hide
+      when unarea     => Invert_Rubber_Box (w, normal);  --  Hide
       when click_1 |
            figure_2 |
            click_2 |
-           bez_click2 => Invert_phantom(w); -- hide
+           bez_click2 => Invert_Phantom (w);  --  Hide
       when others => null;
     end case;
     w.X:= X;
@@ -250,7 +255,7 @@ package body TC.GWin.Mousing is
             if dist > dist_max then
               w.capture:= area;
               Change_Cursor(w, cur_select);
-              Invert_rubber_box(w,picked); -- show
+              Invert_Rubber_Box (w, picked);  --  Show
             end if;
           when text | put | par_cur_2d_cmd =>
             null; -- Capture = click_1
@@ -266,24 +271,24 @@ package body TC.GWin.Mousing is
             if dist > dist_max then
               w.capture:= unarea;
               Change_Cursor(w, cur_unselect);
-              Invert_rubber_box(w,normal); -- show
+              Invert_Rubber_Box(w,normal);  --  Show
             end if;
           when others => null; -- Right button meaningless for not picking
         end case;
       when area =>
         Scroll_if_needed;
-        Invert_rubber_box(w,picked); -- show
+        Invert_Rubber_Box(w,picked); -- show
       when unarea =>
         Scroll_if_needed;
-        Invert_rubber_box(w,normal); -- show
+        Invert_Rubber_Box(w,normal); -- show
       when figure_2 | bez_click2 | click_2 =>
         Scroll_if_needed;
-        Invert_phantom(w); -- show
+        Invert_Phantom(w); -- show
       when click_1  =>
         Scroll_if_needed;
         w.Xs := w.X;
         w.Ys := w.Y; -- only one click, but we follow mouse
-        Invert_phantom(w); -- show
+        Invert_Phantom(w); -- show
       when bez_click0 =>
         -- Bezier is a 3-click operation!
         w.Xs := w.X;
@@ -298,8 +303,9 @@ package body TC.GWin.Mousing is
   procedure Mouse_Up (w    : in out TC_Picture_Panel;
                       X, Y : in     Integer)
   is
-    modif: Boolean;
-    Capture_mem: constant Capture_mode:= w.capture;
+    modif : Boolean;
+    Capture_mem : constant Capture_mode := w.capture;
+    use New_objects, Object_Editing, Phantoms, Picking;
   begin
     w.X:= X;
     w.Y:= Y;
@@ -313,7 +319,7 @@ package body TC.GWin.Mousing is
         Load_Macro (w.pic_parent.all);
         Change_Cursor(w, cur_picking);
       when click_1 =>
-        Release_Mouse;
+        GWindows.Base.Release_Mouse;
         case w.current_cmd is
           when text          =>
             New_text( w.Picture, w.pic_parent.all, w.main.all, w.PU, txt, w.current_ls );
@@ -322,7 +328,7 @@ package body TC.GWin.Mousing is
           when par_cur_2d_cmd  =>
             New_paramcurve_2d( w.Picture, w.pic_parent.all, w.main.all, w.PU, w.current_ls );
           when Deformation_cmd =>
-            Deformation(w);
+            Morphing.Deformation (w);
           when others =>
             null; -- Meaningless
         end case;
@@ -333,7 +339,7 @@ package body TC.GWin.Mousing is
             if w.Picture.picked = 1 then
               w.Picture.refresh:= every;
               Subtle_Redraw(w);
-              Release_Mouse;
+              GWindows.Base.Release_Mouse;
               Change_Cursor(w, cur_arrow);
               case w.Picture.memo.art is
                 when txt | putaux | box =>
@@ -372,13 +378,13 @@ package body TC.GWin.Mousing is
           when others => null; -- Right button meaningless for not picking
         end case;
       when area =>
-        Invert_rubber_box(w,picked); -- hide
+        Invert_Rubber_Box(w,picked); -- hide
         PicPic(
           w.Picture, pick_area,
           w.PS, w.PU );
         Change_Cursor(w, cur_picking);
       when unarea =>
-        Invert_rubber_box(w,normal); -- hide
+        Invert_Rubber_Box(w,normal); -- hide
         PicPic(
           w.Picture, unpick_area,
           w.PS, w.PU );
@@ -390,7 +396,7 @@ package body TC.GWin.Mousing is
         -- ^ this test is also valid with snapping enabled 2-Nov-2005
           case w.current_cmd is
             when Box_cmd | oval =>
-              Release_Mouse;
+              GWindows.Base.Release_Mouse;
               New_boxoval( w.Picture, w.pic_parent.all, w.main.all,
                 (Real'Min(w.PU.x,w.PS.x),Real'Min(w.PU.y,w.PS.y)),
                 (Real'Max(w.PU.x,w.PS.x),Real'Max(w.PU.y,w.PS.y)),
@@ -404,8 +410,8 @@ package body TC.GWin.Mousing is
               w.Picture.refresh:= only_last;
               New_circdisc( w.Picture, w.PS, w.PU, w.current_cmd, w.current_ls );
             when Deformation_cmd =>
-              Release_Mouse;
-              Deformation(w);
+              GWindows.Base.Release_Mouse;
+              Morphing.Deformation (w);
             when others =>
               null;
           end case;
@@ -420,17 +426,17 @@ package body TC.GWin.Mousing is
         w.capture := bez_click2;
         w.phantomart:= bezier;
         Tranform_coordinates(w);
-        Invert_phantom(w); -- show
+        Invert_Phantom(w); -- show
       when bez_click2 =>
         -- Figure already done on last Mouse_Down
-        Invert_phantom(w); -- hide
+        Invert_Phantom(w); -- hide
         New_bezier( w.Picture, w.PS, w.PE, w.PU, w.current_ls );
         -- Chaining: new start on last end point
         w.Xs:= w.Xb;
         w.Ys:= w.Yb;
         w.capture:= bez_click1;
       when click_2 =>
-        Invert_phantom(w); -- hide
+        Invert_Phantom(w); -- hide
         New_linvec( w.Picture, w.PS, w.PU, w.current_ls );
         w.PS:= w.PU; -- \line has modified w.PU
         w.capture:= click_2;
@@ -439,7 +445,7 @@ package body TC.GWin.Mousing is
     Show_mouse_mode (w);
     case Capture_mem is
       when click_2 | figure_2 =>
-        Invert_phantom(w); -- hide
+        Invert_Phantom(w); -- hide
       when others => null;
     end case;
     case w.capture is
@@ -449,7 +455,7 @@ package body TC.GWin.Mousing is
         Subtle_Redraw(w);
       when others => -- includes "none" (default)
         Subtle_Redraw(w);
-        Release_Mouse;
+        GWindows.Base.Release_Mouse;
     end case;
   end Mouse_Up;
 
