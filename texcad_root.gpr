@@ -12,10 +12,10 @@ project TeXCAD_Root is
    for Source_Dirs use (".");
    for Exec_Dir use ".";
    for Main use ("test_tc_io.adb");
-   type Build_Mode_Type is ("Optimize", "Debug");
-   Build_Mode : Build_Mode_Type := external ("Build_Mode", "Debug");
+   type TeXCAD_Build_Mode_Type is ("Optimize", "Debug");
+   TeXCAD_Build_Mode : TeXCAD_Build_Mode_Type := external ("TeXCAD_Build_Mode", "Debug");
    
-   case Build_Mode is
+   case TeXCAD_Build_Mode is
       when "Debug" =>
          for Object_Dir use "acu_debg";
       when "Optimize" =>
@@ -29,7 +29,7 @@ project TeXCAD_Root is
    package Builder is
       --   "If -j0 is used, then the maximum number of simultaneous compilation
       --    jobs is the number of core processors on the platform."
-      case Build_Mode is
+      case TeXCAD_Build_Mode is
          when "Debug" =>
             for Default_Switches ("ada") use ("-j0");
          when "Optimize" =>
@@ -54,7 +54,7 @@ project TeXCAD_Root is
    );
 
    package Compiler is
-      case Build_Mode is
+      case TeXCAD_Build_Mode is
          when "Debug" =>
             for Local_Configuration_Pragmas use project'Project_Dir & "acu_debg/debug.pra";
             for Default_Switches ("ada") use Common_Compiler_Options & ("-gnato", "-fstack-check", "-g", "-gnatVa");
@@ -66,7 +66,7 @@ project TeXCAD_Root is
 
    package Binder is
       --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
-      case Build_Mode is
+      case TeXCAD_Build_Mode is
          when "Debug" =>
             for Default_Switches ("ada") use ("-Es");
          when "Optimize" =>

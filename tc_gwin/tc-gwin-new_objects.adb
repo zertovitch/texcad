@@ -13,15 +13,15 @@ package body TC.GWin.New_objects is
     t : constant ptr_Obj_type := new Obj_type (art);
     modif : Boolean;
   begin
-    t.P1:= P1;
-    t.inhalt:= Null_Unbounded_String;
-    t.adjust_len:= 0;
-    t.solid:= False;
-    t.ls:= ls;
+    t.P1 := P1;
+    t.inhalt := Null_Unbounded_String;
+    t.adjust_len := 0;
+    t.solid := False;
+    t.ls := ls;
     Object_Editing.Change_Text (parent, main, t.all, modif);
     if modif then
-      Insert(p, t, at_end);
-      p.refresh:= only_last; -- 30-Apr-2004
+      Insert (p, t, at_end);
+      p.refresh := only_last; -- 30-Apr-2004
     end if;
   end New_text;
 
@@ -34,36 +34,36 @@ package body TC.GWin.New_objects is
      cmd         :        Drawing_cmd)
   is
     t : ptr_Obj_type;
-    modif: Boolean;
+    modif : Boolean;
   begin
     if cmd = oval then
-      t:= new Obj_type(oval);
-      t.P1:= 0.5 * (P1+P2);
-      t.LL:= P1;
-      t.part:= entire;
-      t.osize := P2-P1;
+      t := new Obj_type (oval);
+      t.P1 := 0.5 * (P1 + P2);
+      t.LL := P1;
+      t.part := entire;
+      t.osize := P2 - P1;
     else
-      t:= new Obj_type(box);
-      t.P1:= P1;
-      t.inhalt:= Null_Unbounded_String;
-      t.adjust_len:= 0;
-      t.size := P2-P1;
+      t := new Obj_type (box);
+      t.P1 := P1;
+      t.inhalt := Null_Unbounded_String;
+      t.adjust_len := 0;
+      t.size := P2 - P1;
     end if;
-    t.ls:= ls;
+    t.ls := ls;
     case cmd is
       when framebox   =>
-        t.solid:= False;
+        t.solid := False;
         Object_Editing.Change_Text (parent, main, t.all, modif);
       when filled_box =>
-        t.solid:= True;
+        t.solid := True;
       when oval =>
         Object_Editing.Change_Oval (parent, main, t.all, modif);
       when others =>
         null;
     end case;
-    ls:= t.ls; -- possible current dot/dash change by Text_Change
-    -- Box is kept even if Change_Text cancelled (modif=False)
-    Insert(p, t, at_end);
+    ls := t.ls; -- possible current dot/dash change by Text_Change
+    --  Box is kept even if Change_Text cancelled (modif=False)
+    Insert (p, t, at_end);
   end New_boxoval;
 
   procedure New_linvec
@@ -74,33 +74,33 @@ package body TC.GWin.New_objects is
   is
     t : constant ptr_Obj_type := new Obj_type (line);
   begin
-    t.P1:= P1;
-    t.P2:= P2;
-    t.ls:= ls;
-    t.any_slope:= p.opt.steigung or t.ls.pattern /= plain;
-    Set_slope_of_linvec(t.all);
-    Improve_linvec(t.all, p.ul_in_pt); -- 30-Apr-2004
-    Insert(p, t, at_end);
-    P2:= t.P2;
+    t.P1 := P1;
+    t.P2 := P2;
+    t.ls := ls;
+    t.any_slope := p.opt.steigung or t.ls.pattern /= plain;
+    Set_slope_of_linvec (t.all);
+    Improve_linvec (t.all, p.ul_in_pt); -- 30-Apr-2004
+    Insert (p, t, at_end);
+    P2 := t.P2;
   end New_linvec;
 
   procedure New_bezier
-    (p        : in out Picture;
-     P1,PE,PG :        Point;
-     ls       :        Line_settings)
+    (p          : in out Picture;
+     P1, PE, PG :        Point;
+     ls         :        Line_settings)
   is
     t : constant ptr_Obj_type := new Obj_type (bezier);
   begin
-    t.P1:= P1;
-    t.PE:= PE;
-    t.ls:= ls;
-    Set_control_point( t.all, PG );
+    t.P1 := P1;
+    t.PE := PE;
+    t.ls := ls;
+    Set_control_point (t.all, PG);
     case gen_opt.solid_bez is
-      when auto    => t.num:= 0;
-      when suggest => t.num:= Good_num_of_bezier_points(t.all,p.ul_in_pt);
+      when auto    => t.num := 0;
+      when suggest => t.num := Good_num_of_bezier_points (t.all, p.ul_in_pt);
     end case;
-    Set_slope_of_bezvec(t.all,p.ul_in_pt);
-    Insert(p, t, at_end);
+    Set_slope_of_bezvec (t.all, p.ul_in_pt);
+    Insert (p, t, at_end);
   end New_bezier;
 
   procedure New_circdisc
@@ -116,10 +116,10 @@ package body TC.GWin.New_objects is
       when filled_circle => t := new Obj_type (disc);
       when others        => null;
     end case;
-    t.ls:= ls;
-    t.P1:= P1;
-    Set_radius( t.all, df=> P2 - P1 );
-    Insert(p, t, at_end);
+    t.ls := ls;
+    t.P1 := P1;
+    Set_radius (t.all, df => P2 - P1);
+    Insert (p, t, at_end);
   end New_circdisc;
 
   procedure New_paramcurve_2d
@@ -130,18 +130,18 @@ package body TC.GWin.New_objects is
      ls     : in out Line_settings)
   is
     t : constant ptr_Obj_type := new Obj_type (paramcurve2d);
-    modif: Boolean;
+    modif : Boolean;
   begin
-    t.P1:= orig;
-    t.ls:= ls;
+    t.P1 := orig;
+    t.ls := ls;
     t.data_2d.segments := 0;
     t.data_2d.scale    := 1.0;
     t.data_2d.min_t    := 0.0;
     t.data_2d.max_t    := 1.0;
     Object_Editing.Change_Param_2D (parent, main, t.all, modif);
     if modif then
-      Insert(p, t, at_end);
-      p.refresh:= only_last;
+      Insert (p, t, at_end);
+      p.refresh := only_last;
     end if;
   end New_paramcurve_2d;
 

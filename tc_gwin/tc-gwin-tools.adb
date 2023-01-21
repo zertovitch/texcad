@@ -20,12 +20,12 @@ package body TC.GWin.Tools is
     action : Cleanup_action := no_cleanup_action;
 
     procedure Get_Data
-      (Window : in out GWindows.Base.Base_Window_Type'Class)
+      (Some_Window : in out GWindows.Base.Base_Window_Type'Class)
     is
-    pragma Unreferenced (Window);
+    pragma Unreferenced (Some_Window);
     begin
       for topic in Detection loop
-        action(topic):= d.Detection_List.Is_Selected(Detection'Pos(topic));
+        action (topic) := d.Detection_List.Is_Selected (Detection'Pos (topic));
       end loop;
     end Get_Data;
 
@@ -34,19 +34,25 @@ package body TC.GWin.Tools is
   begin
     TeXCAD_Resource_GUI.Create_Full_Dialog (d, Window, Msg (cleanup));
     d.IDOK.Text (Msg (cleanup_selected));
-    d.IDCANCEL.Text(Msg(mcancel));
+    d.IDCANCEL.Text (Msg (mcancel));
     d.Center;
     d.Small_Icon ("Tools_Icon");
     d.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     Detect (Window.Draw_Control.Picture, stat);
-    d.Detection_List.Insert_Column(Msg(topic), 0, 210);
-    d.Detection_List.Insert_Column(Msg(occurrences), 1, 90);
-    d.Detection_List.Insert_Column(Msg(first_pos), 2, 110);
-    for topic in Detection loop
-      d.Detection_List.Insert_Item(Msg(msg_for_cleanup(topic)), Detection'Pos(topic));
-      d.Detection_List.Set_Sub_Item(S2G (Integer'Image(stat(topic).number)), Detection'Pos(topic), 1);
-      if stat(topic).number > 0 then
-        d.Detection_List.Set_Sub_Item(S2G (Integer'Image(stat(topic).first_obj_pos)), Detection'Pos(topic), 2);
+    d.Detection_List.Insert_Column (Msg (topic), 0, 210);
+    d.Detection_List.Insert_Column (Msg (occurrences), 1, 90);
+    d.Detection_List.Insert_Column (Msg (first_pos), 2, 110);
+    for detection_topic in Detection loop
+      d.Detection_List.Insert_Item
+        (Msg (msg_for_cleanup (detection_topic)),
+         Detection'Pos (detection_topic));
+      d.Detection_List.Set_Sub_Item
+        (S2G (stat (detection_topic).number'Image),
+         Detection'Pos (detection_topic), 1);
+      if stat (detection_topic).number > 0 then
+        d.Detection_List.Set_Sub_Item
+          (S2G (stat (detection_topic).first_obj_pos'Image),
+           Detection'Pos (detection_topic), 2);
       end if;
     end loop;
     Result := GWindows.Application.Show_Dialog (d, Window);

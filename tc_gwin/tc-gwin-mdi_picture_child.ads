@@ -45,8 +45,8 @@ package TC.GWin.MDI_Picture_Child is
         hor_splitt,
         ver_splitt,              --  Aufteilung des Bildschirms
         curs_x,curs_y: Integer;  --  Cursorposition in Bildschirm-Koord.
-        wx,wy,                   --  Cursorposition in Weltkoordinaten
-        m_wx,m_wy    : TC.Real;  --  maximales x und y in Weltkoordinaten
+        wx, wy,                  --  Cursorposition in Weltkoordinaten
+        m_wx, m_wy   : TC.Real;  --  maximales x und y in Weltkoordinaten
         current_cmd  : Permanent_cmd;
         current_ls   : Line_settings;
         capture      : Capture_mode;
@@ -54,11 +54,11 @@ package TC.GWin.MDI_Picture_Child is
         phantom_ls   : Line_settings;  --  sometimes /= current_ls (e.g. translation vector)
       end record;
 
-  procedure Subtle_Redraw (Window : in out TC_Picture_Panel );
+  procedure Subtle_Redraw (Window : in out TC_Picture_Panel);
 
-  procedure On_Paint (Window : in out TC_Picture_Panel;
-                      Canvas : in out GWindows.Drawing.Canvas_Type;
-                      Area   : in     GWindows.Types.Rectangle_Type);
+  overriding procedure On_Paint (Window : in out TC_Picture_Panel;
+                                 Canvas : in out GWindows.Drawing.Canvas_Type;
+                                 Area   : in     GWindows.Types.Rectangle_Type);
 
   type MDI_Picture_Child_Type is
     new Office_Applications.Classic_Document_Window_Type with
@@ -69,7 +69,7 @@ package TC.GWin.MDI_Picture_Child is
         Short_Name   : GString_Unbounded;
         --  ^Window title = Short_Name & {""|" *"}
         Macro_Name   : GString_Unbounded;  --  a macro to be loaded
-        --Scroll_Panel : GWindows.Scroll_Panels.Scroll_Panel_Type;
+        --  Scroll_Panel : GWindows.Scroll_Panels.Scroll_Panel_Type;
         Draw_Control : TC_Picture_Panel;
         File_Menu,
         Draw_Menu,
@@ -78,25 +78,25 @@ package TC.GWin.MDI_Picture_Child is
         View_Menu    : GWindows.Menus.Menu_Type;
       end record;
 
-  procedure On_Horizontal_Scroll
+  overriding procedure On_Horizontal_Scroll
     (Window  : in out MDI_Picture_Child_Type;
      Request : in     GWindows.Base.Scroll_Request_Type;
      Control : in     GWindows.Base.Pointer_To_Base_Window_Class);
 
-  procedure On_Vertical_Scroll
+  overriding procedure On_Vertical_Scroll
     (Window  : in out MDI_Picture_Child_Type;
      Request : in     GWindows.Base.Scroll_Request_Type;
      Control : in     GWindows.Base.Pointer_To_Base_Window_Class);
 
-  procedure On_Size (Window : in out MDI_Picture_Child_Type;
-                     Width  : in     Integer;
-                     Height : in     Integer);
+  overriding procedure On_Size (Window : in out MDI_Picture_Child_Type;
+                                Width  : in     Integer;
+                                Height : in     Integer);
 
-  -- Added 17-May-2004: avoid painting the background colour since the
-  -- area is completely covered by the canvas; practically, it avoids
-  -- the flickering when resizing the window with full redraw option
+  --  Added 17-May-2004: avoid painting the background colour since the
+  --  area is completely covered by the canvas; practically, it avoids
+  --  the flickering when resizing the window with full redraw option
 
-  procedure On_Erase_Background
+  overriding procedure On_Erase_Background
     (Window : in out MDI_Picture_Child_Type;
      Canvas : in out GWindows.Drawing.Canvas_Type;
      Area   : in     GWindows.Types.Rectangle_Type);
@@ -107,14 +107,14 @@ package TC.GWin.MDI_Picture_Child is
 
   procedure On_Save (Window : in out MDI_Picture_Child_Type);
 
-  procedure On_Save_As (Window : in out MDI_Picture_Child_Type; macro: Boolean);
+  procedure On_Save_As (Window : in out MDI_Picture_Child_Type; macro : Boolean);
   --  Handles file saves
 
   --  procedure On_Pre_Create (Window    : in out MDI_Picture_Child_Type;
   --                           dwStyle   : in out Interfaces.C.unsigned;
   --                           dwExStyle : in out Interfaces.C.unsigned);
 
-  procedure On_Create (Window : in out MDI_Picture_Child_Type);
+  overriding procedure On_Create (Window : in out MDI_Picture_Child_Type);
   --  Handles creating window
 
   overriding procedure On_Menu_Select
@@ -127,23 +127,23 @@ package TC.GWin.MDI_Picture_Child is
 
   overriding function Is_Document_Modified (Window : MDI_Picture_Child_Type) return Boolean;
 
-  -- !! bad try !!
+  --  !! bad try !!
   --
-  -- procedure On_Focus (Window : in out MDI_Picture_Child_Type);
+  --  procedure On_Focus (Window : in out MDI_Picture_Child_Type);
   --
-  -- procedure On_Lost_Focus (Window : in out MDI_Picture_Child_Type);
+  --  procedure On_Lost_Focus (Window : in out MDI_Picture_Child_Type);
 
-  -- For when the MDI parent tries to close its children.
-  success_in_enumerated_close: Boolean;
+  --  For when the MDI parent tries to close its children.
+  success_in_enumerated_close : Boolean;
 
   procedure Zoom_Picture
     (Window    : in out MDI_Picture_Child_Type;
      direction :        Integer);
 
-  procedure Update_Information (Window: in out MDI_Picture_Child_Type);
+  procedure Update_Information (Window : in out MDI_Picture_Child_Type);
 
   procedure Update_Permanent_Command (Window : in out MDI_Picture_Child_Type);
 
-  procedure Load_Macro (Window: in out MDI_Picture_Child_Type);
+  procedure Load_Macro (Window : in out MDI_Picture_Child_Type);
 
 end TC.GWin.MDI_Picture_Child;

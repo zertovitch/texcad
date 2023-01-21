@@ -14,33 +14,33 @@ with Ada.Strings.Fixed;
 
 package body TC.GWin.Mousing is
 
-  procedure Show_coordinates(w: TC_Picture_Panel) is
+  procedure Show_coordinates (w : TC_Picture_Panel) is
     function FullCoord return GString is
-      function Coord(x,y: Integer; P: Point) return GString is
+      function Coord (x, y : Integer; P : Point) return GString is
         pragma Warnings (Off, x);
         pragma Warnings (Off, y);
-        sx,sy : String (1..20);
+        sx, sy : String (1 .. 20);
         use Ada.Strings, Ada.Strings.Fixed;
       begin
-        RIO.Put(sx,P.x,2,0);
-        RIO.Put(sy,P.y,2,0);
+        RIO.Put (sx, P.x, 2, 0);
+        RIO.Put (sy, P.y, 2, 0);
         return
-          S2G ('(' & Trim(sx,Left) & ',' & Trim(sy,Left) & ')')
+          S2G ('(' & Trim (sx, Left) & ',' & Trim (sy, Left) & ')')
           --  & " = [" & integer'image(x) & ',' & integer'image(y) & ']'
-          -- ^ Verification with mouse coords.
+          --  ^ Verification with mouse coords.
         ;
       end Coord;
     begin
       if (w.X /= w.Xs or w.Y /= w.Ys) and w.capture /= bez_click2 then
-        return Coord(w.Xs,w.Ys,w.PS)      & " > " &
-               Coord(w.X, w.Y, w.PU)      & ": "  &
-               Coord(w.Xs,w.Ys,w.PU-w.PS);
+        return Coord (w.Xs, w.Ys, w.PS)      & " > " &
+               Coord (w.X, w.Y, w.PU)      & ": "  &
+               Coord (w.Xs, w.Ys, w.PU - w.PS);
       else
-        return Coord(w.X, w.Y, w.PU);
+        return Coord (w.X, w.Y, w.PU);
       end if;
     end FullCoord;
   begin
-    w.main.Update_Status_Bar (MDI_Main.coords, FullCoord );
+    w.main.Update_Status_Bar (MDI_Main.coords, FullCoord);
   end Show_coordinates;
 
   last_shown_mode : Capture_mode := none;
@@ -60,136 +60,136 @@ package body TC.GWin.Mousing is
      paste0 | paste1 => m_paste
     );
 
-  procedure Show_mouse_mode(w: TC_Picture_Panel) is
+  procedure Show_mouse_mode (w : TC_Picture_Panel) is
   begin
     if last_shown_mode /= w.capture then
-      last_shown_mode:= w.capture;
-      w.main.Update_Status_Bar (MDI_Main.comment, Msg(msg_for_mode(w.capture)) );
+      last_shown_mode := w.capture;
+      w.main.Update_Status_Bar (MDI_Main.comment, Msg (msg_for_mode (w.capture)));
     end if;
   end Show_mouse_mode;
 
-  snappable: constant array( Capture_mode ) of Boolean:=
-    ( none .. unarea => False, others => True );
+  snappable : constant array (Capture_mode) of Boolean :=
+    (none .. unarea => False, others => True);
 
-  procedure Tranform_coordinates(w: in out TC_Picture_Panel) is
-    YM: constant Integer:=  Height(w)-1;
-    snap: constant Boolean:= snappable( w.capture ) and w.Picture.opt.snapping;
-    s,ivs: Real;
+  procedure Tranform_coordinates (w : in out TC_Picture_Panel) is
+    YM : constant Integer :=  Height (w) - 1;
+    snap : constant Boolean := snappable (w.capture) and w.Picture.opt.snapping;
+    s, ivs : Real;
 
-    procedure P2U( px,py: Integer; PU: out TC.Point) is
+    procedure P2U (px, py : Integer; PU : out TC.Point) is
     begin
-      Display.Pixels_to_Units (w.Picture, px,py, YM, PU);
+      Display.Pixels_to_Units (w.Picture, px, py, YM, PU);
       if snap then
-        PU:= s * ( Real'Floor(PU.x * ivs), Real'Floor(PU.y * ivs) );
+        PU := s * (Real'Floor (PU.x * ivs), Real'Floor (PU.y * ivs));
       end if;
     end P2U;
   begin
     if snap then
-      s:= Real(w.Picture.opt.snap_asp);
-      ivs:= 1.0 / s;
+      s := Real (w.Picture.opt.snap_asp);
+      ivs := 1.0 / s;
     end if;
     if w.capture /= click_2 then
-      P2U( w.Xs,w.Ys, w.PS );
-      -- for click_2 (can be \line,\vector) w.PS has been set in math plane
+      P2U (w.Xs, w.Ys, w.PS);
+      --  For click_2 (can be \line,\vector), w.PS has been set in math plane
     end if;
-    P2U( w.X, w.Y,  w.PU );
-    P2U( w.Xb,w.Yb, w.PE );
+    P2U (w.X, w.Y,  w.PU);
+    P2U (w.Xb, w.Yb, w.PE);
   end Tranform_coordinates;
 
-  procedure Change_Cursor(w: in out TC_Picture_Panel; cur: Cursor_Type) is
+  procedure Change_Cursor (w : in out TC_Picture_Panel; cur : Cursor_Type) is
   begin
-    w.Cursor:= cur;
-    Set_Cursor(cur);
+    w.Cursor := cur;
+    Set_Cursor (cur);
   end Change_Cursor;
 
   procedure Mouse_Down (w    : in out TC_Picture_Panel;
                         X, Y : in     Integer;
-                        Btn  : in     GWindows.Windows.Mouse_Keys )
+                        Btn  : in     GWindows.Windows.Mouse_Keys)
   is
-    new_Capture: Capture_mode;
+    new_Capture : Capture_mode;
     use GWindows.Windows, Phantoms;
   begin
     Capture_Mouse (w);
-    w.X:= X;
-    w.Y:= Y;
+    w.X := X;
+    w.Y := Y;
     if w.capture = none or w.capture = paste0 then
       w.Xs := w.X;
       w.Ys := w.Y;
     end if;
-    Tranform_coordinates(w);
+    Tranform_coordinates (w);
     if w.capture = paste0 then
       case Btn is
-        when Left_Button  => w.capture:= paste1;
-        when Right_Button => w.capture:= none; -- cancelled;
+        when Left_Button  => w.capture := paste1;
+        when Right_Button => w.capture := none;  --  cancelled;
         when others => null;
       end case;
     else
-      w.phantom_ls:= w.current_ls;
+      w.phantom_ls := w.current_ls;
       case w.current_cmd is
         when pick_obj =>
           case Btn is
             when Left_Button  =>
               w.capture := pick;
-              Change_Cursor(w, cur_pick);
+              Change_Cursor (w, cur_pick);
             when Right_Button =>
               w.capture := unpick;
-              Change_Cursor(w, cur_unpick);
+              Change_Cursor (w, cur_unpick);
             when others => null;
           end case;
         when Drawing_cmd =>
           if Btn = Left_Button then
-            new_Capture:= figure_2;
-            case Drawing_cmd(w.current_cmd) is
+            new_Capture := figure_2;
+            case Drawing_cmd (w.current_cmd) is
               when Box_cmd    =>
-                w.phantomart:= box;
+                w.phantomart := box;
               when line =>
-                w.phantomart:= line;
+                w.phantomart := line;
                 case w.capture is
                   when none =>
-                    null; -- normal figure_2
+                    null;  --  normal figure_2
                   when click_2 =>
-                    new_Capture:= w.capture; -- handled on button release
+                    new_Capture := w.capture; -- handled on button release
                   when others =>
-                    null; -- never seen
+                    null;  --  never seen
                 end case;
-              when circle        => w.phantomart:= circ;
-              when filled_circle => w.phantomart:= disc;
-              when oval          => w.phantomart:= oval;
+              when circle        => w.phantomart := circ;
+              when filled_circle => w.phantomart := disc;
+              when oval          => w.phantomart := oval;
               when bez =>
                 case w.capture is
-                  when none       => new_Capture:= bez_click0;
+                  when none       => new_Capture := bez_click0;
                   when bez_click1 |
-                       bez_click2 => new_Capture:= w.capture;
+                       bez_click2 => new_Capture := w.capture;
                   when others => null;
                 end case;
               when text | put | par_cur_2d_cmd =>
-                new_Capture:= click_1;
-                w.phantomart:= txt;
+                new_Capture := click_1;
+                w.phantomart := txt;
             end case;
             if new_Capture in click_1 .. figure_2 then
               Invert_Phantom (w);  --  Show
             end if;
-            w.capture:= new_Capture;
-          elsif Btn = Right_Button then -- Cancel draw operation
-            w.capture:= none;
+            w.capture := new_Capture;
+          elsif Btn = Right_Button then  --  Cancel draw operation
+            w.capture := none;
             GWindows.Base.Release_Mouse;
-            Redraw(w);
+            w.Redraw;
           end if;
         when change_text =>
           if Btn = Left_Button then
-            w.capture:= pick;
+            w.capture := pick;
           end if;
         when Deformation_cmd =>
           if Btn = Left_Button then
-            w.capture:= figure_2;
-            case Deformation_cmd(w.current_cmd) is
+            w.capture := figure_2;
+            case Deformation_cmd (w.current_cmd) is
               when translate =>
-                w.phantomart:= line;
-                w.phantom_ls:= normal_line_settings;
-                w.phantom_ls.arrows:= head;
+                w.phantomart := line;
+                w.phantom_ls := normal_line_settings;
+                w.phantom_ls.arrows := head;
               when rotate | mirror | homoth =>
-                w.capture:= click_1;
-                w.phantomart:= txt;
+                w.capture := click_1;
+                w.phantomart := txt;
             end case;
             Invert_Phantom (w);  --  Show
           end if;
@@ -208,19 +208,19 @@ package body TC.GWin.Mousing is
       X00 := w.X0;
       Y00 := w.Y0;
       if X < w.X0 then
-        On_Horizontal_Scroll( w.pic_parent.all, Previous_Unit, null);
+        On_Horizontal_Scroll (w.pic_parent.all, Previous_Unit, null);
       elsif X > w.Disp_W + w.X0 then
-        On_Horizontal_Scroll( w.pic_parent.all, Next_Unit, null);
+        On_Horizontal_Scroll (w.pic_parent.all, Next_Unit, null);
       end if;
 
       if  Y < w.Y0 then
-        On_Vertical_Scroll( w.pic_parent.all, Previous_Unit, null);
+        On_Vertical_Scroll (w.pic_parent.all, Previous_Unit, null);
       elsif Y > w.Disp_H + w.Y0 then
-        On_Vertical_Scroll( w.pic_parent.all, Next_Unit, null);
+        On_Vertical_Scroll (w.pic_parent.all, Next_Unit, null);
       end if;
       if X00 /= w.X0 or Y00 /= w.Y0 then
-        Redraw(w,Redraw_Now=> True);
-        Tranform_coordinates(w);
+        Redraw (w, Redraw_Now => True);
+        Tranform_coordinates (w);
       end if;
     end Scroll_if_needed;
 
@@ -238,10 +238,10 @@ package body TC.GWin.Mousing is
            bez_click2 => Invert_Phantom (w);  --  Hide
       when others => null;
     end case;
-    w.X:= X;
-    w.Y:= Y;
-    Tranform_coordinates(w);
-    dist:= (w.X-w.Xs)**2 + (w.Y-w.Ys)**2;
+    w.X := X;
+    w.Y := Y;
+    Tranform_coordinates (w);
+    dist := (w.X - w.Xs)**2 + (w.Y - w.Ys)**2;
     case w.capture is
       when none | paste0 | paste1 =>
         w.Xs := w.X;
@@ -253,8 +253,8 @@ package body TC.GWin.Mousing is
             w.Ys := w.Y;  -- only "pick", but we follow mouse
           when pick_obj =>
             if dist > dist_max then
-              w.capture:= area;
-              Change_Cursor(w, cur_select);
+              w.capture := area;
+              Change_Cursor (w, cur_select);
               Invert_Rubber_Box (w, picked);  --  Show
             end if;
           when text | put | par_cur_2d_cmd =>
@@ -269,9 +269,9 @@ package body TC.GWin.Mousing is
         case w.current_cmd is
           when pick_obj =>
             if dist > dist_max then
-              w.capture:= unarea;
-              Change_Cursor(w, cur_unselect);
-              Invert_Rubber_Box(w,normal);  --  Show
+              w.capture := unarea;
+              Change_Cursor (w, cur_unselect);
+              Invert_Rubber_Box (w, normal);  --  Show
             end if;
           when others => null; -- Right button meaningless for not picking
         end case;

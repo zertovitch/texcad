@@ -5,10 +5,10 @@ with Ada.Strings.Unbounded;
 package TC.GWin.Lang is
 
   type Message is
-  ( empty,
-    -- Status bar
+   (empty,
+    --  Status bar
     ready,
-    -- Menus
+    --  Menus
     ffile,
       fnew, fopen, fsave, fsaveas, fclose, fexit,
     ddraw,
@@ -36,7 +36,7 @@ package TC.GWin.Lang is
       wcascade, wtilehor, wtilever, wclosall,
     hhelp,
       habout,
-    -- Various panels
+    --  Various panels
     exists, replace, cannotsave, cannotbackup,
     mcancel,
     open,
@@ -49,20 +49,20 @@ package TC.GWin.Lang is
     lng_chg,
     fx_restrt,
     no_picked,
-    -- General options panel
+    --  General options panel
     gen_opt_tab_display,
     gen_opt_tab_latex,
     gen_opt_tab_miscellaneous,
     lng,
     gcolors, background, normal, picked, shadow,
-    grid,gridnone,gridpts,gridlin,
+    grid, gridnone, gridpts, gridlin,
     bezpts, bezauto, bezsugg,
     param2d_title, param2d_segments, param2d_scale,
     preview_latex_mode,
     preview_directory,
     mcurrent,
     mtemporary,
-    -- Picture options panel
+    --  Picture options panel
     pic_opt_tab_drawing,
     pic_opt_tab_latex,
     dimensions, unitlength, linewidth,
@@ -73,11 +73,11 @@ package TC.GWin.Lang is
     slopes, anyslope, txslopes,
     preview_insertions,
     compat,
-    -- Object edition
-    left,hcenter,right,
-    top,vcenter,bottom,
+    --  Object edition
+    left, hcenter, right,
+    top, vcenter, bottom,
     dash_size,
-    -- Misc
+    --  Misc
     dot_gap, dot_symbol,
     new_pic,
     ltx_pic,
@@ -92,7 +92,7 @@ package TC.GWin.Lang is
     error,
     fnotfound,
     expl_pick,
-    -- Tools
+    --  Tools
     cleanup,
     cleanup_selected,
     topic,
@@ -102,7 +102,7 @@ package TC.GWin.Lang is
     clean_zero_sized_object,
     clean_unknown_command,
     clean_comment,
-    -- About
+    --  About
     blurb,
     authors,
     original,
@@ -110,27 +110,27 @@ package TC.GWin.Lang is
     windoze_version,
     thanks,
     gwind,
-    -- Mouse
+    --  Mouse
     mouse_drag,
     bez_pt2,
     bez_ptc,
     m_paste
   );
 
-  -- NB: String might become Wide_String
+  --  NB: String might become Wide_String
 
-  -- Gives message m in language l
-  function Speak( l: Language; m: Message ) return GString;
-  -- Gives message m in startup_language
-  function Msg(m: Message) return GString;
+  --  Gives message m in language l
+  function Speak (l : Language; m : Message) return GString;
+  --  Gives message m in startup_language
+  function Msg (m : Message) return GString;
 
-  -- Filter the '&'-s
-  function Filter_amp( s: GString ) return GString;
+  --  Filter the '&'-s
+  function Filter_amp (s : GString) return GString;
 
-  function Language_rich_image( l: Language ) return GString;
+  function Language_rich_image (l : Language) return GString;
 
-  msg_for_command: constant array(Custom_cmd) of Message:=
-    ( preview          => preview,
+  msg_for_command : constant array (Custom_cmd) of Message :=
+     (preview          => preview,
       save             => fsave,
       save_as          => fsaveas,
       close            => fclose,
@@ -176,19 +176,18 @@ package TC.GWin.Lang is
       clean_pic        => tclean,
       TB_Drawing       => vtogdtb,
       TB_Line_settings => vtogltb,
-      others => empty);
+      others           => empty);
 
-  msg_for_cleanup : constant array (Tools.Detection) of Message:=
-    ( Tools.empty_text         =>  clean_empty_text,
-      Tools.zero_sized_object  =>  clean_zero_sized_object,
-      Tools.unknown_command    =>  clean_unknown_command,
-      Tools.comment            =>  clean_comment
-    );
+  msg_for_cleanup : constant array (Tools.Detection) of Message :=
+    (Tools.empty_text         =>  clean_empty_text,
+     Tools.zero_sized_object  =>  clean_zero_sized_object,
+     Tools.unknown_command    =>  clean_unknown_command,
+     Tools.comment            =>  clean_comment);
 
   function U (Source : String) return Ada.Strings.Unbounded.Unbounded_String
     renames Ada.Strings.Unbounded.To_Unbounded_String;
 
   type Message_set is
-    array( Message ) of Ada.Strings.Unbounded.Unbounded_String;
+    array (Message) of Ada.Strings.Unbounded.Unbounded_String;
 
 end TC.GWin.Lang;

@@ -39,7 +39,7 @@ package body TC.GWin.MDI_Picture_Child is
   use GWindows.Base, GWindows.Menus, GWindows.Message_Boxes, GWindows.Windows;
   use GWin_Util;
 
-  -- Adjust the Draw control's position to those of the scroll controls.
+  --  Adjust the Draw control's position to those of the scroll controls.
   --
   procedure Adjust_Draw_Control_Position (Window : in out MDI_Picture_Child_Type)
   is
@@ -52,15 +52,15 @@ package body TC.GWin.MDI_Picture_Child is
        0 - Window.Draw_Control.Y0);
   end Adjust_Draw_Control_Position;
 
-  procedure On_Size (Window : in out MDI_Picture_Child_Type;
-                     Width  : in     Integer;
-                     Height : in     Integer) is
+  overriding procedure On_Size (Window : in out MDI_Picture_Child_Type;
+                                Width  : in     Integer;
+                                Height : in     Integer) is
   begin
     if user_maximize_restore then
-      MDI_childen_maximized:= Zoom(Window);
+      MDI_childen_maximized := Window.Zoom;
     end if;
 
-    -- Taken from GWindows.Scroll_Panels
+    --  Taken from GWindows.Scroll_Panels
     if
       Client_Area_Width (Window) < Client_Area_Width (Window.Draw_Control)
     then
@@ -70,11 +70,11 @@ package body TC.GWin.MDI_Picture_Child is
           Client_Area_Width (Window.Draw_Control) -
           Client_Area_Width (Window) + 30);
        Scroll_Page_Size (Window, Horizontal, 30);
-       Adjust_Draw_Control_Position(Window);
+       Adjust_Draw_Control_Position (Window);
     else
        Left (Window.Draw_Control, 0);
        Scroll_Position (Window, Horizontal, 0);
-       Window.Draw_Control.X0:= 0;
+       Window.Draw_Control.X0 := 0;
        Horizontal_Scroll_Bar (Window, False);
     end if;
 
@@ -87,32 +87,32 @@ package body TC.GWin.MDI_Picture_Child is
           Client_Area_Height (Window.Draw_Control) -
           Client_Area_Height (Window) + 30);
        Scroll_Page_Size (Window, Vertical, 30);
-       Adjust_Draw_Control_Position(Window);
+       Adjust_Draw_Control_Position (Window);
     else
        Top (Window.Draw_Control, 0);
        Scroll_Position (Window, Vertical, 0);
-       Window.Draw_Control.Y0:= 0;
+       Window.Draw_Control.Y0 := 0;
        Vertical_Scroll_Bar (Window, False);
     end if;
 
-    Window.Draw_Control.Disp_W:= Client_Area_Width (Window);
-    Window.Draw_Control.Disp_H:= Client_Area_Height (Window);
+    Window.Draw_Control.Disp_W := Client_Area_Width (Window);
+    Window.Draw_Control.Disp_H := Client_Area_Height (Window);
   end On_Size;
 
-  procedure On_Horizontal_Scroll
+  overriding procedure On_Horizontal_Scroll
     (Window  : in out MDI_Picture_Child_Type;
      Request : in     GWindows.Base.Scroll_Request_Type;
      Control : in     GWindows.Base.Pointer_To_Base_Window_Class)
   is
   begin
     if Request = Thumb_Drag then
-      Window.Draw_Control.X0:= Scroll_Drag_Position (Window, Horizontal);
-      Window.Draw_Control.Y0:= Scroll_Drag_Position (Window, Vertical);
+      Window.Draw_Control.X0 := Scroll_Drag_Position (Window, Horizontal);
+      Window.Draw_Control.Y0 := Scroll_Drag_Position (Window, Vertical);
       Move (Window.Draw_Control,
             0 - Window.Draw_Control.X0,
             0 - Window.Draw_Control.Y0);
     else
-       Adjust_Draw_Control_Position(Window);
+       Adjust_Draw_Control_Position (Window);
        On_Horizontal_Scroll
          (GWindows.Windows.Window_Type (Window),
           Request,
@@ -124,7 +124,7 @@ package body TC.GWin.MDI_Picture_Child is
   -- On_Vertical_Scroll --
   ------------------------
 
-  procedure On_Vertical_Scroll
+  overriding procedure On_Vertical_Scroll
     (Window  : in out MDI_Picture_Child_Type;
      Request : in     GWindows.Base.Scroll_Request_Type;
      Control : in     GWindows.Base.Pointer_To_Base_Window_Class)
@@ -132,20 +132,20 @@ package body TC.GWin.MDI_Picture_Child is
   is
   begin
     if Request = Thumb_Drag then
-      Window.Draw_Control.X0:= Scroll_Drag_Position (Window, Horizontal);
-      Window.Draw_Control.Y0:= Scroll_Drag_Position (Window, Vertical);
+      Window.Draw_Control.X0 := Scroll_Drag_Position (Window, Horizontal);
+      Window.Draw_Control.Y0 := Scroll_Drag_Position (Window, Vertical);
       Move (Window.Draw_Control,
             0 - Window.Draw_Control.X0,
             0 - Window.Draw_Control.Y0);
     else
-      Adjust_Draw_Control_Position(Window);
+      Adjust_Draw_Control_Position (Window);
       On_Vertical_Scroll (GWindows.Windows.Window_Type (Window),
                           Request,
                           Control);
     end if;
   end On_Vertical_Scroll;
 
-  procedure On_Erase_Background
+  overriding procedure On_Erase_Background
     (Window : in out MDI_Picture_Child_Type;
      Canvas : in out GWindows.Drawing.Canvas_Type;
      Area   : in     GWindows.Types.Rectangle_Type)
@@ -156,9 +156,9 @@ package body TC.GWin.MDI_Picture_Child is
     null;  --  Do nothing! Avoids the flickering background/canvas.
   end On_Erase_Background;
 
-  procedure Display_saved_bitmap(
-    window : in out TC_Picture_Panel;
-    area   :        GWindows.Types.Rectangle_Type)
+  procedure Display_saved_bitmap
+    (window : in out TC_Picture_Panel;
+     area   :        GWindows.Types.Rectangle_Type)
   is
   begin
     window.Drawing_Area.BitBlt
@@ -177,11 +177,11 @@ package body TC.GWin.MDI_Picture_Child is
   begin
     if Window.Picture.refresh /= no then
       Display.Draw
-        (Window.Saved_Area, Window.Picture, null, Width(Window), Height(Window));
+        (Window.Saved_Area, Window.Picture, null, Width (Window), Height (Window));
     end if;
   end Update_bitmap;
 
-  procedure Subtle_Redraw (Window : in out TC_Picture_Panel ) is
+  procedure Subtle_Redraw (Window : in out TC_Picture_Panel) is
     mem : constant TC.Refresh_mode := Window.Picture.refresh;
   begin
     Update_bitmap (Window);
@@ -190,41 +190,41 @@ package body TC.GWin.MDI_Picture_Child is
     end if;
   end Subtle_Redraw;
 
-  procedure On_Paint (Window : in out TC_Picture_Panel;
-                      Canvas : in out GWindows.Drawing.Canvas_Type;
-                      Area   : in     GWindows.Types.Rectangle_Type)
+  overriding procedure On_Paint (Window : in out TC_Picture_Panel;
+                                 Canvas : in out GWindows.Drawing.Canvas_Type;
+                                 Area   : in     GWindows.Types.Rectangle_Type)
   is
     pragma Warnings (Off, Canvas);  --  Canvas == Window.Drawing_Area
   begin
-    Update_bitmap(Window);
-    Display_saved_bitmap(Window,Area);
+    Update_bitmap (Window);
+    Display_saved_bitmap (Window, Area);
   end On_Paint;
 
   procedure Create_Menus (Window : in out MDI_Picture_Child_Type) is
     Main : constant Menu_Type := Create_Menu;
   begin
-    Window.File_Menu := TC.GWin.Menus.Create_File_Menu(is_child => True);
-    Append_Menu (Main, Msg(ffile), Window.File_Menu);
+    Window.File_Menu := TC.GWin.Menus.Create_File_Menu (is_child => True);
+    Append_Menu (Main, Msg (ffile), Window.File_Menu);
 
     Window.Draw_Menu := TC.GWin.Menus.Create_Draw_Menu;
-    Append_Menu (Main, Msg(ddraw), Window.Draw_Menu);
+    Append_Menu (Main, Msg (ddraw), Window.Draw_Menu);
 
     Window.Line_Menu := TC.GWin.Menus.Create_Line_Menu;
-    Append_Menu (Main, Msg(lline), Window.Line_Menu);
+    Append_Menu (Main, Msg (lline), Window.Line_Menu);
 
     Window.Edit_Menu := TC.GWin.Menus.Create_Edit_Menu;
-    Append_Menu (Main, Msg(eedit), Window.Edit_Menu);
+    Append_Menu (Main, Msg (eedit), Window.Edit_Menu);
 
-    Append_Menu (Main, Msg(ttools), TC.GWin.Menus.Create_Tools_Menu);
+    Append_Menu (Main, Msg (ttools), TC.GWin.Menus.Create_Tools_Menu);
 
     Window.View_Menu := TC.GWin.Menus.Create_View_Menu;
-    Append_Menu (Main, Msg(vview), Window.View_Menu);
+    Append_Menu (Main, Msg (vview), Window.View_Menu);
 
     Append_Menu
-      (Main, Msg(oopt),
+      (Main, Msg (oopt),
        TC.GWin.Menus.Create_Options_Menu (is_child => True));
-    Append_Menu (Main, Msg(wwindow), TC.GWin.Menus.Create_Wndw_Menu);
-    Append_Menu (Main, Msg(hhelp), TC.GWin.Menus.Create_Help_Menu);
+    Append_Menu (Main, Msg (wwindow), TC.GWin.Menus.Create_Wndw_Menu);
+    Append_Menu (Main, Msg (hhelp), TC.GWin.Menus.Create_Help_Menu);
 
     MDI_Menu (Window, Main, Window_Menu => 8);
   end Create_Menus;
@@ -243,7 +243,7 @@ package body TC.GWin.MDI_Picture_Child is
     pragma Warnings (Off, Keys);
   begin
     if Window in TC_Picture_Panel'Class then
-      Mousing.Mouse_Down(TC_Picture_Panel (Window), X,Y, Left_Button);
+      Mousing.Mouse_Down (TC_Picture_Panel (Window), X, Y, Left_Button);
     end if;
   end Do_Left_Mouse_Down;
 
@@ -254,7 +254,7 @@ package body TC.GWin.MDI_Picture_Child is
     pragma Warnings (Off, Keys);
   begin
     if Window in TC_Picture_Panel'Class then
-      Mousing.Mouse_Down(TC_Picture_Panel(Window), X, Y, Right_Button);
+      Mousing.Mouse_Down (TC_Picture_Panel (Window), X, Y, Right_Button);
     end if;
   end Do_Right_Mouse_Down;
 
@@ -311,7 +311,7 @@ package body TC.GWin.MDI_Picture_Child is
     end if;
   end Do_Mouse_Wheel;
 
-  -- Added Key down handler for steering mouse cursor with arrow keys 14-Oct-2005
+  --  Added Key down handler for steering mouse cursor with arrow keys 14-Oct-2005
 
   procedure Do_Key_Down
               (Window      : in out GWindows.Base.Base_Window_Type'Class;
@@ -322,32 +322,32 @@ package body TC.GWin.MDI_Picture_Child is
     --
     pic_child : MDI_Picture_Child_Type renames MDI_Picture_Child_Type (Window);
     v_pos : constant Natural := Scroll_Position (pic_child, Vertical);
-    dy : constant Natural := Scroll_Page_Size(pic_child, Vertical);
+    dy : constant Natural := Scroll_Page_Size (pic_child, Vertical);
     --
-    procedure Move_mouse_cursor (dx, dy: Integer) is
+    procedure Move_mouse_cursor (mdx, mdy : Integer) is
       p : constant GWindows.Types.Point_Type := GWindows.Cursors.Get_Cursor_Position;
     begin
-      GWindows.Cursors.Set_Cursor_Position (p.X + dx, p.Y + dy);
+      GWindows.Cursors.Set_Cursor_Position (p.X + mdx, p.Y + mdy);
     end Move_mouse_cursor;
   begin
     case Special_Key is
       when Left_Key     => Move_mouse_cursor (-1,  0);
-      when Up_Key       => Move_mouse_cursor ( 0, -1);
+      when Up_Key       => Move_mouse_cursor  (0, -1);
       when Right_Key    => Move_mouse_cursor (+1,  0);
-      when Down_Key     => Move_mouse_cursor ( 0, +1);
+      when Down_Key     => Move_mouse_cursor  (0, +1);
       when Page_Up      =>
-        Scroll_Position(pic_child, Vertical, v_pos - dy);
+        Scroll_Position (pic_child, Vertical, v_pos - dy);
         Adjust_Draw_Control_Position (pic_child);
       when Page_Down    =>
-        Scroll_Position(pic_child, Vertical, v_pos + dy);
+        Scroll_Position (pic_child, Vertical, v_pos + dy);
         Adjust_Draw_Control_Position (pic_child);
       when others       => null;
     end case;
   end Do_Key_Down;
 
-  -- This will update file menu of MDI_Root and all of this windows' brothers.
+  --  This will update file menu of MDI_Root and all of this windows' brothers.
   procedure Update_Common_Menus (Window        : MDI_Picture_Child_Type;
-                                 top_mru_entry : GString := "" )
+                                 top_mru_entry : GString := "")
   is
   begin
     Window.MDI_Root.Update_Common_Menus (top_mru_entry);
@@ -356,13 +356,13 @@ package body TC.GWin.MDI_Picture_Child is
   procedure Update_Permanent_Command (Window : in out MDI_Picture_Child_Type) is
 
     procedure Radio_Check_Custom
-      (m                  : in Menu_Type;
-       first, last, check :    Custom_cmd)
+      (m                    : in Menu_Type;
+       first, last, checked : in Custom_cmd)
     is
     begin
       Radio_Check
         (m, Command,
-         ID_custom(first), ID_custom(last), ID_custom(check));
+         ID_custom (first), ID_custom (last), ID_custom (checked));
     end Radio_Check_Custom;
 
     procedure Update_cmd (m : in Menu_Type) is
@@ -373,7 +373,7 @@ package body TC.GWin.MDI_Picture_Child is
     end Update_cmd;
 
     procedure Update_ls is
-      c: Custom_cmd;
+      c : Custom_cmd;
     begin
       Radio_Check_Custom
         (Window.Line_Menu,
@@ -413,7 +413,7 @@ package body TC.GWin.MDI_Picture_Child is
     end case;
     Window.MDI_Root.Update_Status_Bar
       (command,
-       Filter_amp(Msg(msg_for_command(Window.Draw_Control.current_cmd))));
+       Filter_amp (Msg (msg_for_command (Window.Draw_Control.current_cmd))));
   end Update_Permanent_Command;
 
   zoom_factor : constant Real := 2.0 ** (1.0 / 8.0);
@@ -432,13 +432,13 @@ package body TC.GWin.MDI_Picture_Child is
       Subtle_Redraw (Window.Draw_Control);
     end if;
     RIO.Put (sf, opt.zoom_fac, 2, 0);
-    Window.MDI_Root.Update_Status_Bar (zoom, S2G (Trim (sf,Left)));
+    Window.MDI_Root.Update_Status_Bar (zoom, S2G (Trim (sf, Left)));
   end Zoom_Picture;
 
   procedure Update_Information (Window : in out MDI_Picture_Child_Type) is
     p : TC.Picture renames Window.Draw_Control.Picture;
     is_modified : constant Boolean := not p.saved;
-    bool_to_state: constant array (Boolean) of State_Type := (Disabled, Enabled);
+    bool_to_state : constant array (Boolean) of State_Type := (Disabled, Enabled);
     Star : constant array (Boolean) of GCharacter := (False => ' ', True => '*');
 
     procedure Update_Tool_Bar is
@@ -495,7 +495,7 @@ package body TC.GWin.MDI_Picture_Child is
   -- On_Create --
   ---------------
 
-  procedure On_Create (Window : in out MDI_Picture_Child_Type) is
+  overriding procedure On_Create (Window : in out MDI_Picture_Child_Type) is
     win_asp_x, win_asp_y : Interfaces.C.unsigned;
     use type Interfaces.C.unsigned;
     use GWindows.Application, GWindows.Drawing, GWindows.Drawing.Capabilities;
@@ -509,27 +509,27 @@ package body TC.GWin.MDI_Picture_Child is
                        Width  => Desktop_Width,
                        Height => Desktop_Height);
 
-    Window.Draw_Control.Picture.refresh:= full;
+    Window.Draw_Control.Picture.refresh := full;
 
     --  Filial feelings:
-    Window.MDI_Root:= MDI_Main_Access (Controlling_Parent (Window));
+    Window.MDI_Root := MDI_Main_Access (Controlling_Parent (Window));
     Window.Draw_Control.pic_parent :=
       MDI_Picture_Child_Access (Controlling_Parent (Window.Draw_Control));
     Window.Draw_Control.main := Window.MDI_Root;
 
-    Use_GUI_Font(Window.Draw_Control);
+    Use_GUI_Font (Window.Draw_Control);
 
-      -- Dock (Window.Draw_Control, GWindows.Base.Fill);
-      -- Auto_Resize(Window.Draw_Control);
-      -- Dock_Children (Window.Scroll_Panel.Panel);
+      --  Dock (Window.Draw_Control, GWindows.Base.Fill);
+      --  Auto_Resize(Window.Draw_Control);
+      --  Dock_Children (Window.Scroll_Panel.Panel);
       Window.Draw_Control.Drawing_Area.Background_Mode (Transparent);
       Window.Draw_Control.Saved_Area.Background_Mode (Transparent);
 
       On_Change_Cursor_Handler (Window.Draw_Control, Do_Change_Cursor'Access);
-      On_Left_Mouse_Button_Down_Handler(Window.Draw_Control, Do_Left_Mouse_Down'Access);
-      On_Right_Mouse_Button_Down_Handler(Window.Draw_Control, Do_Right_Mouse_Down'Access);
-      On_Left_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
-      On_Right_Mouse_Button_Up_Handler(Window.Draw_Control, Do_Mouse_Up'Access);
+      On_Left_Mouse_Button_Down_Handler (Window.Draw_Control, Do_Left_Mouse_Down'Access);
+      On_Right_Mouse_Button_Down_Handler (Window.Draw_Control, Do_Right_Mouse_Down'Access);
+      On_Left_Mouse_Button_Up_Handler (Window.Draw_Control, Do_Mouse_Up'Access);
+      On_Right_Mouse_Button_Up_Handler (Window.Draw_Control, Do_Mouse_Up'Access);
       On_Mouse_Move_Handler (Window.Draw_Control, Do_Mouse_Move'Access);
       --
       On_Mouse_Wheel_Handler (Window, Do_Mouse_Wheel'Access);
@@ -549,14 +549,14 @@ package body TC.GWin.MDI_Picture_Child is
       Refresh_size_dependent_parameters
         (Window.Draw_Control.Picture,
          objects => True);
-      -- ^default pt, not yet from options.
+      --  ^default pt, not yet from options.
 
       Subtle_Redraw (Window.Draw_Control);
 
-      --Dock_Children (Window);
+      --  Dock_Children (Window);
 
-      win_asp_x := Get_Capability (Window.Draw_Control.Drawing_Area,ASPECTX);
-      win_asp_y := Get_Capability (Window.Draw_Control.Drawing_Area,ASPECTY);
+      win_asp_x := Get_Capability (Window.Draw_Control.Drawing_Area, ASPECTX);
+      win_asp_y := Get_Capability (Window.Draw_Control.Drawing_Area, ASPECTY);
       --  GWindows.Message_Boxes.Message_Box(Window,
       --    "Aspect",
       --            "ASPECTX" & Interfaces.C.Unsigned'image(win_asp_x)
@@ -578,7 +578,7 @@ package body TC.GWin.MDI_Picture_Child is
       --  2007: Maximize-demaximize (non-maximized case) to
       --        avoid invisible windows...
       declare
-        memo_unmaximized_children: constant Boolean := not MDI_childen_maximized;
+        memo_unmaximized_children : constant Boolean := not MDI_childen_maximized;
       begin
         if memo_unmaximized_children then
           Window.MDI_Root.Freeze;
@@ -604,7 +604,7 @@ package body TC.GWin.MDI_Picture_Child is
   begin
     if window.Draw_Control.Picture.opt.sty (emlines) then
       case Message_Box
-        (window, Msg(preview), Msg(noemlines1) & NL & Msg(noemlines2),
+        (window, Msg (preview), Msg (noemlines1) & NL & Msg (noemlines2),
          Yes_No_Cancel_Box, Question_Icon)
       is
         when Yes =>
@@ -620,21 +620,21 @@ package body TC.GWin.MDI_Picture_Child is
     ti := ttl'Last;
     for i in reverse ttl'Range loop
       case ttl (i) is
-        when '\'|'/'|'-' => exit;  --  stop character
+        when '\' | '/' | '-' => exit;  --  stop character
         when others => null;
       end case;
       ti := i;
     end loop;
     TC.GWin.Previewing.Create_files
       (pic   => window.Draw_Control.Picture,
-       title => G2S (ttl(ti..ttl'Last)));
+       title => G2S (ttl (ti .. ttl'Last)));
     TC.GWin.Previewing.Start;
   exception
-    when E: TC.GWin.Previewing.Preview_error =>
+    when E : TC.GWin.Previewing.Preview_Error =>
       Message_Box (
         window,
-        Msg(preview),
-        Msg(prev_fail) & NL & NL & S2G (Ada.Exceptions.Exception_Message(E)),
+        Msg (preview),
+        Msg (prev_fail) & NL & NL & S2G (Ada.Exceptions.Exception_Message (E)),
         OK_Box, Exclamation_Icon);
       TC.GWin.Previewing.Cleanup;
   end Preview;
@@ -669,10 +669,10 @@ package body TC.GWin.MDI_Picture_Child is
     else
       Open (f, In_File, Clip_filename);
       while not End_Of_File (f) loop
-        contents := contents & Get_Line(f) & ASCII.LF;
+        contents := contents & Get_Line (f) & ASCII.LF;
       end loop;
       Close (f);
-      GWindows.Clipboard.Clipboard_Text (Window_Type(Window), S2G (To_String (contents)));
+      GWindows.Clipboard.Clipboard_Text (Window_Type (Window), S2G (To_String (contents)));
     end if;
   end Clip_file_to_Clipboard;
 
@@ -695,26 +695,26 @@ package body TC.GWin.MDI_Picture_Child is
     GWindows.Common_Dialogs.Open_File
       (Window, Msg (open),
        File_Name,
-       ((To_GString_Unbounded (Msg(tcd_mac) & " (*." & S2G (Mac_suffix) & ")"),
-           To_GString_Unbounded ("*." & S2G (Mac_suffix) )),
-         (To_GString_Unbounded (Msg(all_files) & " (*.*)"),
+       ((To_GString_Unbounded (Msg (tcd_mac) & " (*." & S2G (Mac_suffix) & ")"),
+           To_GString_Unbounded ("*." & S2G (Mac_suffix))),
+         (To_GString_Unbounded (Msg (all_files) & " (*.*)"),
            To_GString_Unbounded ("*.*"))),
        '.' & S2G (Mac_suffix),
        File_Title,
        Success);
     if Success then
-      Window.Macro_Name:= File_Name;
+      Window.Macro_Name := File_Name;
     end if;
   end On_Open_Macro;
 
-  procedure Load_Macro (Window: in out MDI_Picture_Child_Type) is
+  procedure Load_Macro (Window : in out MDI_Picture_Child_Type) is
     pw : Picture renames Window.Draw_Control.Picture;
     mo : Picture_Options;  --  save all picture options, overwritten by loading
   begin
     mo := pw.opt;
     pw.opt.P0 := Window.Draw_Control.PU;  --  origin on mouse cursor
     begin
-      TC.Input.Load( pw, True, G2S (To_GString_From_Unbounded(Window.Macro_Name)));
+      TC.Input.Load (pw, True, G2S (To_GString_From_Unbounded (Window.Macro_Name)));
     exception
       when E : TC.Input.Load_error =>
         Message_Box
@@ -729,22 +729,22 @@ package body TC.GWin.MDI_Picture_Child is
            Icon => Exclamation_Icon);
     end;
     pw.opt := mo;  --  restore options
-    Refresh_size_dependent_parameters (pw,objects => True);
-    -- ^ was missing ! Fixed 14-Jan-2004
+    Refresh_size_dependent_parameters (pw, objects => True);
+    --  ^ was missing ! Fixed 14-Jan-2004
     pw.refresh := shadows_and_objects;
   end Load_Macro;
 
-  -- 23-Feb-2004
+  --  23-Feb-2004
 
   procedure Change_Pattern_Params
     (Window      : in out MDI_Picture_Child_Type;
      new_pattern :        Line_pattern)
   is
-    pan            : Window_Type;
-    sym_eb, len_eb : GWindows.Edit_Boxes.Edit_Box_Type;
-    oki            : GWindows.Buttons.Default_Button_Type;
-    cancel         : GWindows.Buttons.Button_Type;
-    Result,y       : Integer;
+    pan             : Window_Type;
+    sym_eb, len_eb  : GWindows.Edit_Boxes.Edit_Box_Type;
+    oki             : GWindows.Buttons.Default_Button_Type;
+    cancel          : GWindows.Buttons.Button_Type;
+    Result, y       : Integer;
 
     candidate : Line_settings;
 
@@ -758,19 +758,19 @@ package body TC.GWin.MDI_Picture_Child is
       case candidate.pattern is
         when plain => null;
         when dot =>
-          candidate.dot_symbol := To_Unbounded_String (G2S(GWindows.Edit_Boxes.Text(sym_eb)));
-          candidate.dot_gap := TC.Real'Value(G2S(len_eb.Text));
+          candidate.dot_symbol := To_Unbounded_String (G2S (GWindows.Edit_Boxes.Text (sym_eb)));
+          candidate.dot_gap := TC.Real'Value (G2S (len_eb.Text));
         when dash =>
-          candidate.dash_length := TC.Real'Value(G2S(len_eb.Text));
+          candidate.dash_length := TC.Real'Value (G2S (len_eb.Text));
       end case;
     end Get_Box_Data;
 
   begin
-    y:= 30;
+    y := 30;
 
     Create_As_Dialog
       (pan, Window.MDI_Root.all,
-       Filter_amp(Msg(vtogltb)),
+       Filter_amp (Msg (vtogltb)),
        Width => 300, Height => 140 + y);
 
     Center (pan);
@@ -790,14 +790,14 @@ package body TC.GWin.MDI_Picture_Child is
       when dot =>
         Create_Label (pan, Msg (dot_gap), 10,  y, 130, 20);
         len_eb.Create (pan, S2G (TeX_Number (candidate.dot_gap, 2)), 180, y,  40, 20);
-        Create_Label (pan, Msg (dot_symbol), 10,  y+30, 130, 20);
-        sym_eb.Create (pan, S2G (To_String (candidate.dot_symbol)), 180, y+30, 80, 22);
+        Create_Label (pan, Msg (dot_symbol), 10,  y + 30, 130, 20);
+        sym_eb.Create (pan, S2G (To_String (candidate.dot_symbol)), 180, y + 30, 80, 22);
     end case;
 
     oki.Create
       (pan, "O&K", 20, Client_Area_Height (pan) - 40, 60, 25, ID => IDOK);
     cancel.Create
-      (pan, Msg(mcancel), 100, Client_Area_Height (pan) - 40, 60, 25, ID => IDCANCEL);
+      (pan, Msg (mcancel), 100, Client_Area_Height (pan) - 40, 60, 25, ID => IDCANCEL);
 
     case candidate.pattern is
       when plain => null;
@@ -830,7 +830,7 @@ package body TC.GWin.MDI_Picture_Child is
     begin
       case c is
         when save       => On_Save (Window);
-        when save_as    => On_Save_As (Window, macro=> False);
+        when save_as    => On_Save_As (Window, macro => False);
         when close      => Close (Window);
         when zoom_minus => Window.Zoom_Picture (-2);
         when zoom_plus  => Window.Zoom_Picture (+2);
@@ -857,11 +857,11 @@ package body TC.GWin.MDI_Picture_Child is
           end if;
 
         when Permanent_direct_cmd =>
-          Window.Draw_Control.current_cmd:= c;
+          Window.Draw_Control.current_cmd := c;
           Update_Permanent_Command (Window);
 
         when Line_setting_cmd =>
-          case Line_setting_cmd(c) is
+          case Line_setting_cmd (c) is
             when thin  => Window.Draw_Control.current_ls.thickness := thin;
             when thick => Window.Draw_Control.current_ls.thickness := thick;
             --
@@ -881,35 +881,35 @@ package body TC.GWin.MDI_Picture_Child is
         when Select_cmd =>
           case Select_cmd (c) is
             when unselect   =>
-              PicPic( Window.Draw_Control.Picture, unpick_all );
+              PicPic (Window.Draw_Control.Picture, unpick_all);
               Window.Draw_Control.Picture.refresh := unpicked;
             when select_all =>
-              PicPic( Window.Draw_Control.Picture, pick_all );
+              PicPic (Window.Draw_Control.Picture, pick_all);
               Window.Draw_Control.Picture.refresh := picked;
           end case;
           Window.Draw_Control.current_cmd := pick_obj;
-          Update_Permanent_Command(Window);
-          Subtle_Redraw(Window.Draw_Control);
+          Update_Permanent_Command (Window);
+          Subtle_Redraw (Window.Draw_Control);
           Update_Information (Window);
 
         when Action_on_picked_cmd =>
           if Window.Draw_Control.Picture.picked = 0 then
-            Message_Box(Window, "",Msg(no_picked), OK_Box, Error_Icon);
+            Message_Box (Window, "", Msg (no_picked), OK_Box, Error_Icon);
           else
-            case Action_on_picked_cmd(c) is
+            case Action_on_picked_cmd (c) is
               when Deformation_cmd =>
-                Window.Draw_Control.current_cmd:= c;
-                Update_Permanent_Command(Window);
+                Window.Draw_Control.current_cmd := c;
+                Update_Permanent_Command (Window);
               when Removes_picked_cmd =>
                 if c = cut_clip then    -- "Cut" is like "Copy" and "Delete"
-                  Copy_clip( Window );
+                  Copy_clip (Window);
                 end if;
-                Del_picked( Window.Draw_Control.Picture );
-                Window.Draw_Control.Picture.refresh:= full;
-                Window.Draw_Control.current_cmd:= pick_obj;
-                Update_Permanent_Command(Window);
-              when copy_clip  => Copy_clip( Window );
-              when save_macro => On_Save_As (Window, macro=> True);
+                Del_picked (Window.Draw_Control.Picture);
+                Window.Draw_Control.Picture.refresh := full;
+                Window.Draw_Control.current_cmd := pick_obj;
+                Update_Permanent_Command (Window);
+              when copy_clip  => Copy_clip (Window);
+              when save_macro => On_Save_As (Window, macro => True);
             end case;
             Subtle_Redraw (Window.Draw_Control);
             Update_Information (Window);
@@ -917,43 +917,43 @@ package body TC.GWin.MDI_Picture_Child is
 
         when paste_clip | load_macro  =>
           if c = load_macro then
-            On_Open_Macro(Window,success);
+            On_Open_Macro (Window, success);
           else
-            Clipboard_to_Clip_file(Window);
+            Clipboard_to_Clip_file (Window);
             declare
-              n: constant String:= Clip_filename;
+              n : constant String := Clip_filename;
             begin
               success := Ada.Directories.Exists (n);
               if success then
-                Window.Macro_Name:= To_GString_Unbounded(S2G(n));
+                Window.Macro_Name := To_GString_Unbounded (S2G (n));
               end if;
             end;
           end if;
           if success then
-            Window.Draw_Control.capture:= paste0;
+            Window.Draw_Control.capture := paste0;
             Mousing.Show_mouse_mode (Window.Draw_Control);
             Mousing.Change_Cursor (Window.Draw_Control, Mousing.cur_set_origin);
-            -- ^ The ball is in Mousing camp now...
+            --  ^ The ball is in Mousing camp now...
           else
-            Message_Box(Window, Msg(error), Msg(fnotfound), Icon => Exclamation_Icon);
+            Message_Box (Window, Msg (error), Msg (fnotfound), Icon => Exclamation_Icon);
           end if;
         when tc_undo =>
           null;  --  !!
         when tc_redo =>
           null;  --  !!
       end case;
-      -- In any case, we don't want arrows with boxes. What a bad taste!
+      --  In any case, we don't want arrows with boxes. What a bad taste!
       if Window.Draw_Control.current_cmd in Box_cmd then
-        Window.Draw_Control.current_ls.arrows:= no_arrow;
+        Window.Draw_Control.current_ls.arrows := no_arrow;
       end if;
     end Command;
 
   begin
     for c in MDI_child_cmd loop
-      if  Item = ID_custom(c) or else
-         (Item = ID_std(c) and then Item /= no_std_id)
+      if  Item = ID_custom (c) or else
+         (Item = ID_std (c) and then Item /= no_std_id)
       then
-        Command(c);
+        Command (c);
         exit;
       end if;
     end loop;
@@ -968,9 +968,9 @@ package body TC.GWin.MDI_Picture_Child is
     File_Name : constant GWindows.GString := To_GString_From_Unbounded (Window.File_Name);
   begin
     if File_Name = "" then
-      On_Save_As (Window, macro=> False);
+      On_Save_As (Window, macro => False);
     else
-      Save (Window, File_Name, macro=> False);
+      Save (Window, File_Name, macro => False);
     end if;
   end On_Save;
 
@@ -978,15 +978,15 @@ package body TC.GWin.MDI_Picture_Child is
   -- On_Save_As --
   ----------------
 
-  procedure On_Save_As (Window : in out MDI_Picture_Child_Type; macro: Boolean)
+  procedure On_Save_As (Window : in out MDI_Picture_Child_Type; macro : Boolean)
   is
      New_File_Name : GWindows.GString_Unbounded;
      File_Title    : GWindows.GString_Unbounded;
      Success       : Boolean;
-     saveas_or_macro: constant array(Boolean) of Message:=
-       (True=> save_macro, False=> save_as);
-     file_kind: constant array(Boolean) of Message:=
-       (True=> tcd_mac, False=> ltx_pic);
+     saveas_or_macro : constant array (Boolean) of Message :=
+       (True => save_macro, False => save_as);
+     file_kind : constant array (Boolean) of Message :=
+       (True => tcd_mac, False => ltx_pic);
      function Suffix return String is
      begin
        if macro then
@@ -997,18 +997,18 @@ package body TC.GWin.MDI_Picture_Child is
      end Suffix;
   begin
     if macro then
-      New_File_Name := To_GString_Unbounded("");
+      New_File_Name := To_GString_Unbounded ("");
     else
       New_File_Name := Window.File_Name;
     end if;
     GWindows.Common_Dialogs.Save_File
       (Window,
-       Msg (saveas_or_macro(macro)) & "...",
+       Msg (saveas_or_macro (macro)) & "...",
        New_File_Name,
-       ((To_GString_Unbounded (Msg(file_kind(macro)) &
+       ((To_GString_Unbounded (Msg (file_kind (macro)) &
          " (*." & S2G (Suffix) & ")"),
-         To_GString_Unbounded ("*." & S2G (Suffix) )),
-        (To_GString_Unbounded (Msg(all_files) & " (*.*)"),
+         To_GString_Unbounded ("*." & S2G (Suffix))),
+        (To_GString_Unbounded (Msg (all_files) & " (*.*)"),
          To_GString_Unbounded ("*.*"))),
         '.' & S2G (Suffix),
         File_Title,
@@ -1019,10 +1019,10 @@ package body TC.GWin.MDI_Picture_Child is
       then
          begin
             if Message_Box (Window,
-                            Msg(saveas_or_macro(macro)),
+                            Msg (saveas_or_macro (macro)),
                             To_GString_From_Unbounded (New_File_Name) &
-                            Msg(exists) & NL &
-                            Msg(replace),
+                            Msg (exists) & NL &
+                            Msg (replace),
                             Yes_No_Box,
                             Exclamation_Icon) = No
             then
@@ -1036,7 +1036,7 @@ package body TC.GWin.MDI_Picture_Child is
       if not macro then
         Window.File_Name := New_File_Name;
         Window.Short_Name := File_Title;
-        Update_Common_Menus (Window,To_GString_From_Unbounded (New_File_Name));
+        Update_Common_Menus (Window, To_GString_From_Unbounded (New_File_Name));
         Update_Information (Window);  --  Refresh window title, menus, ...
       end if;
     end if;
@@ -1048,77 +1048,74 @@ package body TC.GWin.MDI_Picture_Child is
 
   procedure Save (Window    : in out MDI_Picture_Child_Type;
                   File_Name : in     GWindows.GString;
-                  macro     :        Boolean )
+                  macro     :        Boolean)
   is
     use type GString_Unbounded;
-    written_name: GString_Unbounded:=
-      To_GString_Unbounded(File_Name);
-    temp_ext: constant GString:= ".$$$";
-    backup_name: constant String:=
-      To_String(File_Name) & '.' &
-      To_String(gen_opt.bak_suff);
+    written_name : GString_Unbounded :=
+      To_GString_Unbounded (File_Name);
+    temp_ext : constant GString := ".$$$";
+    backup_name : constant String :=
+      To_String (File_Name) & '.' &
+      To_String (gen_opt.bak_suff);
 
-    with_backup: constant Boolean:= TC.gen_opt.bak_enabled and not macro;
+    with_backup : constant Boolean := TC.gen_opt.bak_enabled and not macro;
 
     use GNAT.OS_Lib;
     ok : Boolean;
-    save_error, backup_error: exception;
+    save_error, backup_error : exception;
 
   begin
     if with_backup then
-      written_name:= written_name & temp_ext;
+      written_name := written_name & temp_ext;
     end if;
-    TC.Output.Save(
-      pic            => Window.Draw_Control.Picture,
-      macro          => macro,
-      file_name      => G2S (GU2G(written_name)),
-      displayed_name => G2S (File_Name)
-    );
+    TC.Output.Save
+      (pic            => Window.Draw_Control.Picture,
+       macro          => macro,
+       file_name      => G2S (GU2G (written_name)),
+       displayed_name => G2S (File_Name));
     if with_backup then
-      -- If there was an exception at writing,
-      -- the original file is untouched.
+      --  If there was an exception at writing,
+      --  the original file is untouched.
       --
-      -- 1/ delete old backup
+      --  1/ delete old backup
       if Ada.Directories.Exists (backup_name) then
-        Delete_File( backup_name, ok );
+        Delete_File (backup_name, ok);
         if not ok then
           raise backup_error;
         end if;
       end if;
-      -- 2/ file -> backup
-      if Ada.Directories.Exists (To_String(File_Name)) then
-        Rename_File(
-          To_String(File_Name),
-          backup_name,
-          ok
-        );
+      --  2/ file -> backup
+      if Ada.Directories.Exists (To_String (File_Name)) then
+        Rename_File
+          (To_String (File_Name),
+           backup_name,
+           ok);
         if not ok then
           raise backup_error;
         end if;
       end if;
-      -- 3/ new file -> file
-      Rename_File(
-        G2S (GU2G (written_name)),
-        G2S (File_Name),
-        ok
-      );
+      --  3/ new file -> file
+      Rename_File
+        (G2S (GU2G (written_name)),
+         G2S (File_Name),
+         ok);
       if not ok then
         raise save_error;
       end if;
     end if;
     Window.Extra_First_Doc := False;
-    -- ^ even if it is the extra new window and is saved, we won't close
-    --   it now on opening of another document.
+    --  ^ even if it is the extra new window and is saved, we won't close
+    --    it now on opening of another document.
     if not macro then
-      Update_Common_Menus (Window,File_Name);
+      Update_Common_Menus (Window, File_Name);
     end if;
     Update_Information (Window);
   exception
     when backup_error =>
       begin
         Message_Box (Window,
-                     Msg(save),
-                     Msg(cannotbackup) &
+                     Msg (save),
+                     Msg (cannotbackup) &
                        NL & "-> " &
                        S2G (backup_name),
                      OK_Box,
@@ -1127,8 +1124,8 @@ package body TC.GWin.MDI_Picture_Child is
     when others =>
       begin
         Message_Box (Window,
-                     Msg(save),
-                     Msg(cannotsave) &
+                     Msg (save),
+                     Msg (cannotsave) &
                        NL & "-> " &
                        File_Name,
                      OK_Box,
@@ -1144,10 +1141,10 @@ package body TC.GWin.MDI_Picture_Child is
       loop
         case Message_Box
                (Window,
-                Msg(close_not_saved),
-                Msg(do_you_want_to_save) & ' ' &
-                Msg(the_changes_you_made_to) & " '" &
-                To_GString_From_Unbounded(Window.Short_Name) & "' ?",
+                Msg (close_not_saved),
+                Msg (do_you_want_to_save) & ' ' &
+                Msg (the_changes_you_made_to) & " '" &
+                To_GString_From_Unbounded (Window.Short_Name) & "' ?",
                 Yes_No_Cancel_Box,
                 Exclamation_Icon)
         is
@@ -1165,7 +1162,8 @@ package body TC.GWin.MDI_Picture_Child is
         end case;
       end loop;
     else
-      Update_Common_Menus (Window, To_GString_From_Unbounded(Window.File_Name));
+      Update_Common_Menus
+        (Window, To_GString_From_Unbounded (Window.File_Name));
     end if;
   end On_Close;
 
@@ -1174,7 +1172,7 @@ package body TC.GWin.MDI_Picture_Child is
     return not Window.Draw_Control.Picture.saved;
   end Is_Document_Modified;
 
-  -- !! bad try !!
+  --  !! bad try !!
 
   --  procedure On_Focus (Window : in out MDI_Picture_Child_Type) is
   --  begin

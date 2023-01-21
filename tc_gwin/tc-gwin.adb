@@ -1,6 +1,6 @@
 with GWin_Util;
 
-pragma Elaborate(GWin_Util); -- Get_Windows_Version
+pragma Elaborate (GWin_Util); -- Get_Windows_Version
 
 package body TC.GWin is
 
@@ -31,7 +31,7 @@ package body TC.GWin is
 
 begin
   for c in Custom_cmd loop
-    ID_custom(c):= 101 + Custom_cmd'Pos(c);
+    ID_custom (c) := 101 + Custom_cmd'Pos (c);
   end loop;
   Determine_version;
 end TC.GWin;

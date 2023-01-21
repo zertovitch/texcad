@@ -27,9 +27,9 @@ package TC.GWin.New_objects is
      ls :        Line_settings);
 
   procedure New_bezier
-    (p        : in out Picture;
-     P1,PE,PG :        Point;
-     ls       :        Line_settings);
+    (p          : in out Picture;
+     P1, PE, PG :        Point;
+     ls         :        Line_settings);
 
   procedure New_circdisc
     (p      : in out Picture;
