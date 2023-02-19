@@ -1,6 +1,11 @@
 Major+minor changes in TeXCAD
 =============================
 
+Version 4.52
+============
+a100:
+- (Windows) Re-activated mouse wheel functions (tested on Windows 10)
+
 Version 4.51
 ============
 a75:

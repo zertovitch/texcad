@@ -1,0 +1,125 @@
+% This is a LaTeX picture output by TeXCAD.
+% File name: [folders.tcp].
+% Version of TeXCAD: 4.52
+% Reference / build: 19-Feb-2023 (rev. a100)
+% For new versions, check: http://texcad.sf.net/
+% Options are on the following lines.
+%\grade{\on}
+%\emlines{\off}
+%\epic{\off}
+%\beziermacro{\on}
+%\reduce{\on}
+%\snapping{\on}
+%\pvinsert{\def\TC{{\TeX}CAD}}
+%\quality{8.000}
+%\graddiff{0.010}
+%\snapasp{1}
+%\zoom{6.7272}
+\unitlength 3pt % = 3pt
+\linethickness{0.4pt}
+\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility
+\begin{picture}(136.5,51)(0,0)
+\put(8,48){\line(0,-1){5}}
+\put(8,43){\line(1,0){7}}
+\put(15,43){\line(0,1){5}}
+\put(15,48){\line(-1,0){7}}
+%\emline(8,48)(9,49)
+\multiput(8,48)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(9,49){\line(1,0){2}}
+%\emline(11,49)(12,48)
+\multiput(11,49)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(18,40){\line(0,-1){5}}
+\put(18,35){\line(1,0){7}}
+\put(25,35){\line(0,1){5}}
+\put(25,40){\line(-1,0){7}}
+%\emline(18,40)(19,41)
+\multiput(18,40)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(19,41){\line(1,0){2}}
+%\emline(21,41)(22,40)
+\multiput(21,41)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(11,37){\line(1,0){7}}
+\put(18,24){\line(0,-1){5}}
+\put(18,32){\line(0,-1){5}}
+\put(18,19){\line(1,0){7}}
+\put(18,27){\line(1,0){7}}
+\put(25,19){\line(0,1){5}}
+\put(25,27){\line(0,1){5}}
+\put(25,24){\line(-1,0){7}}
+\put(25,32){\line(-1,0){7}}
+%\emline(18,24)(19,25)
+\multiput(18,24)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+%\emline(18,32)(19,33)
+\multiput(18,32)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(19,25){\line(1,0){2}}
+\put(19,33){\line(1,0){2}}
+%\emline(21,25)(22,24)
+\multiput(21,25)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+%\emline(21,33)(22,32)
+\multiput(21,33)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(18,16){\line(0,-1){5}}
+\put(18,8){\line(0,-1){5}}
+\put(18,11){\line(1,0){7}}
+\put(18,3){\line(1,0){7}}
+\put(25,11){\line(0,1){5}}
+\put(25,3){\line(0,1){5}}
+\put(25,16){\line(-1,0){7}}
+\put(25,8){\line(-1,0){7}}
+%\emline(18,16)(19,17)
+\multiput(18,16)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+%\emline(18,8)(19,9)
+\multiput(18,8)(.03125,.03125){32}{\line(0,1){.03125}}
+%\end
+\put(19,17){\line(1,0){2}}
+\put(19,9){\line(1,0){2}}
+%\emline(21,17)(22,16)
+\multiput(21,17)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+%\emline(21,9)(22,8)
+\multiput(21,9)(.03125,-.03125){32}{\line(0,-1){.03125}}
+%\end
+\put(11,21){\line(1,0){7}}
+\put(11,29){\line(1,0){7}}
+\put(11,13){\line(1,0){7}}
+\put(11,5){\line(1,0){7}}
+\put(17,46){\makebox(0,0)[lc]{(root)}}
+\put(27,38){\makebox(0,0)[lc]{TC\_GWin}}
+\put(11,42){\line(0,-1){37}}
+\put(27,22){\makebox(0,0)[lc]{Test\_IO}}
+\put(27,30){\makebox(0,0)[lc]{gt}}
+\put(27,14){\makebox(0,0)[lc]{ACU\_Opti}}
+\put(27,6){\makebox(0,0)[lc]{ACU\_Debg}}
+%\dottedline{1}(26,45)(66,45)
+\multiput(25.933,44.933)(.97561,0){42}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(40,37)(66,37)
+\multiput(39.933,36.933)(.96296,0){28}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(37,21)(66,21)
+\multiput(36.933,20.933)(.96667,0){31}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(37,29)(66,29)
+\multiput(36.933,28.933)(.96667,0){31}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(40,13)(66,13)
+\multiput(39.933,12.933)(.96296,0){28}{{\rule{.4pt}{.4pt}}}
+%\end
+%\dottedline{1}(40,5)(66,5)
+\multiput(39.933,4.933)(.96296,0){28}{{\rule{.4pt}{.4pt}}}
+%\end
+\put(67,45){\makebox(0,0)[lb]{Core of {\TC} (unconditionally portable)}}
+\put(67,37){\makebox(0,0)[lb]{Parts for the Windows version}}
+\put(67,21){\makebox(0,0)[lb]{Test pictures for checking I/O integrity}}
+\put(67,29){\makebox(0,0)[lb]{GraphThing to TeXCAD converter}}
+\put(67,13){\makebox(0,0)[lb]{Compiled parts of the optimized version}}
+\put(67,5){\makebox(0,0)[lb]{Compiled parts of the debug version}}
+\put(69,26){\oval(135,50)[]}
+\end{picture}
