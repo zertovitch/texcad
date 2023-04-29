@@ -7,12 +7,12 @@
 -- Root package of the MS Windows hull for TeXCAD --
 ----------------------------------------------------
 
-with GWindows;                          use GWindows;
-with GWindows.Constants;
-with GWindows.GStrings;                 use GWindows.GStrings;
-with GWindows.Colors;                   use GWindows.Colors;
+with GWindows,
+     GWindows.Constants,
+     GWindows.Colors,
+     GWindows.GStrings;
 
-with Standard_IDs;                      use Standard_IDs;
+with Standard_IDs;
 
 with Floating_Toolbars;
 
@@ -20,12 +20,21 @@ package TC.GWin is
 
   pragma Elaborate_Body (TC.GWin);
 
+  use GWindows, GWindows.Colors;
   use TC.Graphics;
+  use Standard_IDs;
 
-  function S2G (Value : String) return GString renames To_GString_From_String;
-  function G2S (Value : GString) return String renames To_String;
-  function GU2G (Value : GString_Unbounded) return GString renames To_GString_From_Unbounded;
-  function G2GU (Value : GString) return GString_Unbounded renames To_GString_Unbounded;
+  --  String <-> GString conversions
+  function S2G (Value : String) return GString
+    renames GWindows.GStrings.To_GString_From_String;
+  function G2S (Value : GString) return String
+    renames GWindows.GStrings.To_String;
+
+  --  Fixed String <-> Unbounded String conversions
+  function GU2G (Value : GString_Unbounded) return GString
+    renames GWindows.GStrings.To_GString_From_Unbounded;
+  function G2GU (Value : GString) return GString_Unbounded
+    renames GWindows.GStrings.To_GString_Unbounded;
 
   type Color_Set is array (Color_Zone) of Color_Type;
 

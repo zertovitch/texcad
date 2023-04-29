@@ -1,6 +1,6 @@
 with GWin_Util;
 
-pragma Elaborate (GWin_Util); -- Get_Windows_Version
+pragma Elaborate (GWin_Util);  --  For: Get_Windows_Version
 
 package body TC.GWin is
 

@@ -156,7 +156,7 @@ package body TC.GWin.MDI_Main is
     if is_open then
       return;        -- nothing to do, picture already in a window
     end if;
-    TC.Input.Load (Candidate, False, G2S (To_GString_From_Unbounded (File_Name)));
+    TC.Input.Load (Candidate, False, G2S (GU2G (File_Name)));
     declare
       New_Window : constant MDI_Picture_Child_Access :=
         new MDI_Picture_Child_Type;
@@ -171,11 +171,11 @@ package body TC.GWin.MDI_Main is
       New_Window.File_Name := File_Name;
       Create_MDI_Child (New_Window.all,
         Window,
-        To_GString_From_Unbounded (File_Title),
+        GU2G (File_Title),
         Is_Dynamic => True);
       New_Window.Short_Name := File_Title;
       MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus (Window, To_GString_From_Unbounded (New_Window.File_Name));
+      Update_Common_Menus (Window, GU2G (New_Window.File_Name));
       Update_Information (New_Window.all);
       Finish_subwindow_opening (Window, New_Window.all);
     end;
@@ -261,7 +261,7 @@ package body TC.GWin.MDI_Main is
     for I in 1 .. Argument_Count loop
       Open_Child_Window_And_Load_Picture
         (Window,
-         To_GString_Unbounded (S2G (Argument (I))));
+         G2GU (S2G (Argument (I))));
     end loop;
     Accept_File_Drag_And_Drop (Window);
     Window.Tool_Bar.Redraw;  --  2007: sometimes the buttons do not appear...
@@ -331,7 +331,7 @@ package body TC.GWin.MDI_Main is
     user_maximize_restore := False;
     Create_MDI_Child (New_Window.all,
       Window, File_Title, Is_Dynamic => True);
-    New_Window.Short_Name := To_GString_Unbounded (File_Title);
+    New_Window.Short_Name := G2GU (File_Title);
 
     MDI_Active_Window (Window, New_Window.all);
 
@@ -364,10 +364,10 @@ package body TC.GWin.MDI_Main is
     GWindows.Common_Dialogs.Open_File
       (Window, Msg (open),
        File_Name,
-       ((To_GString_Unbounded (Msg (ltx_pic) & " (*." & S2G (Pic_suffix) & ")"),
-           To_GString_Unbounded ("*." & S2G (Pic_suffix))),
-         (To_GString_Unbounded (Msg (all_files) & " (*.*)"),
-           To_GString_Unbounded ("*.*"))),
+       ((G2GU (Msg (ltx_pic) & " (*." & S2G (Pic_suffix) & ")"),
+           G2GU ("*." & S2G (Pic_suffix))),
+         (G2GU (Msg (all_files) & " (*.*)"),
+           G2GU ("*.*"))),
        '.' & S2G (Pic_suffix),
        File_Title,
        Success);

@@ -2,15 +2,14 @@ with TC.GWin.Lang,
      TC.GWin.Display,
      TC.GWin.Options;
 
-with GWindows.Base;                     use GWindows.Base;
-with GWindows.Buttons;                  use GWindows.Buttons;
-with GWindows.Common_Dialogs;           use GWindows.Common_Dialogs;
-with GWindows.Constants;
-with GWindows.Combo_Boxes;
-with GWindows.Edit_Boxes;
-with GWindows.Message_Boxes;
-with GWindows.Static_Controls;
-with GWindows.Windows;
+with GWindows.Buttons,
+     GWindows.Combo_Boxes,
+     GWindows.Common_Dialogs,
+     GWindows.Constants,
+     GWindows.Edit_Boxes,
+     GWindows.Message_Boxes,
+     GWindows.Static_Controls,
+     GWindows.Windows;
 
 with GWin_Util;
 
@@ -18,7 +17,7 @@ with Ada.Strings.Fixed;
 
 package body TC.GWin.Options_Dialogs is
 
-  use GWindows.Message_Boxes;
+  use GWindows.Buttons, GWindows.Message_Boxes;
 
   type Color_Button is new GWindows.Buttons.Button_Type with record
     z : Color_Zone;
@@ -167,7 +166,7 @@ package body TC.GWin.Options_Dialogs is
     begin
       z := Color_Button (btn).z;
       c := color (z);
-      Choose_Color (btn, c, ok);
+      GWindows.Common_Dialogs.Choose_Color (btn, c, ok);
       if ok and then color (z) /= c then
         color (z) := c;
         redraw_again := True;

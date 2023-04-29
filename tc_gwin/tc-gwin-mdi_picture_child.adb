@@ -695,10 +695,10 @@ package body TC.GWin.MDI_Picture_Child is
     GWindows.Common_Dialogs.Open_File
       (Window, Msg (open),
        File_Name,
-       ((To_GString_Unbounded (Msg (tcd_mac) & " (*." & S2G (Mac_suffix) & ")"),
-           To_GString_Unbounded ("*." & S2G (Mac_suffix))),
-         (To_GString_Unbounded (Msg (all_files) & " (*.*)"),
-           To_GString_Unbounded ("*.*"))),
+       ((G2GU (Msg (tcd_mac) & " (*." & S2G (Mac_suffix) & ")"),
+           G2GU ("*." & S2G (Mac_suffix))),
+         (G2GU (Msg (all_files) & " (*.*)"),
+           G2GU ("*.*"))),
        '.' & S2G (Mac_suffix),
        File_Title,
        Success);
@@ -714,7 +714,7 @@ package body TC.GWin.MDI_Picture_Child is
     mo := pw.opt;
     pw.opt.P0 := Window.Draw_Control.PU;  --  origin on mouse cursor
     begin
-      TC.Input.Load (pw, True, G2S (To_GString_From_Unbounded (Window.Macro_Name)));
+      TC.Input.Load (pw, True, G2S (GU2G (Window.Macro_Name)));
     exception
       when E : TC.Input.Load_error =>
         Message_Box
@@ -925,7 +925,7 @@ package body TC.GWin.MDI_Picture_Child is
             begin
               success := Ada.Directories.Exists (n);
               if success then
-                Window.Macro_Name := To_GString_Unbounded (S2G (n));
+                Window.Macro_Name := G2GU (S2G (n));
               end if;
             end;
           end if;
@@ -965,7 +965,7 @@ package body TC.GWin.MDI_Picture_Child is
 
   procedure On_Save (Window : in out MDI_Picture_Child_Type)
   is
-    File_Name : constant GWindows.GString := To_GString_From_Unbounded (Window.File_Name);
+    File_Name : constant GWindows.GString := GU2G (Window.File_Name);
   begin
     if File_Name = "" then
       On_Save_As (Window, macro => False);
@@ -997,7 +997,7 @@ package body TC.GWin.MDI_Picture_Child is
      end Suffix;
   begin
     if macro then
-      New_File_Name := To_GString_Unbounded ("");
+      New_File_Name := G2GU ("");
     else
       New_File_Name := Window.File_Name;
     end if;
@@ -1005,22 +1005,21 @@ package body TC.GWin.MDI_Picture_Child is
       (Window,
        Msg (saveas_or_macro (macro)) & "...",
        New_File_Name,
-       ((To_GString_Unbounded (Msg (file_kind (macro)) &
+       ((G2GU (Msg (file_kind (macro)) &
          " (*." & S2G (Suffix) & ")"),
-         To_GString_Unbounded ("*." & S2G (Suffix))),
-        (To_GString_Unbounded (Msg (all_files) & " (*.*)"),
-         To_GString_Unbounded ("*.*"))),
+         G2GU ("*." & S2G (Suffix))),
+        (G2GU (Msg (all_files) & " (*.*)"),
+         G2GU ("*.*"))),
         '.' & S2G (Suffix),
         File_Title,
         Success);
     if Success then
-      if Ada.Directories.Exists
-        (To_String (To_GString_From_Unbounded (New_File_Name)))
+      if Ada.Directories.Exists (G2S (GU2G (New_File_Name)))
       then
          begin
             if Message_Box (Window,
                             Msg (saveas_or_macro (macro)),
-                            To_GString_From_Unbounded (New_File_Name) &
+                            GU2G (New_File_Name) &
                             Msg (exists) & NL &
                             Msg (replace),
                             Yes_No_Box,
@@ -1031,12 +1030,12 @@ package body TC.GWin.MDI_Picture_Child is
          end;
       end if;
 
-      Save (Window, To_GString_From_Unbounded (New_File_Name), macro => macro);
+      Save (Window, GU2G (New_File_Name), macro => macro);
 
       if not macro then
         Window.File_Name := New_File_Name;
         Window.Short_Name := File_Title;
-        Update_Common_Menus (Window, To_GString_From_Unbounded (New_File_Name));
+        Update_Common_Menus (Window, GU2G (New_File_Name));
         Update_Information (Window);  --  Refresh window title, menus, ...
       end if;
     end if;
@@ -1052,11 +1051,9 @@ package body TC.GWin.MDI_Picture_Child is
   is
     use type GString_Unbounded;
     written_name : GString_Unbounded :=
-      To_GString_Unbounded (File_Name);
+      G2GU (File_Name);
     temp_ext : constant GString := ".$$$";
-    backup_name : constant String :=
-      To_String (File_Name) & '.' &
-      To_String (gen_opt.bak_suff);
+    backup_name : constant String := G2S (File_Name) & '.' & To_String (gen_opt.bak_suff);
 
     with_backup : constant Boolean := TC.gen_opt.bak_enabled and not macro;
 
@@ -1085,11 +1082,8 @@ package body TC.GWin.MDI_Picture_Child is
         end if;
       end if;
       --  2/ file -> backup
-      if Ada.Directories.Exists (To_String (File_Name)) then
-        Rename_File
-          (To_String (File_Name),
-           backup_name,
-           ok);
+      if Ada.Directories.Exists (G2S (File_Name)) then
+        Rename_File (G2S (File_Name), backup_name, ok);
         if not ok then
           raise backup_error;
         end if;
@@ -1144,7 +1138,7 @@ package body TC.GWin.MDI_Picture_Child is
                 Msg (close_not_saved),
                 Msg (do_you_want_to_save) & ' ' &
                 Msg (the_changes_you_made_to) & " '" &
-                To_GString_From_Unbounded (Window.Short_Name) & "' ?",
+                GU2G (Window.Short_Name) & "' ?",
                 Yes_No_Cancel_Box,
                 Exclamation_Icon)
         is
@@ -1163,7 +1157,7 @@ package body TC.GWin.MDI_Picture_Child is
       end loop;
     else
       Update_Common_Menus
-        (Window, To_GString_From_Unbounded (Window.File_Name));
+        (Window, GU2G (Window.File_Name));
     end if;
   end On_Close;
 

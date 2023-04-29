@@ -1,11 +1,13 @@
-with TC.GWin.Display;                   use TC.GWin.Display;
+with TC.GWin.Display;
 
-with GWindows.Drawing;                  use GWindows.Drawing;
-with GWindows.Drawing_Objects;          use GWindows.Drawing_Objects;
+with GWindows.Drawing,
+     GWindows.Drawing_Objects;
 
 pragma Elaborate_All (GWindows.Drawing_Objects);  --  For Create_Pen
 
 package body TC.GWin.Phantoms is
+
+  use GWindows.Drawing_Objects;
 
   phantom_pen : array (Pen_Style_Type) of Pen_Type;
 
@@ -19,18 +21,18 @@ package body TC.GWin.Phantoms is
     X2 : constant Integer := w.X;
     Y2 : constant Integer := w.Y;
   begin
-    Set_Mix_Mode (w.Drawing_Area, R2_NOTXORPEN);
-    Select_Object (w.Drawing_Area, phantom_pen (Dot));
-    Line (w.Drawing_Area, X1, Y1, X2, Y1);
-    Line (w.Drawing_Area, X2, Y1, X2, Y2);
-    Line (w.Drawing_Area, X1, Y2, X2, Y2);
-    Line (w.Drawing_Area, X1, Y1, X1, Y2);
+    w.Drawing_Area.Set_Mix_Mode (GWindows.Drawing.R2_NOTXORPEN);
+    w.Drawing_Area.Select_Object (phantom_pen (Dot));
+    w.Drawing_Area.Line (X1, Y1, X2, Y1);
+    w.Drawing_Area.Line (X2, Y1, X2, Y2);
+    w.Drawing_Area.Line (X1, Y2, X2, Y2);
+    w.Drawing_Area.Line (X1, Y1, X1, Y2);
   end Invert_Rubber_Box;
 
   procedure Invert_Phantom (w : in out MDI_Picture_Child.TC_Picture_Panel) is
     procedure Draw_one (p : ptr_Obj_type) is
     begin
-      Draw (w.Drawing_Area, w.Picture, p, w.Width, w.Height);
+      Display.Draw (w.Drawing_Area, w.Picture, p, w.Width, w.Height);
     end Draw_one;
 
     o, l : ptr_Obj_type;
@@ -140,14 +142,14 @@ package body TC.GWin.Phantoms is
         o.num := Good_num_of_bezier_points (o.all, w.Picture.ul_in_pt) / 9;
       when others => null;
     end case;
-    Set_Mix_Mode (w.Drawing_Area, R2_NOTXORPEN);
-    Select_Object (w.Drawing_Area, phantom_pen (Solid));
+    w.Drawing_Area.Set_Mix_Mode (GWindows.Drawing.R2_NOTXORPEN);
+    w.Drawing_Area.Select_Object (phantom_pen (Solid));
     Draw_one (o);
     case w.phantomart is
       when circ | oval =>
         l := new Obj_type (line);
         l.ls := normal_line_settings;
-        Circle_or_Oval_frame_and_cross; -- 14-Oct-2005, show frame
+        Circle_or_Oval_frame_and_cross;  --  14-Oct-2005, show frame
         Dispose (l);
       when disc =>
         --  14-Oct-2005, a diagonal cross for showing difference with circle:
@@ -163,10 +165,10 @@ package body TC.GWin.Phantoms is
           l.P2:= o.P1 + (x,-x);
           Draw_one( l );
         end;
-        Circle_or_Oval_frame_and_cross; -- 14-Oct-2005, show frame
+        Circle_or_Oval_frame_and_cross;  --  14-Oct-2005, show frame
         Dispose(l);
       when bezier =>
-        Select_Object( w.Drawing_Area, phantom_pen( Dash_Dot_Dot ) );
+        w.Drawing_Area.Select_Object (phantom_pen (Dash_Dot_Dot));
         l:= new Obj_type(line);
         l.ls:= normal_line_settings;
         l.P1:= o.PC;
@@ -174,7 +176,7 @@ package body TC.GWin.Phantoms is
         Draw_one( l );
         l.P2:= o.PE + more * (o.PE-o.PC);
         Draw_one( l );
-        Select_Object( w.Drawing_Area, phantom_pen( Solid ) );
+        w.Drawing_Area.Select_Object (phantom_pen (Solid));
         Ortholine(o.P1, o.P1-o.PC);
         Ortholine(o.PE, o.PE-o.PC);
         Dispose(l);

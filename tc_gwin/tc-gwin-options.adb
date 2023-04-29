@@ -72,7 +72,7 @@ package body TC.GWin.Options is
   begin
     for n in list'Range loop
       declare
-        user    : constant GString := To_GString_From_Unbounded (list (n));
+        user    : constant GString := GU2G (list (n));
         user_tc : constant GString := user & '\' & kname;
       begin
         declare
@@ -188,7 +188,7 @@ package body TC.GWin.Options is
               end;
             when mru1 .. mru9 =>
               mru.Item (Key'Pos (k) - Key'Pos (mru1) + 1).Name :=
-                To_GString_Unbounded (S2G (s));
+                G2GU (S2G (s));
             when Color_Key   =>
               color (Color_Zone'Val (Key'Pos (k) - Key'Pos (Color_Key'First))) :=
                 Color_Type'Value (s);
@@ -276,7 +276,7 @@ package body TC.GWin.Options is
             end;
           when mru1 .. mru9 =>
             R (GWindows.GStrings.To_String
-                 (To_GString_From_Unbounded (mru.Item (Key'Pos (k) - Key'Pos (mru1) + 1).Name)));
+                 (GU2G (mru.Item (Key'Pos (k) - Key'Pos (mru1) + 1).Name)));
           when Color_Key =>
             R (Color_Type'Image
                  (color (Color_Zone'Val (Key'Pos (k) - Key'Pos (Color_Key'First)))));

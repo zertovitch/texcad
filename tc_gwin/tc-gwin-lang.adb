@@ -14,7 +14,7 @@ package body TC.GWin.Lang is
   begin
     return
       --  GString can be either a Wide (UNICODE) or an ANSI string type
-      To_GString_From_String (To_String (Babel));
+      S2G (To_String (Babel));
   end Speak;
 
   function Msg (m : Message) return GString is
