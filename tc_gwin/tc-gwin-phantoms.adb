@@ -66,31 +66,31 @@ package body TC.GWin.Phantoms is
       hd := (f * fx, 0.0);
       vd := (0.0, f * fy);
       --  Frame:
-      l.P1:= o.P1 + (-fx,-fy);
-      l.P2:= l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2:= l.P1 + hd;  Draw_one( l );
-      l.P2:= l.P1 + vd;  Draw_one( l );
-      l.P1:= o.P1 + (+fx,-fy);
-      l.P2:= l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2:= l.P1 - hd;  Draw_one( l );
-      l.P2:= l.P1 + vd;  Draw_one( l );
-      l.P1:= o.P1 + (+fx,+fy);
-      l.P2:= l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2:= l.P1 - hd;  Draw_one( l );
-      l.P2:= l.P1 - vd;  Draw_one( l );
-      l.P1:= o.P1 + (-fx,+fy);
-      l.P2:= l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2:= l.P1 + hd;  Draw_one( l );
-      l.P2:= l.P1 - vd;  Draw_one( l );
+      l.P1 := o.P1 + (-fx, -fy);
+      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 + hd;  Draw_one( l );
+      l.P2 := l.P1 + vd;  Draw_one( l );
+      l.P1 := o.P1 + (+fx,-fy);
+      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 - hd;  Draw_one( l );
+      l.P2 := l.P1 + vd;  Draw_one( l );
+      l.P1 := o.P1 + (+fx,+fy);
+      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 - hd;  Draw_one( l );
+      l.P2 := l.P1 - vd;  Draw_one( l );
+      l.P1 := o.P1 + (-fx,+fy);
+      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 + hd;  Draw_one( l );
+      l.P2 := l.P1 - vd;  Draw_one( l );
       -- Cross:
-      l.P1:= o.P1 + hd;
-      l.P2:= o.P1 - hd;
+      l.P1 := o.P1 + hd;
+      l.P2 := o.P1 - hd;
       Draw_one( l );
-      l.P1:= o.P1 + vd;
-      l.P2:= o.P1 - vd;
+      l.P1 := o.P1 + vd;
+      l.P2 := o.P1 - vd;
       Draw_one( l );
-      l.P1:= o.P1;
-      l.P2:= o.P1;
+      l.P1 := o.P1;
+      l.P2 := o.P1;
       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
     end Circle_or_Oval_frame_and_cross;
 
@@ -158,38 +158,38 @@ package body TC.GWin.Phantoms is
         declare
           x : constant Real := o.rad / 1.4142135624;
         begin
-          l.P1:= o.P1 - (x,x);
-          l.P2:= o.P1 + (x,x);
-          Draw_one( l );
-          l.P1:= o.P1 - (x,-x);
-          l.P2:= o.P1 + (x,-x);
-          Draw_one( l );
+          l.P1 := o.P1 - (x, x);
+          l.P2 := o.P1 + (x, x);
+          Draw_one (l);
+          l.P1 := o.P1 - (x, -x);
+          l.P2 := o.P1 + (x, -x);
+          Draw_one (l);
         end;
         Circle_or_Oval_frame_and_cross;  --  14-Oct-2005, show frame
-        Dispose(l);
+        Dispose (l);
       when bezier =>
         w.Drawing_Area.Select_Object (phantom_pen (Dash_Dot_Dot));
-        l:= new Obj_type(line);
-        l.ls:= normal_line_settings;
-        l.P1:= o.PC;
-        l.P2:= o.P1 + more * (o.P1-o.PC);
-        Draw_one( l );
-        l.P2:= o.PE + more * (o.PE-o.PC);
-        Draw_one( l );
+        l := new Obj_type (line);
+        l.ls := normal_line_settings;
+        l.P1 := o.PC;
+        l.P2 := o.P1 + more * (o.P1 - o.PC);
+        Draw_one (l);
+        l.P2 := o.PE + more * (o.PE - o.PC);
+        Draw_one (l);
         w.Drawing_Area.Select_Object (phantom_pen (Solid));
-        Ortholine(o.P1, o.P1-o.PC);
-        Ortholine(o.PE, o.PE-o.PC);
-        Dispose(l);
-        l:= new Obj_type(circ);
-        l.P1:= o.P1;
-        l.rad:= rbd;
-        Draw_one( l );
-        l.P1:= o.PE;
-        Draw_one( l );
-        Dispose(l);
-      when others=> null;
+        Ortholine (o.P1, o.P1 - o.PC);
+        Ortholine (o.PE, o.PE - o.PC);
+        Dispose (l);
+        l := new Obj_type (circ);
+        l.P1 := o.P1;
+        l.rad := rbd;
+        Draw_one (l);
+        l.P1 := o.PE;
+        Draw_one (l);
+        Dispose (l);
+      when others => null;
     end case;
-    Dispose(o);
+    Dispose (o);
   end Invert_Phantom;
 
 begin
@@ -197,6 +197,6 @@ begin
   -- to avoid GDI leak under Windows 95/98/ME. We simply create all
   -- possible pens, once for all.
   for s in Pen_Style_Type loop
-    Create_Pen( phantom_pen(s), s, 1, Black );
+    Create_Pen (phantom_pen (s), s, 1, Black);
   end loop;
 end TC.GWin.Phantoms;

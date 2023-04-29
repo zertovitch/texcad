@@ -65,16 +65,16 @@ package body TC.GWin.Options_Dialogs is
       new GWin_Util.Property_Tabs_Package
         (Tab_subject, Lang.Msg, "O&K", Msg (mcancel));
 
-    New_Pic_Opt              : Button_Type;
-    language_box             : GWindows.Combo_Boxes.Drop_Down_List_Box_Type;
-    Result, i, x, y, yy      : Integer;
+    New_Pic_Opt               : Button_Type;
+    language_box              : GWindows.Combo_Boxes.Drop_Down_List_Box_Type;
+    Result, i, x, y, yy       : Integer;
     D_tex_suff,
-    D_mac_suff               : GWindows.Edit_Boxes.Edit_Box_Type;
-    color_group, suffix_group: Group_Box_Type;
-    bak_check_box            : Special_Check_Box_Type;
-    g_group                  : Group_Box_Type;
-    g_radio                  : array (Grid_Display) of Radio_Button_Type;
-    redraw_again             : Boolean  := False;
+    D_mac_suff                : GWindows.Edit_Boxes.Edit_Box_Type;
+    color_group, suffix_group : Group_Box_Type;
+    bak_check_box             : Special_Check_Box_Type;
+    g_group                   : Group_Box_Type;
+    g_radio                   : array (Grid_Display) of Radio_Button_Type;
+    redraw_again              : Boolean  := False;
 
     qbez_group : Group_Box_Type;
     q_radio    : array (Solid_Bezier_Points_Mode) of Radio_Button_Type;
@@ -250,10 +250,10 @@ package body TC.GWin.Options_Dialogs is
 
     for z in Color_Zone loop
       i := y + 30 * (Color_Zone'Pos (z) + 1);
-      Create_Label(
-        Tabbing.tab (gen_opt_tab_display),
-        Msg (Message'Val (Message'Pos (background) + Color_Zone'Pos (z))),
-        25, i, 125, 25);
+      Create_Label
+        (Tabbing.tab (gen_opt_tab_display),
+         Msg (Message'Val (Message'Pos (background) + Color_Zone'Pos (z))),
+         25, i, 125, 25);
       Create (col_btn (z), Tabbing.tab (gen_opt_tab_display), Msg (choose), 190, i, 90, 22);
       On_Click_Handler (col_btn (z), CColor'Unrestricted_Access);
       col_btn (z).z := z;

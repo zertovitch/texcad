@@ -277,27 +277,27 @@ package body TC.GWin.Mousing is
         end case;
       when area =>
         Scroll_if_needed;
-        Invert_Rubber_Box(w,picked); -- show
+        Invert_Rubber_Box (w, picked);  --  show
       when unarea =>
         Scroll_if_needed;
-        Invert_Rubber_Box(w,normal); -- show
+        Invert_Rubber_Box (w, normal);  --  show
       when figure_2 | bez_click2 | click_2 =>
         Scroll_if_needed;
-        Invert_Phantom(w); -- show
+        Invert_Phantom (w);  --  show
       when click_1  =>
         Scroll_if_needed;
         w.Xs := w.X;
-        w.Ys := w.Y; -- only one click, but we follow mouse
-        Invert_Phantom(w); -- show
+        w.Ys := w.Y;  --  only one click, but we follow mouse
+        Invert_Phantom (w);  --  show
       when bez_click0 =>
-        -- Bezier is a 3-click operation!
+        --  Bezier is a 3-click operation!
         w.Xs := w.X;
         w.Ys := w.Y;
-        -- Just to calm down Show_Coordinates
+        --  Just to calm down Show_Coordinates
       when bez_click1 =>
         null;
     end case;
-    Show_coordinates(w);
+    Show_coordinates (w);
   end Mouse_Move;
 
   procedure Mouse_Up (w    : in out TC_Picture_Panel;
@@ -307,26 +307,26 @@ package body TC.GWin.Mousing is
     Capture_mem : constant Capture_mode := w.capture;
     use New_objects, Object_Editing, Phantoms, Picking;
   begin
-    w.X:= X;
-    w.Y:= Y;
-    Tranform_coordinates(w);
+    w.X := X;
+    w.Y := Y;
+    Tranform_coordinates (w);
     w.capture := none;
-    w.Picture.refresh:= shadows_and_objects; ---18-Jun-2003 not THERE!
+    w.Picture.refresh := shadows_and_objects;  --  18-Jun-2003 not THERE!
     case Capture_mem is
       when none => null;
       when paste0 => null; -- shoudn't happen...
       when paste1 =>
         Load_Macro (w.pic_parent.all);
-        Change_Cursor(w, cur_picking);
+        Change_Cursor (w, cur_picking);
       when click_1 =>
         GWindows.Base.Release_Mouse;
         case w.current_cmd is
           when text          =>
-            New_text( w.Picture, w.pic_parent.all, w.main.all, w.PU, txt, w.current_ls );
+            New_text (w.Picture, w.pic_parent.all, w.main.all, w.PU, txt, w.current_ls);
           when put           =>
-            New_text( w.Picture, w.pic_parent.all, w.main.all, w.PU, putaux, w.current_ls );
+            New_text (w.Picture, w.pic_parent.all, w.main.all, w.PU, putaux, w.current_ls);
           when par_cur_2d_cmd  =>
-            New_paramcurve_2d( w.Picture, w.pic_parent.all, w.main.all, w.PU, w.current_ls );
+            New_paramcurve_2d (w.Picture, w.pic_parent.all, w.main.all, w.PU, w.current_ls);
           when Deformation_cmd =>
             Morphing.Deformation (w);
           when others =>
@@ -335,80 +335,76 @@ package body TC.GWin.Mousing is
       when pick =>
         case w.current_cmd is
           when change_text   =>
-            PicPic( w.Picture, pick_text, w.PU );
+            PicPic (w.Picture, pick_text, w.PU);
             if w.Picture.picked = 1 then
-              w.Picture.refresh:= every;
-              Subtle_Redraw(w);
+              w.Picture.refresh := every;
+              Subtle_Redraw (w);
               GWindows.Base.Release_Mouse;
-              Change_Cursor(w, cur_arrow);
+              Change_Cursor (w, cur_arrow);
               case w.Picture.memo.art is
                 when txt | putaux | box =>
-                  Change_Text( w.pic_parent.all, w.main.all, w.Picture.memo.all, modif );
+                  Change_Text (w.pic_parent.all, w.main.all, w.Picture.memo.all, modif);
                 when oval =>
-                  Change_Oval( w.pic_parent.all, w.main.all, w.Picture.memo.all, modif );
+                  Change_Oval (w.pic_parent.all, w.main.all, w.Picture.memo.all, modif);
                 when bezier =>
-                  Change_Bezier(
-                    w.pic_parent.all, w.main.all, w.Picture.ul_in_pt,
-                    w.Picture.memo.all, modif);
+                  Change_Bezier
+                    (w.pic_parent.all, w.main.all, w.Picture.ul_in_pt,
+                     w.Picture.memo.all, modif);
                 when paramcurve2d =>
-                  Change_Param_2D(
-                    w.pic_parent.all, w.main.all,
-                    w.Picture.memo.all, modif);
+                  Change_Param_2D
+                    (w.pic_parent.all, w.main.all,
+                     w.Picture.memo.all, modif);
                 when others =>
-                  modif:= False;
+                  modif := False;
               end case;
-              w.Picture.saved:= w.Picture.saved and not modif;
-              Change_Cursor(w, cur_chg_text);
+              w.Picture.saved := w.Picture.saved and not modif;
+              Change_Cursor (w, cur_chg_text);
               if modif then
-                w.Picture.refresh:= full; -- 12-Jan-2004
-                Redraw(w);
+                w.Picture.refresh := full; -- 12-Jan-2004
+                Redraw (w);
               end if;
             end if;
-          when pick_obj      =>
-            PicPic( w.Picture, pick, w.PU );
-            Change_Cursor(w, cur_picking);
+          when pick_obj =>
+            PicPic (w.Picture, pick, w.PU);
+            Change_Cursor (w, cur_picking);
           when others =>
-            null; -- Capture = click_1, figure_2 or bez* for these
+            null;  --  Capture = click_1, figure_2 or bez* for these
         end case;
       when unpick =>
         case w.current_cmd is
-          when pick_obj      =>
-            PicPic( w.Picture, unpick, w.PU );
-            Change_Cursor(w, cur_picking);
-          when others => null; -- Right button meaningless for not picking
+          when pick_obj =>
+            PicPic (w.Picture, unpick, w.PU);
+            Change_Cursor (w, cur_picking);
+          when others => null;  --  Right button meaningless for not picking
         end case;
       when area =>
-        Invert_Rubber_Box(w,picked); -- hide
-        PicPic(
-          w.Picture, pick_area,
-          w.PS, w.PU );
-        Change_Cursor(w, cur_picking);
+        Invert_Rubber_Box (w, picked);  --  hide
+        PicPic (w.Picture, pick_area, w.PS, w.PU);
+        Change_Cursor (w, cur_picking);
       when unarea =>
-        Invert_Rubber_Box(w,normal); -- hide
-        PicPic(
-          w.Picture, unpick_area,
-          w.PS, w.PU );
-        Change_Cursor(w, cur_picking);
+        Invert_Rubber_Box (w, normal);  --  hide
+        PicPic (w.Picture, unpick_area, w.PS, w.PU);
+        Change_Cursor (w, cur_picking);
       when figure_2 =>
-        -- Avoid an accidental click :
-        -- if w.Xs /= w.X or w.Ys /= w.Y then
-        if not Almost_Zero(Norm(w.PU-w.PS)) then
-        -- ^ this test is also valid with snapping enabled 2-Nov-2005
+        --  Avoid an accidental click :
+        --  if w.Xs /= w.X or w.Ys /= w.Y then
+        if not Almost_Zero (Norm (w.PU - w.PS)) then
+        --  ^ this test is also valid with snapping enabled 2-Nov-2005
           case w.current_cmd is
             when Box_cmd | oval =>
               GWindows.Base.Release_Mouse;
-              New_boxoval( w.Picture, w.pic_parent.all, w.main.all,
-                (Real'Min(w.PU.x,w.PS.x),Real'Min(w.PU.y,w.PS.y)),
-                (Real'Max(w.PU.x,w.PS.x),Real'Max(w.PU.y,w.PS.y)),
-                w.current_ls, w.current_cmd );
-              w.Picture.refresh:= only_last;
+              New_boxoval (w.Picture, w.pic_parent.all, w.main.all,
+                (Real'Min (w.PU.x, w.PS.x), Real'Min (w.PU.y, w.PS.y)),
+                (Real'Max (w.PU.x, w.PS.x), Real'Max (w.PU.y, w.PS.y)),
+                w.current_ls, w.current_cmd);
+              w.Picture.refresh := only_last;
             when line =>
-              New_linvec( w.Picture, w.PS, w.PU, w.current_ls );
-              w.PS:= w.PU; -- \line has modified w.PU
+              New_linvec (w.Picture, w.PS, w.PU, w.current_ls);
+              w.PS := w.PU;  --  \line has modified w.PU
               w.capture := click_2;
             when circle | filled_circle =>
-              w.Picture.refresh:= only_last;
-              New_circdisc( w.Picture, w.PS, w.PU, w.current_cmd, w.current_ls );
+              w.Picture.refresh := only_last;
+              New_circdisc (w.Picture, w.PS, w.PU, w.current_cmd, w.current_ls);
             when Deformation_cmd =>
               GWindows.Base.Release_Mouse;
               Morphing.Deformation (w);
@@ -417,44 +413,44 @@ package body TC.GWin.Mousing is
           end case;
         end if;
       when bez_click0 =>
-        w.Xs:= w.X;
-        w.Ys:= w.Y;
+        w.Xs := w.X;
+        w.Ys := w.Y;
         w.capture := bez_click1;
       when bez_click1 =>
-        w.Xb:= w.X;
-        w.Yb:= w.Y;
+        w.Xb := w.X;
+        w.Yb := w.Y;
         w.capture := bez_click2;
-        w.phantomart:= bezier;
-        Tranform_coordinates(w);
-        Invert_Phantom(w); -- show
+        w.phantomart := bezier;
+        Tranform_coordinates (w);
+        Invert_Phantom (w);  --  show
       when bez_click2 =>
-        -- Figure already done on last Mouse_Down
-        Invert_Phantom(w); -- hide
-        New_bezier( w.Picture, w.PS, w.PE, w.PU, w.current_ls );
-        -- Chaining: new start on last end point
-        w.Xs:= w.Xb;
-        w.Ys:= w.Yb;
-        w.capture:= bez_click1;
+        --  Figure already done on last Mouse_Down
+        Invert_Phantom (w);  --  hide
+        New_bezier (w.Picture, w.PS, w.PE, w.PU, w.current_ls);
+        --  Chaining: new start on last end point
+        w.Xs := w.Xb;
+        w.Ys := w.Yb;
+        w.capture := bez_click1;
       when click_2 =>
-        Invert_Phantom(w); -- hide
-        New_linvec( w.Picture, w.PS, w.PU, w.current_ls );
-        w.PS:= w.PU; -- \line has modified w.PU
-        w.capture:= click_2;
+        Invert_Phantom (w);  --  hide
+        New_linvec (w.Picture, w.PS, w.PU, w.current_ls);
+        w.PS := w.PU;  --  \line has modified w.PU
+        w.capture := click_2;
     end case;
     Update_Information (w.pic_parent.all);
     Show_mouse_mode (w);
     case Capture_mem is
       when click_2 | figure_2 =>
-        Invert_Phantom(w); -- hide
+        Invert_Phantom (w);  --  hide
       when others => null;
     end case;
     case w.capture is
       when bez_click2 => null;
       when click_2 => null;
-        w.Picture.refresh:= only_last;
-        Subtle_Redraw(w);
-      when others => -- includes "none" (default)
-        Subtle_Redraw(w);
+        w.Picture.refresh := only_last;
+        Subtle_Redraw (w);
+      when others =>  --  includes "none" (default)
+        Subtle_Redraw (w);
         GWindows.Base.Release_Mouse;
     end case;
   end Mouse_Up;

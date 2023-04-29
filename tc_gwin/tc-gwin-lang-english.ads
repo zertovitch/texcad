@@ -1,8 +1,8 @@
 package TC.GWin.Lang.English is
 
-  m: constant Message_set:=
+  m : constant Message_set :=
 
-      (  empty      => U(""),
+        (empty      => U(""),
          ready      => U("Ready"),
          ffile      => U("&File"),
          fnew       => U("&New"),

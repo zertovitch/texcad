@@ -1,8 +1,8 @@
 package TC.GWin.Lang.French is
 
-  m: constant Message_set:=
+  m : constant Message_set :=
 
-      (  empty      => U(""),
+        (empty      => U(""),
          ready      => U("Prêt"),
          ffile      => U("&Fichier"),
          fnew       => U("&Nouveau"),

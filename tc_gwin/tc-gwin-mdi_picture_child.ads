@@ -26,32 +26,32 @@ package TC.GWin.MDI_Picture_Child is
   type TC_Picture_Panel is
     new GWindows.Drawing_Panels.Drawing_Panel_Type with
       record
-        Picture      : TC.Picture;
-        Drawing_Area : GWindows.Drawing.Canvas_Type;
-        Saved_Area   : GWindows.Drawing.Memory_Canvas_Type;
-        Saved_Bitmap : GWindows.Drawing_Objects.Bitmap_Type;
-        Cursor       : GWindows.Cursors.Cursor_Type;
-        X0, Y0       : Integer := 0;  --  Origin of displayed part in Canvas pixels
-        Xs, Ys       : Integer := 0;  --  Start in Canvas pixels (1st end)
-        PS           : Point;         --  Start in picture units
-        X, Y         : Integer;       --  Cursor in Canvas pixels
-        PU           : Point;         --  Cursor in picture units
-        Xb, Yb       : Integer := 0;  --  Point 2 for Bezier
-        PE           : Point;         --  Point 2 for Bezier in picture units
+        Picture        : TC.Picture;
+        Drawing_Area   : GWindows.Drawing.Canvas_Type;
+        Saved_Area     : GWindows.Drawing.Memory_Canvas_Type;
+        Saved_Bitmap   : GWindows.Drawing_Objects.Bitmap_Type;
+        Cursor         : GWindows.Cursors.Cursor_Type;
+        X0, Y0         : Integer := 0;  --  Origin of displayed part in Canvas pixels
+        Xs, Ys         : Integer := 0;  --  Start in Canvas pixels (1st end)
+        PS             : Point;         --  Start in picture units
+        X, Y           : Integer;       --  Cursor in Canvas pixels
+        PU             : Point;         --  Cursor in picture units
+        Xb, Yb         : Integer := 0;  --  Point 2 for Bezier
+        PE             : Point;         --  Point 2 for Bezier in picture units
         Disp_W,
-        Disp_H       : Integer;       --  Size of displayed area (=client area of parent)
-        pic_parent   : MDI_Picture_Child_Access;  --  -> containing window
-        main         : MDI_Main.MDI_Main_Access;  --  -> main window
+        Disp_H         : Integer;       --  Size of displayed area (=client area of parent)
+        pic_parent     : MDI_Picture_Child_Access;  --  -> containing window
+        main           : MDI_Main.MDI_Main_Access;  --  -> main window
         hor_splitt,
-        ver_splitt,              --  Aufteilung des Bildschirms
-        curs_x,curs_y: Integer;  --  Cursorposition in Bildschirm-Koord.
-        wx, wy,                  --  Cursorposition in Weltkoordinaten
-        m_wx, m_wy   : TC.Real;  --  maximales x und y in Weltkoordinaten
-        current_cmd  : Permanent_cmd;
-        current_ls   : Line_settings;
-        capture      : Capture_mode;
-        phantomart   : Obj_art_type;
-        phantom_ls   : Line_settings;  --  sometimes /= current_ls (e.g. translation vector)
+        ver_splitt,                --  Aufteilung des Bildschirms
+        curs_x, curs_y : Integer;  --  Cursorposition in Bildschirm-Koord.
+        wx, wy,                    --  Cursorposition in Weltkoordinaten
+        m_wx, m_wy     : TC.Real;  --  maximales x und y in Weltkoordinaten
+        current_cmd    : Permanent_cmd;
+        current_ls     : Line_settings;
+        capture        : Capture_mode;
+        phantomart     : Obj_art_type;
+        phantom_ls     : Line_settings;  --  sometimes /= current_ls (e.g. translation vector)
       end record;
 
   procedure Subtle_Redraw (Window : in out TC_Picture_Panel);
