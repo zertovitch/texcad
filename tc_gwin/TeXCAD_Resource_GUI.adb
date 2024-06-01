@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: TeXCAD.rc
---  Transcription time: 2023/02/19  12:08:29
+--  Transcription time: 2024/06/01  11:16:09
 --  GWenerator project file: TeXCAD.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.

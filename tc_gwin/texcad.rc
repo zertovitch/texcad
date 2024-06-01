@@ -102,26 +102,26 @@ FONT 8, "Ms Shell Dlg"
 
 Main_Menu ACCELERATORS PRELOAD MOVEABLE PURE
 BEGIN
-	"A",            ID_EDIT_SELECT_ALL,     VIRTKEY,CONTROL
-	"U",            ID_EDIT_CLEAR_ALL,      VIRTKEY,CONTROL
-	"C",            ID_EDIT_COPY,           VIRTKEY,CONTROL
-	VK_INSERT,      ID_EDIT_COPY,           VIRTKEY,CONTROL
-	"X",            ID_EDIT_CUT,            VIRTKEY,CONTROL
-      VK_DELETE,      ID_EDIT_CUT,            VIRTKEY,SHIFT
-      VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY,CONTROL
-      VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY
-	"V",            ID_EDIT_PASTE,          VIRTKEY,CONTROL
-      VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY,SHIFT
-	"N",            ID_FILE_NEW,            VIRTKEY,CONTROL
-	"O",            ID_FILE_OPEN,           VIRTKEY,CONTROL
-	"S",            ID_FILE_SAVE,           VIRTKEY,CONTROL
-	VK_F12,         ID_FILE_SAVE_AS,        VIRTKEY
-	"W",            ID_FILE_CLOSE,          VIRTKEY,CONTROL
+    "A",            ID_EDIT_SELECT_ALL,     VIRTKEY,CONTROL
+    "U",            ID_EDIT_CLEAR_ALL,      VIRTKEY,CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY,CONTROL
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY,CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY,CONTROL
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY,SHIFT
+    VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY,CONTROL
+    VK_DELETE,      ID_EDIT_CLEAR,          VIRTKEY
+    "V",            ID_EDIT_PASTE,          VIRTKEY,CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY,SHIFT
+    "N",            ID_FILE_NEW,            VIRTKEY,CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY,CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY,CONTROL
+    VK_F12,         ID_FILE_SAVE_AS,        VIRTKEY
+    "W",            ID_FILE_CLOSE,          VIRTKEY,CONTROL
 END
 
 1 VERSIONINFO
-FILEVERSION     4,  5, 2, 0
-PRODUCTVERSION  4,  5, 2, 0
+FILEVERSION     4,  5, 2, 1
+PRODUCTVERSION  4,  5, 2, 1
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
@@ -134,7 +134,7 @@ BEGIN
             VALUE "FileDescription", "TeXCAD, a LaTeX {picture} drawing program"
             VALUE "FileVersion", "Ver. 4.52"
             VALUE "InternalName", "TeXCAD"
-            VALUE "LegalCopyright", "© 2003 .. 2023 Free Software Foundation"
+            VALUE "LegalCopyright", "© 2003 .. 2024 Free Software Foundation"
             VALUE "OriginalFilename", "TeXCAD.exe"
             VALUE "ProductName", "TeXCAD"
             VALUE "ProductVersion", "4.52"
