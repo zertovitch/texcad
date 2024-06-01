@@ -1,5 +1,5 @@
 --  This is a GNAT, GCC or GNAT Studio project file
---  for the TeXCAD project:
+--  for the TeXCAD project, version using GWindows.
 --
 --      home page:     http://texcad.sf.net/
 --      project page:  http://sf.net/projects/texcad/
@@ -7,6 +7,9 @@
 --
 --  Build me with "gnatmake -P texcad_gwin", or open me with GNAT Studio
 --
+--  This variant is a "flat" project, which does not refer to other projects.
+--  See "texcad_gw_project_tree.gpr" for the other, hierarchical, variant.
+
 --  *** External libraries ***
 --  * 
 --  *     You need to make the following projects' source files visible to this project
@@ -20,14 +23,14 @@
 --  *       Mirror URL: https://github.com/zertovitch/gwindows
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 --  * 
---  *  Example: GNAT_SOURCE_PATH=C:\Ada\gnavi\gwindows\framework;C:\Ada\gnavi\gwindows\contrib;C:\Ada\gnavi\gnatcom\framework
---  *  =======
+--  *  Example: GNAT_SOURCE_PATH=
+--  *             C:\Ada\gnavi\gwindows\framework;
+--  *             C:\Ada\gnavi\gwindows\contrib;
+--  *             C:\Ada\gnavi\gnatcom\framework
 
 project TeXCAD_GWin is
 
    for Source_Dirs use ("..\", ".") & external_as_list("GNAT_SOURCE_PATH", ";");
-   
-   --  Caution: the "Windows_Stuff" subdirectory is no more used and will be deleted!
    
    for Main use ("TeXCAD.adb");
    for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch

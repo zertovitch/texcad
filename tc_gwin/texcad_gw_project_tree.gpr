@@ -1,0 +1,120 @@
+--  This is a GNAT, GCC or GNAT Studio project file
+--  for the TeXCAD project, version using GWindows.
+--
+--      home page:     http://texcad.sf.net/
+--      project page:  http://sf.net/projects/texcad/
+--      mirror:        https://github.com/zertovitch/texcad
+--
+--  Build me with "gnatmake -P texcad_gwin", or open me with GNAT Studio
+--
+--  This variant is a hierarchical project, which refers to other projects.
+--  See "texcad_gwin.gpr" for the other, "flat", variant.
+
+--  *** External projects ***
+--  * 
+--  *   You need to make the following projects files visible to this project,
+--  *   for instance through the ADA_PROJECT_PATH environment variable:
+--  *   
+--  *   * GWindows and contributions:
+--  *       [gnavi]\gwindows\gwindows_contrib.gpr
+--  *       Project URL: http://sf.net/projects/gnavi/
+--  *       Mirror URL: https://github.com/zertovitch/gwindows
+--  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
+--  * 
+--  *  Example: ADA_PROJECT_PATH=
+--  *  =======    C:\Ada\gnavi\gwindows
+
+project TeXCAD_GW_Project_Tree extends "GWindows_Contrib" is
+
+   for Source_Dirs use ("..\", ".");
+   
+   for Main use ("TeXCAD.adb");
+   for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
+
+   type TeXCAD_Build_Mode_Type is ("Optimize", "Debug");
+   TeXCAD_Build_Mode : TeXCAD_Build_Mode_Type := external ("TeXCAD_Build_Mode", "Debug");
+
+   type TeXCAD_Styles_Checks_Type is
+      ("Off",
+       "On",
+       "Extra"
+      );
+   TeXCAD_Styles_Checks : TeXCAD_Styles_Checks_Type := external ("TeXCAD_Styles_Checks", "On");
+
+   case TeXCAD_Build_Mode is
+      when "Debug" =>
+         for Object_Dir use "..\ACU_Debg";
+      when "Optimize" =>
+         for Object_Dir use "..\ACU_Opti";
+   end case;
+
+   package Ide is
+      for Default_Switches ("adacontrol") use ("-f", "../verif.aru");
+   end Ide;
+
+   package Builder is
+      --   "If -j0 is used, then the maximum number of simultaneous compilation
+      --    jobs is the number of core processors on the platform."
+      case TeXCAD_Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-j0");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-j0", "-s"); -- , "-a", "-x"
+      end case;
+   end Builder;
+
+   Common_Compiler_Options := (
+     "-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
+     "-gnatwcijkmopruvz.c.p.t.x",      --  Warnings switches (run "gnatmake" for full list)
+     "-gnatf",  --  Full errors. Verbose details, all undefined references
+     "-gnatq",  --  Don't quit, try semantics, even if parse errors
+     "-gnatQ"   --  Don't quit, write ali/tree file even if compile errors
+   );
+
+   Style_Checks_1 := 
+     ("-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
+      "-gnatyO",       --  Style: check overriding indicators
+      "-gnatyx");      --  Style: check x:no extra parens
+
+   Style_Checks_2 := 
+     ("-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
+      "-gnatye",       --  Style: check e:end/exit labels present
+      "-gnatytc",      --  Style: check t:token separation rules, c:comment format (two spaces)
+      "-gnatwh");      --  Warnings switches (h:turn on warnings for hiding declarations)
+
+   case TeXCAD_Styles_Checks is
+      when "Off"   => null;
+      when "On"    => Common_Compiler_Options := Common_Compiler_Options & Style_Checks_1;
+      when "Extra" => Common_Compiler_Options := Common_Compiler_Options & Style_Checks_1 & Style_Checks_2;
+   end case;
+   
+   package Compiler is
+      case TeXCAD_Build_Mode is
+         when "Debug" =>
+            for Local_Configuration_Pragmas use project'Project_Dir & "..\acu_debg\debug.pra";
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-gnato", "-fstack-check", "-g", "-gnatVa");
+         when "Optimize" =>
+            for Local_Configuration_Pragmas use project'Project_Dir & "..\acu_debg\tc_elim.pra";
+            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp", "-fno-strict-aliasing", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0");
+      end case;
+   end Compiler;
+
+   package Linker is
+      case TeXCAD_Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-LWindows_Stuff");
+         when "Optimize" =>
+            for Default_Switches ("ada") use ("-mwindows", "texcad.rbj", "-s", "-LWindows_Stuff");
+      end case;
+   end Linker;
+
+   package Binder is
+      --  -Es: Store tracebacks in exception occurrences, and enable symbolic tracebacks
+      case TeXCAD_Build_Mode is
+         when "Debug" =>
+            for Default_Switches ("ada") use ("-Es");
+         when "Optimize" =>
+      end case;
+   end Binder;
+
+end TeXCAD_GW_Project_Tree;
