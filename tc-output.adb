@@ -7,16 +7,16 @@ with TC.IO_Commands;                    use TC.IO_Commands;
 
 package body TC.Output is
 
-  function Max(a,b,c:Real) return Real is --  GH
+  function Max (a, b, c : Real) return Real is  --  GH
   begin
-    if  a>b then
-      if  a>c then
+    if  a > b then
+      if  a > c then
         return a;
       else
         return c;
       end if;
     else
-      if b>c then
+      if b > c then
         return b;
       else
         return c;
@@ -24,18 +24,18 @@ package body TC.Output is
     end if;
   end Max;
 
-  function Min(a,b:Real) return Real renames Real'Min;
+  function Min (a, b : Real) return Real renames Real'Min;
 
-  function Vorz(a:Real) return Real is --  JW
+  function Vorz (a : Real) return Real is  --  JW
   begin
-    if  a < 0.0 then
+    if a < 0.0 then
       return -1.0;
     else
       return 1.0;
     end if;
   end Vorz;
 
-  function On_off( s: Boolean ) return String is
+  function On_off (s : Boolean) return String is
   begin
     if s then
       return "{\on}";
@@ -44,359 +44,358 @@ package body TC.Output is
     end if;
   end On_off;
 
-  default_precision: constant:= 3;
-  current_precision: Positive;
+  default_precision : constant := 3;
+  current_precision : Positive;
 
-  function R( x: Real; prec: Positive ) return String
+  function R (x : Real; prec : Positive) return String
     renames TeX_Number;
 
-  function R( x: Real ) return String is
+  function R (x : Real) return String is
   begin
-    return R(x,current_precision);
+    return R (x, current_precision);
   end R;
 
-  function I( x: Integer ) return String is
+  function I (x : Integer) return String is
   begin
-    return Trim(Integer'Image(x), Left);
+    return Trim (Integer'Image (x), Left);
   end I;
 
-  function I( x: Integer; prec: Positive ) return String is
-    pragma Warnings(off,prec); -- prec is fake here
+  function I (x : Integer; prec : Positive) return String is
+    pragma Warnings (off, prec);  --  prec is fake here
   begin
-    return I(x);
+    return I (x);
   end I;
 
   generic
     type Num is private;
-    with function Im( x: Num ) return String;
-    with function Im( x: Num; prec: Positive ) return String;
+    with function Im (x : Num) return String;
+    with function Im (x : Num; prec : Positive) return String;
   package Put_Args is
-    function Br( x: Num ) return String;                   -- {x}
-    function Pt( x,y: Num ) return String;                 -- (x,y)
-    function Pt( x,y: Num; prec: Positive ) return String; -- (x,y)
+    function Br (x : Num) return String;                     --  {x}
+    function Pt (x, y : Num) return String;                  --  (x, y)
+    function Pt (x, y : Num; prec : Positive) return String; --  (x, y)
   end Put_Args;
 
   package body Put_Args is
 
-    function Br( x: Num ) return String is
+    function Br (x : Num) return String is
     begin
-      return '{' & Im(x) & '}';
+      return '{' & Im (x) & '}';
     end Br;
 
-    function Pt( x,y: Num ) return String is
+    function Pt (x, y : Num) return String is
     begin
-      return '(' & Im(x) & ',' & Im(y) & ')';
+      return '(' & Im (x) & ',' & Im (y) & ')';
     end Pt;
 
-    function Pt( x,y: Num; prec: Positive ) return String is
+    function Pt (x, y : Num; prec : Positive) return String is
     begin
-      return '(' & Im(x,prec) & ',' & Im(y,prec) & ')';
+      return '(' & Im (x, prec) & ',' & Im (y, prec) & ')';
     end Pt;
 
   end Put_Args;
 
-  package PA_Real is new Put_Args(Real,R,R); use PA_Real;
-  package PA_Integer is new Put_Args(Integer,I,I); use PA_Integer;
+  package PA_Real is new Put_Args (Real, R, R); use PA_Real;
+  package PA_Integer is new Put_Args (Integer, I, I); use PA_Integer;
 
-  -- Some numbers are saved in Ada/Pascal format "0.01" instead of ".01"
-  -- for compatibility TC 3.2
-  function Ada_Pas_Real( x: Real; prec: Positive ) return String is
-    s: String(1..30);
+  --  Some numbers are saved in Ada/Pascal format "0.01" instead of ".01"
+  --  for compatibility TC 3.2
+  function Ada_Pas_Real (x : Real; prec : Positive) return String is
+    s : String (1 .. 30);
   begin
-    RIO.Put(s,x,prec,0);
-    return Trim(s,Left);
+    RIO.Put (s, x, prec, 0);
+    return Trim (s, Left);
   end Ada_Pas_Real;
 
-  function Ada_Pas_Real( x: Real ) return String is
+  function Ada_Pas_Real (x : Real) return String is
   begin
-    return Ada_Pas_Real(x,current_precision);
+    return Ada_Pas_Real (x, current_precision);
   end Ada_Pas_Real;
 
-  package PA_AdaPas_Real is new Put_Args(Real,Ada_Pas_Real,Ada_Pas_Real);
+  package PA_AdaPas_Real is new Put_Args (Real, Ada_Pas_Real, Ada_Pas_Real);
 
-  function Pt( P: Point) return String is
+  function Pt (P : Point) return String is
   begin
-    return Pt( P.x, P.y );
+    return Pt (P.x, P.y);
   end Pt;
 
-  function Pt( P: Point; prec: Positive) return String is
+  function Pt (P : Point; prec : Positive) return String is
   begin
-    return Pt( P.x, P.y, prec );
+    return Pt (P.x, P.y, prec);
   end Pt;
 
-  ------------------------------------------------------
-  -- Buffering of output - 26-Jan-2007                --
-  -- Only the pending end-of-line is buffered for now --
-  ------------------------------------------------------
+  --------------------------------------------------------
+  --  Buffering of output - 26-Jan-2007                 --
+  --  Only the pending end-of-line is buffered for now  --
+  --------------------------------------------------------
 
   package Buffered_Text_Output is
-    -- Mimic Ada.Text_IO :
-    procedure Put( f: Ada.Text_IO.File_Type; c: Character );
-    procedure Put( f: Ada.Text_IO.File_Type; s: String );
-    procedure Put_Line( f: Ada.Text_IO.File_Type; s: String );
-    procedure New_Line( f: Ada.Text_IO.File_Type );
-    -- What this package is for :
-    procedure Forget_Last_New_Line( f: Ada.Text_IO.File_Type );
-    procedure Flush( f: Ada.Text_IO.File_Type );
+    --  Mimic Ada.Text_IO :
+    procedure Put (f : Ada.Text_IO.File_Type; c : Character);
+    procedure Put (f : Ada.Text_IO.File_Type; s : String);
+    procedure Put_Line (f : Ada.Text_IO.File_Type; s : String);
+    procedure New_Line (f : Ada.Text_IO.File_Type);
+    --  What this package is for :
+    procedure Forget_Last_New_Line (f : Ada.Text_IO.File_Type);
+    procedure Flush (f : Ada.Text_IO.File_Type);
   end Buffered_Text_Output;
 
   package body Buffered_Text_Output is
-    -- Not nice, but fine here: common buffering, whatever file
-    pending_new_Line: Boolean:= False;
-    procedure Flush( f: Ada.Text_IO.File_Type ) is
+    --  Not nice, but fine here: common buffering, whatever file
+    pending_new_Line : Boolean := False;
+    procedure Flush (f : Ada.Text_IO.File_Type) is
     begin
       if pending_new_Line then
-        Ada.Text_IO.New_Line(f);
-        pending_new_Line:= False;
+        Ada.Text_IO.New_Line (f);
+        pending_new_Line := False;
       end if;
     end Flush;
     --
-    procedure Put( f: Ada.Text_IO.File_Type; c: Character ) is
+    procedure Put (f : Ada.Text_IO.File_Type; c : Character) is
     begin
-      Flush(f);
-      Ada.Text_IO.Put(f,c);
+      Flush (f);
+      Ada.Text_IO.Put (f, c);
     end Put;
-    procedure Put( f: Ada.Text_IO.File_Type; s: String ) is
+    procedure Put (f : Ada.Text_IO.File_Type; s : String) is
     begin
-      Flush(f);
-      Ada.Text_IO.Put(f,s);
+      Flush (f);
+      Ada.Text_IO.Put (f, s);
     end Put;
-    procedure Put_Line( f: Ada.Text_IO.File_Type; s: String ) is
+    procedure Put_Line (f : Ada.Text_IO.File_Type; s : String) is
     begin
-      Flush(f);
-      Ada.Text_IO.Put(f,s);
-      pending_new_Line:= True;
+      Flush (f);
+      Ada.Text_IO.Put (f, s);
+      pending_new_Line := True;
     end Put_Line;
-    procedure New_Line( f: Ada.Text_IO.File_Type ) is
+    procedure New_Line (f : Ada.Text_IO.File_Type) is
     begin
-      Flush(f);
-      pending_new_Line:= True;
+      Flush (f);
+      pending_new_Line := True;
     end New_Line;
     --
-    procedure Forget_Last_New_Line( f: Ada.Text_IO.File_Type ) is
-    pragma Warnings( Off, f ); -- f not used : not-so-nice...
+    procedure Forget_Last_New_Line (f : Ada.Text_IO.File_Type) is
+    pragma Warnings (Off, f);  --  f not used : not-so-nice...
     begin
-      pending_new_Line:= False;
+      pending_new_Line := False;
     end Forget_Last_New_Line;
   end Buffered_Text_Output;
 
-  procedure Insert( pic           : in Picture;
-                    macro         :    Boolean;
-                    file          :    Ada.Text_IO.File_Type;
-                    displayed_name:    String
-  )
+  procedure Insert (pic            : Picture;
+                    macro          : Boolean;
+                    file           : Ada.Text_IO.File_Type;
+                    displayed_name : String)
   is
     --  JW,GH (Save)
-    tf: Ada.Text_IO.File_Type renames file;
-    o: ptr_Obj_type;
-    s1,s2,Pmin,Pmax: Point;
-    pointnum: Natural;
+    tf : Ada.Text_IO.File_Type renames file;
+    o : ptr_Obj_type;
+    s1, s2, Pmin, Pmax : Point;
+    pointnum : Natural;
 
     use REF;
 
-    current_LaTeX_ls: Line_settings:= normal_line_settings;
-    -- ^ 2-Mar-2004. Tracks changes in settings (esp. thickness) in the
-    -- order they will be parsed by LaTeX.
+    current_LaTeX_ls : Line_Settings := normal_line_settings;
+    --  ^ 2-Mar-2004. Tracks changes in settings (esp. thickness) in the
+    --  order they will be parsed by LaTeX.
 
-    -- 25-Jan-2007: track last command, in order to allow
-    -- chaining of \drawline, \dashline, \dottedline
+    --  25-Jan-2007: track last command, in order to allow
+    --  chaining of \drawline, \dashline, \dottedline
     type Command_tracker is record
-       -- default: bogus values in case the tracker
-       -- is used at first epic command
-      k      : Kom_type        := czoom;
-      P      : Point           := (0.0,0.0);
-      stretch: Integer         := -101;
-      symbol : Unbounded_String:= To_Unbounded_String("z314");
-      gap    : Real            := -1.0;
-      length : Real            := -1.0;
+       --  default: bogus values in case the tracker
+       --  is used at first epic command
+      k       : Kom_type         := czoom;
+      P       : Point            := (0.0, 0.0);
+      stretch : Integer          := -101;
+      symbol  : Unbounded_String := To_Unbounded_String ("z314");
+      gap     : Real             := -1.0;
+      length  : Real             := -1.0;
     end record;
-    last_command: Command_tracker;
-    function Img_track(k: Kom_type) return String is
+    last_command : Command_tracker;
+    function Img_track (k : Kom_type) return String is
     begin
-      last_command.k:= k;
-      return Img(k);
+      last_command.k := k;
+      return Img (k);
     end Img_track;
 
     use Buffered_Text_Output;
 
     procedure Pack_Line is
     begin
-      if Ada.Text_IO."<"(Ada.Text_IO.Col(tf), 75) then
-        Forget_Last_New_Line(tf);
+      if Ada.Text_IO."<"(Ada.Text_IO.Col (tf), 75) then
+        Forget_Last_New_Line (tf);
       end if;
     end Pack_Line;
 
     procedure End_of_emulation is
     begin
-      Put_Line(tf,"%\end");
+      Put_Line (tf, "%\end");
     end End_of_emulation;
 
-    procedure Write_line_any_slope(
-      M       : in out Point;
-      PP      :        Point;
-      stretch :        Integer)
+    procedure Write_line_any_slope
+      (M       : in out Point;
+       PP      :        Point;
+       stretch :        Integer)
     is
     --  JW
-      genauigkeit: constant:= 0.12;
-      pixfac     : constant:= 0.5;
-      DQ,D: Point;
-      mini,vx,vy,f,xf:Real;
-      numprec: Positive;
+      genauigkeit : constant := 0.12;
+      pixfac      : constant := 0.5;
+      DQ, D : Point;
+      mini, vx, vy, f, xf : Real;
+      numprec : Positive;
     begin
-      if pic.opt.sty(epic) then
+      if pic.opt.sty (epic) then
         if last_command.k = cdrawline
-          and then Almost_Zero(Norm2(M - last_command.P))
+          and then Almost_Zero (Norm2 (M - last_command.P))
           and then last_command.stretch = stretch
         then -- can chain, then just output end point
           Pack_Line;
-          Put_Line(tf, Pt(PP));
-          last_command.P:= PP;
+          Put_Line (tf, Pt (PP));
+          last_command.P := PP;
         elsif last_command.k = cdrawline
-          and then Almost_Zero(Norm2(PP - last_command.P))
+          and then Almost_Zero (Norm2 (PP - last_command.P))
           and then last_command.stretch = stretch
         then -- can chain this segment reversed
           Pack_Line;
-          Put_Line(tf, Pt(M));
-          last_command.P:= M;
+          Put_Line (tf, Pt (M));
+          last_command.P := M;
         else
-          Put(tf, Img_track(cdrawline));
-          -- \drawline[stretch](x1,y1)(x2,y2)...(xn,yn)
+          Put (tf, Img_track (cdrawline));
+          --  \drawline[stretch](x1,y1)(x2,y2)...(xn,yn)
           if stretch /= 0 then
-            Put(tf,'[' & I(stretch) & ']');
+            Put (tf, '[' & I (stretch) & ']');
           end if;
-          Put_Line(tf, Pt(M) & Pt(PP));
-          last_command.P:= PP;
-          last_command.stretch:= stretch;
+          Put_Line (tf, Pt (M) & Pt (PP));
+          last_command.P := PP;
+          last_command.stretch := stretch;
         end if;
-      elsif pic.opt.sty(emlines) then --  and (mx <> xx) and (my <> yy)
-        pointnum:= pointnum + 1;
-        Put(tf, Img_track(cemline1) & Br(M.x) & Br(M.y) & Br(pointnum) );
-        pointnum:= pointnum + 1;
-        Put_Line(tf, Br(PP.x) & Br(PP.y) & Br(pointnum) );
+      elsif pic.opt.sty (emlines) then  --  and (mx <> xx) and (my <> yy)
+        pointnum := pointnum + 1;
+        Put (tf, Img_track (cemline1) & Br (M.x) & Br (M.y) & Br (pointnum));
+        pointnum := pointnum + 1;
+        Put_Line (tf, Br (PP.x) & Br (PP.y) & Br (pointnum));
       else
-        DQ:= PP - M;
-        vx:= Vorz(DQ.x);
-        vy:= Vorz(DQ.y);
-        mini:= Min(abs DQ.x, abs DQ.y);
-        numprec:= current_precision + 1;
+        DQ := PP - M;
+        vx := Vorz (DQ.x);
+        vy := Vorz (DQ.y);
+        mini := Min (abs DQ.x, abs DQ.y);
+        numprec := current_precision + 1;
         if  mini > genauigkeit then
-          f:= mini/genauigkeit;
-          -- 3-Jun-2003: ensure good rendering for large-scale pictures
+          f := mini / genauigkeit;
+          --  3-Jun-2003: ensure good rendering for large-scale pictures
           if pic.ul_in_pt > 0.0 and then pic.lw_in_pt > 0.0 then
-            xf:= pixfac * pic.ul_in_pt / pic.lw_in_pt;
+            xf := pixfac * pic.ul_in_pt / pic.lw_in_pt;
             if xf > 1.0 then
-              f:= f * xf;
+              f := f * xf;
             end if;
           end if;
-          f:= Real'Floor(f + 0.99999999999);
-          -- Pascal: f:=round(min/genauigkeit+0.5);
-          D:= (1.0/f) * DQ;
-          numprec:= numprec + Integer'Max(0,Integer(Log(f)));
-          Put(tf,
-            "\multiput" & Pt(M) & Pt(D,numprec) & Br(Integer(f)) &
-            "{\line");
-        else -- mini <= genauigkeit
-          D:= PP - M;
-          Put(tf, Img_track(cput) & Pt(M) & "{\line");
+          f := Real'Floor (f + 0.99999999999);
+          --  Pascal: f:=round(min/genauigkeit+0.5);
+          D := (1.0 / f) * DQ;
+          numprec := numprec + Integer'Max (0, Integer (Log (f)));
+          Put
+            (tf,
+             "\multiput" & Pt (M) & Pt (D, numprec) & Br (Integer (f)) &
+             "{\line");
+        else  --  mini <= genauigkeit
+          D := PP - M;
+          Put (tf, Img_track (cput) & Pt (M) & "{\line");
         end if;
         if abs D.x > abs D.y then
-          Put_Line(tf, Pt(Integer(vx),0) & '{' & R(abs D.x, numprec) & "}}");
+          Put_Line (tf, Pt (Integer (vx), 0) & '{' & R (abs D.x, numprec) & "}}");
         else
-          Put_Line(tf, Pt(0,Integer(vy)) & '{' & R(abs D.y, numprec) & "}}");
+          Put_Line (tf, Pt (0, Integer (vy)) & '{' & R (abs D.y, numprec) & "}}");
         end if;
       end if;
-      M:= PP;
+      M := PP;
     end Write_line_any_slope;
 
-    procedure Write_reduced_any_lines(
-      M, Q : in out Point;
-      PP: Point; no_start: Boolean)
+    procedure Write_reduced_any_lines
+      (M, Q : in out Point; PP : Point; no_start : Boolean)
     is
       --  JW, GM
       --  Fasst EMlinien mit fast gleicher Steigung zusammen
-      s1,s2,df: Real;
+      rl_s1, rl_s2, df : Real;
     begin
       if no_start then
         if not pic.opt.reduce then
-          Write_line_any_slope( M, Q, 0);
+          Write_line_any_slope (M, Q, 0);
         elsif
-          abs(PP.x-M.x) > 0.01  and  abs(PP.y-M.y) > 0.01 and
-          -- Bug found thanks to GNAT's validity checks:
-          abs(Q.x-M.x) > 0.01  and  abs(PP.x-Q.x) > 0.01
+          abs (PP.x - M.x) > 0.01  and  abs (PP.y - M.y) > 0.01 and
+          --  Bug found thanks to GNAT's validity checks (-gnatV*):
+          abs (Q.x  - M.x) > 0.01  and  abs (PP.x - Q.x) > 0.01
         then
-          s1:=(Q.y-M.y)  / (Q.x-M.x);
-          s2:=(PP.y-Q.y) / (PP.x-Q.x);
-          df:= abs(s1-s2);
+          rl_s1 := (Q.y - M.y)  / (Q.x - M.x);
+          rl_s2 := (PP.y - Q.y) / (PP.x - Q.x);
+          df := abs (rl_s1 - rl_s2);
           if df > pic.opt.stdiff then
-            Write_line_any_slope( M, Q, 0);
+            Write_line_any_slope (M, Q, 0);
           end if;
         end if;
       end if;
-      Q:= PP;
+      Q := PP;
     end Write_reduced_any_lines;
 
-    procedure Write_emulated_bezier(o: Obj_type) is
+    procedure Write_emulated_bezier (o : Obj_type) is
       --  JW , GM
-      M, Q: Point;
-      no_start: Boolean:= False;
+      M, Q : Point;
+      no_start : Boolean := False;
 
-      procedure PlotPoint( P: Point ) is
+      procedure PlotPoint (P : Point) is
       begin
-        Write_reduced_any_lines( M, Q, P, no_start );
-        no_start:= True;
+        Write_reduced_any_lines (M, Q, P, no_start);
+        no_start := True;
       end PlotPoint;
 
-      procedure Draw_Bezier is new Bezier_curve(PlotPoint);
+      procedure Draw_Bezier is new Bezier_curve (PlotPoint);
 
     begin
-      M:= o.P1;
-      Q:= (0.0,0.0);
-      -- ^ Unused at start, just calms down
-      -- validity check (-gnatVa) + pragma Initialize_Scalars
-      Draw_Bezier(o,pic.ul_in_pt);
-      Write_line_any_slope( M, o.PE, 0);
+      M := o.P1;
+      Q := (0.0, 0.0);
+      --  ^ Unused at start, just calms down
+      --    validity check (-gnatVa) + pragma Initialize_Scalars
+      Draw_Bezier (o, pic.ul_in_pt);
+      Write_line_any_slope (M, o.PE, 0);
     end Write_emulated_bezier;
 
-    procedure Write_emulated_paramcurve2d(o: Obj_type) is
-      M, Q, PE: Point;
-      no_start, restart: Boolean:= False;
+    procedure Write_emulated_paramcurve2d (o : Obj_type) is
+      M, Q, PE : Point;
+      no_start, restart : Boolean := False;
 
-      procedure PlotPoint( P: Point ) is
+      procedure PlotPoint (P : Point) is
       begin
         if restart then
-          M:= P;
-          restart:= False;
+          M := P;
+          restart := False;
         else
-          Write_reduced_any_lines( M, Q, P, no_start );
-          no_start:= True;
+          Write_reduced_any_lines (M, Q, P, no_start);
+          no_start := True;
         end if;
       end PlotPoint;
 
       procedure Singularity is
       begin
-        no_start:= False;
-        restart:= True;
+        no_start := False;
+        restart := True;
       end Singularity;
 
-      procedure Draw_Paramcurve is new Parametric_curve_2D(PlotPoint, Singularity);
+      procedure Draw_Paramcurve is new Parametric_curve_2D (PlotPoint, Singularity);
 
     begin
-      M:= Evaluate_param_curve_2D(o, o.data_2d.min_t);
-      Q:= (0.0,0.0);
-      Draw_Paramcurve(o,pic.ul_in_pt);
-      PE:= Evaluate_param_curve_2D(o, o.data_2d.max_t);
-      Write_line_any_slope( M, PE, 0);
+      M := Evaluate_param_curve_2D (o, o.data_2d.min_t);
+      Q := (0.0, 0.0);
+      Draw_Paramcurve (o, pic.ul_in_pt);
+      PE := Evaluate_param_curve_2D (o, o.data_2d.max_t);
+      Write_line_any_slope (M, PE, 0);
     end Write_emulated_paramcurve2d;
 
-    procedure Write_kreis( o: Obj_type; Pmin: Point ) is
+    procedure Write_kreis (o : Obj_type; Pmin : Point ) is
 
       use Ada.Numerics;
 
-      procedure Write_circle_with_lines(C: Point; as_command: Boolean) is
+      procedure Write_circle_with_lines (C : Point; as_command : Boolean) is
         --  JW, GM
-        pid: constant:= 2.0 * Pi;
-        M, PP, Q: Point;
-        t,dt : Real;
+        pid : constant := 2.0 * Pi;
+        M, PP, Q : Point;
+        t, dt : Real;
       begin
         if as_command then
           Put_Line(tf, Img_track(ccircle2) & Pt(C) & Br(2.0*o.rad));
@@ -510,7 +509,7 @@ package body TC.Output is
       end if;
     end Write_kreis;
 
-    function Arrows_option_image( ls: Line_settings ) return String is
+    function Arrows_option_image( ls: Line_Settings ) return String is
     begin
       case ls.arrows is
         when no_arrow => return "";         -- never happens

@@ -48,17 +48,16 @@ package body TC.GWin.Mousing is
   use Lang;
 
   msg_for_mode : constant array (Capture_mode) of Message :=
-    (none            => ready,
-     pick | unpick   => expl_pick,
-     area | unarea   => mouse_drag,
-     click_1         => empty,
-     figure_2        => mouse_drag,
-     click_2         => bez_pt2,
-     bez_click0      => empty,
-     bez_click1      => bez_pt2,
-     bez_click2      => bez_ptc,
-     paste0 | paste1 => m_paste
-    );
+    (none                        => ready,
+     pick | unpick               => expl_pick,
+     select_area | unselect_area => mouse_drag,
+     click_1                     => empty,
+     figure_2                    => mouse_drag,
+     click_2                     => bez_pt2,
+     bez_click0                  => empty,
+     bez_click1                  => bez_pt2,
+     bez_click2                  => bez_ptc,
+     paste0 | paste1             => m_paste);
 
   procedure Show_mouse_mode (w : TC_Picture_Panel) is
   begin
@@ -69,7 +68,7 @@ package body TC.GWin.Mousing is
   end Show_mouse_mode;
 
   snappable : constant array (Capture_mode) of Boolean :=
-    (none .. unarea => False, others => True);
+    (none .. unselect_area => False, others => True);
 
   procedure Tranform_coordinates (w : in out TC_Picture_Panel) is
     YM : constant Integer :=  Height (w) - 1;
@@ -230,8 +229,8 @@ package body TC.GWin.Mousing is
 
   begin  --  Mouse_Move
     case w.capture is
-      when area       => Invert_Rubber_Box (w, picked);  --  Hide
-      when unarea     => Invert_Rubber_Box (w, normal);  --  Hide
+      when select_area   => Invert_Rubber_Box (w, picked);  --  Hide
+      when unselect_area => Invert_Rubber_Box (w, normal);  --  Hide
       when click_1 |
            figure_2 |
            click_2 |
@@ -253,7 +252,7 @@ package body TC.GWin.Mousing is
             w.Ys := w.Y;  -- only "pick", but we follow mouse
           when pick_obj =>
             if dist > dist_max then
-              w.capture := area;
+              w.capture := select_area;
               Change_Cursor (w, cur_select);
               Invert_Rubber_Box (w, picked);  --  Show
             end if;
@@ -269,16 +268,16 @@ package body TC.GWin.Mousing is
         case w.current_cmd is
           when pick_obj =>
             if dist > dist_max then
-              w.capture := unarea;
+              w.capture := unselect_area;
               Change_Cursor (w, cur_unselect);
               Invert_Rubber_Box (w, normal);  --  Show
             end if;
           when others => null; -- Right button meaningless for not picking
         end case;
-      when area =>
+      when select_area =>
         Scroll_if_needed;
         Invert_Rubber_Box (w, picked);  --  show
-      when unarea =>
+      when unselect_area =>
         Scroll_if_needed;
         Invert_Rubber_Box (w, normal);  --  show
       when figure_2 | bez_click2 | click_2 =>
@@ -377,11 +376,11 @@ package body TC.GWin.Mousing is
             Change_Cursor (w, cur_picking);
           when others => null;  --  Right button meaningless for not picking
         end case;
-      when area =>
+      when select_area =>
         Invert_Rubber_Box (w, picked);  --  hide
         PicPic (w.Picture, pick_area, w.PS, w.PU);
         Change_Cursor (w, cur_picking);
-      when unarea =>
+      when unselect_area =>
         Invert_Rubber_Box (w, normal);  --  hide
         PicPic (w.Picture, unpick_area, w.PS, w.PU);
         Change_Cursor (w, cur_picking);

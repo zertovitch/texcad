@@ -746,7 +746,7 @@ package body TC.GWin.MDI_Picture_Child is
     cancel          : GWindows.Buttons.Button_Type;
     Result, y       : Integer;
 
-    candidate : Line_settings;
+    candidate : Line_Settings;
 
     use GWindows.Constants, GWindows.Static_Controls;
 

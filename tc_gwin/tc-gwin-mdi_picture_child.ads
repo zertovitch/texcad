@@ -16,7 +16,7 @@ package TC.GWin.MDI_Picture_Child is
   type MDI_Picture_Child_Access is access all MDI_Picture_Child_Type;
 
   type Capture_mode is
-    (none, pick, unpick, area, unarea,
+    (none, pick, unpick, select_area, unselect_area,
      click_1,  -- Figure on one point (text, putaux)
      figure_2, -- Figure with two ends, in one, long, click
      click_2,  -- Supplemental line, click on the end
@@ -48,10 +48,10 @@ package TC.GWin.MDI_Picture_Child is
         wx, wy,                    --  Cursorposition in Weltkoordinaten
         m_wx, m_wy     : TC.Real;  --  maximales x und y in Weltkoordinaten
         current_cmd    : Permanent_cmd;
-        current_ls     : Line_settings;
+        current_ls     : Line_Settings;
         capture        : Capture_mode;
         phantomart     : Obj_art_type;
-        phantom_ls     : Line_settings;  --  sometimes /= current_ls (e.g. translation vector)
+        phantom_ls     : Line_Settings;  --  sometimes /= current_ls (e.g. translation vector)
       end record;
 
   procedure Subtle_Redraw (Window : in out TC_Picture_Panel);

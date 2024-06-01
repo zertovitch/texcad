@@ -67,31 +67,31 @@ package body TC.GWin.Phantoms is
       vd := (0.0, f * fy);
       --  Frame:
       l.P1 := o.P1 + (-fx, -fy);
-      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2 := l.P1 + hd;  Draw_one( l );
-      l.P2 := l.P1 + vd;  Draw_one( l );
-      l.P1 := o.P1 + (+fx,-fy);
-      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2 := l.P1 - hd;  Draw_one( l );
-      l.P2 := l.P1 + vd;  Draw_one( l );
-      l.P1 := o.P1 + (+fx,+fy);
-      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2 := l.P1 - hd;  Draw_one( l );
-      l.P2 := l.P1 - vd;  Draw_one( l );
-      l.P1 := o.P1 + (-fx,+fy);
-      l.P2 := l.P1;       Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
-      l.P2 := l.P1 + hd;  Draw_one( l );
-      l.P2 := l.P1 - vd;  Draw_one( l );
-      -- Cross:
+      l.P2 := l.P1;       Draw_one (l);  --  1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 + hd;  Draw_one (l);
+      l.P2 := l.P1 + vd;  Draw_one (l);
+      l.P1 := o.P1 + (+fx, -fy);
+      l.P2 := l.P1;       Draw_one (l);  --  1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 - hd;  Draw_one (l);
+      l.P2 := l.P1 + vd;  Draw_one (l);
+      l.P1 := o.P1 + (+fx, +fy);
+      l.P2 := l.P1;       Draw_one (l);  --  1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 - hd;  Draw_one (l);
+      l.P2 := l.P1 - vd;  Draw_one (l);
+      l.P1 := o.P1 + (-fx, +fy);
+      l.P2 := l.P1;       Draw_one (l);  --  1 pixel (for 3x pixel inversion)
+      l.P2 := l.P1 + hd;  Draw_one (l);
+      l.P2 := l.P1 - vd;  Draw_one (l);
+      --  Cross:
       l.P1 := o.P1 + hd;
       l.P2 := o.P1 - hd;
-      Draw_one( l );
+      Draw_one (l);
       l.P1 := o.P1 + vd;
       l.P2 := o.P1 - vd;
-      Draw_one( l );
+      Draw_one (l);
       l.P1 := o.P1;
       l.P2 := o.P1;
-      Draw_one( l ); -- 1 pixel (for 3x pixel inversion)
+      Draw_one (l);  --  1 pixel (for 3x pixel inversion)
     end Circle_or_Oval_frame_and_cross;
 
     more : constant :=  1.0;  --  Extend the line from a Bezier control point
@@ -193,9 +193,9 @@ package body TC.GWin.Phantoms is
   end Invert_Phantom;
 
 begin
-  -- 17-Jun-2003 : moved from Invert_[rubber_]box and Invert_phantom
-  -- to avoid GDI leak under Windows 95/98/ME. We simply create all
-  -- possible pens, once for all.
+  --  17-Jun-2003 : moved from Invert_[rubber_]box and Invert_phantom
+  --  to avoid GDI leak under Windows 95/98/ME. We simply create all
+  --  possible pens, once for all.
   for s in Pen_Style_Type loop
     Create_Pen (phantom_pen (s), s, 1, Black);
   end loop;

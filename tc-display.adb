@@ -1,71 +1,71 @@
 package body TC.Display is
   use TC.REF, TC.Graphics, Ada.Numerics;
 
-  P0   : Point; --  Linke untere Ecke des angezeigten Bildausschnittes
-  ulpt : Real;  --  size of unitlength, for qBezier density
+  P0   : Point;  --  Linke untere Ecke des angezeigten Bildausschnittes
+  ulpt : Real;   --  size of unitlength, for qBezier density
 
-  procedure Set_Origin( P: Point ) is
+  procedure Set_Origin (P : Point) is
   begin
-    P0:= P;
+    P0 := P;
   end Set_Origin;
 
-  procedure Set_ul( pt: Real ) is -- size of unitlength, for qBezier and parametric curves density
+  procedure Set_ul (pt : Real) is  --  size of unitlength, for qBezier and parametric curves density
   begin
-    ulpt:= pt;
+    ulpt := pt;
   end Set_ul;
 
-  ldots: constant String:= "...";
-  tail: constant:= text_cutting / 3;
+  ldots : constant String := "...";
 
-  function Abbr( s:String ) return String is
+  function Abbr (s : String) return String is
 
-    function Cut( s:String ) return String is
+    function Cut (s : String) return String is
+      tail_length : constant := text_cutting / 3;
     begin
       if s'Length <= text_cutting then
         return s;
       else
         return
-          s(s'First .. s'First + text_cutting - 1 - ldots'Length - tail)
+          s (s'First .. s'First + text_cutting - 1 - ldots'Length - tail_length)
           & ldots &
-          s(s'Last - tail + 1 .. s'Last);
+          s (s'Last - tail_length + 1 .. s'Last);
       end if;
     end Cut;
 
-    e: Integer:= 0;
+    e : Integer := 0;
 
   begin
-    if s'Length=0 then
+    if s'Length = 0 then
       return "(?)";
     end if;
     if s'Length > 2 and then
-         ( (s(s'First)='{' and s(s'Last)='}') or
-           (s(s'First)='$' and s(s'Last)='$') )
+         ((s (s'First) = '{' and s (s'Last) = '}') or
+          (s (s'First) = '$' and s (s'Last) = '$'))
     then
-      return Abbr(s( s'First+1 .. s'Last-1 ));
+      return Abbr (s (s'First + 1 .. s'Last - 1));
     elsif s'Length > 1 and then
-       s(s'First)='\'
+       s (s'First) = '\'
     then
       for i in reverse s'Range loop
-        if s(i)=' ' then e:= i; end if;
+        if s (i) = ' ' then e := i; end if;
       end loop;
-      if e = 0 then      -- test is a \command only
-        return Cut(s);
-      else               -- skip \command
-        return Abbr(s(e+1 .. s'Last));
+      if e = 0 then      --  test is a \command only
+        return Cut (s);
+      else               --  skip \command
+        return Abbr (s (e + 1 .. s'Last));
       end if;
     else
-      return Cut(s);
+      return Cut (s);
     end if;
   end Abbr;
 
-  -- 2007:
-  function Abbr( s: Unbounded_String ) return String is
+  --  2007:
+  function Abbr (s : Unbounded_String) return String is
   begin
-    return Abbr(To_String(s));
+    return Abbr (To_String (s));
   end Abbr;
 
-  maxint_real: constant Real:= 0.99 * Real(Integer'Last);
-  minint_real: constant Real:= -maxint_real;
+  maxint_real : constant Real := 0.99 * Real (Integer'Last);
+  minint_real : constant Real := -maxint_real;
 
   function TransX( rx: Real ) return Integer is
   pragma Inline(TransX);
@@ -156,7 +156,7 @@ package body TC.Display is
     end if;
   end Arrow;
 
-  procedure Draw_line(P1,P2: Point; ls: Line_settings) is
+  procedure Draw_line(P1,P2: Point; ls: Line_Settings) is
   -- Internal - 20-Feb-2004
     x1,x2,y1,y2, ns, xc,yc: Integer;
     tr_x1x2: Boolean:= False;

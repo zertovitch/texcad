@@ -8,7 +8,7 @@ package body TC.GWin.New_objects is
      main   : in out MDI_Main.MDI_Main_Type;
      P1     :        Point;
      art    :        Obj_art_type;
-     ls     :        Line_settings)
+     ls     :        Line_Settings)
   is
     t : constant ptr_Obj_type := new Obj_type (art);
     modif : Boolean;
@@ -30,7 +30,7 @@ package body TC.GWin.New_objects is
      parent      : in out GWindows.Base.Base_Window_Type'Class;
      main        : in out MDI_Main.MDI_Main_Type;
      P1, P2      :        Point;
-     ls          : in out Line_settings;  --  Possible current dot/dash change
+     ls          : in out Line_Settings;  --  Possible current dot/dash change
      cmd         :        Drawing_cmd)
   is
     t : ptr_Obj_type;
@@ -70,7 +70,7 @@ package body TC.GWin.New_objects is
     (p  : in out Picture;
      P1 :        Point;
      P2 : in out Point;        --  Moved by setting limited \line slope
-     ls :        Line_settings)
+     ls :        Line_Settings)
   is
     t : constant ptr_Obj_type := new Obj_type (line);
   begin
@@ -87,7 +87,7 @@ package body TC.GWin.New_objects is
   procedure New_bezier
     (p          : in out Picture;
      P1, PE, PG :        Point;
-     ls         :        Line_settings)
+     ls         :        Line_Settings)
   is
     t : constant ptr_Obj_type := new Obj_type (bezier);
   begin
@@ -107,7 +107,7 @@ package body TC.GWin.New_objects is
     (p      : in out Picture;
      P1, P2 :        Point;
      cmd    :        Drawing_cmd;
-     ls     :        Line_settings)
+     ls     :        Line_Settings)
   is
     t : ptr_Obj_type;
   begin
@@ -127,7 +127,7 @@ package body TC.GWin.New_objects is
      parent : in out GWindows.Base.Base_Window_Type'Class;
      main   : in out MDI_Main.MDI_Main_Type;
      orig   :        Point;
-     ls     : in out Line_settings)
+     ls     : in out Line_Settings)
   is
     t : constant ptr_Obj_type := new Obj_type (paramcurve2d);
     modif : Boolean;

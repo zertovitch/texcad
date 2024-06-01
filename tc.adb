@@ -2,288 +2,288 @@ package body TC is
 
   use REF;
 
-  function "+"(P1,P2: Point) return Point is
+  function "+"(P1, P2 : Point) return Point is
   begin
-    return ( P1.x+P2.x, P1.y+P2.y );
+    return (P1.x + P2.x, P1.y + P2.y);
   end "+";
 
-  function "-"(P1,P2: Point) return Point is
+  function "-"(P1, P2 : Point) return Point is
   begin
-    return ( P1.x-P2.x, P1.y-P2.y );
+    return (P1.x - P2.x, P1.y - P2.y);
   end "-";
 
-  function "-"(P1: Point) return Point is
+  function "-"(P1 : Point) return Point is
   begin
-    return ( -P1.x, -P1.y );
+    return (-P1.x, -P1.y);
   end "-";
 
-  function "*"(f: Real; P: Point) return Point is
+  function "*"(f : Real; P : Point) return Point is
   begin
-    return ( f * P.x, f * P.y );
+    return (f * P.x, f * P.y);
   end "*";
 
-  function Norm2(P:Point) return Real is
+  function Norm2 (P : Point) return Real is
   begin
     return P.x**2 + P.y**2;
   end Norm2;
 
-  function Norm(P:Point) return Real is
+  function Norm (P : Point) return Real is
   begin
-    return Sqrt(Norm2(P));
+    return Sqrt (Norm2 (P));
   end Norm;
 
-  function Ortho(P:Point) return Point is
+  function Ortho (P : Point) return Point is
   begin
-    return (P.y,-P.x);
+    return (P.y, -P.x);
   end Ortho;
 
   function Pic_suffix return String is
   begin
-    return To_String(gen_opt.tex_suff);
+    return To_String (gen_opt.tex_suff);
   end Pic_suffix;
 
   function Mac_suffix return String is
   begin
-    return To_String(gen_opt.mac_suff);
+    return To_String (gen_opt.mac_suff);
   end Mac_suffix;
 
   package body Graphics is
 
-    procedure Images( hj: H_Justify; vj: V_Justify; s: out String; sl: out Natural) is
-      ch: constant array(H_Justify) of Character:= "lcr";
-      cv: constant array(V_Justify) of Character:= "tcb";
+    procedure Images (hj : H_Justify; vj : V_Justify; s : out String; sl : out Natural) is
+      ch : constant array (H_Justify) of Character := "lcr";
+      cv : constant array (V_Justify) of Character := "tcb";
     begin
-      s(s'First)  := ch(hj);
-      s(s'First+1):= cv(vj);
-      sl:= s'First+1;
+      s (s'First)  := ch (hj);
+      s (s'First + 1) := cv (vj);
+      sl := s'First + 1;
     end Images;
 
-    procedure Values( s: String; hj: out H_Justify; vj: out V_Justify) is
+    procedure Values (s : String; hj : out H_Justify; vj : out V_Justify) is
     begin
-      hj:= centertext;
-      vj:= centertext;
-      for i in 1..s'Length loop -- admits partial options
-        case s(i) is
-          when 'l'=> hj:= lefttext;
-          when 'r'=> hj:= righttext;
-          when 't'=> vj:= toptext;
-          when 'b'=> vj:= bottomtext;
-          when 'c'=> null;  -- default is centered
-          when others=> null;
+      hj := centertext;
+      vj := centertext;
+      for i in 1 .. s'Length loop  --  admits partial options
+        case s (i) is
+          when 'l' => hj := lefttext;
+          when 'r' => hj := righttext;
+          when 't' => vj := toptext;
+          when 'b' => vj := bottomtext;
+          when 'c' => null;  --  default is centered
+          when others => null;
         end case;
       end loop;
     end Values;
 
-    function Position_of_text( o: Obj_type ) return Point is
-      h_just: H_Justify;
-      v_just: V_Justify;
-      sz, P: Point;
+    function Position_of_text (o : Obj_type) return Point is
+      h_just : H_Justify;
+      v_just : V_Justify;
+      sz, P  : Point;
     begin
       case o.art is
         when txt | putaux =>
           return o.P1;
         when box =>
-          sz:= o.size;
+          sz := o.size;
         when others =>
-          return (0.0,0.0); -- indeed, an error...
+          return (0.0, 0.0);  --  Actually, an error...
       end case;
-      Values( o.adjust(1..o.adjust_len), h_just, v_just );
+      Values (o.adjust (1 .. o.adjust_len), h_just, v_just);
       case h_just is
-        when lefttext   => P.x:= o.P1.x;
-        when centertext => P.x:= o.P1.x + 0.5 * sz.x;
-        when righttext  => P.x:= o.P1.x + sz.x;
+        when lefttext   => P.x := o.P1.x;
+        when centertext => P.x := o.P1.x + 0.5 * sz.x;
+        when righttext  => P.x := o.P1.x + sz.x;
       end case;
       case v_just is
-        when toptext    => P.y:= o.P1.y + sz.y;
-        when centertext => P.y:= o.P1.y + 0.5 * sz.y;
-        when bottomtext => P.y:= o.P1.y;
+        when toptext    => P.y := o.P1.y + sz.y;
+        when centertext => P.y := o.P1.y + 0.5 * sz.y;
+        when bottomtext => P.y := o.P1.y;
       end case;
       return P;
     end Position_of_text;
 
   end Graphics;
 
-  procedure Bezier_curve( o: Obj_type; pt_scale: Real ) is
-    sc, scp, nt: Natural;
-    isc, tr: Real;
-    PA,PB: Point;
+  procedure Bezier_curve (o : Obj_type; pt_scale : Real) is
+    sc, scp, nt : Natural;
+    isc, tr : Real;
+    PA, PB : Point;
   begin
-    sc:= o.num;
-    if sc < 1 then -- \qbezier - autom
-      sc:= Good_num_of_bezier_points(o, pt_scale);
+    sc := o.num;
+    if sc < 1 then  --  \qbezier - autom
+      sc := Good_num_of_bezier_points (o, pt_scale);
     end if;
-    isc:= 1.0 / Real(sc);
-    scp:= sc+1;
-    PB:= 2.0 * (o.PC-o.P1);
-    PA:= isc * ((o.PE-o.P1)-PB);
-    nt:= 0;
+    isc := 1.0 / Real (sc);
+    scp := sc + 1;
+    PB := 2.0 * (o.PC - o.P1);
+    PA := isc * ((o.PE - o.P1) - PB);
+    nt := 0;
     while nt < scp loop
-      tr:= Real(nt);
-      Action( isc * tr * (tr * PA + PB) + o.P1 );
-      nt:= nt + 2;
+      tr := Real (nt);
+      Action (isc * tr * (tr * PA + PB) + o.P1);
+      nt := nt + 2;
     end loop;
   end Bezier_curve;
 
-  function Evaluate_variable (name : String; t: Real) return Real is
+  function Evaluate_variable (name : String; t : Real) return Real is
   begin
-    if name'Length = 1 and then (name(name'First) = 't' or name(name'First) = 'T') then
+    if name'Length = 1 and then (name (name'First) = 't' or name (name'First) = 'T') then
       return t;
     end if;
     return 0.0;
   end Evaluate_variable;
 
-  function Evaluate_param_curve_2D( o: Obj_type; t: Real ) return Point is
-    x: constant Real:= TC_Formulas.Evaluate(o.parsed_2d_x, t);
-    y: constant Real:= TC_Formulas.Evaluate(o.parsed_2d_y, t);
+  function Evaluate_param_curve_2D (o : Obj_type; t : Real) return Point is
+    x : constant Real := TC_Formulas.Evaluate (o.parsed_2d_x, t);
+    y : constant Real := TC_Formulas.Evaluate (o.parsed_2d_y, t);
   begin
-    -- RIO.Put(x); RIO.Put(16.0 * sin(t)**3); Ada.Text_IO.New_Line;
-    -- RIO.Put(y); RIO.Put(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t)); Ada.Text_IO.New_Line;
+    --  RIO.Put(x); RIO.Put(16.0 * sin(t)**3); Ada.Text_IO.New_Line;
+    --  RIO.Put(y); RIO.Put(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t)); Ada.Text_IO.New_Line;
     return o.P1 + o.data_2d.scale * (x, y);
   end Evaluate_param_curve_2D;
 
-  procedure Parametric_curve_2D( o: Obj_type; pt_scale: Real ) is
-    sc, nt: Natural;
-    isc, t: Real;
-    len: constant Real:= o.data_2d.max_t - o.data_2d.min_t;
-    P1, P2, P3, P: Point;
-    density: Real;
-    function Convert_0_1_to_min_t_max_t(z: Real) return Real is
+  procedure Parametric_curve_2D (o : Obj_type; pt_scale : Real) is
+    sc, nt : Natural;
+    isc, t : Real;
+    len : constant Real := o.data_2d.max_t - o.data_2d.min_t;
+    P1, P2, P3, P : Point;
+    density : Real;
+    function Convert_0_1_to_min_t_max_t (z : Real) return Real is
     begin
       return z * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
     end Convert_0_1_to_min_t_max_t;
-    sing: Boolean;
+    sing : Boolean;
   begin
-    sc:= o.data_2d.segments;
+    sc := o.data_2d.segments;
     if sc = 0 then  --  Automatically compute number of segments
-      density:= 16.0 * Real'Max(1.0, pt_scale);
+      density := 16.0 * Real'Max (1.0, pt_scale);
       --  We pick 3 points, and hope there is no singularity there
-      P1:= Evaluate_param_curve_2D(o, Convert_0_1_to_min_t_max_t(0.01));
-      P2:= Evaluate_param_curve_2D(o, Convert_0_1_to_min_t_max_t(0.49));
-      P3:= Evaluate_param_curve_2D(o, Convert_0_1_to_min_t_max_t(0.99));
-      sc:= 1 + Integer(density * ( Norm(P1 - P2) + Norm(P2 - P3) ));
+      P1 := Evaluate_param_curve_2D (o, Convert_0_1_to_min_t_max_t (0.01));
+      P2 := Evaluate_param_curve_2D (o, Convert_0_1_to_min_t_max_t (0.49));
+      P3 := Evaluate_param_curve_2D (o, Convert_0_1_to_min_t_max_t (0.99));
+      sc := 1 + Integer (density * (Norm (P1 - P2) + Norm (P2 - P3)));
     end if;
-    isc:= 1.0 / Real(sc);
-    nt:= 0;
+    isc := 1.0 / Real (sc);
+    nt := 0;
     while nt <= sc loop
-      t:= (Real(nt) * isc) * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
+      t := (Real (nt) * isc) * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
       begin
-        P:= Evaluate_param_curve_2D(o, t);
-        sing:= False;
+        P := Evaluate_param_curve_2D (o, t);
+        sing := False;
       exception
         when others =>
-          sing:= True;
+          sing := True;
       end;
       if sing then
         Singularity;
       else
-        Action(P);
+        Action (P);
       end if;
-      nt:= nt + 1;
+      nt := nt + 1;
     end loop;
   end Parametric_curve_2D;
 
-  -- For Get_Slope
+  --  For Get_Slope
 
-  rad2deg: constant:= 57.295779513082320877;
+  rad2deg : constant := 57.295779513082320877;
 
   type angle_table is record
-    x,y  : Slope_value;
-    angle: Real;
+    x, y  : Slope_value;
+    angle : Real;
   end record;
 
-  line_angles: constant array (1 .. 25) of  angle_table:=(
-       (x=>0, y=>1, angle=>90.0),
-       (x=>1, y=>0, angle=>0.0),
-       (x=>1, y=>1, angle=>45.0),
-       (x=>1, y=>2, angle=>63.434948822922010648),
-       (x=>1, y=>3, angle=>71.565051177077989351),
-       (x=>1, y=>4, angle=>75.963756532073521417),
-       (x=>1, y=>5, angle=>78.690067525979786913),
-       (x=>1, y=>6, angle=>80.537677791974382609),
-       (x=>2, y=>1, angle=>26.565051177077989351),
-       (x=>2, y=>3, angle=>56.309932474020213086),
-       (x=>2, y=>5, angle=>68.198590513648188229),
-       (x=>3, y=>1, angle=>18.434948822922010648),
-       (x=>3, y=>2, angle=>33.690067525979786913),
-       (x=>3, y=>4, angle=>53.130102354155978703),
-       (x=>3, y=>5, angle=>59.036243467926478582),
-       (x=>4, y=>1, angle=>14.036243467926478588),
-       (x=>4, y=>3, angle=>36.869897645844021297),
-       (x=>4, y=>5, angle=>51.340191745909909396),
-       (x=>5, y=>1, angle=>11.309932474020213086),
-       (x=>5, y=>2, angle=>21.801409486351811770),
-       (x=>5, y=>3, angle=>30.963756532073521417),
-       (x=>5, y=>4, angle=>38.659808254090090604),
-       (x=>5, y=>6, angle=>50.194428907734805993),
-       (x=>6, y=>1, angle=>9.4623222080256173906),
-       (x=>6, y=>5, angle=>39.805571092265194006));
+  line_angles : constant array (1 .. 25) of angle_table :=
+      ((x => 0, y => 1, angle => 90.0),
+       (x => 1, y => 0, angle =>  0.0),
+       (x => 1, y => 1, angle => 45.0),
+       (x => 1, y => 2, angle => 63.434948822922010648),
+       (x => 1, y => 3, angle => 71.565051177077989351),
+       (x => 1, y => 4, angle => 75.963756532073521417),
+       (x => 1, y => 5, angle => 78.690067525979786913),
+       (x => 1, y => 6, angle => 80.537677791974382609),
+       (x => 2, y => 1, angle => 26.565051177077989351),
+       (x => 2, y => 3, angle => 56.309932474020213086),
+       (x => 2, y => 5, angle => 68.198590513648188229),
+       (x => 3, y => 1, angle => 18.434948822922010648),
+       (x => 3, y => 2, angle => 33.690067525979786913),
+       (x => 3, y => 4, angle => 53.130102354155978703),
+       (x => 3, y => 5, angle => 59.036243467926478582),
+       (x => 4, y => 1, angle => 14.036243467926478588),
+       (x => 4, y => 3, angle => 36.869897645844021297),
+       (x => 4, y => 5, angle => 51.340191745909909396),
+       (x => 5, y => 1, angle => 11.309932474020213086),
+       (x => 5, y => 2, angle => 21.801409486351811770),
+       (x => 5, y => 3, angle => 30.963756532073521417),
+       (x => 5, y => 4, angle => 38.659808254090090604),
+       (x => 5, y => 6, angle => 50.194428907734805993),
+       (x => 6, y => 1, angle =>  9.4623222080256173906),
+       (x => 6, y => 5, angle => 39.805571092265194006));
 
-  arrow_angles: constant array (1 .. 13) of  angle_table:=(
-       (x=>0, y=>1, angle=>90.0),
-       (x=>1, y=>0, angle=>0.0),
-       (x=>1, y=>1, angle=>45.0),
-       (x=>1, y=>2, angle=>63.434948822922010648),
-       (x=>1, y=>3, angle=>71.565051177077989351),
-       (x=>1, y=>4, angle=>75.963756532073521417),
-       (x=>2, y=>1, angle=>26.565051177077989351),
-       (x=>2, y=>3, angle=>56.309932474020213086),
-       (x=>3, y=>1, angle=>18.434948822922010648),
-       (x=>3, y=>2, angle=>33.690067525979786913),
-       (x=>3, y=>4, angle=>53.130102354155978703),
-       (x=>4, y=>1, angle=>14.036243467926478588),
-       (x=>4, y=>3, angle=>36.869897645844021297));
+  arrow_angles : constant array (1 .. 13) of angle_table :=
+      ((x => 0, y => 1, angle => 90.0),
+       (x => 1, y => 0, angle =>  0.0),
+       (x => 1, y => 1, angle => 45.0),
+       (x => 1, y => 2, angle => 63.434948822922010648),
+       (x => 1, y => 3, angle => 71.565051177077989351),
+       (x => 1, y => 4, angle => 75.963756532073521417),
+       (x => 2, y => 1, angle => 26.565051177077989351),
+       (x => 2, y => 3, angle => 56.309932474020213086),
+       (x => 3, y => 1, angle => 18.434948822922010648),
+       (x => 3, y => 2, angle => 33.690067525979786913),
+       (x => 3, y => 4, angle => 53.130102354155978703),
+       (x => 4, y => 1, angle => 14.036243467926478588),
+       (x => 4, y => 3, angle => 36.869897645844021297));
 
-  procedure Get_slope(df: Point; sl: out LaTeX_slope; vector: Boolean) is
+  procedure Get_slope (df : Point; sl : out LaTeX_slope; vector : Boolean) is
     --  JW,GH
-    d,d1,angle: Real;
-    s: Positive;
+    d, d1, angle : Real;
+    s : Positive;
   begin
-    if Almost_Zero(df.x) then
-      sl(h):= 0;
-      if df.y<0.0 then
-        sl(v):=-1;
+    if Almost_Zero (df.x) then
+      sl (h) := 0;
+      if df.y < 0.0 then
+        sl (v) := -1;
       else
-        sl(v):=1;
+        sl (v) :=  1;
       end if;
     else
-      s:= 1; -- Calm down Aonix OA 7.2.2 warning
-      angle:= Arctan(abs df.y /abs df.x ) * rad2deg;
-      d:= 180.0;
+      s := 1;  --  Calm down Aonix OA 7.2.2 warning
+      angle := Arctan (abs df.y / abs df.x) * rad2deg;
+      d := 180.0;
       if vector then   -- \vector
          for i in 1 .. 13 loop
-            d1:= abs(angle-arrow_angles(i).angle);
-            if  d1<d then
-              s:=i;
-              d:=d1;
+            d1 := abs (angle - arrow_angles (i).angle);
+            if d1 < d then
+              s := i;
+              d := d1;
             end if;
          end loop;
-         if df.x<0.0 then
-           sl(h):= -arrow_angles(s).x;
+         if df.x < 0.0 then
+           sl (h) := -arrow_angles (s).x;
          else
-           sl(h):=  arrow_angles(s).x;
+           sl (h) :=  arrow_angles (s).x;
          end if;
-         if df.y<0.0 then
-           sl(v):= -arrow_angles(s).y;
+         if df.y < 0.0 then
+           sl (v) := -arrow_angles (s).y;
          else
-           sl(v):=  arrow_angles(s).y;
+           sl (v) :=  arrow_angles (s).y;
          end if;
        else            -- \line
          for i in 1 .. 25 loop
-            d1:=abs(angle-line_angles(i).angle);
-            if d1<d then
-              s:=i;
-              d:=d1;
+            d1 := abs (angle - line_angles (i).angle);
+            if d1 < d then
+              s := i;
+              d := d1;
             end if;
          end loop;
-         if df.x<0.0 then
-           sl(h):= -line_angles(s).x;
+         if df.x < 0.0 then
+           sl (h) := -line_angles (s).x;
          else
-           sl(h):=  line_angles(s).x;
+           sl (h) :=  line_angles (s).x;
          end if;
-         if df.y<0.0 then
-           sl(v):= -line_angles(s).y;
+         if df.y < 0.0 then
+           sl (v) := -line_angles (s).y;
          else
-           sl(v):=  line_angles(s).y;
+           sl (v) :=  line_angles (s).y;
          end if;
       end if;
     end if;

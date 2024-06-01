@@ -1,14 +1,20 @@
 with Ada.Exceptions, Ada.Strings.Fixed, Ada.Text_IO;
 
-with TC.IO_Commands;                    use TC.IO_Commands;
+with TC.IO_Commands;
 
 package body TC.Input is
 
-  procedure Which_command(com: String; art: out Obj_art_type;
-                          options: Boolean; k: out Kom_type) is --  JW
-    start,ende: Kom_type;
+  use TC.IO_Commands;
+
+  procedure Which_command
+    (com     : in     String;
+     art     :    out Obj_art_type;
+     options : in     Boolean;
+     k       :    out Kom_type)
+  is  --  JW
+    start, ende : Kom_type;
   begin
-    art:= aux;
+    art := aux;
     if options then
       start := K_option'First;
       ende  := cputaux;
@@ -18,8 +24,8 @@ package body TC.Input is
     end if;
 
     for i in  start .. ende loop
-      if Img(i) = com then
-        art:= kommando_art(i);
+      if Img (i) = com then
+        art := kommando_art (i);
         k := i;
         exit;
       end if;
@@ -53,7 +59,7 @@ package body TC.Input is
     kommando            : Kom_type;
     TC_option,
     ziart               : Obj_art_type;
-    ls                  : Line_settings:= normal_line_settings;
+    ls                  : Line_Settings:= normal_line_settings;
     type mode_int is range 0..2;
     mode: mode_int;
     -- Fix 23-Apr-2003: End_of_File(tf) before the end of parsing (prefetch)
@@ -446,7 +452,7 @@ package body TC.Input is
     function Is_com_on return Boolean is
     begin return com(1..com_len)="\on"; end Is_com_on;
 
-    procedure Read_arrows_option( ls: in out Line_settings ) is
+    procedure Read_arrows_option( ls: in out Line_Settings ) is
       arrs: Small_String;
       arrl: Natural;
     begin
@@ -461,13 +467,13 @@ package body TC.Input is
       end if;
     end Read_arrows_option;
 
-    procedure Read_drawline_options( ls: in out Line_settings ) is
+    procedure Read_drawline_options( ls: in out Line_Settings ) is
     begin
       -- \drawline[stretch](x1,y1)(x2,y2)...(xn,yn)
       ls.stretch:= Integer(Read_real_arg('[',']', optional => True));
     end Read_drawline_options;
 
-    procedure Read_dashline_options( ls: in out Line_settings ) is
+    procedure Read_dashline_options( ls: in out Line_Settings ) is
     begin
       ls.pattern:= dash;
       -- \dashline[stretch]{dash-length}[inter-dot-gap for dash](x1,y1)(x2,y2)...(xn,yn)
@@ -476,7 +482,7 @@ package body TC.Input is
       ls.dash_dot_gap:=         Read_real_arg('[',']', optional => True);
     end Read_dashline_options;
 
-    procedure Read_dottedline_options( ls: in out Line_settings ) is
+    procedure Read_dottedline_options( ls: in out Line_Settings ) is
     begin
       ls.pattern:= dot;
       -- \dottedline[optional dotcharacter]{dotgap in units}(x1,y1)(x2,y2)...(xn,yn)
