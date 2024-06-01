@@ -11,7 +11,10 @@
 --  See "texcad_gwin.gpr" for the other, "flat", variant.
 
 --  *** External projects ***
---  * 
+--  *
+--  *   If you use Alire, everything is done for you, ignore the following comments!
+--  *
+--  *   --- 
 --  *   You need to make the following projects files visible to this project,
 --  *   for instance through the ADA_PROJECT_PATH environment variable:
 --  *   
@@ -21,12 +24,23 @@
 --  *       Mirror URL: https://github.com/zertovitch/gwindows
 --  *       NB: The Unicode (default) mode of GWindows is needed; in doubt, run [gnavi]\gwindows\unicode.cmd
 --  * 
+--  *   * MathPaqs:
+--  *       [mathpaqs]\
+--  *       Home page:       http://mathpaqs.sf.net/
+--  *       Project page 1:  http://sf.net/projects/mathpaqs/
+--  *       Project page 2:  https://github.com/zertovitch/mathpaqs
+--  * 
 --  *  Example: ADA_PROJECT_PATH=
---  *  =======    C:\Ada\gnavi\gwindows
+--  *  =======    C:\Ada\gnavi\gwindows;
+--  *             C:\Ada\mpq
+
+with "MathPaqs";  --  For the Formulas packages
 
 project TeXCAD_GW_Project_Tree extends "GWindows_Contrib" is
 
-   for Source_Dirs use ("..\", ".");
+   for Source_Dirs use
+      ("..\",        --  TeXCAD core
+       ".");         --  TeXCAD for GWindows
    
    for Main use ("TeXCAD.adb");
    for Create_Missing_Dirs use "True";  --  Flips by default the "-p" switch
@@ -37,8 +51,8 @@ project TeXCAD_GW_Project_Tree extends "GWindows_Contrib" is
    type TeXCAD_Styles_Checks_Type is
       ("Off",
        "On",
-       "Extra"
-      );
+       "Extra");
+
    TeXCAD_Styles_Checks : TeXCAD_Styles_Checks_Type := external ("TeXCAD_Styles_Checks", "On");
 
    case TeXCAD_Build_Mode is

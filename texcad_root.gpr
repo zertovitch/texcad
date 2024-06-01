@@ -9,7 +9,10 @@
 --
 project TeXCAD_Root is
 
-   for Source_Dirs use (".");
+   for Source_Dirs use
+     (".",
+      "extras");  --  Sources that may belong to other open-source projects.
+
    for Exec_Dir use ".";
    for Main use ("test_tc_io.adb");
    type TeXCAD_Build_Mode_Type is ("Optimize", "Debug");

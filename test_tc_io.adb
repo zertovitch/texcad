@@ -1,12 +1,15 @@
-with TC.Input, TC.Output, TC.Tools;
+with TC.Input,
+     TC.Output,
+     TC.Tools;
 
-with Ada.Text_IO;                       use Ada.Text_IO;
-with Ada.Characters.Handling;           use Ada.Characters.Handling;
+with Ada.Characters.Handling,
+     Ada.Text_IO;
 
 procedure Test_TC_IO is
+  use Ada.Characters.Handling, Ada.Text_IO;
   use TC.RIO;
 
-  function Short(s: String) return String is
+  function Short (s : String) return String is
     f: Integer:= s'First;
   begin
     for i in s'Range loop
@@ -17,11 +20,11 @@ procedure Test_TC_IO is
     return s(f..s'Last);
   end Short;
 
-  procedure Text_compare(n1,n2: String) is
-    f1,f2: File_Type;
-    s1,s2,os1,os2: String(1..1000);
-    l1,l2,ol1,ol2: Natural;
-    r1,r2: Positive;
+  procedure Text_compare (n1, n2 : String) is
+    f1,f2 : File_Type;
+    s1,s2,os1,os2 : String (1..1000);
+    l1,l2,ol1,ol2 : Natural;
+    r1,r2 : Positive;
   begin
     Open(f1,In_File,n1);
     Open(f2,In_File,n2);
@@ -66,7 +69,7 @@ procedure Test_TC_IO is
     Close(f1);
   end Text_compare;
 
-  procedure Test_clean ( name: String ) is
+  procedure Test_clean (name : String) is
     use TC.Tools;
     pic: TC.Picture;
     stat: Detection_stat;
@@ -84,7 +87,7 @@ procedure Test_TC_IO is
     end loop;
   end Test_clean;
 
-  procedure Test_one( name: String; across_sty: Boolean ) is
+  procedure Test_one (name : String; across_sty : Boolean) is
     pic: TC.Picture;
 
     Sty_set_combs: constant:= 2**TC.Supposing_sty_set'Length;
@@ -100,8 +103,8 @@ procedure Test_TC_IO is
     end Comb_number_to_set;
 
   begin
-    TC.Input.Load( pic, False, name & ".tcp");
-    Put(Short(name) & " ok/");
+    TC.Input.Load (pic, False, name & ".tcp");
+    Put (Short(name) & " ok/");
     if across_sty then
       Comb_number_to_set(0, pic.opt.sty);
       Put("Save]");
@@ -144,77 +147,77 @@ procedure Test_TC_IO is
     Put_Line("[Last comparison done]");
   end Test_one;
 
-  procedure Test( name1: String; across_sty: Boolean:= False ) is
+  procedure Test (name1: String; across_sty: Boolean:= False) is
     name: constant String:= "./Test_IO/" & name1;
   begin
     Put(" [Load... ");
-    Test_one(name, across_sty);
-    Test_clean(name);
+    Test_one (name, across_sty);
+    Test_clean (name);
   exception
     when Name_Error =>
-      Test_one(To_Lower(name), across_sty);
+      Test_one (To_Lower(name), across_sty);
   end Test;
 
   use TC.Units;
 
 begin
   for u2 in TC.Units.Unit'First .. TC.Units.sp loop
-    Ada.Text_IO.Put("      " & TC.Units.Unit'Image(u2));
+    Ada.Text_IO.Put ("      " & TC.Units.Unit'Image(u2));
   end loop;
   Ada.Text_IO.New_Line;
   for u1 in TC.Units.Unit'First .. TC.Units.sp loop
     Ada.Text_IO.Put(TC.Units.Unit'Image(u1));
     for u2 in TC.Units.Unit'First .. TC.Units.sp loop
       if u2 = TC.Units.sp then
-        TC.RIO.Put(Convert(1.0,u1,u2),9,0,0);
+        TC.RIO.Put (Convert(1.0,u1,u2),9,0,0);
       else
         if u1 = sp then
-          TC.RIO.Put(Convert(1.0,u1,u2),3,1,2);
+          TC.RIO.Put (Convert(1.0,u1,u2),3,1,2);
         else
-          TC.RIO.Put(Convert(1.0,u1,u2),3,4,0);
+          TC.RIO.Put (Convert(1.0,u1,u2),3,4,0);
         end if;
       end if;
     end loop;
     Ada.Text_IO.New_Line;
   end loop;
 
-  Put( TC.Units.Convert("123pt", TC.Units.pt),4,4,0 );
+  Put ( TC.Units.Convert("123pt", TC.Units.pt),4,4,0 );
   New_Line;
-  Put( TC.Units.Convert("456.0pt", TC.Units.pt),4,4,0 );
+  Put ( TC.Units.Convert("456.0pt", TC.Units.pt),4,4,0 );
   New_Line;
-  Put( TC.Units.Convert("1.0 in", TC.Units.cm),4,4,0 );
+  Put ( TC.Units.Convert("1.0 in", TC.Units.cm),4,4,0 );
   New_Line;
 
-  Test("LineThrs");
-  Test("Glocke2");
-  Test("CAGlob");
-  Test("ModuFT", True);
-  Test("Cellule");
-  Test("PlugFlow", True);
-  Test("O2R");
-  Test("OmegaK");
-  Test("IntrCara");
-  Test("Smodele");
-  Test("Burgchoc");
-  Test("Burgrare");
-  Test("Burgsinu");
-  Test("Tutti");
-  Test("Bezoff");
-  for i in 1..5 loop
+  Test ("LineThrs");
+  Test ("Glocke2");
+  Test ("CAGlob");
+  Test ("ModuFT", True);
+  Test ("Cellule");
+  Test ("PlugFlow", True);
+  Test ("O2R");
+  Test ("OmegaK");
+  Test ("IntrCara");
+  Test ("Smodele");
+  Test ("Burgchoc");
+  Test ("Burgrare");
+  Test ("Burgsinu");
+  Test ("Tutti");
+  Test ("Bezoff");
+  for i in 1 .. 5 loop
     declare
       n: constant String:= Integer'Image(1000+i);
     begin
-      Test("burg" & n(5), True);
+      Test("burg" & n (5), True);
     end;
   end loop;
   for i in 1..8 loop
     declare
       n: constant String:= Integer'Image(1000+i);
     begin
-      Test("petri" & n(4..5), True);
+      Test("petri" & n (4..5), True);
     end;
   end loop;
-  for i in 1..42 loop
+  for i in 1 .. 42 loop
     declare
       n: constant String:= Integer'Image(1000+i);
     begin
