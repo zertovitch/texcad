@@ -230,7 +230,7 @@ package body TC.Output is
       Put_Line (tf, "%\end");
     end End_of_emulation;
 
-    procedure Write_line_any_slope
+    procedure Write_Line_any_Slope
       (M       : in out Point;
        PP      :        Point;
        stretch :        Integer)
@@ -306,9 +306,9 @@ package body TC.Output is
         end if;
       end if;
       M := PP;
-    end Write_line_any_slope;
+    end Write_Line_any_Slope;
 
-    procedure Write_reduced_any_lines
+    procedure Write_reduced_any_Lines
       (M, Q : in out Point; PP : Point; no_start : Boolean)
     is
       --  JW, GM
@@ -317,7 +317,7 @@ package body TC.Output is
     begin
       if no_start then
         if not pic.opt.reduce then
-          Write_line_any_slope (M, Q, 0);
+          Write_Line_any_Slope (M, Q, 0);
         elsif
           abs (PP.x - M.x) > 0.01  and  abs (PP.y - M.y) > 0.01 and
           --  Bug found thanks to GNAT's validity checks (-gnatV*):
@@ -327,21 +327,21 @@ package body TC.Output is
           rl_s2 := (PP.y - Q.y) / (PP.x - Q.x);
           df := abs (rl_s1 - rl_s2);
           if df > pic.opt.stdiff then
-            Write_line_any_slope (M, Q, 0);
+            Write_Line_any_Slope (M, Q, 0);
           end if;
         end if;
       end if;
       Q := PP;
-    end Write_reduced_any_lines;
+    end Write_reduced_any_Lines;
 
-    procedure Write_emulated_bezier (o : Obj_type) is
+    procedure Write_emulated_Bezier (o : Obj_type) is
       --  JW , GM
       M, Q : Point;
       no_start : Boolean := False;
 
       procedure PlotPoint (P : Point) is
       begin
-        Write_reduced_any_lines (M, Q, P, no_start);
+        Write_reduced_any_Lines (M, Q, P, no_start);
         no_start := True;
       end PlotPoint;
 
@@ -353,10 +353,10 @@ package body TC.Output is
       --  ^ Unused at start, just calms down
       --    validity check (-gnatVa) + pragma Initialize_Scalars
       Draw_Bezier (o, pic.ul_in_pt);
-      Write_line_any_slope (M, o.PE, 0);
-    end Write_emulated_bezier;
+      Write_Line_any_Slope (M, o.PE, 0);
+    end Write_emulated_Bezier;
 
-    procedure Write_emulated_paramcurve2d (o : Obj_type) is
+    procedure Write_emulated_Paramcurve2d (o : Obj_type) is
       M, Q, PE : Point;
       no_start, restart : Boolean := False;
 
@@ -366,7 +366,7 @@ package body TC.Output is
           M := P;
           restart := False;
         else
-          Write_reduced_any_lines (M, Q, P, no_start);
+          Write_reduced_any_Lines (M, Q, P, no_start);
           no_start := True;
         end if;
       end PlotPoint;
@@ -384,10 +384,10 @@ package body TC.Output is
       Q := (0.0, 0.0);
       Draw_Paramcurve (o, pic.ul_in_pt);
       PE := Evaluate_param_curve_2D (o, o.data_2d.max_t);
-      Write_line_any_slope (M, PE, 0);
-    end Write_emulated_paramcurve2d;
+      Write_Line_any_Slope (M, PE, 0);
+    end Write_emulated_Paramcurve2d;
 
-    procedure Write_kreis (o : Obj_type; Pmin : Point) is
+    procedure Write_Kreis (o : Obj_type) is
 
       use Ada.Numerics;
 
@@ -408,10 +408,10 @@ package body TC.Output is
         M := C + (o.rad, 0.0);
         while t < pid loop
           PP := o.rad * (Cos (t), Sin (t)) + o.P1;
-          Write_reduced_any_lines (M, Q, PP, not Almost_Zero (t));
+          Write_reduced_any_Lines (M, Q, PP, not Almost_Zero (t));
           t := t + dt;
         end loop;
-        Write_line_any_slope (M, o.P1 - Pmin + (o.rad, 0.0), 0);
+        Write_Line_any_Slope (M, o.P1 - Pmin + (o.rad, 0.0), 0);
         if as_command then
           End_of_emulation;
         end if;
@@ -507,9 +507,9 @@ package body TC.Output is
       else
         Write_circle_with_lines (o.P1 - Pmin, as_command => True);
       end if;
-    end Write_kreis;
+    end Write_Kreis;
 
-    function Arrows_option_image (ls : Line_Settings) return String is
+    function Arrows_Option_Image (ls : Line_Settings) return String is
     begin
       case ls.arrows is
         when no_arrow => return "";         -- never happens
@@ -517,10 +517,10 @@ package body TC.Output is
         when both     => return "[both]";
         when middle   => return "[middle]";
       end case;
-    end Arrows_option_image;
+    end Arrows_Option_Image;
 
     --  24-Apr-2003
-    procedure Write_bezier_command (o : Obj_type; force_no_vec : Boolean := False) is
+    procedure Write_Bezier_Command (o : Obj_type; force_no_vec : Boolean := False) is
       bez_choice : constant array (Boolean, Boolean) of Kom_type :=
         (True =>   (True => cqbezvec, False => cqbezier1),
          False => (True => cbezvec,  False => cbezier1));
@@ -533,12 +533,12 @@ package body TC.Output is
         --  NB: different syntaxes: \bezier: {n}, \qbezier: [n]
       end if;
       if vec then
-        Put (tf, Arrows_option_image (o.ls));
+        Put (tf, Arrows_Option_Image (o.ls));
       end if;
       Put_Line (tf, Pt (o.P1 - Pmin) & Pt (o.PC - Pmin) & Pt (o.PE - Pmin));
-    end Write_bezier_command;
+    end Write_Bezier_Command;
 
-    procedure Write_arrow (P : Point; s : LaTeX_slope) is
+    procedure Write_Arrow (P : Point; s : LaTeX_slope) is
       minipt : constant := 0.2;
       al : Real;  --  4-Jun-2003: minimal length to obtain an arrow, was {0.2}
     begin
@@ -548,37 +548,37 @@ package body TC.Output is
         al := minipt;
       end if;
       Put (tf, Img_track (cput) & Pt (P) & "{\vector" & Pt (s (h), s (v)) & Br (al) & '}');
-    end Write_arrow;
+    end Write_Arrow;
 
-    procedure Write_bezier (o : Obj_type) is  --  24-Feb-2004
+    procedure Write_Bezier (o : Obj_type) is  --  24-Feb-2004
     begin
       if o.ls.arrows = no_arrow then  --  \bezier or %\bezier
         if pic.opt.sty (bezier) then
-          Write_bezier_command (o);
+          Write_Bezier_Command (o);
         else
           Put (tf, '%');
-          Write_bezier_command (o);
-          Write_emulated_bezier (o);
+          Write_Bezier_Command (o);
+          Write_emulated_Bezier (o);
           End_of_emulation;
         end if;
       else                           --  %\bezvec or %\qbezvec
-        Write_bezier_command (o);
+        Write_Bezier_Command (o);
         case With_arrows (o.ls.arrows) is  --  no_arrow treated above
-          when head     => Write_arrow (o.PE - Pmin, o.bez_slope (1));
-          when both     => Write_arrow (o.PE - Pmin, o.bez_slope (1));
-                           Write_arrow (o.P1 - Pmin, o.bez_slope (2));
-          when middle   => Write_arrow (o.Pmiddle - Pmin, o.bez_slope (1));
+          when head     => Write_Arrow (o.PE - Pmin, o.bez_slope (1));
+          when both     => Write_Arrow (o.PE - Pmin, o.bez_slope (1));
+                           Write_Arrow (o.P1 - Pmin, o.bez_slope (2));
+          when middle   => Write_Arrow (o.Pmiddle - Pmin, o.bez_slope (1));
         end case;
         if pic.opt.sty (bezier) then
-          Write_bezier_command (o, force_no_vec => True);
+          Write_Bezier_Command (o, force_no_vec => True);
         else
-          Write_emulated_bezier (o);
+          Write_emulated_Bezier (o);
         end if;
         End_of_emulation;
       end if;
-    end Write_bezier;
+    end Write_Bezier;
 
-    procedure Write_paramcurve2d (o : Obj_type) is
+    procedure Write_Paramcurve2d (o : Obj_type) is
       long : constant Boolean := Length (o.data_2d.form_x) + Length (o.data_2d.form_y) > 40;
       procedure Spacing is
       begin
@@ -599,43 +599,43 @@ package body TC.Output is
       Put (tf, To_String (o.data_2d.form_y) & ", ");
       Spacing;
       Put_Line (tf, R (o.data_2d.min_t) & ", " & R (o.data_2d.max_t) & ')');
-      Write_emulated_paramcurve2d (o);
+      Write_emulated_Paramcurve2d (o);
       End_of_emulation;
-    end Write_paramcurve2d;
+    end Write_Paramcurve2d;
 
-    procedure Write_vector_arrows (P1, P2 : Point; arrows : Line_arrows) is
+    procedure Write_Vector_Arrows (P1, P2 : Point; arrows : Line_arrows) is
       s : LaTeX_slope;
     begin
       Get_slope (P2 - P1, s, True);
       case With_arrows (arrows) is
-        when head   => Write_arrow (P2, s);
-        when both   => Write_arrow (P2, s);
-                       Write_arrow (P1, (-s (h), -s (v)));
-        when middle => Write_arrow (0.5 * (P1 + P2), s);
+        when head   => Write_Arrow (P2, s);
+        when both   => Write_Arrow (P2, s);
+                       Write_Arrow (P1, (-s (h), -s (v)));
+        when middle => Write_Arrow (0.5 * (P1 + P2), s);
       end case;
-    end Write_vector_arrows;
+    end Write_Vector_Arrows;
 
-    procedure Write_plain_line_any_slope (o : Obj_type) is
-      s1, s2 : Point;
+    procedure Write_Plain_Line_any_Slope (o : Obj_type) is
+      pls1, pls2 : Point;
       needs_emulation : constant Boolean :=
         not (pic.opt.sty (emlines) or pic.opt.sty (epic));
     begin
-      s1 := o.P1 - Pmin;
-      s2 := o.P2 - Pmin;
+      pls1 := o.P1 - Pmin;
+      pls2 := o.P2 - Pmin;
       case o.ls.arrows is
         when no_arrow =>
           if needs_emulation then
             --  line, but no emlines.sty or epic.sty
-            Put_Line (tf, Img_track (cemline2) & Pt (s1) & Pt (s2));
+            Put_Line (tf, Img_track (cemline2) & Pt (pls1) & Pt (pls2));
           end if;
         when With_arrows =>
           Put_Line (tf,
              Img_track (cvector2) &          --  %\vector
-             Arrows_option_image (o.ls) &    --  [m]
-             Pt (s1) & Pt (s2));             --  (0,0)(10,10)
-          Write_vector_arrows (s1, s2, o.ls.arrows);
+             Arrows_Option_Image (o.ls) &    --  [m]
+             Pt (pls1) & Pt (pls2));         --  (0,0)(10,10)
+          Write_Vector_Arrows (pls1, pls2, o.ls.arrows);
       end case;
-      Write_line_any_slope (s1, s2, o.ls.stretch);
+      Write_Line_any_Slope (pls1, pls2, o.ls.stretch);
       --  ^ emline, epic or emulation
       case o.ls.arrows is
         when no_arrow =>
@@ -645,16 +645,16 @@ package body TC.Output is
         when With_arrows =>
           End_of_emulation;
       end case;
-    end Write_plain_line_any_slope;
+    end Write_Plain_Line_any_Slope;
 
-    procedure Write_dotted_line
-      (E1, E2    : Point;
-       gap       : Real;
-       sym       : String;
-       epic      : Boolean;
-       put_cmd   : Boolean;
-       thick     : Boolean;
-       can_chain : Boolean)
+    procedure Write_Dotted_Line
+      (E1, E2        : Point;
+       gap           : Real;
+       sym           : String;
+       as_epic_line  : Boolean;
+       put_cmd       : Boolean;
+       as_thick_line : Boolean;
+       can_chain     : Boolean)
     is
       E1p : Point;
       D_lta : constant Point := E2 - E1;
@@ -672,7 +672,7 @@ package body TC.Output is
         Put_Line (tf, Pt (E1) & Pt (E2));
       end Put_options_and_parameters;
     begin
-      if epic then
+      if as_epic_line then
         if put_cmd then
           if can_chain
             and then last_command.k = cdottedline1
@@ -705,7 +705,7 @@ package body TC.Output is
            "\multiput" & Pt (E1p) & Pt (cgap * D_lta, prec) & Br (np + 1) & '{');
         if sym = "" then
           w := pic.lw_in_pt;
-          if thick then
+          if as_thick_line then
             w := w * 2.0;
           end if;
           Put (tf, "{\rule{" & R (w, prec) & "pt}{" & R (w, prec) & "pt}}");
@@ -714,21 +714,21 @@ package body TC.Output is
         end if;
         Put_Line (tf, "}");
       end if;
-    end Write_dotted_line;
+    end Write_Dotted_Line;
 
     --  23-Feb-2004: %\dottedbox
-    procedure Write_dotted_box (o : Obj_type) is
+    procedure Write_Dotted_Box (o : Obj_type) is
       C1, C2 : Point;  --  corners
       gap : constant Real := o.ls.dot_gap;
       sym : constant String := To_String (o.ls.dot_symbol);
       procedure Spit (E1, E2 : Point) is
       begin
-        Write_dotted_line
+        Write_Dotted_Line
           (E1, E2, gap, sym,
-           epic      => pic.opt.sty (epic),
-           put_cmd   => True,
-           thick     => o.ls.thickness = thick,
-           can_chain => True);
+           as_epic_line => pic.opt.sty (epic),
+           put_cmd      => True,
+           as_thick_line        => o.ls.thickness = thick,
+           can_chain    => True);
       end Spit;
     begin
       C1 := o.P1 - Pmin;
@@ -760,13 +760,13 @@ package body TC.Output is
       Spit ((C1.x, C2.y),  C2);           --  hor
       Spit  (C2,          (C2.x, C1.y));  --  ver
       End_of_emulation;
-    end Write_dotted_box;
+    end Write_Dotted_Box;
 
-    procedure Write_dash_line
+    procedure Write_Dash_Line
       (E1, E2               : Point;
        stretch              : Integer;
-       length, gap          : Real;
-       epic                 : Boolean;
+       line_length, gap     : Real;
+       as_epic_line         : Boolean;
        put_cmd              : Boolean;
        can_chain            : Boolean)
     is
@@ -781,8 +781,8 @@ package body TC.Output is
         if stretch /= 0 then
           Put (tf, '[' & I (stretch) & ']');
         end if;
-        if not Almost_Zero (length) then
-          Put (tf, Br (length));
+        if not Almost_Zero (line_length) then
+          Put (tf, Br (line_length));
         end if;
         if not Almost_Zero (gap) then
           Put (tf, Br (gap));
@@ -790,13 +790,13 @@ package body TC.Output is
         Put_Line (tf, Pt (E1) & Pt (E2));
       end Put_options_and_parameters;
     begin
-      if epic then
+      if as_epic_line then
         if put_cmd then
           if can_chain
             and then last_command.k = cdashline1
             and then Almost_Zero (Norm2 (E1 - last_command.P))
             and then Almost_Zero (last_command.gap - gap)
-            and then Almost_Zero (last_command.length - length)
+            and then Almost_Zero (last_command.length - line_length)
           then  --  can chain, then just output end point
             Pack_Line;
             Put_Line (tf, Pt (E2));
@@ -806,7 +806,7 @@ package body TC.Output is
             Put_options_and_parameters;
             last_command.P := E2;
             last_command.gap := gap;
-            last_command.length := length;
+            last_command.length := line_length;
           end if;
         else
           --  No command, but options and parameters are to
@@ -815,7 +815,7 @@ package body TC.Output is
         end if;
       else  --  emulation of epic.sty
         --  !! emulate gap, stretch !!
-        ns := TC.epic_calc.Num_segments (D, length);
+        ns := TC.epic_calc.Num_segments (D, line_length);
         --  prec:= precision + 1 + Integer'Max(0, Integer(log(Real(ns),10.0)));
         E1p := E1 - pic.lw_in_pt / pic.ul_in_pt * (0.5, 0.5);
         D := 1.0 / Real (ns) * D;
@@ -823,43 +823,45 @@ package body TC.Output is
         for i in 1 .. ns loop
           Pb := E1p + Real (i) * D;
           if i mod 2 = 1 then
-            Write_line_any_slope (Pa, Pb, 0);
+            Write_Line_any_Slope (Pa, Pb, 0);
             --  ^ emline or emulation
           end if;
           Pa := Pb;
         end loop;
       end if;
-    end Write_dash_line;
+    end Write_Dash_Line;
 
     --  20-Jan-2004: epic's \dottedline, 24-Feb-2004: epic's \dashline
 
-    procedure Write_dot_dash_line_command (o : Obj_type) is
-      procedure Spit (epic, put_cmd, can_chain : Boolean) is
+    procedure Write_Dot_Dash_Line_Command (o : Obj_type) is
+
+      procedure Spit (as_epic_line, put_cmd, can_chain : Boolean) is
       begin
         case o.ls.pattern is
           when plain => null;  --  not here
           when dot =>
-            Write_dotted_line
+            Write_Dotted_Line
               (o.P1 - Pmin,
                o.P2 - Pmin,
                o.ls.dot_gap,
                To_String (o.ls.dot_symbol),
-               epic      => epic,
-               put_cmd   => put_cmd,
-               thick     => o.ls.thickness = thick,
-               can_chain => can_chain);
+               as_epic_line  => as_epic_line,
+               put_cmd       => put_cmd,
+               as_thick_line => o.ls.thickness = thick,
+               can_chain     => can_chain);
           when dash =>
-            Write_dash_line
+            Write_Dash_Line
               (o.P1 - Pmin,
                o.P2 - Pmin,
                o.ls.stretch,
                o.ls.dash_length,
                o.ls.dash_dot_gap,
-               epic      => epic,
+               as_epic_line      => as_epic_line,
                put_cmd   => put_cmd,
                can_chain => can_chain);
         end case;
       end Spit;
+
       emul_epic : constant Boolean := not pic.opt.sty (epic);
     begin
       case o.ls.arrows is
@@ -868,30 +870,30 @@ package body TC.Output is
             Put (tf, '%');
           end if;
           --  Spit the epic command, even as comment:
-          Spit (epic => True, put_cmd => True, can_chain => not emul_epic);
+          Spit (as_epic_line => True, put_cmd => True, can_chain => not emul_epic);
           if emul_epic then
-            Spit (epic => False, put_cmd => False, can_chain => False);
+            Spit (as_epic_line => False, put_cmd => False, can_chain => False);
             --  put_cmd, can_chain are bogus there.
             End_of_emulation;
           end if;
         when others   =>
           --  all other syntaxes are %\vector{dot}... %\end
-          Put (tf, Img_track (cvector2) & Arrows_option_image (o.ls));
+          Put (tf, Img_track (cvector2) & Arrows_Option_Image (o.ls));
           case o.ls.pattern is
             when plain => null;  --  not here
             when dot   => Put (tf, "{dot}");
             when dash  => Put (tf, "{dash}");
           end case;
-          Spit (epic => True, put_cmd => False, can_chain => False);
+          Spit (as_epic_line => True, put_cmd => False, can_chain => False);
           --  epic's options, points, no command
-          Write_vector_arrows (o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
-          Spit (epic => pic.opt.sty (epic), put_cmd => True, can_chain => False);
+          Write_Vector_Arrows (o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
+          Spit (as_epic_line => pic.opt.sty (epic), put_cmd => True, can_chain => False);
           --  Spit the epic command for segment, as epic or emulated.
           --  We don't chain: the eol forgetting puts an eventual point
           --  at the end of the abov TeX comment!
           End_of_emulation;
       end case;
-    end Write_dot_dash_line_command;
+    end Write_Dot_Dash_Line_Command;
 
     procedure Write_LaTeX_put_figure (o : Obj_type) is
       o_len : Real;
@@ -901,7 +903,7 @@ package body TC.Output is
     begin
       if special_arrows_limited_slope then
         --  %\vector command around!
-        Put_Line (tf, Img_track (cvector2) & Arrows_option_image (o.ls) & "{\line}");
+        Put_Line (tf, Img_track (cvector2) & Arrows_Option_Image (o.ls) & "{\line}");
       end if;
       --  The \put command:
       Put (tf, Img_track (cput) & Pt (o.P1 - Pmin) & '{');
@@ -951,7 +953,7 @@ package body TC.Output is
               Put (tf, "}");
               --  TC "%\" command already added, then th \put command.
               --  Now emulation of arrows
-              Write_vector_arrows (o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
+              Write_Vector_Arrows (o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
               New_Line (tf);
               End_of_emulation;
             when others   => null;
@@ -1148,18 +1150,18 @@ package body TC.Output is
 
         if o.art = line and then o.any_slope then
           case o.ls.pattern is
-            when plain       => Write_plain_line_any_slope (o.all);
-            when dot | dash  => Write_dot_dash_line_command (o.all);
+            when plain       => Write_Plain_Line_any_Slope (o.all);
+            when dot | dash  => Write_Dot_Dash_Line_Command (o.all);
           end case;
-        else  -- Something else (not an em-line/vector)
+        else  --  Something else (not an em-line/vector)
           case o.art is
-            when bezier       => Write_bezier (o.all);
-            when paramcurve2d => Write_paramcurve2d (o.all);
-            when circ | disc  => Write_kreis (o.all, Pmin);
+            when bezier       => Write_Bezier (o.all);
+            when paramcurve2d => Write_Paramcurve2d (o.all);
+            when circ | disc  => Write_Kreis (o.all);
             when aux          => Put (tf, To_String (o.inhalt));
             when others =>
               if o.art = box and o.ls.pattern = dot then
-                Write_dotted_box (o.all);
+                Write_Dotted_Box (o.all);
               else
                 Write_LaTeX_put_figure (o.all);  --  e.g. \put{\dashbox...}
               end if;

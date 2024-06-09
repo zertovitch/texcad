@@ -46,26 +46,26 @@ package body TC.Input is
     subtype Big_String is String (1 .. 4090);
 
     --  JW, GH
-    tf : Ada.Text_IO.File_Type;
-    line_buf, com, arg   : Big_String;
-    dum_str              : Small_String;
+    tf                    : Ada.Text_IO.File_Type;
+    line_buf, com, arg    : Big_String;
+    dum_str               : Small_String;
     line_n, line_len,
     com_len, arg_len,
-    p, q, dumi           : Natural := 0;
-    ch                   : Character;
-    stop                 : Boolean;  -- succ
-    end_of_parsing       : Boolean := False;
-    Pdum                 : Point;
-    cur_obj, o, obj_ptr2 : ptr_Obj_type;
-    kommando             : Kom_type;
+    p, q, dumi            : Natural := 0;
+    ch                    : Character;
+    stop                  : Boolean;  -- succ
+    end_of_parsing        : Boolean := False;
+    Pdum                  : Point;
+    cur_obj, o, obj_ptr2  : ptr_Obj_type;
+    kommando              : Kom_type;
     TC_option,
-    ziart                : Obj_art_type;
-    ls                   : Line_Settings := normal_line_settings;
+    ziart                 : Obj_art_type;
+    current_line_settings : Line_Settings := normal_line_settings;
     type mode_int is range 0 .. 2;
     mode : mode_int;
     --  Fix 23-Apr-2003: End_of_File(tf) before the end of parsing (prefetch)
 
-    use TC.Units, Ada.Strings, Ada.Strings.Fixed, Ada.Text_IO;
+    use TC.Units, Ada.Strings, Ada.Strings.Fixed;
 
     procedure Error (msg_0 : String) is  --  JW, GH
       h : constant String := Integer'Image (line_n);
@@ -80,14 +80,15 @@ package body TC.Input is
         raise Load_error with msg & content;
       end Raise_it;
     begin
-      Close (tf);
+      Ada.Text_IO.Close (tf);
       case mode is
         when 0 | 2 => Raise_it (line_buf (1 .. line_len));
         when 1 =>     Raise_it (arg (1 .. arg_len));
       end case;
     end Error;
 
-    procedure Read_line is --  GH
+    procedure Read_line is  --  GH
+      use Ada.Text_IO;
     begin
       loop
         if End_Of_File (tf) then
@@ -281,8 +282,8 @@ package body TC.Input is
                         len      : out Natural;
                         optional :     Boolean)
     is
-      --  JW,GH
-      count : Integer;
+      --  JW, GH
+      nesting_count : Integer;
       a2 : String (arg_1'Range);
       l2 : Natural;
     begin
@@ -297,21 +298,21 @@ package body TC.Input is
       end if;
       Seek_ch (op);
       l2 := 0;
-      count := 1;
+      nesting_count := 1;
       loop
         if ch = op then
-          count := count + 1;
+          nesting_count := nesting_count + 1;
         elsif ch = cl then
-          count := count - 1;
+          nesting_count := nesting_count - 1;
         end if;
-        if count > 0 then
+        if nesting_count > 0 then
           l2 := l2 + 1;
           a2 (l2) := ch;
         end if;
         Read_ch;
-        exit when count = 0 or ch = Character'Val (255) or end_of_parsing;
+        exit when nesting_count = 0 or ch = Character'Val (255) or end_of_parsing;
       end loop;
-      if count /= 0 then
+      if nesting_count /= 0 then
         Error (''' & cl & "' expected");
       end if;
       arg_1 (arg_1'First .. l2) := a2 (1 .. l2);
@@ -588,7 +589,7 @@ package body TC.Input is
     procedure Read_new_object is
     begin
       o := new Obj_type (ziart);
-      o.ls := ls;
+      o.ls := current_line_settings;
       case  kommando  is
         when cemline1 =>
           o.any_slope := True;
@@ -863,9 +864,9 @@ package body TC.Input is
       end if;
     end Read_new_object;
 
-  begin --  load
+  begin  --  load
     mode := 0;
-    Open (tf, In_File, file_name);
+    Ada.Text_IO.Open (tf, Ada.Text_IO.In_File, file_name);
 
     if macro then
       cur_obj := pic.root;
@@ -904,9 +905,9 @@ package body TC.Input is
         elsif kommando = caux and com (1 .. com_len) /= "\begin" then
           --  Sometimes \thinlines, \thicklines appear before \begin!
           if com (1 .. com_len) = "\thinlines" then
-            ls.thickness := thin;
+            current_line_settings.thickness := thin;
           elsif com (1 .. com_len) = "\thicklines" then
-            ls.thickness := thick;
+            current_line_settings.thickness := thick;
           else
             Read_line;
             Read_ch;
@@ -978,8 +979,8 @@ package body TC.Input is
       Which_command (com (1 .. com_len), ziart, False, kommando);
       if ziart = option then
         case K_context (kommando) is
-          when cthinlines  => ls.thickness := thin;
-          when cthicklines => ls.thickness := thick;
+          when cthinlines  => current_line_settings.thickness := thin;
+          when cthicklines => current_line_settings.thickness := thick;
         end case;
       else
         Read_new_object;
@@ -987,7 +988,7 @@ package body TC.Input is
       exit when stop;
     end loop;
 
-    Close (tf);
+    Ada.Text_IO.Close (tf);
     pic.saved := not macro;
     Refresh_size_dependent_parameters (pic, objects => True);
   end Load;
