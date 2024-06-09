@@ -36,7 +36,7 @@ package body TC.GWin.MDI_Picture_Child is
 
   use TC.REF;
   use TC.GWin.Lang;
-  use GWindows.Base, GWindows.Menus, GWindows.Message_Boxes, GWindows.Windows;
+  use GWindows, GWindows.Base, GWindows.Menus, GWindows.Message_Boxes, GWindows.Windows;
   use GWin_Util;
 
   --  Adjust the Draw control's position to those of the scroll controls.

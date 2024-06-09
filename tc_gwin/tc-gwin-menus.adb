@@ -12,8 +12,8 @@ package body TC.GWin.Menus is
                          Menu_Command : in Custom_cmd)
   is
     i    : constant Integer := ID_custom (Menu_Command);
-    s    : constant GString := Msg (msg_for_command (Menu_Command));
-    Keys : constant GString := Keyboard_Shortcut (Menu_Command);
+    s    : constant GWindows.GString := Msg (msg_for_command (Menu_Command));
+    Keys : constant GWindows.GString := Keyboard_Shortcut (Menu_Command);
   begin
     if Keys = "" then
       Append_Item (Menu, s, i);

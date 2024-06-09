@@ -65,10 +65,10 @@ package TC.GWin.MDI_Picture_Child is
       record
         --  Access to the main, containing window:
         MDI_Root     : MDI_Main.MDI_Main_Access;
-        File_Name    : GString_Unbounded;
-        Short_Name   : GString_Unbounded;
+        File_Name    : GWindows.GString_Unbounded;
+        Short_Name   : GWindows.GString_Unbounded;
         --  ^Window title = Short_Name & {""|" *"}
-        Macro_Name   : GString_Unbounded;  --  a macro to be loaded
+        Macro_Name   : GWindows.GString_Unbounded;  --  a macro to be loaded
         --  Scroll_Panel : GWindows.Scroll_Panels.Scroll_Panel_Type;
         Draw_Control : TC_Picture_Panel;
         File_Menu,

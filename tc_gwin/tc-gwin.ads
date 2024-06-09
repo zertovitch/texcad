@@ -20,20 +20,20 @@ package TC.GWin is
 
   pragma Elaborate_Body (TC.GWin);
 
-  use GWindows, GWindows.Colors;
+  use GWindows.Colors;
   use TC.Graphics;
   use Standard_IDs;
 
   --  String <-> GString conversions
-  function S2G (Value : String) return GString
+  function S2G (Value : String) return GWindows.GString
     renames GWindows.GStrings.To_GString_From_String;
-  function G2S (Value : GString) return String
+  function G2S (Value : GWindows.GString) return String
     renames GWindows.GStrings.To_String;
 
   --  Fixed String <-> Unbounded String conversions
-  function GU2G (Value : GString_Unbounded) return GString
+  function GU2G (Value : GWindows.GString_Unbounded) return GWindows.GString
     renames GWindows.GStrings.To_GString_From_Unbounded;
-  function G2GU (Value : GString) return GString_Unbounded
+  function G2GU (Value : GWindows.GString) return GWindows.GString_Unbounded
     renames GWindows.GStrings.To_GString_Unbounded;
 
   type Color_Set is array (Color_Zone) of Color_Type;
@@ -143,7 +143,7 @@ package TC.GWin is
        close      => ID_FILE_CLOSE,
        others     => no_std_id);
 
-  function Keyboard_Shortcut (c : Custom_cmd) return GString;
+  function Keyboard_Shortcut (c : Custom_cmd) return GWindows.GString;
 
   Windows_95 : Boolean;  --  Has a bug with hatch brush.
 

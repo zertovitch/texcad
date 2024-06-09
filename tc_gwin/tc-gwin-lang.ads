@@ -120,14 +120,14 @@ package TC.GWin.Lang is
   --  NB: String might become Wide_String
 
   --  Gives message m in language l
-  function Speak (l : Language; m : Message) return GString;
+  function Speak (l : Language; m : Message) return GWindows.GString;
   --  Gives message m in startup_language
-  function Msg (m : Message) return GString;
+  function Msg (m : Message) return GWindows.GString;
 
   --  Filter the '&'-s
-  function Filter_amp (s : GString) return GString;
+  function Filter_amp (s : GWindows.GString) return GWindows.GString;
 
-  function Language_rich_image (l : Language) return GString;
+  function Language_rich_image (l : Language) return GWindows.GString;
 
   msg_for_command : constant array (Custom_cmd) of Message :=
      (preview          => preview,

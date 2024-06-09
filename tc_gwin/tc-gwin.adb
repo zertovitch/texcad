@@ -4,7 +4,7 @@ pragma Elaborate (GWin_Util);  --  For: Get_Windows_Version
 
 package body TC.GWin is
 
-  function Keyboard_Shortcut (c : Custom_cmd) return GString is
+  function Keyboard_Shortcut (c : Custom_cmd) return GWindows.GString is
   begin
     case c is
       when save       => return "Ctrl+S";

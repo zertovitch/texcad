@@ -17,7 +17,7 @@ with Ada.Strings.Fixed;
 
 package body TC.GWin.Options_Dialogs is
 
-  use GWindows.Buttons, GWindows.Message_Boxes;
+  use GWindows, GWindows.Buttons, GWindows.Message_Boxes;
 
   type Color_Button is new GWindows.Buttons.Button_Type with record
     z : Color_Zone;

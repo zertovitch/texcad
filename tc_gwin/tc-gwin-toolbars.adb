@@ -10,7 +10,7 @@ with Interfaces.C;
 
 package body TC.GWin.Toolbars is
 
-  use Floating_Toolbars, GWin_Util, Interfaces.C, Lang;
+  use Floating_Toolbars, GWindows, GWin_Util, Interfaces.C, Lang;
 
   procedure Add_Button_with_Tip
     (Control     : in out Office_Applications.Classic_Main_Tool_Bar_Type'Class;

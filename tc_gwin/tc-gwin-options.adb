@@ -1,7 +1,7 @@
 with GWindows.Registry;
 
 package body TC.GWin.Options is
-  use GWindows.Registry;
+  use GWindows, GWindows.Registry;
 
   kname : constant GString := "Software\TeXCAD";
 

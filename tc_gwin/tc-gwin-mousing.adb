@@ -14,6 +14,8 @@ with Ada.Strings.Fixed;
 
 package body TC.GWin.Mousing is
 
+  use GWindows;
+
   procedure Show_coordinates (w : TC_Picture_Panel) is
     function FullCoord return GString is
       function Coord (x, y : Integer; P : Point) return GString is

@@ -67,12 +67,12 @@ package TC.GWin.MDI_Main is
                                  Can_Close :    out Boolean);
 
   procedure Update_Common_Menus (Window        : in out MDI_Main_Type;
-                                 top_mru_entry :        GString := "");
+                                 top_mru_entry :        GWindows.GString := "");
 
   procedure Update_Status_Bar
     (Window    : in out MDI_Main_Type;
      Part      :        MDI_Status_bar_part;
-     Content   :        GString := "");
+     Content   :        GWindows.GString := "");
 
   --  13-Aug-2004
   procedure Toolbar_enabling

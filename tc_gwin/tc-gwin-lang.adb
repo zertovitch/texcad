@@ -3,7 +3,7 @@ with TC.GWin.Lang.English,
 
 package body TC.GWin.Lang is
 
-  function Speak (l : Language; m : Message) return GString is
+  function Speak (l : Language; m : Message) return GWindows.GString is
     function Babel return Unbounded_String is
     begin
       case l is
@@ -17,13 +17,13 @@ package body TC.GWin.Lang is
       S2G (To_String (Babel));
   end Speak;
 
-  function Msg (m : Message) return GString is
+  function Msg (m : Message) return GWindows.GString is
   begin
     return Speak (startup_language, m);
   end Msg;
 
-  function Filter_amp (s : GString) return GString is
-    r : GString (1 .. s'Length);
+  function Filter_amp (s : GWindows.GString) return GWindows.GString is
+    r : GWindows.GString (1 .. s'Length);
     l : Natural := 0;
   begin
     for i in s'Range loop
@@ -35,7 +35,7 @@ package body TC.GWin.Lang is
     return r (1 .. l);
   end Filter_amp;
 
-  function Language_rich_image (l : Language) return GString is
+  function Language_rich_image (l : Language) return GWindows.GString is
   begin
     case l is
       when l_english => return "English";

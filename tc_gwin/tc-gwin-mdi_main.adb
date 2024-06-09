@@ -50,7 +50,7 @@ package body TC.GWin.MDI_Main is
   end Update_Common_Menus_Child;
 
   procedure Update_Common_Menus (Window        : in out MDI_Main_Type;
-                                 top_mru_entry :        GString := "")
+                                 top_mru_entry :        GWindows.GString := "")
   is
     use Office_Applications;
   begin
@@ -84,12 +84,12 @@ package body TC.GWin.MDI_Main is
 
   procedure Focus_an_open_window
     (Window    : MDI_Main_Type;
-     file_name : GString_Unbounded;
+     file_name : GWindows.GString_Unbounded;
      is_open   : out Boolean)
   is
     procedure Identify (Any_Window : GWindows.Base.Pointer_To_Base_Window_Class)
     is
-      use type GString_Unbounded;
+      use type GWindows.GString_Unbounded;
     begin
       if Any_Window.all in MDI_Picture_Child_Type'Class then
         declare
@@ -324,7 +324,8 @@ package body TC.GWin.MDI_Main is
       end if;
     end Suffix;
 
-    File_Title : constant GString := Lang.Msg (Lang.new_pic) & Suffix;
+    File_Title : constant GWindows.GString :=
+      Lang.Msg (Lang.new_pic) & Suffix;
 
   begin
     New_Window.Extra_First_Doc := extra_first;
@@ -357,7 +358,7 @@ package body TC.GWin.MDI_Main is
   ------------------
 
   procedure On_File_Open (Window : in out MDI_Main_Type) is
-    File_Name, File_Title : GString_Unbounded;
+    File_Name, File_Title : GWindows.GString_Unbounded;
     Success : Boolean;
     use Lang;
   begin
@@ -615,7 +616,7 @@ package body TC.GWin.MDI_Main is
   procedure Update_Status_Bar
     (Window    : in out MDI_Main_Type;
      Part      :        MDI_Status_bar_part;
-     Content   :        GString := "")
+     Content   :        GWindows.GString := "")
   is
   begin
     Text (Window.Status_Bar, Content, MDI_Status_bar_part'Pos (Part));
