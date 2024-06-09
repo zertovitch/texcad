@@ -198,22 +198,30 @@ package body TC.Morphing is
           when txt | circ | disc | putaux =>
             Sym4P (o.P1);
           when box =>
-            hr:=o.P1.x+o.size.x;
-            o.P1.x:=x+y-o.P1.y-o.size.y; o.P1.y:=x+y-hr;
-            hr:=o.size.x; o.size.x:=o.size.y; o.size.y:=hr;
+            hr := o.P1.x + o.size.x;
+            o.P1.x := x + y - o.P1.y - o.size.y;
+            o.P1.y := x + y - hr;
+            hr := o.size.x;
+            o.size.x := o.size.y;
+            o.size.y := hr;
 
           when line =>
             Sym4P (o.P1);
             Sym4P (o.P2);
             if not o.any_slope then
-              hi:=o.line_slope(v); o.line_slope(v):=-o.line_slope(h); o.line_slope(h):=-hi;
+              hi := o.line_slope (v);
+              o.line_slope (v) := -o.line_slope (h);
+              o.line_slope (h) := -hi;
             end if;
 
           when oval =>
             Sym4P (o.P1);
-            hr:=o.LL.x+o.osize.x;
-            o.LL.x:=x+y-o.LL.y-o.osize.y; o.LL.y:=x+y-hr;
-            hr:=o.osize.x; o.osize.x:=o.osize.y; o.osize.y:=hr;
+            hr := o.LL.x + o.osize.x;
+            o.LL.x := x + y - o.LL.y - o.osize.y;
+            o.LL.y := x + y - hr;
+            hr := o.osize.x;
+            o.osize.x := o.osize.y;
+            o.osize.y := hr;
 
           when bezier =>
             Sym4P (o.P1);
@@ -232,16 +240,16 @@ package body TC.Morphing is
   --   1   3
   --     2
 
-  procedure Rotate( o: in out Obj_type; M: Point; subcmd: Natural; pt_scale: Real ) is
-    hr,x,y: Real; hi: Integer;
+  procedure Rotate (o : in out Obj_type; M : Point; subcmd : Natural; pt_scale : Real) is
+    hr, x, y : Real; hi : Integer;
 
-    function Rotate_oval( scheme: Integer; ov: Ovop ) return Ovop is
-      circular: constant array( 0..7 ) of Ovop:= (LT, L, LB, B, RB, R, RT, T);
-      shifting: constant array( 1..3 ) of Integer:= ( 2, 4, -2 );
+    function Rotate_oval (scheme : Integer; ov : Ovop) return Ovop is
+      circular : constant array (0 .. 7) of Ovop := (LT, L, LB, B, RB, R, RT, T);
+      shifting : constant array (1 .. 3) of Integer := (2, 4, -2);
     begin
       for i in circular'Range loop
-        if circular(i) = ov then
-          return circular( (i+shifting(scheme)) mod 8 );
+        if circular (i) = ov then
+          return circular ((i + shifting (scheme)) mod 8);
         end if;
       end loop;
       return ov;  --  should not happen
@@ -253,12 +261,11 @@ package body TC.Morphing is
 
     if subcmd in 1 .. 3 then
       if o.art = oval then
-        o.part:= Rotate_oval( subcmd, o.part );
+        o.part := Rotate_oval (subcmd, o.part);
       elsif Has_text_alignment (o) then
-        Oval_corner_to_text_align(
-          o,
-          Rotate_oval( subcmd, Text_align_to_oval_corner(o) )
-        );
+        Oval_corner_to_text_align
+          (o,
+           Rotate_oval (subcmd, Text_align_to_oval_corner (o)));
       end if;
     end if;
 
@@ -266,103 +273,137 @@ package body TC.Morphing is
       when 1 =>
         case o.art is
           when txt | circ | disc | putaux =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(y-o.P1.y); o.P1.y:=y+(hr-x);
+             hr := o.P1.x;
+             o.P1.x := x + (y - o.P1.y);
+             o.P1.y := y + (hr - x);
 
           when box =>
-             o.P1.y:=o.P1.y+o.size.y; hr:=o.P1.x;
-             o.P1.x:=x+(y-o.P1.y); o.P1.y:=y+(hr-x);
-             hr:=o.size.x; o.size.x:=o.size.y; o.size.y:=hr;
+             o.P1.y := o.P1.y + o.size.y;
+             hr := o.P1.x;
+             o.P1.x := x + (y - o.P1.y);
+             o.P1.y := y + (hr - x);
+             hr := o.size.x;
+             o.size.x := o.size.y;
+             o.size.y := hr;
 
           when line =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(y-o.P1.y); o.P1.y:=y+(hr-x);
-             hr:=o.P2.x;
-             o.P2.x:=x+(y-o.P2.y); o.P2.y:=y+(hr-x);
+             hr := o.P1.x;
+             o.P1.x := x + (y - o.P1.y);
+             o.P1.y := y + (hr - x);
+             hr := o.P2.x;
+             o.P2.x := x + (y - o.P2.y);
+             o.P2.y := y + (hr - x);
              if not o.any_slope then
-               hi:=o.line_slope(h); o.line_slope(h):=-o.line_slope(v); o.line_slope(v):=hi;
+               hi := o.line_slope (h);
+               o.line_slope (h) := -o.line_slope (v);
+               o.line_slope (v) := hi;
              end if;
 
           when oval =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(y-o.P1.y); o.P1.y:=y+(hr-x);
-             o.LL.y:=o.LL.y+o.osize.y; hr:=o.LL.x;
-             o.LL.x:=x+(y-o.LL.y); o.LL.y:=y+(hr-x);
-             hr:=o.osize.x; o.osize.x:=o.osize.y; o.osize.y:=hr;
+             hr := o.P1.x;
+             o.P1.x := x + (y - o.P1.y);
+             o.P1.y := y + (hr - x);
+             o.LL.y := o.LL.y + o.osize.y;
+             hr := o.LL.x;
+             o.LL.x := x + (y - o.LL.y);
+             o.LL.y := y + (hr - x);
+             hr := o.osize.x;
+             o.osize.x := o.osize.y;
+             o.osize.y := hr;
 
           when bezier =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(y-o.P1.y); o.P1.y:=y+(hr-x);
-             hr:=o.PE.x;
-             o.PE.x:=x+(y-o.PE.y); o.PE.y:=y+(hr-x);
-             hr:=o.PC.x;
-             o.PC.x:=x+(y-o.PC.y); o.PC.y:=y+(hr-x);
-             Set_slope_of_bezvec(o,pt_scale);
+             hr := o.P1.x;
+             o.P1.x := x + (y - o.P1.y);
+             o.P1.y := y + (hr - x);
+             hr := o.PE.x;
+             o.PE.x := x + (y - o.PE.y);
+             o.PE.y := y + (hr - x);
+             hr := o.PC.x;
+             o.PC.x := x + (y - o.PC.y);
+             o.PC.y := y + (hr - x);
+             Set_slope_of_bezvec (o, pt_scale);
           when others => null;
         end case;
 
       when 2 =>
         case o.art is
           when txt | circ | disc | putaux =>
-             o.P1:= 2.0*M - o.P1;
+             o.P1 := 2.0 * M - o.P1;
 
           when box =>
-             o.P1:= 2.0*M - o.P1 - o.size;
+             o.P1 := 2.0 * M - o.P1 - o.size;
 
           when line =>
-             o.P1:= 2.0*M - o.P1;
-             o.P2:= 2.0*M - o.P2;
+             o.P1 := 2.0 * M - o.P1;
+             o.P2 := 2.0 * M - o.P2;
              if not o.any_slope then
-               o.line_slope(h):= -o.line_slope(h);
-               o.line_slope(v):= -o.line_slope(v);
+               o.line_slope (h) := -o.line_slope (h);
+               o.line_slope (v) := -o.line_slope (v);
              end if;
 
           when oval =>
-             o.P1:= 2.0*M - o.P1;
-             o.LL:= 2.0*M - o.LL - o.osize;
+             o.P1 := 2.0 * M - o.P1;
+             o.LL := 2.0 * M - o.LL - o.osize;
 
           when bezier =>
-             o.P1:= 2.0*M - o.P1;
-             o.PE:= 2.0*M - o.PE;
-             o.PC:= 2.0*M - o.PC;
-             Set_slope_of_bezvec(o,pt_scale);
-          when others=> null;
+             o.P1 := 2.0 * M - o.P1;
+             o.PE := 2.0 * M - o.PE;
+             o.PC := 2.0 * M - o.PC;
+             Set_slope_of_bezvec (o, pt_scale);
+          when others => null;
         end case;
 
       when 3 =>
         case o.art is
           when txt | circ | disc | putaux =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(o.P1.y-y); o.P1.y:=y-(hr-x);
+             hr := o.P1.x;
+             o.P1.x := x + (o.P1.y - y);
+             o.P1.y := y - (hr - x);
 
           when box =>
-             o.P1.x:=o.P1.x+o.size.x; hr:=o.P1.x;
-             o.P1.x:=x+(o.P1.y-y); o.P1.y:=y-(hr-x);
-             hr:=o.size.x; o.size.x:=o.size.y; o.size.y:=hr;
+             o.P1.x := o.P1.x + o.size.x;
+             hr := o.P1.x;
+             o.P1.x := x + (o.P1.y - y);
+             o.P1.y := y - (hr - x);
+             hr := o.size.x;
+             o.size.x := o.size.y;
+             o.size.y := hr;
 
           when line =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(o.P1.y-y); o.P1.y:=y-(hr-x);
-             hr:=o.P2.x;
-             o.P2.x:=x+(o.P2.y-y); o.P2.y:=y-(hr-x);
+             hr := o.P1.x;
+             o.P1.x := x + (o.P1.y - y);
+             o.P1.y := y - (hr - x);
+             hr := o.P2.x;
+             o.P2.x := x + (o.P2.y - y);
+             o.P2.y := y - (hr - x);
              if not o.any_slope then
-               hi:=o.line_slope(h); o.line_slope(h):=o.line_slope(v); o.line_slope(v):=-hi;
+               hi := o.line_slope (h);
+               o.line_slope (h) := o.line_slope (v);
+               o.line_slope (v) := -hi;
              end if;
 
           when oval =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(o.P1.y-y); o.P1.y:=y-(hr-x);
-             o.LL.x:=o.LL.x+o.osize.x; hr:=o.LL.x;
-             o.LL.x:=x+(o.LL.y-y); o.LL.y:=y-(hr-x);
-             hr:=o.osize.x; o.osize.x:=o.osize.y; o.osize.y:=hr;
+             hr := o.P1.x;
+             o.P1.x := x + (o.P1.y - y);
+             o.P1.y := y - (hr - x);
+             o.LL.x := o.LL.x + o.osize.x;
+             hr := o.LL.x;
+             o.LL.x := x + (o.LL.y - y);
+             o.LL.y := y - (hr - x);
+             hr := o.osize.x;
+             o.osize.x := o.osize.y;
+             o.osize.y := hr;
 
           when bezier =>
-             hr:=o.P1.x;
-             o.P1.x:=x+(o.P1.y-y); o.P1.y:=y-(hr-x);
-             hr:=o.PE.x;
-             o.PE.x:=x+(o.PE.y-y); o.PE.y:=y-(hr-x);
-             hr:=o.PC.x;
-             o.PC.x:=x+(o.PC.y-y); o.PC.y:=y-(hr-x);
+             hr := o.P1.x;
+             o.P1.x := x + (o.P1.y - y);
+             o.P1.y := y - (hr - x);
+             hr := o.PE.x;
+             o.PE.x := x + (o.PE.y - y);
+             o.PE.y := y - (hr - x);
+             hr := o.PC.x;
+             o.PC.x := x + (o.PC.y - y);
+             o.PC.y := y - (hr - x);
              Set_slope_of_bezvec (o, pt_scale);
           when others => null;
         end case;
@@ -371,11 +412,11 @@ package body TC.Morphing is
   end Rotate;
 
   --  28-May-2003 -- Affine transformation where Diag.x and Diag.y are >= 0
-  procedure Affine_positive (o: in out Obj_type; Center, Diag: Point; pt_scale: Real) is
-    D1 : constant Point:= (1.0, 1.0) - Diag;
+  procedure Affine_positive (o : in out Obj_type; Center, Diag : Point; pt_scale : Real) is
+    D1 : constant Point := (1.0, 1.0) - Diag;
     is_an_homothethy : constant Boolean := Almost_Zero (Diag.y - Diag.x);
 
-    procedure Move (P: in out Point) is
+    procedure Move (P : in out Point) is
     begin
       P := (D1.x * Center.x + Diag.x * P.x,
             D1.y * Center.y + Diag.y * P.y);
@@ -407,14 +448,14 @@ package body TC.Morphing is
       when bezier =>
         Move (o.PE);
         Move (o.PC);
-        Set_slope_of_bezvec (o,pt_scale);
+        Set_slope_of_bezvec (o, pt_scale);
       when others => null;
     end case;
   end Affine_positive;
 
   --  28-May-2003  --  Affine transformation with factors Diag.x, Diag.y
-  procedure Affine (o: in out Obj_type; Center, Diag: Point; pt_scale: Real) is
-    Dabs: constant Point:= (abs Diag.x, abs Diag.y);
+  procedure Affine (o : in out Obj_type; Center, Diag : Point; pt_scale : Real) is
+    Dabs : constant Point := (abs Diag.x, abs Diag.y);
   begin
     Affine_positive (o, Center, Dabs, pt_scale);
     if Diag.x < 0.0 then
@@ -474,7 +515,7 @@ package body TC.Morphing is
           end if;
           f := Real (i);
           case m is
-            when translation => Translate (o.all, f * (M2-M1));
+            when translation => Translate (o.all, f * (M2 - M1));
             when symmetry    => Symmetry (o.all, M1, subcmd, p.ul_in_pt);
             when rotation    => Rotate (o.all, M1, (i * subcmd) mod 4, p.ul_in_pt);
             when homothethy  => Affine (o.all, M1, (M2.x ** i, M2.y ** i), p.ul_in_pt);

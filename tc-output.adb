@@ -387,7 +387,7 @@ package body TC.Output is
       Write_line_any_slope (M, PE, 0);
     end Write_emulated_paramcurve2d;
 
-    procedure Write_kreis (o : Obj_type; Pmin : Point ) is
+    procedure Write_kreis (o : Obj_type; Pmin : Point) is
 
       use Ada.Numerics;
 
@@ -398,118 +398,118 @@ package body TC.Output is
         t, dt : Real;
       begin
         if as_command then
-          Put_Line(tf, Img_track(ccircle2) & Pt(C) & Br(2.0*o.rad));
+          Put_Line (tf, Img_track (ccircle2) & Pt (C) & Br (2.0 * o.rad));
         end if;
-        dt:= pid / ((12.0 + 0.25 * o.rad) * pic.opt.quality);
-        Q:= (0.0,0.0);
-        -- ^ Unused at start, just calms down
-        -- validity check (-gnatVa) + pragma Initialize_Scalars
-        t:= 0.0;
-        M:= C + (o.rad,0.0);
+        dt := pid / ((12.0 + 0.25 * o.rad) * pic.opt.quality);
+        Q := (0.0, 0.0);
+        --  ^ Unused at start, just calms down
+        --  validity check (-gnatVa) + pragma Initialize_Scalars
+        t := 0.0;
+        M := C + (o.rad, 0.0);
         while t < pid loop
-          PP:= o.rad * ( Cos(t), Sin(t) ) + o.P1;
-          Write_reduced_any_lines( M, Q, PP, not Almost_Zero(t) );
-          t:= t+dt;
+          PP := o.rad * (Cos (t), Sin (t)) + o.P1;
+          Write_reduced_any_lines (M, Q, PP, not Almost_Zero (t));
+          t := t + dt;
         end loop;
-        Write_line_any_slope( M, o.P1 - Pmin + (o.rad,0.0), 0);
+        Write_line_any_slope (M, o.P1 - Pmin + (o.rad, 0.0), 0);
         if as_command then
           End_of_emulation;
         end if;
       end Write_circle_with_lines;
 
-      -- 10-Jun-2003: Draw fractal for filled circles above max LaTeX size
-      procedure Write_disc_with_boxes(C: Point) is
-        -- GM
-        eps: Real:= 0.16; -- limit to the algorithm
-        pad: Real:= 0.16; -- padding around rectangles
+      --  10-Jun-2003: Draw fractal for filled circles above max LaTeX size
+      procedure Write_disc_with_boxes (C : Point) is
+        --  GM
+        eps : Real := 0.16;  --  limit to the algorithm
+        pad : Real := 0.16;  --  padding around rectangles
         type Multi is (single, double, quadruple);
 
-        -- Write a rectangle, relative to C
-        procedure Rect( P1,P2:Point; rep: Multi:= single; P1b,P1c: Point:= C ) is
-          prec: constant Integer:= current_precision + 1;
-          with_frames: constant Boolean:= False; -- For seeing what's done
+        --  Write a rectangle, relative to C
+        procedure Rect (P1, P2 : Point; rep : Multi := single; P1b, P1c : Point := C) is
+          prec : constant Integer := current_precision + 1;
+          with_frames : constant Boolean := False; -- For seeing what's done
         begin
           if rep = single then
-            Put(tf, Img_track(cput));
+            Put (tf, Img_track (cput));
           else
-            Put(tf, "\multiput");
+            Put (tf, "\multiput");
           end if;
-          Put(tf, Pt(C+P1-(pad,pad),prec));
+          Put (tf, Pt (C + P1 - (pad, pad), prec));
           if rep /= single then
-            Put(tf, Pt(P1b-P1,prec) & "{2}");
+            Put (tf, Pt (P1b - P1, prec) & "{2}");
             if rep = quadruple then
-              Put(tf,"{\multiput(0,0)" & Pt(P1c-P1,prec) & "{2}");
+              Put (tf, "{\multiput(0,0)" & Pt (P1c - P1, prec) & "{2}");
             end if;
           end if;
           if with_frames then
-            Put(tf,
-              "{\framebox" & Pt(P2-P1+2.0*(pad,pad),prec) & "[]{}}");
+            Put (tf,
+              "{\framebox" & Pt (P2 - P1 + 2.0 * (pad, pad), prec) & "[]{}}");
           else
-            Put(tf,
+            Put (tf,
               "{\rule{" &
-              R(P2.x-P1.x+2.0*pad,prec) & "\unitlength}{" &
-              R(P2.y-P1.y+2.0*pad,prec) & "\unitlength}}");
+              R (P2.x - P1.x + 2.0 * pad, prec) & "\unitlength}{" &
+              R (P2.y - P1.y + 2.0 * pad, prec) & "\unitlength}}");
           end if;
           if rep = quadruple then
-            Put(tf,'}');
+            Put (tf, '}');
           end if;
-          New_Line(tf);
+          New_Line (tf);
         end Rect;
 
-        -- P1 is the lower left corner in the first quadrant
-        -- We fractally "fill" the area limited by (1) the vertical
-        -- and (2) the horizontal lines passing through P1,
-        -- and (3) the circle.
+        --  P1 is the lower left corner in the first quadrant
+        --  We fractally "fill" the area limited by (1) the vertical
+        --  and (2) the horizontal lines passing through P1,
+        --  and (3) the circle.
 
-        procedure Fill( P1: Point; a_beg,a_end: Real ) is
-          a_mid: constant Real:= 0.5 * (a_beg+a_end);
-          P2: constant Point:= o.rad * (Cos(a_mid), Sin(a_mid));
+        procedure Fill (P1 : Point; a_beg, a_end : Real) is
+          a_mid : constant Real := 0.5 * (a_beg + a_end);
+          P2 : constant Point := o.rad * (Cos (a_mid), Sin (a_mid));
         begin
-          if Real'Min(abs(P1.x-P2.x),abs(P1.y-P2.y)) >= pad then
-            -- Draw rectangles by symmetry on the 4 quadrants,
-            -- avoiding drawing twins:
-            if Almost_Zero( Norm2(P1) ) then
-              Rect( -P2, P2 );
-            elsif Almost_Zero(P1.x) then
-              Rect( (-P2.x, P1.y), (P2.x,P2.y), double, (-P2.x,-P2.y) );
-            elsif Almost_Zero(P1.y) then
-              Rect( (P1.x,-P2.y), (P2.x,P2.y), double, (-P2.x,-P2.y) );
+          if Real'Min (abs (P1.x - P2.x), abs (P1.y - P2.y)) >= pad then
+            --  Draw rectangles by symmetry on the 4 quadrants,
+            --  avoiding drawing twins:
+            if Almost_Zero (Norm2 (P1)) then
+              Rect (-P2, P2);
+            elsif Almost_Zero (P1.x) then
+              Rect ((-P2.x, P1.y), (P2.x, P2.y), double, (-P2.x, -P2.y));
+            elsif Almost_Zero (P1.y) then
+              Rect ((P1.x, -P2.y), (P2.x, P2.y), double, (-P2.x, -P2.y));
             else
-              Rect( P1,P2, quadruple, (-P2.x,P1.y), (P1.x,-P2.y));
+              Rect (P1, P2, quadruple, (-P2.x, P1.y), (P1.x, -P2.y));
             end if;
-            -- Recursively fill the rest of the area:
-            Fill( (P1.x,P2.y), a_mid, a_end ); -- above the rectangle
-            Fill( (P2.x,P1.y), a_beg, a_mid ); -- right to the rectangle
+            --  Recursively fill the rest of the area:
+            Fill ((P1.x, P2.y), a_mid, a_end);  --  above the rectangle
+            Fill ((P2.x, P1.y), a_beg, a_mid);  --  right to the rectangle
           end if;
         end Fill;
 
       begin
         if pic.ul_in_pt > 0.0 then
-          eps:= eps / pic.ul_in_pt;
-          pad:= pad / pic.ul_in_pt;
+          eps := eps / pic.ul_in_pt;
+          pad := pad / pic.ul_in_pt;
         end if;
-        Put_Line(tf,"%\circle*" & Pt(C) & Br(2.0*o.rad));
-        Fill( (0.0,0.0), 0.0, Pi / 2.0 );
-        Write_circle_with_lines(o.P1 - Pmin, as_command => False);
-        -- For disc: just a fine outline, no command
+        Put_Line (tf, "%\circle*" & Pt (C) & Br (2.0 * o.rad));
+        Fill ((0.0, 0.0), 0.0, Pi / 2.0);
+        Write_circle_with_lines (o.P1 - Pmin, as_command => False);
+        --  For disc: just a fine outline, no command
         End_of_emulation;
       end Write_disc_with_boxes;
 
     begin
-      if o.rad <= Max_radius(o.art,pic.ul_in_pt) then -- was: 7.0
-        Put(tf, Img_track(cput) & Pt( o.P1 - Pmin ) & "{\circle");
-        if o.art=disc then
-          Put(tf,'*');
+      if o.rad <= Max_radius (o.art, pic.ul_in_pt) then  --  was: 7.0
+        Put (tf, Img_track (cput) & Pt (o.P1 - Pmin) & "{\circle");
+        if o.art = disc then
+          Put (tf, '*');
         end if;
-        Put_Line(tf, Br(2.0*o.rad) & '}');
+        Put_Line (tf, Br (2.0 * o.rad) & '}');
       elsif o.art = disc then
-        Write_disc_with_boxes(o.P1 - Pmin);
+        Write_disc_with_boxes (o.P1 - Pmin);
       else
-        Write_circle_with_lines(o.P1 - Pmin, as_command => True);
+        Write_circle_with_lines (o.P1 - Pmin, as_command => True);
       end if;
     end Write_kreis;
 
-    function Arrows_option_image( ls: Line_Settings ) return String is
+    function Arrows_option_image (ls : Line_Settings) return String is
     begin
       case ls.arrows is
         when no_arrow => return "";         -- never happens
@@ -519,125 +519,124 @@ package body TC.Output is
       end case;
     end Arrows_option_image;
 
-    -- 24-Apr-2003
-    procedure Write_bezier_command(o: Obj_type; force_no_vec: Boolean:= False) is
-      bez_choice: constant array(Boolean, Boolean) of Kom_type:=
-        ( True=>   (True=> cqbezvec, False=> cqbezier1),
-          False => (True=> cbezvec,  False=> cbezier1)
-        );
-      q  : constant Boolean:= o.num=0;
-      vec: constant Boolean:= o.ls.arrows /= no_arrow and not force_no_vec;
+    --  24-Apr-2003
+    procedure Write_bezier_command (o : Obj_type; force_no_vec : Boolean := False) is
+      bez_choice : constant array (Boolean, Boolean) of Kom_type :=
+        (True =>   (True => cqbezvec, False => cqbezier1),
+         False => (True => cbezvec,  False => cbezier1));
+      q   : constant Boolean := o.num = 0;
+      vec : constant Boolean := o.ls.arrows /= no_arrow and not force_no_vec;
     begin
-      Put(tf, Img_track( bez_choice(q, vec) ));
+      Put (tf, Img_track (bez_choice (q, vec)));
       if not q then
-        Put(tf, '{' & I(o.num) & '}');
-        -- NB: different syntaxes: \bezier: {n}, \qbezier: [n]
+        Put (tf, '{' & I (o.num) & '}');
+        --  NB: different syntaxes: \bezier: {n}, \qbezier: [n]
       end if;
       if vec then
-        Put(tf,Arrows_option_image(o.ls));
+        Put (tf, Arrows_option_image (o.ls));
       end if;
-      Put_Line(tf, Pt(o.P1 - Pmin) & Pt(o.PC - Pmin) & Pt(o.PE - Pmin) );
+      Put_Line (tf, Pt (o.P1 - Pmin) & Pt (o.PC - Pmin) & Pt (o.PE - Pmin));
     end Write_bezier_command;
 
-    procedure Write_arrow(P: Point; s: LaTeX_slope) is
-      minipt: constant:= 0.2;
-      al: Real; -- 4-Jun-2003: minimal length to obtain an arrow, was {0.2}
+    procedure Write_arrow (P : Point; s : LaTeX_slope) is
+      minipt : constant := 0.2;
+      al : Real;  --  4-Jun-2003: minimal length to obtain an arrow, was {0.2}
     begin
       if pic.ul_in_pt > 0.0 then
-        al:= minipt / pic.ul_in_pt;
+        al := minipt / pic.ul_in_pt;
       else
-        al:= minipt;
+        al := minipt;
       end if;
-      Put(tf, Img_track(cput) & Pt(P) & "{\vector" & Pt(s(h),s(v)) & Br(al) & '}');
+      Put (tf, Img_track (cput) & Pt (P) & "{\vector" & Pt (s (h), s (v)) & Br (al) & '}');
     end Write_arrow;
 
-    procedure Write_bezier(o: Obj_type) is -- 24-Feb-2004
+    procedure Write_bezier (o : Obj_type) is  --  24-Feb-2004
     begin
-      if o.ls.arrows = no_arrow then -- \bezier or %\bezier
-        if pic.opt.sty(bezier) then
-          Write_bezier_command(o);
+      if o.ls.arrows = no_arrow then  --  \bezier or %\bezier
+        if pic.opt.sty (bezier) then
+          Write_bezier_command (o);
         else
-          Put(tf,'%');
-          Write_bezier_command(o);
-          Write_emulated_bezier(o);
+          Put (tf, '%');
+          Write_bezier_command (o);
+          Write_emulated_bezier (o);
           End_of_emulation;
         end if;
-      else                           -- %\bezvec or %\qbezvec
-        Write_bezier_command(o);
-        case With_arrows(o.ls.arrows) is -- no_arrow treated above
-          when head     => Write_arrow(o.PE - Pmin, o.bez_slope(1));
-          when both     => Write_arrow(o.PE - Pmin, o.bez_slope(1));
-                           Write_arrow(o.P1 - Pmin, o.bez_slope(2));
-          when middle   => Write_arrow(o.Pmiddle - Pmin, o.bez_slope(1));
+      else                           --  %\bezvec or %\qbezvec
+        Write_bezier_command (o);
+        case With_arrows (o.ls.arrows) is  --  no_arrow treated above
+          when head     => Write_arrow (o.PE - Pmin, o.bez_slope (1));
+          when both     => Write_arrow (o.PE - Pmin, o.bez_slope (1));
+                           Write_arrow (o.P1 - Pmin, o.bez_slope (2));
+          when middle   => Write_arrow (o.Pmiddle - Pmin, o.bez_slope (1));
         end case;
-        if pic.opt.sty(bezier) then
-          Write_bezier_command(o, force_no_vec => True);
+        if pic.opt.sty (bezier) then
+          Write_bezier_command (o, force_no_vec => True);
         else
-          Write_emulated_bezier(o);
+          Write_emulated_bezier (o);
         end if;
         End_of_emulation;
       end if;
     end Write_bezier;
 
-    procedure Write_paramcurve2d(o: Obj_type) is
-      long: constant Boolean:= Length(o.data_2d.form_x) + Length(o.data_2d.form_y) > 40;
+    procedure Write_paramcurve2d (o : Obj_type) is
+      long : constant Boolean := Length (o.data_2d.form_x) + Length (o.data_2d.form_y) > 40;
       procedure Spacing is
       begin
         if long then
-          New_Line(tf);
-          Put(tf, "%   ");
+          New_Line (tf);
+          Put (tf, "%   ");
         end if;
       end Spacing;
     begin
-      Put(tf, "%\paramcurvexy");
+      Put (tf, "%\paramcurvexy");
       if o.data_2d.segments > 0 then
-        Put(tf, '[' & I(o.data_2d.segments) & ']');
+        Put (tf, '[' & I (o.data_2d.segments) & ']');
       end if;
-      Put(tf, Pt(o.P1 - Pmin) & '(' & R(o.data_2d.scale) & ")(");
+      Put (tf, Pt (o.P1 - Pmin) & '(' & R (o.data_2d.scale) & ")(");
       Spacing;
-      Put(tf, To_String(o.data_2d.form_x) & ", ");
+      Put (tf, To_String (o.data_2d.form_x) & ", ");
       Spacing;
-      Put(tf, To_String(o.data_2d.form_y) & ", ");
+      Put (tf, To_String (o.data_2d.form_y) & ", ");
       Spacing;
-      Put_Line(tf, R(o.data_2d.min_t) & ", " & R(o.data_2d.max_t) & ')');
-      Write_emulated_paramcurve2d(o);
+      Put_Line (tf, R (o.data_2d.min_t) & ", " & R (o.data_2d.max_t) & ')');
+      Write_emulated_paramcurve2d (o);
       End_of_emulation;
     end Write_paramcurve2d;
 
-    procedure Write_vector_arrows(P1,P2: Point; arrows: Line_arrows) is
-      s: LaTeX_slope;
+    procedure Write_vector_arrows (P1, P2 : Point; arrows : Line_arrows) is
+      s : LaTeX_slope;
     begin
-      Get_slope( P2-P1, s, True );
-      case With_arrows(arrows) is
-        when head   => Write_arrow(P2, s);
-        when both   => Write_arrow(P2, s);
-                       Write_arrow(P1, (-s(h),-s(v)));
-        when middle => Write_arrow(0.5*(P1+P2), s);
+      Get_slope (P2 - P1, s, True);
+      case With_arrows (arrows) is
+        when head   => Write_arrow (P2, s);
+        when both   => Write_arrow (P2, s);
+                       Write_arrow (P1, (-s (h), -s (v)));
+        when middle => Write_arrow (0.5 * (P1 + P2), s);
       end case;
     end Write_vector_arrows;
 
-    procedure Write_plain_line_any_slope(o: Obj_type) is
-      s1,s2: Point;
-      needs_emulation: constant Boolean:=
-        not (pic.opt.sty(emlines) or pic.opt.sty(epic));
+    procedure Write_plain_line_any_slope (o : Obj_type) is
+      s1, s2 : Point;
+      needs_emulation : constant Boolean :=
+        not (pic.opt.sty (emlines) or pic.opt.sty (epic));
     begin
-      s1:= o.P1 - Pmin;
-      s2:= o.P2 - Pmin;
+      s1 := o.P1 - Pmin;
+      s2 := o.P2 - Pmin;
       case o.ls.arrows is
         when no_arrow =>
           if needs_emulation then
-            -- line, but no emlines.sty or epic.sty
-            Put_Line(tf, Img_track(cemline2) & Pt(s1) & Pt(s2));
+            --  line, but no emlines.sty or epic.sty
+            Put_Line (tf, Img_track (cemline2) & Pt (s1) & Pt (s2));
           end if;
         when With_arrows =>
-          Put_Line( tf,
-             Img_track(cvector2) &                -- %\vector
-             Arrows_option_image(o.ls) &    -- [m]
-             Pt(s1) & Pt(s2) );             -- (0,0)(10,10)
-          Write_vector_arrows(s1,s2,o.ls.arrows);
+          Put_Line (tf,
+             Img_track (cvector2) &          --  %\vector
+             Arrows_option_image (o.ls) &    --  [m]
+             Pt (s1) & Pt (s2));             --  (0,0)(10,10)
+          Write_vector_arrows (s1, s2, o.ls.arrows);
       end case;
-      Write_line_any_slope( s1, s2, o.ls.stretch );
-      -- ^ emline, epic or emulation
+      Write_line_any_slope (s1, s2, o.ls.stretch);
+      --  ^ emline, epic or emulation
       case o.ls.arrows is
         when no_arrow =>
           if needs_emulation then
@@ -648,572 +647,577 @@ package body TC.Output is
       end case;
     end Write_plain_line_any_slope;
 
-    procedure Write_dotted_line(
-      E1, E2   : Point;
-      gap      : Real;
-      sym      : String;
-      epic     : Boolean;
-      put_cmd  : Boolean;
-      thick    : Boolean;
-      can_chain: Boolean)
+    procedure Write_dotted_line
+      (E1, E2    : Point;
+       gap       : Real;
+       sym       : String;
+       epic      : Boolean;
+       put_cmd   : Boolean;
+       thick     : Boolean;
+       can_chain : Boolean)
     is
-      E1p: Point;
-      D_lta: constant Point:= E2-E1;
-      np, prec: Positive;
-      cgap, w: Real;
+      E1p : Point;
+      D_lta : constant Point := E2 - E1;
+      np, prec : Positive;
+      cgap, w : Real;
       procedure Put_options_and_parameters is
       begin
-        -- Options: \dottedline[$\bullet$]{3}(0,0)(70,0)
+        --  Options: \dottedline[$\bullet$]{3}(0,0)(70,0)
         if sym /= "" then
-          Put(tf,'[' & sym & ']');
+          Put (tf, '[' & sym & ']');
         end if;
         if gap > 0.0 then
-          Put(tf, Br(gap));
+          Put (tf, Br (gap));
         end if;
-        Put_Line(tf, Pt(E1) & Pt(E2));
+        Put_Line (tf, Pt (E1) & Pt (E2));
       end Put_options_and_parameters;
     begin
       if epic then
         if put_cmd then
           if can_chain
             and then last_command.k = cdottedline1
-            and then Almost_Zero(Norm2(E1 - last_command.P))
-            and then Almost_Zero(last_command.gap - gap)
+            and then Almost_Zero (Norm2 (E1 - last_command.P))
+            and then Almost_Zero (last_command.gap - gap)
             and then last_command.symbol = sym
-          then -- can chain, then just output end point
+          then  --  can chain, then just output end point
             Pack_Line;
-            Put_Line(tf, Pt(E2));
-            last_command.P:= E2;
+            Put_Line (tf, Pt (E2));
+            last_command.P := E2;
           else
-            Put(tf, Img_track(cdottedline1));
+            Put (tf, Img_track (cdottedline1));
             Put_options_and_parameters;
-            last_command.P:= E2;
-            last_command.gap:= gap;
-            last_command.symbol:= To_Unbounded_String(sym);
+            last_command.P := E2;
+            last_command.gap := gap;
+            last_command.symbol := To_Unbounded_String (sym);
           end if;
         else
-          -- No command, but options and parameters are to
-          -- be put to complete another command
+          --  No command, but options and parameters are to
+          --  be put to complete another command
           Put_options_and_parameters;
         end if;
-      else -- emulation of epic.sty
-        np:= TC.epic_calc.Num_segments(D_lta, gap);
-        prec:= current_precision + 1 + Integer'Max(0, Integer(Log(Real(np),10.0)));
-        cgap:= 1.0 / Real(np); -- the corrected gap s.t. the last point is at end
-        E1p:= E1 - pic.lw_in_pt / pic.ul_in_pt * (0.5,0.5);
-        Put(tf,
-          "\multiput" & Pt(E1p) & Pt(cgap * D_lta, prec) & Br(np+1) & '{');
+      else  --  emulation of epic.sty
+        np := TC.epic_calc.Num_segments (D_lta, gap);
+        prec := current_precision + 1 + Integer'Max (0, Integer (Log (Real (np), 10.0)));
+        cgap := 1.0 / Real (np);  --  the corrected gap s.t. the last point is at end
+        E1p := E1 - pic.lw_in_pt / pic.ul_in_pt * (0.5, 0.5);
+        Put
+          (tf,
+           "\multiput" & Pt (E1p) & Pt (cgap * D_lta, prec) & Br (np + 1) & '{');
         if sym = "" then
-          w:= pic.lw_in_pt;
+          w := pic.lw_in_pt;
           if thick then
-            w:= w * 2.0;
+            w := w * 2.0;
           end if;
-          Put(tf,"{\rule{" & R(w, prec) & "pt}{" & R(w, prec) & "pt}}");
+          Put (tf, "{\rule{" & R (w, prec) & "pt}{" & R (w, prec) & "pt}}");
         else
-          Put(tf,"\makebox(0,0)[cc]{" & sym & '}');
+          Put (tf, "\makebox(0,0)[cc]{" & sym & '}');
         end if;
-        Put_Line(tf,"}");
+        Put_Line (tf, "}");
       end if;
     end Write_dotted_line;
 
-    -- 23-Feb-2004: %\dottedbox
-    procedure Write_dotted_box(o: Obj_type) is
-      C1,C2: Point; -- corners
-      gap: constant Real:= o.ls.dot_gap;
-      sym: constant String:= To_String(o.ls.dot_symbol);
-      procedure Spit(E1, E2: Point) is
+    --  23-Feb-2004: %\dottedbox
+    procedure Write_dotted_box (o : Obj_type) is
+      C1, C2 : Point;  --  corners
+      gap : constant Real := o.ls.dot_gap;
+      sym : constant String := To_String (o.ls.dot_symbol);
+      procedure Spit (E1, E2 : Point) is
       begin
-        Write_dotted_line(
-          E1, E2, gap, sym,
-          epic      => pic.opt.sty(epic),
-          put_cmd   => True,
-          thick     => o.ls.thickness=thick,
-          can_chain => True
-        );
+        Write_dotted_line
+          (E1, E2, gap, sym,
+           epic      => pic.opt.sty (epic),
+           put_cmd   => True,
+           thick     => o.ls.thickness = thick,
+           can_chain => True);
       end Spit;
     begin
-      C1:= o.P1 - Pmin;
-      C2:= o.P1 + o.size - Pmin;
-      Put(tf, Img_track(cdottedbox) & Pt(C1) & Pt(o.size));
+      C1 := o.P1 - Pmin;
+      C2 := o.P1 + o.size - Pmin;
+      Put (tf, Img_track (cdottedbox) & Pt (C1) & Pt (o.size));
       if sym /= "" then
-        Put(tf,'[' & sym & ']');
+        Put (tf, '[' & sym & ']');
       end if;
       if gap > 0.0 then
-        Put(tf, Br(gap));
+        Put (tf, Br (gap));
       end if;
-      New_Line(tf);
-      -- The emulation itself:
-      -- 1/ Text (if any), with \makebox(w,h)[align]{Text} :
+      New_Line (tf);
+      --  The emulation itself:
+      --  1/ Text (if any), with \makebox(w,h)[align]{Text} :
       if o.inhalt /= "" then
-        Put(tf,
-          Img_track(cput) & Pt( o.P1 - Pmin ) & '{' & Img_track(cmakebox) &
-          Pt( o.size ) &
-          '[' & o.adjust(1..o.adjust_len) & ']');
-        if Length(o.inhalt) >= 50 then
-          New_Line(tf);
+        Put
+          (tf,
+           Img_track (cput) & Pt (o.P1 - Pmin) & '{' & Img_track (cmakebox) &
+           Pt (o.size) &
+           '[' & o.adjust (1 .. o.adjust_len) & ']');
+        if Length (o.inhalt) >= 50 then
+          New_Line (tf);
         end if;
-        Put_Line(tf,'{' & To_String(o.inhalt) & "}}");
+        Put_Line (tf, '{' & To_String (o.inhalt) & "}}");
       end if;
-      -- 2/ Dotted frame (parallels in same direction):
-      Spit( (C1.x,C2.y),  C1         ); -- ver
-      Spit(  C1,         (C2.x,C1.y) ); -- hor
-      Spit( (C1.x,C2.y),  C2         ); -- hor
-      Spit(  C2,         (C2.x,C1.y) ); -- ver
+      --  2/ Dotted frame (parallels in same direction):
+      Spit ((C1.x, C2.y),  C1);           --  ver
+      Spit  (C1,          (C2.x, C1.y));  --  hor
+      Spit ((C1.x, C2.y),  C2);           --  hor
+      Spit  (C2,          (C2.x, C1.y));  --  ver
       End_of_emulation;
     end Write_dotted_box;
 
-    procedure Write_dash_line(
-      E1, E2               : Point;
-      stretch              : Integer;
-      length, gap          : Real;
-      epic                 : Boolean;
-      put_cmd              : Boolean;
-      can_chain            : Boolean)
+    procedure Write_dash_line
+      (E1, E2               : Point;
+       stretch              : Integer;
+       length, gap          : Real;
+       epic                 : Boolean;
+       put_cmd              : Boolean;
+       can_chain            : Boolean)
     is
-      E1p, Pa,Pb: Point;
-      D: Point:= E2-E1;
-      ns: Positive;
-      -- prec: Positive;
+      E1p, Pa, Pb : Point;
+      D : Point := E2 - E1;
+      ns : Positive;
+      --  prec: Positive;
       procedure Put_options_and_parameters is
       begin
-        -- \dashline[stretch]{dash-length}
-        -- [inter-dot-gap for dash](x1,y1)(x2,y2)...(xn,yn)
+        --  \dashline[stretch]{dash-length}
+        --  [inter-dot-gap for dash](x1,y1)(x2,y2)...(xn,yn)
         if stretch /= 0 then
-          Put(tf,'[' & I(stretch) & ']');
+          Put (tf, '[' & I (stretch) & ']');
         end if;
-        if not Almost_Zero(length) then
-          Put(tf, Br(length));
+        if not Almost_Zero (length) then
+          Put (tf, Br (length));
         end if;
-        if not Almost_Zero(gap) then
-          Put(tf, Br(gap));
+        if not Almost_Zero (gap) then
+          Put (tf, Br (gap));
         end if;
-        Put_Line(tf, Pt(E1) & Pt(E2));
+        Put_Line (tf, Pt (E1) & Pt (E2));
       end Put_options_and_parameters;
     begin
       if epic then
         if put_cmd then
           if can_chain
             and then last_command.k = cdashline1
-            and then Almost_Zero(Norm2(E1 - last_command.P))
-            and then Almost_Zero(last_command.gap - gap)
-            and then Almost_Zero(last_command.length - length)
-          then -- can chain, then just output end point
+            and then Almost_Zero (Norm2 (E1 - last_command.P))
+            and then Almost_Zero (last_command.gap - gap)
+            and then Almost_Zero (last_command.length - length)
+          then  --  can chain, then just output end point
             Pack_Line;
-            Put_Line(tf, Pt(E2));
-            last_command.P:= E2;
+            Put_Line (tf, Pt (E2));
+            last_command.P := E2;
           else
-            Put(tf, Img_track(cdashline1));
+            Put (tf, Img_track (cdashline1));
             Put_options_and_parameters;
-            last_command.P:= E2;
-            last_command.gap:= gap;
-            last_command.length:= length;
+            last_command.P := E2;
+            last_command.gap := gap;
+            last_command.length := length;
           end if;
         else
-          -- No command, but options and parameters are to
-          -- be put to complete another command
+          --  No command, but options and parameters are to
+          --  be put to complete another command
           Put_options_and_parameters;
         end if;
-      else -- emulation of epic.sty
-        -- !! emulate gap, stretch !!
-        ns:= TC.epic_calc.Num_segments(D, length);
-        -- prec:= precision + 1 + Integer'Max(0, Integer(log(Real(ns),10.0)));
-        E1p:= E1 - pic.lw_in_pt / pic.ul_in_pt * (0.5,0.5);
-        D:= 1.0 / Real(ns) * D;
-        Pa:= E1p;
-        for i in 1..ns loop
-          Pb:= E1p + Real(i) * D;
-          if i mod 2 =1 then
-            Write_line_any_slope( Pa, Pb, 0 );
-            -- ^ emline or emulation
+      else  --  emulation of epic.sty
+        --  !! emulate gap, stretch !!
+        ns := TC.epic_calc.Num_segments (D, length);
+        --  prec:= precision + 1 + Integer'Max(0, Integer(log(Real(ns),10.0)));
+        E1p := E1 - pic.lw_in_pt / pic.ul_in_pt * (0.5, 0.5);
+        D := 1.0 / Real (ns) * D;
+        Pa := E1p;
+        for i in 1 .. ns loop
+          Pb := E1p + Real (i) * D;
+          if i mod 2 = 1 then
+            Write_line_any_slope (Pa, Pb, 0);
+            --  ^ emline or emulation
           end if;
-          Pa:= Pb;
+          Pa := Pb;
         end loop;
       end if;
     end Write_dash_line;
 
-    -- 20-Jan-2004: epic's \dottedline, 24-Feb-2004: epic's \dashline
+    --  20-Jan-2004: epic's \dottedline, 24-Feb-2004: epic's \dashline
 
-    procedure Write_dot_dash_line_command(o: Obj_type) is
-      procedure Spit(epic, put_cmd, can_chain: Boolean) is
+    procedure Write_dot_dash_line_command (o : Obj_type) is
+      procedure Spit (epic, put_cmd, can_chain : Boolean) is
       begin
         case o.ls.pattern is
-          when plain => null; -- not here
+          when plain => null;  --  not here
           when dot =>
-            Write_dotted_line(
-              o.P1 - Pmin,
-              o.P2 - Pmin,
-              o.ls.dot_gap,
-              To_String(o.ls.dot_symbol),
-              epic      => epic,
-              put_cmd   => put_cmd,
-              thick     => o.ls.thickness=thick,
-              can_chain => can_chain
-            );
+            Write_dotted_line
+              (o.P1 - Pmin,
+               o.P2 - Pmin,
+               o.ls.dot_gap,
+               To_String (o.ls.dot_symbol),
+               epic      => epic,
+               put_cmd   => put_cmd,
+               thick     => o.ls.thickness = thick,
+               can_chain => can_chain);
           when dash =>
-            Write_dash_line(
-              o.P1 - Pmin,
-              o.P2 - Pmin,
-              o.ls.stretch,
-              o.ls.dash_length,
-              o.ls.dash_dot_gap,
-              epic      => epic,
-              put_cmd   => put_cmd,
-              can_chain => can_chain
-            );
+            Write_dash_line
+              (o.P1 - Pmin,
+               o.P2 - Pmin,
+               o.ls.stretch,
+               o.ls.dash_length,
+               o.ls.dash_dot_gap,
+               epic      => epic,
+               put_cmd   => put_cmd,
+               can_chain => can_chain);
         end case;
       end Spit;
-      emul_epic: constant Boolean:= not pic.opt.sty(epic);
+      emul_epic : constant Boolean := not pic.opt.sty (epic);
     begin
       case o.ls.arrows is
         when no_arrow =>
-          if emul_epic then -- emulated, command as TeX comment
-            Put(tf,'%');
+          if emul_epic then  --  emulated, command as TeX comment
+            Put (tf, '%');
           end if;
-          -- Spit the epic command, even as comment:
-          Spit(epic => True, put_cmd => True, can_chain => not emul_epic);
+          --  Spit the epic command, even as comment:
+          Spit (epic => True, put_cmd => True, can_chain => not emul_epic);
           if emul_epic then
-            Spit(epic => False, put_cmd => False, can_chain => False);
-            -- put_cmd, can_chain are bogus there.
+            Spit (epic => False, put_cmd => False, can_chain => False);
+            --  put_cmd, can_chain are bogus there.
             End_of_emulation;
           end if;
         when others   =>
-          -- all other syntaxes are %\vector{dot}... %\end
-          Put(tf, Img_track(cvector2) & Arrows_option_image(o.ls));
+          --  all other syntaxes are %\vector{dot}... %\end
+          Put (tf, Img_track (cvector2) & Arrows_option_image (o.ls));
           case o.ls.pattern is
-            when plain => null; -- not here
-            when dot   => Put(tf, "{dot}");
-            when dash  => Put(tf, "{dash}");
+            when plain => null;  --  not here
+            when dot   => Put (tf, "{dot}");
+            when dash  => Put (tf, "{dash}");
           end case;
-          Spit(epic => True, put_cmd => False, can_chain => False);
-          -- epic's options, points, no command
-          Write_vector_arrows(o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
-          Spit(epic => pic.opt.sty(epic), put_cmd => True, can_chain => False);
-          -- Spit the epic command for segment, as epic or emulated.
-          -- We don't chain: the eol forgetting puts an eventual point
-          -- at the end of the abov TeX comment!
+          Spit (epic => True, put_cmd => False, can_chain => False);
+          --  epic's options, points, no command
+          Write_vector_arrows (o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
+          Spit (epic => pic.opt.sty (epic), put_cmd => True, can_chain => False);
+          --  Spit the epic command for segment, as epic or emulated.
+          --  We don't chain: the eol forgetting puts an eventual point
+          --  at the end of the abov TeX comment!
           End_of_emulation;
       end case;
     end Write_dot_dash_line_command;
 
-    procedure Write_LaTeX_put_figure(o: Obj_type) is
-      o_len: Real;
-      special_arrows_limited_slope: constant Boolean:=
+    procedure Write_LaTeX_put_figure (o : Obj_type) is
+      o_len : Real;
+      special_arrows_limited_slope : constant Boolean :=
         o.art = line and o.ls.arrows in both .. middle;
       use Ada.Characters.Handling;
     begin
       if special_arrows_limited_slope then
-        -- %\vector command around!
-        Put_Line(tf, Img_track(cvector2) & Arrows_option_image(o.ls) & "{\line}");
+        --  %\vector command around!
+        Put_Line (tf, Img_track (cvector2) & Arrows_option_image (o.ls) & "{\line}");
       end if;
-      -- The \put command:
-      Put(tf, Img_track(cput) & Pt( o.P1 - Pmin ) & '{');
+      --  The \put command:
+      Put (tf, Img_track (cput) & Pt (o.P1 - Pmin) & '{');
       case  o.art  is
-        when txt=>
-          Put(tf,"\makebox(0,0)[" & o.adjust(1..o.adjust_len) & ']');
-          if Length(o.inhalt) >=50 then
-            New_Line(tf);
+        when txt =>
+          Put (tf, "\makebox(0,0)[" & o.adjust (1 .. o.adjust_len) & ']');
+          if Length (o.inhalt) >= 50 then
+            New_Line (tf);
           end if;
-          Put(tf,'{' & To_String(o.inhalt) & '}');
-        when box=>
+          Put (tf, '{' & To_String (o.inhalt) & '}');
+        when box =>
           if  o.solid then
-            Put(tf,
-              "\rule{" &
-              R(o.size.x) & "\unitlength}{" &
-              R(o.size.y) & "\unitlength}");
+            Put
+              (tf,
+               "\rule{" &
+               R (o.size.x) & "\unitlength}{" &
+               R (o.size.y) & "\unitlength}");
           else
             case o.ls.pattern is
-              when plain => Put(tf, Img_track(cframebox));
-              when dot   => null; -- not a \put{...}
-              when dash  => Put(tf, Img_track(cdashbox) & Br(o.ls.dash_length) );
+              when plain => Put (tf, Img_track (cframebox));
+              when dot   => null;  --  not a \put{...}
+              when dash  => Put (tf, Img_track (cdashbox) & Br (o.ls.dash_length));
             end case;
-            Put(tf,
-              Pt( o.size ) &
-              '[' & o.adjust(1..o.adjust_len) & ']'
-            );
-            if Length(o.inhalt) >=50 then
-              New_Line(tf);
+            Put
+              (tf,
+               Pt (o.size) &
+               '[' & o.adjust (1 .. o.adjust_len) & ']');
+            if Length (o.inhalt) >= 50 then
+              New_Line (tf);
             end if;
-            Put(tf,'{' & To_String(o.inhalt) & '}');
+            Put (tf, '{' & To_String (o.inhalt) & '}');
           end if;
 
         when line =>
           case o.ls.arrows is
-            when head   => Put(tf, Img_track(cvector1));
-            when others => Put(tf, Img_track(cline));
-            -- \line has more slopes than \vector -> OK for middle & both
+            when head   => Put (tf, Img_track (cvector1));
+            when others => Put (tf, Img_track (cline));
+            --  \line has more slopes than \vector -> OK for middle & both
           end case;
-          o_len:= abs(o.P2.x-o.P1.x);
+          o_len := abs (o.P2.x - o.P1.x);
           if o_len = 0.0 then
-            o_len:= abs(o.P2.y-o.P1.y);
+            o_len := abs (o.P2.y - o.P1.y);
           end if;
-          Put(tf, Pt(o.line_slope(h), o.line_slope(v)) & Br(o_len));
+          Put (tf, Pt (o.line_slope (h), o.line_slope (v)) & Br (o_len));
           case o.ls.arrows is
             when both | middle =>
-              Put(tf,"}");
-              -- TC "%\" command already added, then th \put command.
-              -- Now emulation of arrows
-              Write_vector_arrows(o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
-              New_Line(tf);
+              Put (tf, "}");
+              --  TC "%\" command already added, then th \put command.
+              --  Now emulation of arrows
+              Write_vector_arrows (o.P1 - Pmin, o.P2 - Pmin, o.ls.arrows);
+              New_Line (tf);
               End_of_emulation;
             when others   => null;
           end case;
 
-        when oval=>
-         Put(tf,
-           Img_track(coval) & Pt( o.osize ) &
-           '[' & To_Lower(Image(o.part)) & ']');
-        when putaux=> Put(tf,To_String(o.inhalt));
-        when others=> null;  -- [P2Ada]: no otherwise / else in Pascal
+        when oval =>
+          Put
+            (tf,
+             Img_track (coval) & Pt (o.osize) &
+             '[' & To_Lower (Image (o.part)) & ']');
+        when putaux =>
+          Put (tf, To_String (o.inhalt));
+        when others => null;
       end case;
       if not special_arrows_limited_slope then
-        Put_Line(tf,"}");
+        Put_Line (tf, "}");
       end if;
     end Write_LaTeX_put_figure;
 
-    inf: constant Real:= Real(Integer'Last);
-    Pinf: constant Point:= (inf,inf);
+    inf  : constant Real  := Real (Integer'Last);
+    Pinf : constant Point := (inf, inf);
 
-    function Short_name(s: String) return String is
-      fs: Integer:= s'First;
+    function Short_name (s : String) return String is
+      fs : Integer := s'First;
     begin
       for i in s'Range loop
-        case s(i) is
-          when '\' | '/' | '|' | ':' => fs:= i+1;
+        case s (i) is
+          when '\' | '/' | '|' | ':' => fs := i + 1;
           when others => null;
         end case;
       end loop;
-      return s(fs..s'Last);
+      return s (fs .. s'Last);
     end Short_name;
 
-  begin -- Insert
-    o:= pic.root;
-    if o = null then -- empty picture
-      Pmax:= (0.0, 0.0);
-      Pmin:= (0.0, 0.0);
+  begin  --  Insert
+    o := pic.root;
+    if o = null then  --  empty picture
+      Pmax := (0.0, 0.0);
+      Pmin := (0.0, 0.0);
     else
-      Pmax:= (-1.0)*Pinf;
-      Pmin:=        Pinf;
-      while o/=null loop
+      Pmax := (-1.0) * Pinf;
+      Pmin :=          Pinf;
+      while o /= null loop
         if  (not macro)  or  o.picked then
           case  o.art  is
             when
              txt | putaux =>
-                s1:=o.P1;
-                s2:=o.P1;
+                s1 := o.P1;
+                s2 := o.P1;
 
              when box =>
-                s1:= o.P1 + o.size;
-                s2:= o.P1;
+                s1 := o.P1 + o.size;
+                s2 := o.P1;
 
              when line =>
                 if o.P2.x > o.P1.x then
-                   s1.x:=o.P2.x; s2.x:=o.P1.x;
+                   s1.x := o.P2.x;
+                   s2.x := o.P1.x;
                  else
-                   s1.x:=o.P1.x; s2.x:=o.P2.x;
+                   s1.x := o.P1.x;
+                   s2.x := o.P2.x;
                 end if;
                 if  o.P2.y > o.P1.y then
-                   s1.y:=o.P2.y; s2.y:=o.P1.y;
+                   s1.y := o.P2.y;
+                   s2.y := o.P1.y;
                 else
-                   s1.y:=o.P1.y; s2.y:=o.P2.y;
+                   s1.y := o.P1.y;
+                   s2.y := o.P2.y;
                 end if;
 
              when circ | disc =>
-                s1:= o.P1 + (o.rad,o.rad);
-                s2:= o.P1 - (o.rad,o.rad);
+                s1 := o.P1 + (o.rad, o.rad);
+                s2 := o.P1 - (o.rad, o.rad);
 
              when oval =>
-                s1:= o.P1 + 0.5 * o.osize;
-                s2:= o.P1 - 0.5 * o.osize;
+                s1 := o.P1 + 0.5 * o.osize;
+                s2 := o.P1 - 0.5 * o.osize;
 
              when bezier =>
-                s1.x:=  Max( o.P1.x, o.PC.x, o.PE.x);
-                s2.x:= -Max(-o.P1.x,-o.PC.x,-o.PE.x);
-                s1.y:=  Max( o.P1.y, o.PC.y, o.PE.y);
-                s2.y:= -Max(-o.P1.y,-o.PC.y,-o.PE.y);
+                s1.x :=  Max  (o.P1.x,  o.PC.x,  o.PE.x);
+                s2.x := -Max (-o.P1.x, -o.PC.x, -o.PE.x);
+                s1.y :=  Max  (o.P1.y,  o.PC.y,  o.PE.y);
+                s2.y := -Max (-o.P1.y, -o.PC.y, -o.PE.y);
 
              when paramcurve2d =>
-                s1:= o.P1;  --  We should compute a bounding box !!
-                s2:= s1;
+                s1 := o.P1;  --  We should compute a bounding box !!
+                s2 := s1;
 
-             when others => -- includes aux
-                s1:= (-1.0)*Pinf;
-                s2:=        Pinf;
+             when others =>  --  includes aux
+                s1 := (-1.0) * Pinf;
+                s2 :=          Pinf;
            end case;
 
-           if  s1.x > Pmax.x then Pmax.x:=s1.x; end if;
-           if  s1.y > Pmax.y then Pmax.y:=s1.y; end if;
-           if  s2.x < Pmin.x then Pmin.x:=s2.x; end if;
-           if  s2.y < Pmin.y then Pmin.y:=s2.y; end if;
+           if  s1.x > Pmax.x then Pmax.x := s1.x; end if;
+           if  s1.y > Pmax.y then Pmax.y := s1.y; end if;
+           if  s2.x < Pmin.x then Pmin.x := s2.x; end if;
+           if  s2.y < Pmin.y then Pmin.y := s2.y; end if;
          end if;
-         o:= o.all.next;
+         o := o.all.next;
 
        end loop;
-       if Pmin = Pinf then -- 4-Jun-2003: only "aux" objects
-         Pmax:= (0.0,0.0);
-         Pmin:= (0.0,0.0);
+       if Pmin = Pinf then  --  4-Jun-2003: only "aux" objects
+         Pmax := (0.0, 0.0);
+         Pmin := (0.0, 0.0);
        end if;
-     end if; -- measuring limits.
+     end if;   --  Measuring limits.
 
-     if  macro then
-       Pmax:= Pmax - Pmin;
+     if macro then
+       Pmax := Pmax - Pmin;
      else
-       Pmin:= (0.0,0.0);
+       Pmin := (0.0, 0.0);
      end if;
 
-     Put_Line(tf, "% This is a LaTeX picture output by TeXCAD.");
-     Put_Line(tf, "% File name: [" & Short_name(displayed_name) & "].");
-     Put_Line(tf, "% Version of TeXCAD: " & version);
-     Put_Line(tf, "% Reference / build: " & reference);
-     Put_Line(tf, "% For new versions, check: " & web);
-     Put_Line(tf, "% Options are on the following lines.");
-     -- 8-Jul-2004: + file name
-     Put_Line(tf,Img(cgrade)  & On_off(pic.opt.steigung) );
-     Put_Line(tf,Img(clines)  & On_off(pic.opt.sty(emlines)) );
-     Put_Line(tf,Img(cepic)   & On_off(pic.opt.sty(epic))     );
-     Put_Line(tf,Img(cbezmac) & On_off(pic.opt.sty(bezier))   );
-     Put_Line(tf,Img(creduce) & On_off(pic.opt.reduce)   );
-     Put_Line(tf,Img(csnap)   & On_off(pic.opt.snapping) );
-     -- Preview insertions (Jan-2007):
+     Put_Line (tf, "% This is a LaTeX picture output by TeXCAD.");
+     Put_Line (tf, "% File name: [" & Short_name (displayed_name) & "].");
+     Put_Line (tf, "% Version of TeXCAD: " & version);
+     Put_Line (tf, "% Reference / build: " & reference);
+     Put_Line (tf, "% For new versions, check: " & web);
+     Put_Line (tf, "% Options are on the following lines.");
+     --  8-Jul-2004: + file name
+     Put_Line (tf, Img (cgrade)  & On_off (pic.opt.steigung));
+     Put_Line (tf, Img (clines)  & On_off (pic.opt.sty (emlines)));
+     Put_Line (tf, Img (cepic)   & On_off (pic.opt.sty (epic)));
+     Put_Line (tf, Img (cbezmac) & On_off (pic.opt.sty (bezier)));
+     Put_Line (tf, Img (creduce) & On_off (pic.opt.reduce));
+     Put_Line (tf, Img (csnap)   & On_off (pic.opt.snapping));
+     --  Preview insertions (Jan-2007):
      declare
-       insertion: constant String:= To_String(pic.opt.pv_insert);
+       insertion : constant String := To_String (pic.opt.pv_insert);
      begin
        for i in insertion'Range loop
          if i = insertion'First then
-           Put(tf,Img(cmd_pv_insert) & '{');
+           Put (tf, Img (cmd_pv_insert) & '{');
          end if;
-         case insertion(i) is
+         case insertion (i) is
            when ASCII.LF =>
-             Put_Line(tf,"}");
-             Put(tf,Img(cmd_pv_insert) & '{');
+             Put_Line (tf, "}");
+             Put (tf, Img (cmd_pv_insert) & '{');
            when ASCII.CR =>
              null;
            when others =>
-             Put(tf,insertion(i));
+             Put (tf, insertion (i));
          end case;
          if i = insertion'Last then
-           Put_Line(tf,"}");
+           Put_Line (tf, "}");
          end if;
        end loop;
      end;
 
-     current_precision:= default_precision;
-     Put_Line(tf,Img(cqual)    & PA_AdaPas_Real.Br(pic.opt.quality));
-     Put_Line(tf,Img(cgdiff)   & PA_AdaPas_Real.Br(pic.opt.stdiff));
-     Put_Line(tf,Img(csnapasp) & Br(pic.opt.snap_asp));
-     Put_Line(tf,Img(czoom)    & '{' & Ada_Pas_Real(pic.opt.zoom_fac,4) & '}');
+     current_precision := default_precision;
+     Put_Line (tf, Img (cqual)    & PA_AdaPas_Real.Br (pic.opt.quality));
+     Put_Line (tf, Img (cgdiff)   & PA_AdaPas_Real.Br (pic.opt.stdiff));
+     Put_Line (tf, Img (csnapasp) & Br (pic.opt.snap_asp));
+     Put_Line (tf, Img (czoom)    & '{' & Ada_Pas_Real (pic.opt.zoom_fac, 4) & '}');
 
-     if pic.opt.sty(emlines) then
-       Put_Line(tf,"\special{em:linewidth " & To_String(pic.opt.linewidth) & '}');
+     if pic.opt.sty (emlines) then
+       Put_Line (tf, "\special{em:linewidth " & To_String (pic.opt.linewidth) & '}');
      end if;
-     Put_Line(tf,
-       "\unitlength " & To_String(pic.opt.unitlength) &
-       " % = " & R(pic.ul_in_pt) & "pt");
-     Put_Line(tf,"\linethickness{" & To_String(pic.opt.linewidth) & '}');
+     Put_Line (tf,
+       "\unitlength " & To_String (pic.opt.unitlength) &
+       " % = " & R (pic.ul_in_pt) & "pt");
+     Put_Line (tf, "\linethickness{" & To_String (pic.opt.linewidth) & '}');
 
-     Put_Line(tf,"\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility");
+     Put_Line (tf, "\ifx\plotpoint\undefined\newsavebox{\plotpoint}\fi % GNUPLOT compatibility");
 
      if pic.ul_in_pt > 0.0 then
-       current_precision:= default_precision +
-         Integer'Max(0, Integer(Log(pic.ul_in_pt) / Log(10.0) - 0.5));
-       -- Add extra precision when 1 UL is a "big" distance
+       current_precision := default_precision +
+         Integer'Max (0, Integer (Log (pic.ul_in_pt) / Log (10.0) - 0.5));
+       --  Add extra precision when 1 UL is a "big" distance
      else
-       current_precision:= default_precision;
+       current_precision := default_precision;
      end if;
-     Put_Line(tf,"\begin{picture}" & Pt( Pmax - pic.opt.P0) & Pt( pic.opt.P0 ));
+     Put_Line (tf, "\begin{picture}" & Pt (Pmax - pic.opt.P0) & Pt (pic.opt.P0));
 
-     o:= pic.root;
-     pointnum:= 0;
+     o := pic.root;
+     pointnum := 0;
 
-    while o/= null loop
-      --Put("#" & obj_art_type'image(o.art));
+    while o /= null loop
+      --  Put("#" & obj_art_type'image(o.art));
 
       if o.art = aux then
-        Put_Line(tf,To_String(o.inhalt));
+        Put_Line (tf, To_String (o.inhalt));
       elsif o.picked or not macro then
-        if lined(o.art) and current_LaTeX_ls.thickness /= o.ls.thickness then
-          -- ^ Change of thin/thick useful only when the figure
-          --   is composed by lines and then thickness is different
-          --   than the previous lined figure's.
-          current_LaTeX_ls.thickness:= o.ls.thickness;
+        if lined (o.art) and current_LaTeX_ls.thickness /= o.ls.thickness then
+          --  ^ Change of thin/thick useful only when the figure
+          --    is composed by lines and then thickness is different
+          --    than the previous lined figure's.
+          current_LaTeX_ls.thickness := o.ls.thickness;
           case current_LaTeX_ls.thickness is
-            when thin  => Put_Line(tf,Img_track(cthinlines));
-            when thick => Put_Line(tf,Img_track(cthicklines));
+            when thin  => Put_Line (tf, Img_track (cthinlines));
+            when thick => Put_Line (tf, Img_track (cthicklines));
           end case;
         end if;
 
         if o.art = line and then o.any_slope then
           case o.ls.pattern is
-            when plain       => Write_plain_line_any_slope(o.all);
-            when dot | dash  => Write_dot_dash_line_command(o.all);
+            when plain       => Write_plain_line_any_slope (o.all);
+            when dot | dash  => Write_dot_dash_line_command (o.all);
           end case;
         else  -- Something else (not an em-line/vector)
           case o.art is
-            when bezier      => Write_bezier(o.all);
-            when paramcurve2d=> Write_paramcurve2d(o.all);
-            when circ | disc => Write_kreis(o.all, Pmin);
-            when aux         => Put(tf,To_String(o.inhalt));
+            when bezier       => Write_bezier (o.all);
+            when paramcurve2d => Write_paramcurve2d (o.all);
+            when circ | disc  => Write_kreis (o.all, Pmin);
+            when aux          => Put (tf, To_String (o.inhalt));
             when others =>
-              if o.art = box and o.ls.pattern=dot then
-                Write_dotted_box(o.all);
+              if o.art = box and o.ls.pattern = dot then
+                Write_dotted_box (o.all);
               else
-                Write_LaTeX_put_figure(o.all); -- e.g. \put{\dashbox...}
+                Write_LaTeX_put_figure (o.all);  --  e.g. \put{\dashbox...}
               end if;
           end case;
         end if; -- picked or not macro
       end if; -- aux or not
-      o:= o.next;
+      o := o.next;
     end loop;
 
-    Put_Line(tf,"\end{picture}");
-    Flush(tf);
+    Put_Line (tf, "\end{picture}");
+    Flush (tf);
   end Insert;
 
-  procedure Save( pic           : in out Picture;
-                  macro         :        Boolean;
-                  file_name     :        String;
-                  displayed_name:        String
-  )
+  procedure Save (pic            : in out Picture;
+                  macro          :        Boolean;
+                  file_name      :        String;
+                  displayed_name :        String)
   is
     use Ada.Text_IO;
-    tf: File_Type;
+    tf : File_Type;
   begin
-    Create(tf,Out_File,file_name);
-    Insert(pic,macro,tf,displayed_name);
-    Close(tf);
-    if not macro then pic.saved:= True; end if;
+    Create (tf, Out_File, file_name);
+    Insert (pic, macro, tf, displayed_name);
+    Close (tf);
+    if not macro then pic.saved := True; end if;
   end Save;
 
-  procedure Insert_and_Wrap_in_document(
-    pic  : in Picture;
-    macro:    Boolean;
-    file :    Ada.Text_IO.File_Type;
-    title:    String )
+  procedure Insert_and_Wrap_in_document
+    (pic   : in Picture;
+     macro :    Boolean;
+     file  :    Ada.Text_IO.File_Type;
+     title :    String)
   is
     use Ada.Text_IO;
   begin
     case gen_opt.preview_mode is
       when v209 =>
-        Put(file,"\documentstyle");
-        if pic.opt.sty(epic) then
-          Put(file,"[epic]");
+        Put (file, "\documentstyle");
+        if pic.opt.sty (epic) then
+          Put (file, "[epic]");
         end if;
       when v2e  =>
-        Put(file,"\documentclass");
+        Put (file, "\documentclass");
     end case;
-    Put_Line(file,"{article}\pagestyle{empty}");
-    Put_Line(file,To_String(pic.opt.pv_insert));
+    Put_Line (file, "{article}\pagestyle{empty}");
+    Put_Line (file, To_String (pic.opt.pv_insert));
     case gen_opt.preview_mode is
       when v209 =>
         null;
       when v2e  =>
-        if pic.opt.sty(epic) then
-          Put_Line(file,"\usepackage{epic}");
+        if pic.opt.sty (epic) then
+          Put_Line (file, "\usepackage{epic}");
         end if;
     end case;
-    Put_Line(file,"\begin{document}\parindent 0pt\TeX CAD preview (");
-    Put_Line(file,"\verb/" & title & "/ ) :\\[1.3ex]\framebox{");
-    Insert( pic, macro, file, "" );
-    Put_Line(file,"}\end{document}");
+    Put_Line (file, "\begin{document}\parindent 0pt\TeX CAD preview (");
+    Put_Line (file, "\verb/" & title & "/ ) :\\[1.3ex]\framebox{");
+    Insert (pic, macro, file, "");
+    Put_Line (file, "}\end{document}");
   end Insert_and_Wrap_in_document;
 
 end TC.Output;
