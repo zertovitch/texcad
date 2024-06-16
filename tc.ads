@@ -18,8 +18,8 @@ package TC is
 
   use Ada.Strings.Unbounded;
 
-  version   : constant String := "4.52";
-  reference : constant String := "01-Jun-2024 (revision a105)";
+  version   : constant String := "4.53";
+  reference : constant String := "16-Jun-2024 (revision a111)";
   web       : constant String := "http://texcad.sf.net/";
   mail      : constant String := "gdemont@users.sf.net";
 
@@ -33,11 +33,11 @@ package TC is
 
   function "+"(P1, P2 : Point) return Point;       pragma Inline ("+");
   function "-"(P1, P2 : Point) return Point;       pragma Inline ("-");
-  function "-"(P1 : Point) return Point;          pragma Inline ("-");
+  function "-"(P1 : Point) return Point;           pragma Inline ("-");
   function "*"(f : Real; P : Point) return Point;  pragma Inline ("*");
-  function Norm2 (P : Point) return Real;           pragma Inline (Norm2);
-  function Norm (P : Point) return Real;            pragma Inline (Norm);
-  function Ortho (P : Point) return Point;          pragma Inline (Ortho);
+  function Norm2 (P : Point) return Real;          pragma Inline (Norm2);
+  function Norm (P : Point) return Real;           pragma Inline (Norm);
+  function Ortho (P : Point) return Point;         pragma Inline (Ortho);
 
   --  5-Mar-2004: grouping the ".sty"'s used by the picture.
   type Supposing_sty is (bezier, epic, emlines);
