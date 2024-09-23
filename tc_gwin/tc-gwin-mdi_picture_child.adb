@@ -419,15 +419,15 @@ package body TC.GWin.MDI_Picture_Child is
   zoom_factor : constant Real := 2.0 ** (1.0 / 8.0);
 
   procedure Zoom_Picture
-    (Window    : in out MDI_Picture_Child_Type;
-     direction :        Integer)
+    (Window                : in out MDI_Picture_Child_Type;
+     exponential_direction : in     Integer)
   is
     opt : TC.Picture_Options renames Window.Draw_Control.Picture.opt;
     sf : String (1 .. 20);
     use Ada.Strings, Ada.Strings.Fixed, MDI_Main;
   begin
-    if direction /= 0 then
-      opt.zoom_fac := opt.zoom_fac * (zoom_factor ** direction);
+    if exponential_direction /= 0 then
+      opt.zoom_fac := opt.zoom_fac * (zoom_factor ** exponential_direction);
       Window.Draw_Control.Picture.refresh := full;
       Subtle_Redraw (Window.Draw_Control);
     end if;

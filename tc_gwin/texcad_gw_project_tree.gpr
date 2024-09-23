@@ -48,13 +48,6 @@ project TeXCAD_GW_Project_Tree extends "GWindows_Contrib" is
    type TeXCAD_Build_Mode_Type is ("Optimize", "Debug");
    TeXCAD_Build_Mode : TeXCAD_Build_Mode_Type := external ("TeXCAD_Build_Mode", "Debug");
 
-   type TeXCAD_Styles_Checks_Type is
-      ("Off",
-       "On",
-       "Extra");
-
-   TeXCAD_Styles_Checks : TeXCAD_Styles_Checks_Type := external ("TeXCAD_Styles_Checks", "On");
-
    case TeXCAD_Build_Mode is
       when "Debug" =>
          for Object_Dir use "..\ACU_Debg";
@@ -77,13 +70,13 @@ project TeXCAD_GW_Project_Tree extends "GWindows_Contrib" is
       end case;
    end Builder;
 
-   Common_Compiler_Options := (
-     "-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
-     "-gnatwcijkmopruvz.c.p.t.x",      --  Warnings switches (run "gnatmake" for full list)
-     "-gnatf",  --  Full errors. Verbose details, all undefined references
-     "-gnatq",  --  Don't quit, try semantics, even if parse errors
-     "-gnatQ"   --  Don't quit, write ali/tree file even if compile errors
-   );
+   Compiler_Common_Options :=
+     ("-gnatwa",                        --  Warnings switches (a:turn on all info/warnings marked with +)
+      "-gnatwcijkmopruvz.c.p.t.x",      --  Warnings switches (run "gnatmake" for full list)
+      "-gnatwh",                        --  Warnings switches (h:turn on warnings for hiding declarations)
+      "-gnatf",   --  Full errors. Verbose details, all undefined references
+      "-gnatq",   --  Don't quit, try semantics, even if parse errors
+      "-gnatQ");  --  Don't quit, write ali/tree file even if compile errors
 
    Style_Checks_1 := 
      ("-gnatyaknpr",   --  Style: check all casings: a:attribute, k:keywords, n:package Standard identifiers, p:pragma, r:identifier references
@@ -93,23 +86,18 @@ project TeXCAD_GW_Project_Tree extends "GWindows_Contrib" is
    Style_Checks_2 := 
      ("-gnatybfhiu",   --  Style: check b:no blanks at end of lines, f:no ff/vtabs, h: no htabs, i:if-then layout, u:no unnecessary blank lines
       "-gnatye",       --  Style: check e:end/exit labels present
-      "-gnatytc",      --  Style: check t:token separation rules, c:comment format (two spaces)
-      "-gnatwh");      --  Warnings switches (h:turn on warnings for hiding declarations)
+      "-gnatytc");     --  Style: check t:token separation rules, c:comment format (two spaces)
 
-   case TeXCAD_Styles_Checks is
-      when "Off"   => null;
-      when "On"    => Common_Compiler_Options := Common_Compiler_Options & Style_Checks_1;
-      when "Extra" => Common_Compiler_Options := Common_Compiler_Options & Style_Checks_1 & Style_Checks_2;
-   end case;
+   Compiler_Common_Options := Compiler_Common_Options & Style_Checks_1 & Style_Checks_2;
    
    package Compiler is
       case TeXCAD_Build_Mode is
          when "Debug" =>
             for Local_Configuration_Pragmas use project'Project_Dir & "..\acu_debg\debug.pra";
-            for Default_Switches ("ada") use Common_Compiler_Options & ("-gnato", "-fstack-check", "-g", "-gnatVa");
+            for Default_Switches ("ada") use Compiler_Common_Options & ("-gnato", "-fstack-check", "-g", "-gnatVa");
          when "Optimize" =>
             for Local_Configuration_Pragmas use project'Project_Dir & "..\acu_debg\tc_elim.pra";
-            for Default_Switches ("ada") use Common_Compiler_Options & ("-Os", "-gnatp", "-fno-strict-aliasing", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0");
+            for Default_Switches ("ada") use Compiler_Common_Options & ("-Os", "-gnatp", "-fno-strict-aliasing", "-ffunction-sections", "-falign-jumps=0", "-falign-loops=0", "-falign-functions=0");
       end case;
    end Compiler;
 

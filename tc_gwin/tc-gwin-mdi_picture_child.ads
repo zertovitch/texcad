@@ -137,8 +137,8 @@ package TC.GWin.MDI_Picture_Child is
   success_in_enumerated_close : Boolean;
 
   procedure Zoom_Picture
-    (Window    : in out MDI_Picture_Child_Type;
-     direction :        Integer);
+    (Window                : in out MDI_Picture_Child_Type;
+     exponential_direction : in     Integer);
 
   procedure Update_Information (Window : in out MDI_Picture_Child_Type);
 

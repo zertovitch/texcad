@@ -330,11 +330,11 @@ package body TC.GWin.Options_Dialogs is
   ------------------------
 
   procedure On_Picture_Options
-     (window   : in out GWindows.Base.Base_Window_Type'Class;
-      pic_opt  : in out TC.Picture_Options;
-      main     : in out TC.GWin.MDI_Main.MDI_Main_Type;
-      modified :    out Boolean;
-      title    : String)
+     (window      : in out GWindows.Base.Base_Window_Type'Class;
+      pic_opt     : in out TC.Picture_Options;
+      main        : in out TC.GWin.MDI_Main.MDI_Main_Type;
+      is_modified :    out Boolean;
+      title       : in     String)
    is
      pan : GWindows.Windows.Window_Type;
 
@@ -525,11 +525,11 @@ package body TC.GWin.Options_Dialogs is
 
     case Result is
       when GWindows.Constants.IDOK =>
-        modified := pic_opt /= candidate;
+        is_modified := pic_opt /= candidate;
         --  ^ try to do it so short in another language!
         pic_opt := candidate;
       when others =>  --  Contains the IDCANCEL case.
-        modified := False;
+        is_modified := False;
     end case;
     window.Redraw;
   end On_Picture_Options;

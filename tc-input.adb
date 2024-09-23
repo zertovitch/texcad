@@ -62,7 +62,7 @@ package body TC.Input is
     ziart                 : Obj_art_type;
     current_line_settings : Line_Settings := normal_line_settings;
     type mode_int is range 0 .. 2;
-    mode : mode_int;
+    input_mode : mode_int;
     --  Fix 23-Apr-2003: End_of_File(tf) before the end of parsing (prefetch)
 
     use TC.Units, Ada.Strings, Ada.Strings.Fixed;
@@ -81,7 +81,7 @@ package body TC.Input is
       end Raise_it;
     begin
       Ada.Text_IO.Close (tf);
-      case mode is
+      case input_mode is
         when 0 | 2 => Raise_it (line_buf (1 .. line_len));
         when 1 =>     Raise_it (arg (1 .. arg_len));
       end case;
@@ -92,7 +92,7 @@ package body TC.Input is
     begin
       loop
         if End_Of_File (tf) then
-          if mode = 2 then
+          if input_mode = 2 then
             line_len := 0;
             end_of_parsing := True;
           else
@@ -115,7 +115,7 @@ package body TC.Input is
 
     procedure Read_ch is --  JW,GH
     begin
-      if mode = 0 or mode = 2 then
+      if input_mode = 0 or input_mode = 2 then
         if p > line_len then
           Read_line;
         end if;
@@ -697,12 +697,12 @@ package body TC.Input is
 
         when cend1   =>
              declare
-               mem : constant mode_int := mode;
+               mem : constant mode_int := input_mode;
              begin
-               mode := 2;
+               input_mode := 2;
                Read_arg ('{', '}', arg, arg_len, optional => False);
                stop := arg (1 .. arg_len) = "picture";
-               mode := mem;
+               input_mode := mem;
              end;
         when caux    =>
              if com (1 .. com_len) = "\linethickness" then
@@ -724,7 +724,7 @@ package body TC.Input is
             Read_arg ('{', '}', arg, arg_len, optional => False);
             q := 1;
             ch := ' ';
-            mode := 1;
+            input_mode := 1;
             read_com;
             Which_command (com (1 .. com_len), ziart, False, kommando);
             obj_ptr2 := new Obj_type (ziart);
@@ -806,7 +806,7 @@ package body TC.Input is
              when others => null;
            end case;
 
-           mode := 0;
+           input_mode := 0;
            if p > 1 then
              ch := line_buf (p - 1);
            end if;
@@ -865,7 +865,7 @@ package body TC.Input is
     end Read_new_object;
 
   begin  --  load
-    mode := 0;
+    input_mode := 0;
     Ada.Text_IO.Open (tf, Ada.Text_IO.In_File, file_name);
 
     if macro then
@@ -916,7 +916,7 @@ package body TC.Input is
           Read_arg ('{', '}', arg, arg_len, optional => False);
           q := 1;
           ch := ' ';
-          mode := 1;
+          input_mode := 1;
           case  kommando  is
             when cspec   =>
               if  Index (arg (1 .. arg_len), "em:linewidth") /= 0 then
@@ -952,7 +952,7 @@ package body TC.Input is
                end if;
           end case;
 
-          mode := 0;
+          input_mode := 0;
           ch := line_buf (p - 1);
         end if;
         exit when com (1 .. com_len) = "\begin";

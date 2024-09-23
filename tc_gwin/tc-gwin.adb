@@ -22,11 +22,11 @@ package body TC.GWin is
 
   procedure Determine_version is
     minor, major : Integer;
-    use GWin_Util;
-    f : Windows_family;
+    use type GWin_Util.Windows_family;
+    f : GWin_Util.Windows_family;
   begin
-    Get_Windows_version (major, minor, f);
-    Windows_95 := f = Win9x and major = 4 and minor = 0;
+    GWin_Util.Get_Windows_version (major, minor, f);
+    Windows_95 := f = GWin_Util.Win9x and major = 4 and minor = 0;
   end Determine_version;
 
 begin

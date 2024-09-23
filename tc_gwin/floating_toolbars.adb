@@ -103,10 +103,9 @@ package body Floating_Toolbars is
     (Control : in out GUI_toolbar;
      Item    : in     Integer)
   is
-    use GWindows.Windows;
   begin
     if Control.belongs_to /= null then
-      On_Menu_Select (Window_Type (Control.belongs_to.parent.all), Item);
+      GWindows.Windows.Window_Type (Control.belongs_to.parent.all).On_Menu_Select (Item);
     end if;
   end On_Button_Select;
 
@@ -198,7 +197,6 @@ package body Floating_Toolbars is
 
     procedure Create_tool_window is
       memo_geom : LTWH_Rectangle;
-      use GWindows.Base;
     begin
       --  a/ The tool window
       Control.window.belongs_to := Control'Unrestricted_Access;
@@ -220,14 +218,14 @@ package body Floating_Toolbars is
 
       if memo_geom.l /= GWindows.Constants.Use_Default then
         --  Restore previous position:
-        GWindows.Base.Left (Base_Window_Type (Control.window), memo_geom.l);
-        GWindows.Base.Top (Base_Window_Type (Control.window), memo_geom.t);
+        GWindows.Base.Base_Window_Type (Control.window).Left (memo_geom.l);
+        GWindows.Base.Base_Window_Type (Control.window).Top  (memo_geom.t);
       end if;
 
       if memo_geom.w /= GWindows.Constants.Use_Default then
         --  Restore previous position:
-        GWindows.Base.Width (Base_Window_Type (Control.window), memo_geom.w);
-        GWindows.Base.Height (Base_Window_Type (Control.window), memo_geom.h);
+        GWindows.Base.Base_Window_Type (Control.window).Width  (memo_geom.w);
+        GWindows.Base.Base_Window_Type (Control.window).Height (memo_geom.h);
       end if;
 
       Redraw (Control.window);
@@ -235,10 +233,8 @@ package body Floating_Toolbars is
       Show (Control.bar);  --  We show the bar, but not the containing window!
     end Create_tool_window;
 
-    use GWindows.Base;
-
   begin
-    Control.parent := Window_From_Handle (Handle (Parent));
+    Control.parent := GWindows.Base.Window_From_Handle (GWindows.Base.Handle (Parent));
     Control.title := GWindows.GStrings.To_GString_Unbounded (Title);
     --
     Control.window.geom := (Left, Top, Width, Height);
