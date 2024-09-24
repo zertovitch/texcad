@@ -57,7 +57,7 @@ package body TC.GWin.Tabs is
     use TeXCAD_Resource_GUI, TC.GWin.Lang;
   begin
     Append_Item (Control.context_menu, Msg (fclose), ID_custom (close));
-    Append_Item (Control.context_menu, Msg (fopen_containing_folder), ID_custom (open_containing_folder));
+    Append_Item (Control.context_menu, Msg (fopen_folder), ID_custom (open_folder));
   end On_Create;
 
   overriding procedure On_Message
@@ -104,7 +104,7 @@ package body TC.GWin.Tabs is
       State
         (Control.context_menu,
          Command,
-         ID_custom (open_containing_folder),
+         ID_custom (open_folder),
          bool_to_state (Length (Control.info (chosen_tab).ID.file_name) > 0));
       Immediate_Popup_Menu (Control.context_menu, chosen_child_window.all);
     end if;

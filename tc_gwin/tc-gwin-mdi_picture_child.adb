@@ -458,7 +458,7 @@ package body TC.GWin.MDI_Picture_Child is
       State
         (Window.File_Menu,
          Command,
-         ID_custom (open_containing_folder),
+         ID_custom (open_folder),
          bool_to_state (Ada.Strings.Wide_Unbounded.Length (Window.ID.file_name) > 0));
       --  !!  update on possible undo/redo
       State (Window.Edit_Menu, Command, ID_custom (tc_undo), Disabled);
@@ -854,10 +854,10 @@ package body TC.GWin.MDI_Picture_Child is
       use TC.Picking, Ada.Strings.Wide_Unbounded;
     begin
       case c is
-        when save       => On_Save (Window);
-        when save_as    => On_Save_As (Window, macro => False);
-        when close      => Close (Window);
-        when open_containing_folder =>
+        when save        => On_Save (Window);
+        when save_as     => On_Save_As (Window, macro => False);
+        when close       => Close (Window);
+        when open_folder =>
           if Window.ID.file_name /= "" then
             GWin_Util.Start (Ada.Directories.Containing_Directory (G2S (GU2G (Window.ID.file_name))));
           end if;

@@ -11,7 +11,7 @@ package TC.GWin.Lang is
     --  Menus
     ffile,
       fnew, fopen, fsave, fsaveas, fclose,
-      fopen_containing_folder,
+      fopen_folder,
       fexit,
     ddraw,
       dtext,
@@ -136,8 +136,7 @@ package TC.GWin.Lang is
       save             => fsave,
       save_as          => fsaveas,
       close            => fclose,
-      open_containing_folder =>
-                          fopen_containing_folder,
+      open_folder      => fopen_folder,
       text             => dtext,
       framebox         => dframebox,
       filled_box       => dfilledbox,
