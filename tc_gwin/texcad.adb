@@ -14,7 +14,8 @@ with TC.GWin.MDI_Main,
 with GWindows.Application,
      GWindows.Base,
      GWindows.GStrings,
-     GWindows.Message_Boxes;
+     GWindows.Message_Boxes,
+     GWindows.Single_Instance;
 
 with GWin_Util;
 
@@ -121,6 +122,18 @@ procedure TeXCAD is
     end case;
   end Interactive_crash;
 
+  procedure TeXCAD_Process_Argument (Position, Total : Positive; Arg : String) is
+  begin
+    Top.Process_Argument (Position, Total, Arg);
+  end TeXCAD_Process_Argument;
+
+  package TeXCAD_Single_Instance is
+    new GWindows.Single_Instance (TeXCAD_Process_Argument);
+
+  Exit_Requested       : Boolean;
+  TeXCAD_Class_Name    : constant GWindows.GString := "TeXCAD_Class_Name";
+  TeXCAD_Instance_Name : constant GWindows.GString := "TeXCAD_Instance";
+
   uninst : constant GWindows.GString := "Uninstall TeXCAD";
 
   use Ada.Characters.Handling, Ada.Command_Line;
@@ -138,9 +151,18 @@ begin
     end if;
   else
     GWindows.Base.On_Exception_Handler (Handler => Interactive_crash'Unrestricted_Access);
-    Top.Create_MDI_Top ("TeXCAD");
-    Top.Focus;
-    GWindows.Application.Message_Loop;
+
+    TeXCAD_Single_Instance.Manage_Single_Instance
+      (Application_Class_Name    => TeXCAD_Class_Name,
+       Application_Instance_Name => TeXCAD_Instance_Name,
+       Exit_Requested            => Exit_Requested);
+
+    if not Exit_Requested then
+      Top.Create_MDI_Top ("TeXCAD", CClass => TeXCAD_Class_Name);
+      Top.Focus;
+      GWindows.Application.Message_Loop;
+    end if;
+
   end if;
 exception
   when TC.GWin.Options.Clear_failed =>

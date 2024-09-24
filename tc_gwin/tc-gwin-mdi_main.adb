@@ -20,7 +20,8 @@ with GWindows.Application,
 with GWin_Util;
 
 with Ada.Command_Line,
-     Ada.Exceptions;
+     Ada.Exceptions,
+     Ada.Strings.UTF_Encoding.Conversions;
 
 package body TC.GWin.MDI_Main is
 
@@ -138,7 +139,6 @@ package body TC.GWin.MDI_Main is
       m.Redraw_all;
     end if;
     --  Show things in the main status bar - effective only after Thaw!
-    c.Zoom_Picture (0);
     c.Update_Information;
     c.Update_Permanent_Command;
   end Finish_subwindow_opening;
@@ -656,5 +656,30 @@ package body TC.GWin.MDI_Main is
     Result := GWindows.Application.Show_Dialog (Window, Parent);
     Toolbar_enabling (Main, True);
   end Show_Dialog_with_Toolbars_off;
+
+  procedure Process_Argument
+    (Window   : in out MDI_Main_Type;
+     Position : in     Positive;
+     Total    : in     Positive;
+     Arg      : in     String)
+  is
+    use GWindows.Windows;
+    procedure Dispose is new Ada.Unchecked_Deallocation
+      (Array_Of_File_Names, Array_Of_File_Names_Access);
+  begin
+    if Position = 1 then
+      Window.bulk_files_list :=
+        new Array_Of_File_Names (1 .. Total);
+    end if;
+
+    Window.bulk_files_list (Position) :=
+      G2GU (Ada.Strings.UTF_Encoding.Conversions.Convert (Arg));
+
+    if Position = Total then
+      --  We simulate a file dropping onto the MDI main window.
+      Window.On_File_Drop (Window.bulk_files_list.all);
+      Dispose (Window.bulk_files_list);
+    end if;
+  end Process_Argument;
 
 end TC.GWin.MDI_Main;

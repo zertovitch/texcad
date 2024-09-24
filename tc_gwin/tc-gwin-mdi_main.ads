@@ -27,6 +27,7 @@ package TC.GWin.MDI_Main is
         View_Menu              : GWindows.Menus.Menu_Type;
         tab_bar                : Tabs.TeXCAD_Tab_Bar_Type;
         record_dimensions      : Boolean := False;  --  in On_Move, On_Size
+        bulk_files_list        : GWindows.Windows.Array_Of_File_Names_Access := null;
       end record;
 
   type MDI_Main_Access is access all MDI_Main_Type;
@@ -87,5 +88,11 @@ package TC.GWin.MDI_Main is
      Parent : in     GWindows.Base.Base_Window_Type'Class;
      Main   : in out MDI_Main_Type;
      Result :    out Integer);
+
+  procedure Process_Argument
+    (Window   : in out MDI_Main_Type;
+     Position : in     Positive;
+     Total    : in     Positive;
+     Arg      : in     String);
 
 end TC.GWin.MDI_Main;

@@ -495,6 +495,8 @@ package body TC.GWin.MDI_Picture_Child is
     --  Update state of "Save" button, "Save " menu entry and window title.
     Update_Tool_Bar;
     Update_Menus;
+    --  Show picture's zoom factor.
+    Window.Zoom_Picture (0);
   end Update_Information;
 
   ---------------
@@ -880,7 +882,6 @@ package body TC.GWin.MDI_Picture_Child is
             Refresh_size_dependent_parameters
               (Window.Draw_Control.Picture,
                objects => True);
-            Window.Zoom_Picture (0);  --  Show new zoom factor.
             Window.Draw_Control.Picture.refresh := full;  --  14-Oct-2003
             Update_Information (Window);  --  Show the '*' for modified. 2-Aug-2005.
           end if;
@@ -1216,7 +1217,7 @@ package body TC.GWin.MDI_Picture_Child is
     tab_bar : Tabs.TeXCAD_Tab_Bar_Type renames Window.mdi_root.tab_bar;
     tab_index : Integer;
   begin
-    --  Update_Information (Window, toolbar_and_menu);
+    Window.Update_Information;
     tab_index := tab_bar.Tab_Index (Window.ID);
     if tab_index >= 0 then
       tab_bar.Selected_Tab (tab_index);
