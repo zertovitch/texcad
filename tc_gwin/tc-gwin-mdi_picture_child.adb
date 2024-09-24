@@ -8,6 +8,7 @@ with TC.GWin.Lang,
      TC.GWin.Menus,
      TC.GWin.Options_Dialogs,
      TC.GWin.Previewing,
+     TC.GWin.Tabs,
      TC.GWin.Tools;
 
 with GWindows.Application,
@@ -26,6 +27,7 @@ with GWin_Util;
 with Ada.Directories,
      Ada.Exceptions,
      Ada.Strings.Fixed,
+     Ada.Strings.Wide_Unbounded,
      Ada.Text_IO;
 
 with Interfaces.C;
@@ -350,7 +352,7 @@ package body TC.GWin.MDI_Picture_Child is
                                  top_mru_entry : GString := "")
   is
   begin
-    Window.MDI_Root.Update_Common_Menus (top_mru_entry);
+    Window.mdi_root.Update_Common_Menus (top_mru_entry);
   end Update_Common_Menus;
 
   procedure Update_Permanent_Command (Window : in out MDI_Picture_Child_Type) is
@@ -411,7 +413,7 @@ package body TC.GWin.MDI_Picture_Child is
       when change_text => Change_Cursor (Window.Draw_Control, cur_chg_text);
       when others      => Change_Cursor (Window.Draw_Control, cur_arrow);
     end case;
-    Window.MDI_Root.Update_Status_Bar
+    Window.mdi_root.Update_Status_Bar
       (command,
        Filter_amp (Msg (msg_for_command (Window.Draw_Control.current_cmd))));
   end Update_Permanent_Command;
@@ -432,18 +434,17 @@ package body TC.GWin.MDI_Picture_Child is
       Subtle_Redraw (Window.Draw_Control);
     end if;
     RIO.Put (sf, opt.zoom_fac, 2, 0);
-    Window.MDI_Root.Update_Status_Bar (zoom, S2G (Trim (sf, Left)));
+    Window.mdi_root.Update_Status_Bar (zoom, S2G (Trim (sf, Left)));
   end Zoom_Picture;
 
   procedure Update_Information (Window : in out MDI_Picture_Child_Type) is
     p : TC.Picture renames Window.Draw_Control.Picture;
     is_modified : constant Boolean := not p.saved;
-    bool_to_state : constant array (Boolean) of State_Type := (Disabled, Enabled);
     Star : constant array (Boolean) of GCharacter := (False => ' ', True => '*');
 
     procedure Update_Tool_Bar is
       bar : Office_Applications.Classic_Main_Tool_Bar_Type
-        renames Window.MDI_Root.Tool_Bar;
+        renames Window.mdi_root.Tool_Bar;
     begin
       bar.Enabled (ID_custom (save), is_modified);
       --  !!  update on possible undo/redo
@@ -454,6 +455,11 @@ package body TC.GWin.MDI_Picture_Child is
     procedure Update_Menus is
     begin
       State (Window.File_Menu, Command, ID_custom (save), bool_to_state (is_modified));
+      State
+        (Window.File_Menu,
+         Command,
+         ID_custom (open_containing_folder),
+         bool_to_state (Ada.Strings.Wide_Unbounded.Length (Window.ID.file_name) > 0));
       --  !!  update on possible undo/redo
       State (Window.Edit_Menu, Command, ID_custom (tc_undo), Disabled);
       State (Window.Edit_Menu, Command, ID_custom (tc_redo), Disabled);
@@ -475,17 +481,17 @@ package body TC.GWin.MDI_Picture_Child is
   begin
     --  Update window title.
     if is_modified then
-      Window.Text ("* " & GU2G (Window.Short_Name));
+      Window.Text ("* " & GU2G (Window.ID.short_name));
     else
-      Window.Text (GU2G (Window.Short_Name));
+      Window.Text (GU2G (Window.ID.short_name));
     end if;
     --  Update statistics
-    Window.MDI_Root.Update_Status_Bar
+    Window.mdi_root.Update_Status_Bar
       (stat_objects,
        Show_Total ("Objects:", p.total, p.total_hidden) &
        Show_Total ("; picked:", p.picked, p.picked_hidden));
     --  Put a '*' if picture is modified.
-    Window.MDI_Root.Update_Status_Bar (modified, (1 => Star (is_modified)));
+    Window.mdi_root.Update_Status_Bar (modified, (1 => Star (is_modified)));
     --  Update state of "Save" button, "Save " menu entry and window title.
     Update_Tool_Bar;
     Update_Menus;
@@ -512,10 +518,10 @@ package body TC.GWin.MDI_Picture_Child is
     Window.Draw_Control.Picture.refresh := full;
 
     --  Filial feelings:
-    Window.MDI_Root := MDI_Main_Access (Controlling_Parent (Window));
+    Window.mdi_root := MDI_Main_Access (Controlling_Parent (Window));
     Window.Draw_Control.pic_parent :=
       MDI_Picture_Child_Access (Controlling_Parent (Window.Draw_Control));
-    Window.Draw_Control.main := Window.MDI_Root;
+    Window.Draw_Control.main := Window.mdi_root;
 
     Use_GUI_Font (Window.Draw_Control);
 
@@ -581,14 +587,14 @@ package body TC.GWin.MDI_Picture_Child is
         memo_unmaximized_children : constant Boolean := not MDI_childen_maximized;
       begin
         if memo_unmaximized_children then
-          Window.MDI_Root.Freeze;
+          Window.mdi_root.Freeze;
           Window.Zoom;
         end if;
         Window.On_Size (Window.Width, Window.Height);
         if memo_unmaximized_children then
-          Window.MDI_Root.Thaw;  --  Before Zoom, otherwise uncomplete draw.
+          Window.mdi_root.Thaw;  --  Before Zoom, otherwise uncomplete draw.
           Window.Zoom (False);
-          Window.MDI_Root.Tool_Bar.Redraw;
+          Window.mdi_root.Tool_Bar.Redraw;
         end if;
       end;
 
@@ -596,7 +602,26 @@ package body TC.GWin.MDI_Picture_Child is
       Adjust_Draw_Control_Position (Window);
       Update_Common_Menus (Window);
       Update_Information (Window);
-   end On_Create;
+  end On_Create;
+
+  procedure Create_TeXCAD_MDI_Child
+    (Window : in out MDI_Picture_Child_Type;
+     Parent : in out MDI_Main.MDI_Main_Type;
+     ID     : in     ID_Type)
+  is
+    procedure Append_Tab is
+      title : constant GString := GU2G (Window.ID.short_name);
+    begin
+      Parent.tab_bar.Insert_Tab (Parent.tab_bar.Tab_Count, Simple_Name (title));
+      Parent.tab_bar.Selected_Tab (Parent.tab_bar.Tab_Count - 1);
+      Parent.tab_bar.info.Append ((Window.ID, Window'Unrestricted_Access));
+    end Append_Tab;
+  begin
+    Window.ID := ID;
+    Create_MDI_Child (Window, Parent, GU2G (ID.short_name), Is_Dynamic => True);
+    Parent.MDI_Active_Window (Window);
+    Append_Tab;
+  end Create_TeXCAD_MDI_Child;
 
   procedure Preview (window : in out MDI_Picture_Child_Type) is
     ttl : constant GString := Text (window);
@@ -769,7 +794,7 @@ package body TC.GWin.MDI_Picture_Child is
     y := 30;
 
     Create_As_Dialog
-      (pan, Window.MDI_Root.all,
+      (pan, Window.mdi_root.all,
        Filter_amp (Msg (vtogltb)),
        Width => 300, Height => 140 + y);
 
@@ -806,7 +831,7 @@ package body TC.GWin.MDI_Picture_Child is
     end case;
 
     MDI_Main.Show_Dialog_with_Toolbars_off
-      (pan, Window.MDI_Root.all, Window.MDI_Root.all, Result);
+      (pan, Window.mdi_root.all, Window.mdi_root.all, Result);
 
     case Result is
       when IDOK   => Window.Draw_Control.current_ls := candidate;
@@ -826,12 +851,16 @@ package body TC.GWin.MDI_Picture_Child is
 
     procedure Command (c : MDI_child_cmd) is
       modified, success : Boolean;
-      use TC.Picking;
+      use TC.Picking, Ada.Strings.Wide_Unbounded;
     begin
       case c is
         when save       => On_Save (Window);
         when save_as    => On_Save_As (Window, macro => False);
         when close      => Close (Window);
+        when open_containing_folder =>
+          if Window.ID.file_name /= "" then
+            GWin_Util.Start (Ada.Directories.Containing_Directory (G2S (GU2G (Window.ID.file_name))));
+          end if;
         when zoom_minus => Window.Zoom_Picture (-2);
         when zoom_plus  => Window.Zoom_Picture (+2);
         when preview    => Preview (Window);
@@ -840,7 +869,7 @@ package body TC.GWin.MDI_Picture_Child is
           TC.GWin.Options_Dialogs.On_Picture_Options
             (Window,
              Window.Draw_Control.Picture.opt,
-             Window.MDI_Root.all,
+             Window.mdi_root.all,
              modified,
              G2S (Msg (opicopt) & " - '" &
                Office_Applications.Shorten_File_Name
@@ -965,7 +994,7 @@ package body TC.GWin.MDI_Picture_Child is
 
   procedure On_Save (Window : in out MDI_Picture_Child_Type)
   is
-    File_Name : constant GWindows.GString := GU2G (Window.File_Name);
+    File_Name : constant GWindows.GString := GU2G (Window.ID.file_name);
   begin
     if File_Name = "" then
       On_Save_As (Window, macro => False);
@@ -980,26 +1009,30 @@ package body TC.GWin.MDI_Picture_Child is
 
   procedure On_Save_As (Window : in out MDI_Picture_Child_Type; macro : Boolean)
   is
-     New_File_Name : GWindows.GString_Unbounded;
-     File_Title    : GWindows.GString_Unbounded;
-     Success       : Boolean;
-     saveas_or_macro : constant array (Boolean) of Message :=
-       (True => save_macro, False => save_as);
-     file_kind : constant array (Boolean) of Message :=
-       (True => tcd_mac, False => ltx_pic);
-     function Suffix return String is
-     begin
-       if macro then
-         return Mac_suffix;
-       else
-         return Pic_suffix;
-       end if;
-     end Suffix;
+    New_File_Name   : GWindows.GString_Unbounded;
+    File_Title      : GWindows.GString_Unbounded;
+    new_ID          : ID_Type;
+    tab_bar         : Tabs.TeXCAD_Tab_Bar_Type renames Window.mdi_root.tab_bar;
+    Success         : Boolean;
+    saveas_or_macro : constant array (Boolean) of Message :=
+      (True => save_macro, False => save_as);
+    file_kind : constant array (Boolean) of Message :=
+      (True => tcd_mac, False => ltx_pic);
+    --
+    function Suffix return String is
+    begin
+      if macro then
+        return Mac_suffix;
+      else
+        return Pic_suffix;
+      end if;
+    end Suffix;
+    --
   begin
     if macro then
       New_File_Name := G2GU ("");
     else
-      New_File_Name := Window.File_Name;
+      New_File_Name := Window.ID.file_name;
     end if;
     GWindows.Common_Dialogs.Save_File
       (Window,
@@ -1031,10 +1064,18 @@ package body TC.GWin.MDI_Picture_Child is
       end if;
 
       Save (Window, GU2G (New_File_Name), macro => macro);
+      new_ID := (file_name => New_File_Name, short_name => File_Title);
 
       if not macro then
-        Window.File_Name := New_File_Name;
-        Window.Short_Name := File_Title;
+        --  Change title in the tab bar.
+        for index in 0 .. tab_bar.Tab_Count - 1 loop
+          if tab_bar.info (index).ID = Window.ID then
+            tab_bar.info (index).ID := new_ID;
+            tab_bar.Text (index, Simple_Name (GU2G (New_File_Name)));
+            exit;
+          end if;
+        end loop;
+        Window.ID := new_ID;
         Update_Common_Menus (Window, GU2G (New_File_Name));
         Update_Information (Window);  --  Refresh window title, menus, ...
       end if;
@@ -1128,7 +1169,9 @@ package body TC.GWin.MDI_Picture_Child is
   end Save;
 
   overriding procedure On_Close (Window    : in out MDI_Picture_Child_Type;
-                                 Can_Close :    out Boolean) is
+                                 Can_Close :    out Boolean)
+  is
+    tab_bar : Tabs.TeXCAD_Tab_Bar_Type renames Window.mdi_root.tab_bar;
   begin
     Can_Close := True;
     if Window.Is_Document_Modified then
@@ -1138,7 +1181,7 @@ package body TC.GWin.MDI_Picture_Child is
                 Msg (close_not_saved),
                 Msg (do_you_want_to_save) & ' ' &
                 Msg (the_changes_you_made_to) & " '" &
-                GU2G (Window.Short_Name) & "' ?",
+                GU2G (Window.ID.short_name) & "' ?",
                 Yes_No_Cancel_Box,
                 Exclamation_Icon)
         is
@@ -1157,7 +1200,10 @@ package body TC.GWin.MDI_Picture_Child is
       end loop;
     else
       Update_Common_Menus
-        (Window, GU2G (Window.File_Name));
+        (Window, GU2G (Window.ID.file_name));
+    end if;
+    if Can_Close then
+      tab_bar.Delete_Tab (tab_bar.Tab_Index (Window.ID));
     end if;
   end On_Close;
 
@@ -1166,17 +1212,15 @@ package body TC.GWin.MDI_Picture_Child is
     return not Window.Draw_Control.Picture.saved;
   end Is_Document_Modified;
 
-  --  !! bad try !!
-
-  --  procedure On_Focus (Window : in out MDI_Picture_Child_Type) is
-  --  begin
-  --    parent(Window.MDI_Root.Drawing_toolbar,Window);
-  --  end;
-
-  --  procedure On_Lost_Focus (Window : in out MDI_Picture_Child_Type) is
-  --  begin
-  --    --GWindows.Base.  Base_Window_Type(
-  --    parent(Window.MDI_Root.Drawing_toolbar,Window.MDI_parent.all);
-  --  end;
+  overriding procedure On_Focus (Window : in out MDI_Picture_Child_Type) is
+    tab_bar : Tabs.TeXCAD_Tab_Bar_Type renames Window.mdi_root.tab_bar;
+    tab_index : Integer;
+  begin
+    --  Update_Information (Window, toolbar_and_menu);
+    tab_index := tab_bar.Tab_Index (Window.ID);
+    if tab_index >= 0 then
+      tab_bar.Selected_Tab (tab_index);
+    end if;
+  end On_Focus;
 
 end TC.GWin.MDI_Picture_Child;

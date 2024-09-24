@@ -43,8 +43,8 @@ package body TC.GWin.MDI_Main is
       declare
         cw : MDI_Picture_Child_Type renames MDI_Picture_Child_Type (Window.all);
       begin
-        Update_MRU_Menu (cw.MDI_Root.MRU, cw.File_Menu);
-        Update_Toolbar_Menu (cw.View_Menu, cw.MDI_Root.Floating_toolbars);
+        Update_MRU_Menu (cw.mdi_root.MRU, cw.File_Menu);
+        Update_Toolbar_Menu (cw.View_Menu, cw.mdi_root.Floating_toolbars);
       end;
     end if;
   end Update_Common_Menus_Child;
@@ -95,7 +95,7 @@ package body TC.GWin.MDI_Main is
         declare
           pw : MDI_Picture_Child_Type renames MDI_Picture_Child_Type (Any_Window.all);
         begin
-          if pw.File_Name = file_name then
+          if pw.ID.file_name = file_name then
             is_open := True;
             pw.Focus;
           end if;
@@ -168,14 +168,10 @@ package body TC.GWin.MDI_Main is
       Refresh_size_dependent_parameters
         (New_Window.Draw_Control.Picture,
          objects => True);
-      New_Window.File_Name := File_Name;
-      Create_MDI_Child (New_Window.all,
-        Window,
-        GU2G (File_Title),
-        Is_Dynamic => True);
-      New_Window.Short_Name := File_Title;
+      New_Window.Create_TeXCAD_MDI_Child (Window, (file_name => File_Name, short_name => File_Title));
+      New_Window.ID.short_name := File_Title;
       MDI_Active_Window (Window, New_Window.all);
-      Update_Common_Menus (Window, GU2G (New_Window.File_Name));
+      Update_Common_Menus (Window, GU2G (New_Window.ID.file_name));
       Update_Information (New_Window.all);
       Finish_subwindow_opening (Window, New_Window.all);
     end;
@@ -234,11 +230,24 @@ package body TC.GWin.MDI_Main is
     Dock (Window.Status_Bar, GWindows.Base.At_Bottom);
 
     --  ** Main tool bar (new/open/save/...) at top left of the main window:
-
     TC.GWin.Toolbars.Init_Main_Tool_Bar (Window.Tool_Bar, Window);
 
     --  ** Floating tool bars:
     TC.GWin.Toolbars.Init_Floating_Tool_Bars (Window.Floating_toolbars, Window);
+
+    --  ** Main's tab bar:
+    Window.tab_bar.MDI_Parent := Window'Unrestricted_Access;
+    Window.tab_bar.Create (Window, 0, 30, 10, 25);
+    Window.tab_bar.Dock (GWindows.Base.At_Top);
+    GWin_Util.Use_GUI_Font (Window.tab_bar);
+    --  Tool Tips for the Tab bar:
+    Window.tab_bar.tips.Create (Window);
+    Window.tab_bar.Set_Tool_Tips (Window.tab_bar.tips);
+    GWin_Util.Use_GUI_Font (Window.tab_bar.tips);
+    Window.tab_bar.tips.Set_Durations
+      (Initial  => 0.2,
+       Reshow   => 0.1,
+       Til_Hide => 5.0);
 
     --  ** Resize according to options:
 
@@ -330,9 +339,8 @@ package body TC.GWin.MDI_Main is
   begin
     New_Window.Extra_First_Doc := extra_first;
     user_maximize_restore := False;
-    Create_MDI_Child (New_Window.all,
-      Window, File_Title, Is_Dynamic => True);
-    New_Window.Short_Name := G2GU (File_Title);
+    New_Window.Create_TeXCAD_MDI_Child
+      (Window, (file_name => GWindows.Null_GString_Unbounded, short_name => G2GU (File_Title)));
 
     MDI_Active_Window (Window, New_Window.all);
 

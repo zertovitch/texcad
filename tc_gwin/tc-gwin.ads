@@ -10,7 +10,8 @@
 with GWindows,
      GWindows.Constants,
      GWindows.Colors,
-     GWindows.GStrings;
+     GWindows.GStrings,
+     GWindows.Menus;
 
 with Standard_IDs;
 
@@ -85,6 +86,7 @@ package TC.GWin is
       clean_pic,
       preview,
       save, save_as, close,
+      open_containing_folder,
       --  Only for MDI main:
       gen_opt_dialog,
       TB_Drawing, TB_Line_settings,
@@ -116,7 +118,7 @@ package TC.GWin is
   subtype Removes_picked_cmd is Action_on_picked_cmd range delete .. cut_clip;
   --  ^ All commands that end up removing all picked items
 
-  subtype MDI_child_cmd is Custom_cmd range Custom_cmd'First .. close;
+  subtype MDI_child_cmd is Custom_cmd range Custom_cmd'First .. open_containing_folder;
   --  Commands only for MDI child
   subtype MDI_main_cmd is Custom_cmd range gen_opt_dialog .. Custom_cmd'Last;
   --  Commands only for MDI mani
@@ -160,5 +162,17 @@ package TC.GWin is
 
   type Floating_toolbar_array is
     array (Floating_toolbar_categ) of Floating_Toolbars.Floating_Toolbar;
+
+  type ID_Type is record
+    file_name  : GWindows.GString_Unbounded;
+    short_name : GWindows.GString_Unbounded;
+  end record;
+
+  function Equivalent (Id_1, Id_2 : ID_Type) return Boolean;
+
+  bool_to_state : constant array (Boolean) of GWindows.Menus.State_Type :=
+    (GWindows.Menus.Disabled, GWindows.Menus.Enabled);
+
+  function Simple_Name (path : GWindows.GString) return GWindows.GString;
 
 end TC.GWin;

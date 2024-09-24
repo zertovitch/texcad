@@ -1,10 +1,9 @@
-with Office_Applications;
+with TC.GWin.Tabs;
 
-with Floating_Toolbars;
+with Office_Applications;
 
 with GWindows.Base,
      GWindows.Common_Controls,
-     GWindows.Image_Lists,
      GWindows.Menus,
      GWindows.Windows;
 
@@ -26,6 +25,7 @@ package TC.GWin.MDI_Main is
         Status_Bar             : MDI_Status_Bar_Type;
         File_menu,
         View_Menu              : GWindows.Menus.Menu_Type;
+        tab_bar                : Tabs.TeXCAD_Tab_Bar_Type;
         record_dimensions      : Boolean := False;  --  in On_Move, On_Size
       end record;
 

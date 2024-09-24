@@ -10,6 +10,8 @@ package TC.GWin.Lang.English is
          fsave      => U ("&Save"),
          fsaveas    => U ("Save &As..."),
          fclose     => U ("Close"),
+         fopen_containing_folder =>
+                       U ("Open containing &folder"),
          fexit      => U ("E&xit"),
          ddraw      => U ("&Draw"),
          dtext      => U ("&Text"),

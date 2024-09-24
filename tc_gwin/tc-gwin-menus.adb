@@ -29,6 +29,7 @@ package body TC.GWin.Menus is
     Append_Item (m, Msg (fopen) & HT & "Ctrl+O", ID_FILE_OPEN);
     Append_Separator (m);
     if is_child then
+      Append_Item (m, open_containing_folder);
       Append_Item (m, save);
       Append_Item (m, save_as);
       Append_Item (m, close);

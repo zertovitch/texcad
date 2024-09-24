@@ -64,10 +64,9 @@ package TC.GWin.MDI_Picture_Child is
     new Office_Applications.Classic_Document_Window_Type with
       record
         --  Access to the main, containing window:
-        MDI_Root     : MDI_Main.MDI_Main_Access;
-        File_Name    : GWindows.GString_Unbounded;
-        Short_Name   : GWindows.GString_Unbounded;
-        --  ^Window title = Short_Name & {""|" *"}
+        mdi_root     : MDI_Main.MDI_Main_Access;
+        ID            : ID_Type;
+        --  ^ Window title = ID.short_name & {""|" *"}
         Macro_Name   : GWindows.GString_Unbounded;  --  a macro to be loaded
         --  Scroll_Panel : GWindows.Scroll_Panels.Scroll_Panel_Type;
         Draw_Control : TC_Picture_Panel;
@@ -117,6 +116,11 @@ package TC.GWin.MDI_Picture_Child is
   overriding procedure On_Create (Window : in out MDI_Picture_Child_Type);
   --  Handles creating window
 
+  procedure Create_TeXCAD_MDI_Child
+    (Window : in out MDI_Picture_Child_Type;
+     Parent : in out MDI_Main.MDI_Main_Type;
+     ID     : in     ID_Type);
+
   overriding procedure On_Menu_Select
     (Window : in out MDI_Picture_Child_Type;
      Item   : in     Integer);
@@ -127,11 +131,7 @@ package TC.GWin.MDI_Picture_Child is
 
   overriding function Is_Document_Modified (Window : MDI_Picture_Child_Type) return Boolean;
 
-  --  !! bad try !!
-  --
-  --  procedure On_Focus (Window : in out MDI_Picture_Child_Type);
-  --
-  --  procedure On_Lost_Focus (Window : in out MDI_Picture_Child_Type);
+  overriding procedure On_Focus (Window : in out MDI_Picture_Child_Type);
 
   --  For when the MDI parent tries to close its children.
   success_in_enumerated_close : Boolean;

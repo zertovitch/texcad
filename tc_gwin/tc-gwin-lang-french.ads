@@ -10,6 +10,8 @@ package TC.GWin.Lang.French is
          fsave      => U ("&Sauvegarder"),
          fsaveas    => U ("S&auvegarder sous..."),
          fclose     => U ("Fermer"),
+         fopen_containing_folder =>
+                       U ("Ouvrir &dossier contenant"),
          fexit      => U ("S&ortir"),
          ddraw      => U ("&Dessin"),
          dtext      => U ("&Texte"),
