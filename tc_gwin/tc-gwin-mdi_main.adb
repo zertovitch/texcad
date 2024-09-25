@@ -23,6 +23,8 @@ with Ada.Command_Line,
      Ada.Exceptions,
      Ada.Strings.UTF_Encoding.Conversions;
 
+with GNAT.OS_Lib;
+
 package body TC.GWin.MDI_Main is
 
   use TC.GWin.MDI_Picture_Child;
@@ -615,9 +617,8 @@ package body TC.GWin.MDI_Main is
     Can_Close := MDI_Picture_Child.success_in_enumerated_close;
     --
     if Can_Close then
-      GWindows.Base.On_Exception_Handler (Handler => null);
-      --  !! Trick to remove a strange crash on Destroy_Children
-      --  !! on certain Windows platforms - 29-Jun-2012
+      GNAT.OS_Lib.OS_Exit (0);
+      --  Abrupt termination, but solves a crash around On_Destroy.
     end if;
   end On_Close;
 
