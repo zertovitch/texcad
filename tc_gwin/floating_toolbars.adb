@@ -37,8 +37,8 @@ package body Floating_Toolbars is
   begin
     tb.window.geom.l := Left (tb.window);
     tb.window.geom.t := Top (tb.window);
-    tb.window.geom.w := Client_Area_Width (tb.window);
-    tb.window.geom.h := Client_Area_Height (tb.window);
+    tb.window.geom.w := Width (tb.window);
+    tb.window.geom.h := Height (tb.window);
     tb.bar.w := Correct_bar_width (tb);
     tb.bar.h := Client_Area_Height (tb.bar);
   end Memorize_dimensions;
