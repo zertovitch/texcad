@@ -1071,7 +1071,7 @@ package body TC.Output is
      Put_Line (tf, "% File name: [" & Short_name (displayed_name) & "].");
      Put_Line (tf, "% Version of TeXCAD: " & version);
      Put_Line (tf, "% Reference / build: " & reference);
-     Put_Line (tf, "% For new versions, check: " & web);
+     Put_Line (tf, "% For new versions, check: " & web1);
      Put_Line (tf, "% Options are on the following lines.");
      --  8-Jul-2004: + file name
      Put_Line (tf, Img (cgrade)  & On_off (pic.opt.steigung));

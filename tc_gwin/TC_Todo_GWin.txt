@@ -3,7 +3,6 @@ To do list - TC.GWin (MS Windows skin):
 Bugs to be fixed
 ================
   - by resizing the window the vertical "lift" quits the bottom
-  - crash after closing application (not a problem for users)
   - when two subwindows are open, swapping subwindows messes the "Window" an "Options" menus
     (issue seems tough; other applications using the GWindows framework haven't this problem:
      AZip, LEA or the mdi_example sample)

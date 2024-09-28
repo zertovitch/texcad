@@ -166,9 +166,10 @@ package TC.GWin.Lang.French is
          first_pos  => U ("Première position"),
          blurb      => U ("Logiciel libre, sans garantie"),
          authors    => U ("Auteurs:"),
-         original   => U ("TeXCAD original pour DOS (1989-1994)"),
+         original_tc_dos =>
+                       U ("TeXCAD original pour DOS (1989-1994)"),
          tc4        => U ("système TeXCAD 4"),
-         windoze_version =>
+         version_for_windoze =>
                        U ("version pour MS Windows"),
          thanks     => U ("Remerciements:"),
          gwind      => U ("Plateforme GWindows pour GNAT"),

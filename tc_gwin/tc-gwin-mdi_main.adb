@@ -393,48 +393,67 @@ package body TC.GWin.MDI_Main is
     About     : GWindows.Windows.Window_Type;
     Oki       : GWindows.Buttons.Default_Button_Type;
     Result, w : Integer;
-    Wmax      : constant := 550;
+    wmax                      : constant := 600;
+    blurb_width               : constant := wmax - 92;
+    authors_width             : constant := 160;
+    left_margin               : constant := 20;
+    left_margin_authors       : constant := 30;
+    left_margin_after_icon    : constant := 60;
+    left_margin_version       : constant := left_margin_after_icon + 70;
+    left_margin_after_authors : constant := left_margin_authors + authors_width + 5;
+    top_margin_authors        : constant := 140;
+    --
+    license : constant String := TeXCAD_Resource_GUI.Version_info.LegalCopyright & " (cf COPYING.TXT)";
+    ver_ref : constant String := "* Version: " & version & "   * Reference: " & reference;
     use GWindows.Static_Controls, GWindows.Static_Controls.Web, Lang;
   begin
-    About.Create_As_Dialog (Window, "TeXCAD", Width => Wmax + 50, Height => 300);
+    About.Create_As_Dialog (Window, "TeXCAD", Width => wmax + 50, Height => 350);
     About.Center;
     About.Small_Icon ("Grid_Icon");
     GWin_Util.Use_GUI_Font (About);
-    w := About.Client_Area_Width - 32 - 10;
+    w := About.Client_Area_Width - 32 - left_margin;
 
-    Create_URL (About, "TeXCAD", S2G (web), 60, 15, 80, 16);
+    Create_Icon (About, "AAA_Main_Icon", left_margin, 10, 32, 32);
+    Create_Icon (About, "Picture_Icon",  w,           10, 32, 32);
 
-    Create_Label (About,
-      S2G ("* Version: " & version & "   * Reference: " & reference),
-      140, 15, w - 140 - 18, 25);
+    Create_Label (About, "TeXCAD",      left_margin_after_icon,  15, 65, 16);
+    Create_Label (About, S2G (ver_ref), left_margin_version,     15, w - left_margin_version - 18, 25);
+    Create_Label (About, Msg (blurb),   left_margin_after_icon,  35, blurb_width, 25);
+    Create_Label (About, S2G (license), left_margin_after_icon,  55, blurb_width, 25);
+    Create_URL   (About, S2G (web1),    left_margin_after_icon,  75, blurb_width, 25);
+    Create_URL   (About, S2G (web2),    left_margin_after_icon,  95, blurb_width, 25);
+    Create_URL   (About, S2G (web3),    left_margin_after_icon, 115, blurb_width, 25);
 
-    Create_Icon (About, "AAA_Main_Icon", 10, 10, 32, 32);
-    Create_Icon (About, "Picture_Icon",   w, 10, 32, 32);
-    Create_Label (About, Msg (blurb), 60, 35, Wmax - 92, 25);
-    Create_Label (About, S2G (TeXCAD_Resource_GUI.Version_info.LegalCopyright) & " (cf COPYING.TXT)",
-      60, 55, Wmax - 92, 25);
-    Create_URL (About, S2G ("Internet: " & web), S2G (web),
-      60, 75, Wmax - 92, 25);
-      --
-    Create_Label (About, Msg (authors), 10, 95, Wmax, 25);
-    Create_Label (About, "Georg Horn, Jörn Winkelmann: " --  &&
-      & Msg (original), 30, 115, Wmax, 25);
-
+    Create_Label
+      (About, Msg (authors),
+       left_margin,               top_margin_authors, wmax, 25);
+    --
+    Create_Label
+      (About, "Georg Horn, Jörn Winkelmann:",
+       left_margin_authors,       top_margin_authors + 20, authors_width, 25);
+    Create_Label
+      (About, Msg (original_tc_dos),
+       left_margin_after_authors, top_margin_authors + 20, wmax - left_margin_after_authors, 25);
+    --
     Create_URL
-      (About,
-       "Gautier de Montmollin: Ada-ptation, " &
-       Msg (tc4) & ", " & Msg (windoze_version),
-       "http://sf.net/users/gdemont/",
-       30, 135, Wmax, 16);
+      (About, "Gautier de Montmollin:", "http://sf.net/users/gdemont/",
+       left_margin_authors,       top_margin_authors + 40, authors_width, 16);
+    Create_Label
+      (About, "Ada-ptation, " & Msg (tc4) & ", " & Msg (version_for_windoze),
+       left_margin_after_authors, top_margin_authors + 40, wmax - left_margin_after_authors, 16);
 
-    Create_Label (About, Msg (thanks), 10, 155, Wmax, 25);
+    Create_Label
+      (About, Msg (thanks),
+       left_margin,               top_margin_authors + 65, wmax, 25);
+    --
+    Create_Label
+      (About, "David Botton:",
+       left_margin_authors,       top_margin_authors + 85, authors_width, 16);
     Create_URL
-      (About,
-       "David Botton: " & Msg (gwind),
-       "http://sf.net/projects/gnavi/",
-       30, 175, Wmax, 16);
+      (About, Msg (gwind), "http://sf.net/projects/gnavi/",
+       left_margin_after_authors, top_margin_authors + 85, wmax - left_margin_after_authors, 16);
 
-    Oki.Create (About, "O&K", 20, About.Client_Area_Height - 40, 60, 25,
+    Oki.Create (About, "O&K", left_margin, About.Client_Area_Height - 30 - left_margin, 100, 30,
       ID => GWindows.Constants.IDOK);
     Show_Dialog_with_Toolbars_off (About, Window, Window, Result);
   end On_About;

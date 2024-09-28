@@ -107,9 +107,9 @@ package TC.GWin.Lang is
     --  About
     blurb,
     authors,
-    original,
+    original_tc_dos,
     tc4,
-    windoze_version,
+    version_for_windoze,
     thanks,
     gwind,
     --  Mouse

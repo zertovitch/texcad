@@ -20,7 +20,9 @@ package TC is
 
   version   : constant String := "4.53";
   reference : constant String := "16-Jun-2024 (revision a111)";
-  web       : constant String := "http://texcad.sf.net/";
+  web1      : constant String := "https://texcad.sourceforge.io/";
+  web2      : constant String := "https://github.com/zertovitch/texcad";
+  web3      : constant String := "https://alire.ada.dev/crates/texcad";
   mail      : constant String := "gdemont@users.sf.net";
 
   subtype Real is Long_Float;

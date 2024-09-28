@@ -165,9 +165,10 @@ package TC.GWin.Lang.English is
          clean_comment            => U ("TeX comment"),
          blurb      => U ("Free software, no warranty"),
          authors    => U ("Authors:"),
-         original   => U ("Original TeXCAD for DOS (1989-1994)"),
+         original_tc_dos
+                    => U ("Original TeXCAD for DOS (1989-1994)"),
          tc4        => U ("TeXCAD 4 system"),
-         windoze_version =>
+         version_for_windoze =>
                        U ("version for MS Windows"),
          thanks     => U ("Thanks:"),
          gwind      => U ("GWindows framework for GNAT"),
