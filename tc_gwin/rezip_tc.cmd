@@ -6,7 +6,9 @@ copy /b %1.zip %1.old.zip
 del *.tmp
 del $temp$.zip
 
-rezip -defl %1.zip
+set ramdisk_prefix=r:\texcad_rezip_
+
+rezip -defl -temp=%ramdisk_prefix% %1.zip
 del %1.zip
 move %1.repacked.zip %1.zip
 

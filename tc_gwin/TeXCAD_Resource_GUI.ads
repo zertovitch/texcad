@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------
 --  GUI contents of resource script file: TeXCAD.rc
---  Transcription time: 2024/06/01  11:16:09
+--  Transcription time: 2024/09/28  20:01:44
 --  GWenerator project file: TeXCAD.gwen
 --
 --  Translated by the RC2GW or by the GWenerator tool.
@@ -113,12 +113,12 @@ package TeXCAD_Resource_GUI is
     CompanyName : constant String := "Free Software Foundation, Inc.";
     Authors : constant String := "Georg Horn, Jörn Winkelmann, Gautier de Montmollin";
     FileDescription : constant String := "TeXCAD, a LaTeX {picture} drawing program";
-    FileVersion : constant String := "Ver. 4.52";
+    FileVersion : constant String := "Ver. 4.6";
     InternalName : constant String := "TeXCAD";
     LegalCopyright : constant String := "© 2003 .. 2024 Free Software Foundation";
     OriginalFilename : constant String := "TeXCAD.exe";
     ProductName : constant String := "TeXCAD";
-    ProductVersion : constant String := "4.52";
+    ProductVersion : constant String := "4.6";
     Translation : constant := 1033;
   end Version_info;
 

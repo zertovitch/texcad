@@ -90,13 +90,13 @@ procedure Test_TC_IO is
   procedure Test_one (name : String; across_sty : Boolean) is
     pic: TC.Picture;
 
-    Sty_set_combs: constant:= 2**TC.Supposing_sty_set'Length;
+    Sty_set_combs: constant:= 2**TC.Supposing_Sty_Set'Length;
     type Comb_range is range 0..Sty_set_combs-1;
 
-    procedure Comb_number_to_set(c: Comb_range; ss: out TC.Supposing_sty_set) is
+    procedure Comb_number_to_set(c: Comb_range; ss: out TC.Supposing_Sty_Set) is
       i: Comb_range:= c;
     begin
-      for s in TC.Supposing_sty loop
+      for s in TC.Supposing_Sty loop
         ss(s):= i mod 2 = 1;
         i:= i / 2;
       end loop;
