@@ -127,7 +127,7 @@ package body TC.Display is
   sin_angle_vect : constant Real := Sin (angle_vect);
 
   --  Draws an arrow pointing to (a,b), in direction of (u,v)
-  procedure Arrow (a, b, u, v : Integer) is
+  procedure Arrow (a, b, u, v : Integer; thickness : Line_thickness) is
     --  GM
     un, vn, luv, iv_luv, absc, ordo : Real;
     p : constant Real := h_mag * arrow_length_pt / ulpt;
@@ -138,7 +138,7 @@ package body TC.Display is
   begin
     luv := Sqrt (Real (u * u + v * v));
     if Almost_Zero (luv * f_shrink) then
-      Ellipse (a, b, 3, 3, fill => False);
+      Ellipse (a, b, 3, 3, fill => False, thickness => thickness);
     else
       iv_luv := 1.0 / luv;
       un := iv_luv * Real (u);
@@ -149,11 +149,12 @@ package body TC.Display is
       d := Integer (Real (b) - un * ordo + vn * absc);
       e := Integer (Real (a) + un * absc - vn * ordo);
       f := Integer (Real (b) + un * ordo + vn * absc);
-      Line (c, d, e, f);     --  corde
+      Line (c, d, e, f, thickness);     --  corde
       for i in 0 .. fs loop  --  faisceau
         Line
           ((c * i + e * (fs - i)) / fs,
-           (d * i + f * (fs - i)) / fs, a, b);
+           (d * i + f * (fs - i)) / fs, a, b,
+           thickness);
       end loop;
     end if;
   end Arrow;
@@ -169,7 +170,7 @@ package body TC.Display is
         Trans (P1, x1, y1);
         Trans (P2, x2, y2);
         tr_x1x2 := True;
-        Line (x1, y1, x2, y2);
+        Line (x1, y1, x2, y2, ls.thickness);
       when dot =>
         D := P2 - P1;
         ns := TC.epic_calc.Num_segments (D, ls.dot_gap);
@@ -187,7 +188,7 @@ package body TC.Display is
           if i mod 2 = 1 then
             Trans (Pa, x1, y1);
             Trans (Pb, x2, y2);
-            Line (x1, y1, x2, y2);
+            Line (x1, y1, x2, y2, ls.thickness);
           end if;
           Pa := Pb;
         end loop;
@@ -200,13 +201,13 @@ package body TC.Display is
       when no_arrow =>
         null;
       when head =>
-        Arrow (x2, y2, x2 - x1, y2 - y1);
+        Arrow (x2, y2, x2 - x1, y2 - y1, ls.thickness);
       when both =>
-        Arrow (x2, y2, x2 - x1, y2 - y1);
-        Arrow (x1, y1, x1 - x2, y1 - y2);
+        Arrow (x2, y2, x2 - x1, y2 - y1, ls.thickness);
+        Arrow (x1, y1, x1 - x2, y1 - y2, ls.thickness);
       when middle =>
         Trans (0.5 * (P1 + P2), xc, yc);
-        Arrow (xc, yc, x2 - x1, y2 - y1);
+        Arrow (xc, yc, x2 - x1, y2 - y1, ls.thickness);
     end case;
   end Draw_line;
 
@@ -243,7 +244,8 @@ package body TC.Display is
        sy,
        Integer (h_mag * o.rad + 0.5),
        Integer (v_mag * o.rad + 0.5),
-       fill => o.art = disc);
+       fill      => o.art = disc,
+       thickness => o.ls.thickness);
   end Draw_circ;
 
   procedure Draw_oval (o : Obj_type) is  --  GH
@@ -263,60 +265,60 @@ package body TC.Display is
     Trans (o.LL + 0.5 * o.osize, xp, yp);
     case o.part is
       when entire =>
-        Line (x2, y1, x3, y1);
-        Line (x4, y2, x4, y3);
-        Line (x3, y4, x2, y4);
-        Line (x1, y3, x1, y2);
+        Line (x2, y1, x3, y1, o.ls.thickness);
+        Line (x4, y2, x4, y3, o.ls.thickness);
+        Line (x3, y4, x2, y4, o.ls.thickness);
+        Line (x1, y3, x1, y2, o.ls.thickness);
         Arc (x2, y2, 180, 270, arc_rad);
         Arc (x3, y2, 270, 360, arc_rad);
         Arc (x3, y3, 0, 90, arc_rad);
         Arc (x2, y3, 90, 180, arc_rad);
       when L =>
-        Line (x2, y1, xp, y1);
-        Line (xp, y4, x2, y4);
-        Line (x1, y3, x1, y2);
+        Line (x2, y1, xp, y1, o.ls.thickness);
+        Line (xp, y4, x2, y4, o.ls.thickness);
+        Line (x1, y3, x1, y2, o.ls.thickness);
         Arc (x2, y2, 180, 270, arc_rad);
         Arc (x2, y3, 90, 180, arc_rad);
 
       when R =>
-        Line (xp, y1, x3, y1);
-        Line (x4, y2, x4, y3);
-        Line (x3, y4, xp, y4);
+        Line (xp, y1, x3, y1, o.ls.thickness);
+        Line (x4, y2, x4, y3, o.ls.thickness);
+        Line (x3, y4, xp, y4, o.ls.thickness);
         Arc (x3, y2, 270, 360, arc_rad);
         Arc (x3, y3, 0, 90, arc_rad);
 
       when T =>
-        Line (x4, yp, x4, y3);
-        Line (x3, y4, x2, y4);
-        Line (x1, y3, x1, yp);
+        Line (x4, yp, x4, y3, o.ls.thickness);
+        Line (x3, y4, x2, y4, o.ls.thickness);
+        Line (x1, y3, x1, yp, o.ls.thickness);
         Arc (x3, y3, 0, 90, arc_rad);
         Arc (x2, y3, 90, 180, arc_rad);
 
       when B =>
-        Line (x2, y1, x3, y1);
-        Line (x4, y2, x4, yp);
-        Line (x1, yp, x1, y2);
+        Line (x2, y1, x3, y1, o.ls.thickness);
+        Line (x4, y2, x4, yp, o.ls.thickness);
+        Line (x1, yp, x1, y2, o.ls.thickness);
         Arc (x2, y2, 180, 270, arc_rad);
         Arc (x3, y2, 270, 360, arc_rad);
 
       when LT =>
-        Line (xp, y4, x2, y4);
-        Line (x1, y3, x1, yp);
+        Line (xp, y4, x2, y4, o.ls.thickness);
+        Line (x1, y3, x1, yp, o.ls.thickness);
         Arc (x2, y3, 90, 180, arc_rad);
 
       when LB =>
-        Line (x2, y1, xp, y1);
-        Line (x1, yp, x1, y2);
+        Line (x2, y1, xp, y1, o.ls.thickness);
+        Line (x1, yp, x1, y2, o.ls.thickness);
         Arc (x2, y2, 180, 270, arc_rad);
 
       when RT =>
-        Line (x4, yp, x4, y3);
-        Line (x3, y4, xp, y4);
+        Line (x4, yp, x4, y3, o.ls.thickness);
+        Line (x3, y4, xp, y4, o.ls.thickness);
         Arc (x3, y3, 0, 90, arc_rad);
 
       when RB =>
-        Line (xp, y1, x3, y1);
-        Line (x4, y2, x4, yp);
+        Line (xp, y1, x3, y1, o.ls.thickness);
+        Line (x4, y2, x4, yp, o.ls.thickness);
         Arc (x3, y2, 270, 360, arc_rad);
 
     end case;
@@ -348,11 +350,11 @@ package body TC.Display is
         when lines =>
           for i in reverse 0 .. cx loop
             x := TransX (P0.x + stepx * Real (i));
-            Line (x, 0, x, m_y);
+            Line (x, 0, x, m_y, thin);
           end loop;
           for j in reverse 0 .. cy loop
             y := TransY (P0.y + stepy * Real (j));
-            Line (0, y, m_x, y);
+            Line (0, y, m_x, y, thin);
           end loop;
       end case;
     end if;
@@ -373,15 +375,15 @@ package body TC.Display is
         null;
       when head =>
         Trans (o.PE, x, y);
-        Arrow (x, y,  o.bez_slope (1)(h), -o.bez_slope (1)(v));
+        Arrow (x, y,  o.bez_slope (1)(h), -o.bez_slope (1)(v), o.ls.thickness);
       when both =>
         Trans (o.PE, x, y);
-        Arrow (x, y,  o.bez_slope (1)(h), -o.bez_slope (1)(v));
+        Arrow (x, y,  o.bez_slope (1)(h), -o.bez_slope (1)(v), o.ls.thickness);
         Trans (o.P1, x, y);
-        Arrow (x, y,  o.bez_slope (2)(h), -o.bez_slope (2)(v));
+        Arrow (x, y,  o.bez_slope (2)(h), -o.bez_slope (2)(v), o.ls.thickness);
       when middle =>
         Trans (o.Pmiddle, x, y);
-        Arrow (x, y,  o.bez_slope (1)(h), -o.bez_slope (1)(v));
+        Arrow (x, y,  o.bez_slope (1)(h), -o.bez_slope (1)(v), o.ls.thickness);
     end case;
   end Bezier_and_arrows;
 
@@ -390,8 +392,8 @@ package body TC.Display is
     procedure Cross (P : Point; size : Natural) is
     begin
       Trans (P, x, y);
-      Line (x, y - size, x, y + size);
-      Line (x - size, y, x + size, y);
+      Line (x, y - size, x, y + size, thin);
+      Line (x - size, y, x + size, y, thin);
     end Cross;
     ovc : constant := 5;
     pix : Integer;
@@ -411,40 +413,42 @@ package body TC.Display is
         --  We show the corners (+ 14-Oct-2005)
         if pix > ovc then
           Trans (o.P1 + (-o.rad, -o.rad), x, y);
-          Line (x, y, x + ovc, y);
-          Line (x, y, x, y - ovc);
+          Line (x, y, x + ovc, y, thin);
+          Line (x, y, x, y - ovc, thin);
           Trans (o.P1 + (+o.rad, -o.rad), x, y);
-          Line (x, y, x - ovc, y);
-          Line (x, y, x, y - ovc);
+          Line (x, y, x - ovc, y, thin);
+          Line (x, y, x, y - ovc, thin);
           Trans (o.P1 + (-o.rad, +o.rad), x, y);
-          Line (x, y, x + ovc, y);
-          Line (x, y, x, y + ovc);
+          Line (x, y, x + ovc, y, thin);
+          Line (x, y, x, y + ovc, thin);
           Trans (o.P1 + (+o.rad, +o.rad), x, y);
-          Line (x, y, x - ovc, y);
-          Line (x, y, x, y + ovc);
+          Line (x, y, x - ovc, y, thin);
+          Line (x, y, x, y + ovc, thin);
         end if;
       when oval =>
         --  We show the corners
         pix := abs (TransX (o.osize.x) - TransX (0.0));
         if pix > ovc then  --  (test: + 14-Oct-2005)
           Trans (o.LL, x, y);
-          Line (x, y, x + ovc, y);
-          Line (x, y, x, y - ovc);
+          Line (x, y, x + ovc, y, thin);
+          Line (x, y, x, y - ovc, thin);
           Trans (o.LL + (o.osize.x, 0.0), x, y);
-          Line (x, y, x - ovc, y);
-          Line (x, y, x, y - ovc);
+          Line (x, y, x - ovc, y, thin);
+          Line (x, y, x, y - ovc, thin);
           Trans (o.LL + (0.0, o.osize.y), x, y);
-          Line (x, y, x + ovc, y);
-          Line (x, y, x, y + ovc);
+          Line (x, y, x + ovc, y, thin);
+          Line (x, y, x, y + ovc, thin);
           Trans (o.LL + o.osize, x, y);
-          Line (x, y, x - ovc, y);
-          Line (x, y, x, y + ovc);
+          Line (x, y, x - ovc, y, thin);
+          Line (x, y, x, y + ovc, thin);
         end if;
       when bezier =>
         --  We show the lines between the control point and the ends
         Trans (o.PC, x, y);
-        Trans (o.P1, x1, y1); Line (x, y, x1, y1);
-        Trans (o.PE, x1, y1); Line (x, y, x1, y1);
+        Trans (o.P1, x1, y1);
+        Line (x, y, x1, y1, thin);
+        Trans (o.PE, x1, y1);
+        Line (x, y, x1, y1, thin);
       when others => null;
     end case;
   end Shadow;

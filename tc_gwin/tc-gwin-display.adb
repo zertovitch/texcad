@@ -17,7 +17,7 @@ package body TC.GWin.Display is
   --  due to brush / pen leak in Windows 95/98/ME.
 
   brush, hatch : array (Color_Zone) of Brush_Type;
-  pen          : array (Color_Zone) of Pen_Type;
+  pen          : array (Color_Zone, Line_thickness) of Pen_Type;
   GUI_Font     : Font_Type;
 
   --  Conversions from TC.Graphics styles to GWindows.Drawing styles :
@@ -63,10 +63,10 @@ package body TC.GWin.Display is
       GWindows.Drawing.Point (Canvas, x, y, current_color);
     end PutPoint;
 
-    procedure Line (x1, y1, x2, y2 : Integer) is
+    procedure Line (x1, y1, x2, y2 : Integer; thickness : Line_thickness) is
     begin
       if whole_picture then
-       Select_Object (Canvas, pen (current_zone));
+       Select_Object (Canvas, pen (current_zone, thickness));
       end if;
       if x1 /= x2 or y1 /= y2 then
         Line (Canvas, x1, y1, x2, y2);
@@ -81,7 +81,7 @@ package body TC.GWin.Display is
       Fill_Rectangle (Canvas, (x1, y1, x2, y2), hatch (current_zone));
     end Full_rectangle;
 
-    procedure Ellipse (x, y,  rx, ry : Integer; fill : Boolean) is
+    procedure Ellipse (x, y,  rx, ry : Integer; fill : Boolean; thickness : Line_thickness) is
       l, t, r, b : Integer;
     begin
       l := x - rx;
@@ -89,7 +89,7 @@ package body TC.GWin.Display is
       r := x + rx;
       b := y + ry;
       if whole_picture then
-        Select_Object (Canvas, pen (current_zone));
+        Select_Object (Canvas, pen (current_zone, thickness));
       end if;
       if fill then
         Background_Mode (Canvas, Transparent);
@@ -160,7 +160,10 @@ package body TC.GWin.Display is
           end if;
         end loop;
         for z in Color_Zone loop
-          Create_Pen (pen (z), Solid, 1, color (z));
+          for t in Line_thickness loop
+            Create_Pen
+              (pen (z, t), Solid, (case t is when thin => 1, when thick => 2), color (z));
+          end loop;
         end loop;
         recreate_drawing_objects := False;
       end if;
