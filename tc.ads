@@ -18,8 +18,8 @@ package TC is
 
   use Ada.Strings.Unbounded;
 
-  version   : constant String := "4.53";
-  reference : constant String := "16-Jun-2024 (revision a111)";
+  version   : constant String := "4.6 preview 1";
+  reference : constant String := "28-Sep-2024 (revision a120)";
   web1      : constant String := "https://texcad.sourceforge.io/";
   web2      : constant String := "https://github.com/zertovitch/texcad";
   web3      : constant String := "https://alire.ada.dev/crates/texcad";
@@ -42,15 +42,15 @@ package TC is
   function Ortho (P : Point) return Point;         pragma Inline (Ortho);
 
   --  5-Mar-2004: grouping the ".sty"'s used by the picture.
-  type Supposing_sty is (bezier, epic, emlines);
-  type Supposing_sty_set is array (Supposing_sty) of Boolean;
+  type Supposing_Sty is (bezier, epic, emlines);
+  type Supposing_Sty_Set is array (Supposing_Sty) of Boolean;
 
   --  17-Feb-2003:
   --    Options_type replaced by { General_options, Picture_options }
   --    Cleaner and allows a multi-document context.
 
   type Picture_Options is record
-    sty       : Supposing_sty_set := (emlines => False,
+    sty       : Supposing_Sty_Set := (emlines => False,
                                       bezier  => True,
                                       epic    => False);
     steigung  : Boolean := True;   --  Linien mit bel. Steigung?
@@ -79,11 +79,11 @@ package TC is
   --  ^ "auto" is for \qbezier only,
   --    "suggest" uses \bezier and a proposed amount of points
 
-  type LaTeX_version is
-    (v209,  --            \documentstyle
-     v2e);  -- (or later) \documentclass
+  type LaTeX_Version is
+    (v209,  --             \documentstyle
+     v2e);  --  (or later) \documentclass
 
-  type Preview_directory_choice is
+  type Preview_Directory_Choice is
     (temporary,
      current);
 
@@ -100,8 +100,8 @@ package TC is
     grid              : Grid_Display := points;
     solid_bez         : Solid_Bezier_Points_Mode := auto;
     options_for_new   : Picture_Options;
-    preview_mode      : LaTeX_version := v2e;  --  +10-Jan-2007
-    preview_directory : Preview_directory_choice := temporary;  --  +22-Jan-2007
+    preview_mode      : LaTeX_Version := v2e;  --  +10-Jan-2007
+    preview_directory : Preview_Directory_Choice := temporary;  --  +22-Jan-2007
   end record;
 
   gen_opt : General_Options;
@@ -110,21 +110,21 @@ package TC is
   --  On start, startup_language is equal to loaded gen_opt.lang .
   --  After that, gen_opt.lang may change.
 
-  function Pic_suffix return String;
-  function Mac_suffix return String;
+  function Pic_Suffix return String;
+  function Mac_Suffix return String;
 
-  type Obj_art_type is
+  type Obj_Art_Type is
     (txt, box, line,
      circ, disc, oval, aux, putaux,
      bezier,
      paramcurve2d,
      unitl, spez, beginn, ende1, ende2, point0, option);
 
-  type Art_set is array (Obj_art_type) of Boolean;
+  type Art_Set is array (Obj_Art_Type) of Boolean;
 
-  hidden : constant Art_set := (aux => True, others => False);
+  hidden : constant Art_Set := (aux => True, others => False);
 
-  lined : constant Art_set :=
+  lined : constant Art_Set :=
     (box | line | circ | oval | bezier => True,
      others => False);
 
@@ -133,27 +133,27 @@ package TC is
      L, entire, R,
      LB,   B,  RB);
 
-  type Obj_type;
-  type ptr_Obj_type is access Obj_type;
+  type Obj_Type;
+  type ptr_Obj_Type is access Obj_Type;
 
-  type Line_pattern is (plain, dot, dash);
-  type Line_thickness is (thin, thick);    --  'thin' is normal (\linewidth)
-  type Line_arrows is (no_arrow, head, both, middle);  --  ( ---, -->, <->, ->- )
+  type Line_Pattern is (plain, dot, dash);
+  type Line_Thickness is (thin, thick);    --  'thin' is normal (\linewidth)
+  type Line_Arrows is (no_arrow, head, both, middle);  --  ( ---, -->, <->, ->- )
 
-  subtype With_arrows is Line_arrows range head .. Line_arrows'Last;
+  subtype With_Arrows is Line_Arrows range head .. Line_Arrows'Last;
 
   type Line_Settings is record  --  15-Feb-2004
     ---  *** Width ***  ---
-    thickness    : Line_thickness;
+    thickness    : Line_Thickness;
     stretch      : Integer;           -- (epic) \in -100..\infty, default: 0
     ---  *** Pattern ***  ---
-    pattern      : Line_pattern;
+    pattern      : Line_Pattern;
     dot_gap      : Real;              --  gap in ul; 0.0 -> not specified
     dot_symbol   : Unbounded_String;  --  when "", default dot
     dash_length  : Real;
     dash_dot_gap : Real;              --  default is 0
     ---  *** Arrows ***  ---
-    arrows       : Line_arrows;
+    arrows       : Line_Arrows;
   end record;
 
   normal_line_settings : constant Line_Settings :=
@@ -166,18 +166,18 @@ package TC is
      dash_dot_gap => 0.0,
      arrows       => no_arrow);
 
-  type Hor_ver is (h, v);
-  subtype Slope_value is Integer range -6 .. 6; -- for \line; for \vector: -4..4
+  type Hor_Ver is (h, v);
+  subtype Slope_Value is Integer range -6 .. 6; -- for \line; for \vector: -4..4
 
-  type LaTeX_slope is array (Hor_ver) of Slope_value;
+  type LaTeX_Slope is array (Hor_Ver) of Slope_Value;
   --  25-Feb-2004: for storing fractional LaTeX slope values
-  type LaTeX_slopes is array (1 .. 2) of LaTeX_slope;
+  type LaTeX_Slopes is array (1 .. 2) of LaTeX_Slope;
   --  25-Feb-2004: line, vector, bezvec,... up to 2 non-parallel arrows
 
-  function Evaluate_variable (name : String; t : Real) return Real;
+  function Evaluate_Variable (name : String; t : Real) return Real;
   package TC_Formulas is new Formulas (Real, Real, Evaluate_variable);
 
-  type Param_curve_2D_data is record
+  type Param_Curve_2D_Data is record
     segments  : Natural;  --  if 0: automatic
     scale     : Real;
     form_x    : Unbounded_String;  --  x(t)
@@ -186,9 +186,9 @@ package TC is
     max_t     : Real;
   end record;
 
-  type Obj_type (art : Obj_art_type) is record  --  JW,GH
+  type Obj_Type (art : Obj_Art_Type) is record  --  JW,GH
     P1 : Point;
-    next : ptr_Obj_type := null;
+    next : ptr_Obj_Type := null;
     picked : Boolean := False;
     pick_swap_candidate : Boolean;
     pick_distance : Real;
@@ -203,7 +203,7 @@ package TC is
        when line =>       -- \vector is line with ls.arrows = head.
           P2            : Point;
           any_slope     : Boolean;
-          line_slope    : LaTeX_slope;
+          line_slope    : LaTeX_Slope;
        when circ | disc =>
           rad :  Real;
        when oval =>
@@ -214,17 +214,17 @@ package TC is
           PE        : Point; -- end point
           PC        : Point; -- control point
           Pmiddle   : Point; -- midpoint (for arrows = middle only)
-          bez_slope : LaTeX_slopes;
+          bez_slope : LaTeX_Slopes;
           num       : Natural;
        when paramcurve2d =>  --  Check Read_paramcurve2d in TC.Input for syntax
-          data_2d      : Param_curve_2D_data;
+          data_2d      : Param_Curve_2D_Data;
           parsed_2d_x  : TC_Formulas.Formula;  --  Needs refresh after each modification
           parsed_2d_y  : TC_Formulas.Formula;  --  Needs refresh after each modification
        when others => null;
     end case;
   end record;
 
-  procedure Dispose is new Ada.Unchecked_Deallocation (Obj_type, ptr_Obj_type);
+  procedure Dispose is new Ada.Unchecked_Deallocation (Obj_Type, ptr_Obj_Type);
 
   package Graphics is
 
@@ -238,7 +238,7 @@ package TC is
 
     text_cutting : constant := 15;
 
-    function Position_of_text (o : Obj_type) return Point;
+    function Position_of_Text (o : Obj_Type) return Point;
 
   end Graphics;
 
@@ -251,7 +251,7 @@ package TC is
     );
 
   type Picture is record
-    root   : ptr_Obj_type := null;
+    root   : ptr_Obj_Type := null;
     opt    : Picture_Options;
     saved  : Boolean := True;  --  Bild gespeichert?
     aspect : Real    := 1.0;   --  Faktoren und Aspect-ratio um
@@ -260,7 +260,7 @@ package TC is
     total_hidden,
     picked,
     picked_hidden : Natural := 0;    --  total / picked objects, visible / hidden
-    memo    : ptr_Obj_type := null;  --  pointer to a certain object (e.g. text to change)
+    memo    : ptr_Obj_Type := null;  --  pointer to a certain object (e.g. text to change)
     refresh : Refresh_mode;   --  9-May-2003: which sort of refresh is needed?
 
     ul_in_pt : Real;
@@ -270,48 +270,48 @@ package TC is
     --  \linewidth expressed in pt
   end record;
 
-  type Insert_location is (at_begin, at_end);
+  type Insert_Location is (at_begin, at_end);
 
-  procedure Insert (p : in out Picture; t : ptr_Obj_type; where : Insert_location);
+  procedure Insert (p : in out Picture; t : ptr_Obj_Type; where : Insert_Location);
 
   --  Refresh_size_dependent_parameters (was: Set_pt_lengths), sets:
   --    - ul_in_pt, lw_in_pt
   --    - arrow directions (15-Jan-2004), midpoint (Feb-2004) in bezvec's
-  procedure Refresh_size_dependent_parameters (p : in out Picture; objects : Boolean);
+  procedure Refresh_Size_Dependent_Parameters (p : in out Picture; objects : Boolean);
 
-  function Max_radius (a : Obj_art_type; ul_in_pt : Real) return Real;
+  function Max_Radius (a : Obj_Art_Type; ul_in_pt : Real) return Real;
 
   generic
     with procedure Action (P : Point);
-  procedure Bezier_curve (o : Obj_type; pt_scale : Real);
+  procedure Bezier_Curve (o : Obj_Type; pt_scale : Real);
 
   generic
     with procedure Action (P : Point);
     with procedure Singularity;  --  Lift pen of drawing, for instance
-  procedure Parametric_curve_2D (o : Obj_type; pt_scale : Real);
+  procedure Parametric_Curve_2D (o : Obj_Type; pt_scale : Real);
 
-  procedure Get_slope (df : Point; sl : out LaTeX_slope; vector : Boolean);
-  procedure Set_slope_of_bezvec (o : in out Obj_type; pt_scale : Real);
+  procedure Get_Slope (df : Point; sl : out LaTeX_Slope; vector : Boolean);
+  procedure Set_Slope_of_Bezvec (o : in out Obj_Type; pt_scale : Real);
   --  ^ finds the arrow slope(s) a bezvec, sets midpoint for arrow at middle
 
-  procedure Set_slope_of_linvec (o : in out Obj_type);
+  procedure Set_Slope_of_Linvec (o : in out Obj_Type);
   --  ^ finds len; if any_slope: finds h_slope, v_slope; corrects x2,y2
 
   --  10-Mar-2004: improvement of plain lines
   --    1/ changes to \line, \vector when possible
   --    2/ changes to any_slope when \line is too short - see LineThrs.tcp
   --    (1/ is for shorter output, 2/ ensures display)
-  procedure Improve_linvec (o : in out Obj_type; ul_pt : Real);
+  procedure Improve_Linvec (o : in out Obj_Type; ul_pt : Real);
 
-  procedure Set_radius (o : in out Obj_type; df : Point);
+  procedure Set_Radius (o : in out Obj_Type; df : Point);
   --  ^ finds radius
 
   --  "Good" number of points for a \bezier ; \qbezier has an automatism
-  function Good_num_of_bezier_points (o : Obj_type; pt_scale : Real) return Positive;
+  function Good_Num_of_Bezier_Points (o : Obj_Type; pt_scale : Real) return Positive;
   --  Set control points with extrema points on curve
-  procedure Set_control_point (o : in out Obj_type; TG : Point);
+  procedure Set_Control_Point (o : in out Obj_Type; TG : Point);
 
-  procedure Delete_object_list (root : in out ptr_Obj_type);
+  procedure Delete_Object_List (root : in out ptr_Obj_Type);
 
   function TeX_Number (s : String) return Real;
   --  Tolerant parsing of a TeX number
@@ -345,19 +345,19 @@ package TC is
 
   arrow_length_pt : constant := 4.0;  --  in pt (measured 11-Jan-2004)
 
-  function Sty_title (s : Supposing_sty) return String;
+  function Sty_Title (s : Supposing_Sty) return String;
 
   --  A few algorithms from epic.sty.
   --  Enhancements to Picture Environment. Version 1.2 - Released June 1, 1986
   --  by Sunil Podar, Dept. of Computer Science, SUNY at Stony Brook, NY 11794.
 
-  package epic_calc is
-    function Num_segments (D_lta : Point; dotgap : Real) return Positive;
+  package Epic_Calc is
+    function Num_Segments (D_lta : Point; dotgap : Real) return Positive;
     --  For dotgap = 0.0 (<=> no parameter), 1 is taken.
-  end epic_calc;
+  end Epic_Calc;
 
 private
 
-  function Evaluate_param_curve_2D (o : Obj_type; t : Real) return Point;
+  function Evaluate_Param_Curve_2D (o : Obj_Type; t : Real) return Point;
 
 end TC;

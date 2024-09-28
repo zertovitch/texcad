@@ -2,7 +2,7 @@ with Ada.Characters.Handling;
 
 package body TC.Morphing is
 
-  procedure Translate (o : in out Obj_type; M : Point) is
+  procedure Translate (o : in out Obj_Type; M : Point) is
   begin
     if o.art /= aux then  -- 27-May-2003
       o.P1 := o.P1 + M;
@@ -26,7 +26,7 @@ package body TC.Morphing is
   --  23-May-2003: we adapt text alignment to symmetry and rotations.
   --  The oval corner classification is the good tool for that.
 
-  function Has_text_alignment (o : Obj_type) return Boolean is
+  function Has_text_alignment (o : Obj_Type) return Boolean is
   begin
     case o.art is
       when txt    => return True;
@@ -35,7 +35,7 @@ package body TC.Morphing is
     end case;
   end Has_text_alignment;
 
-  function Text_align_to_oval_corner (o : Obj_type) return Ovop is
+  function Text_align_to_oval_corner (o : Obj_Type) return Ovop is
     use TC.Graphics;
     conv : constant array (H_Justify, V_Justify) of Ovop :=
       (lefttext   => (toptext => LT, centertext => L,      bottomtext => LB),
@@ -48,7 +48,7 @@ package body TC.Morphing is
     return conv (h, v);
   end Text_align_to_oval_corner;
 
-  procedure Oval_corner_to_text_align (o : in out Obj_type; corner : Ovop) is
+  procedure Oval_corner_to_text_align (o : in out Obj_Type; corner : Ovop) is
     a : constant String := Ada.Characters.Handling.To_Lower (Ovop'Image (corner));
   begin
     case corner is
@@ -65,7 +65,7 @@ package body TC.Morphing is
   --      / | \
   --     2  3  4
 
-  procedure Symmetry (o : in out Obj_type; M : Point; subcmd : Natural; pt_scale : Real) is
+  procedure Symmetry (o : in out Obj_Type; M : Point; subcmd : Natural; pt_scale : Real) is
     hr, x, y : Real;
     hi : Integer;
     ovsym : constant array (1 .. 4, Ovop) of Ovop :=
@@ -128,7 +128,7 @@ package body TC.Morphing is
             o.P1.y := 2.0 * y - o.P1.y;
             o.PE.y := 2.0 * y - o.PE.y;
             o.PC.y := 2.0 * y - o.PC.y;
-            Set_slope_of_bezvec (o, pt_scale);
+            Set_Slope_of_Bezvec (o, pt_scale);
           when others => null;
         end case;
 
@@ -165,7 +165,7 @@ package body TC.Morphing is
             Sym2P (o.P1);
             Sym2P (o.PE);
             Sym2P (o.PC);
-            Set_slope_of_bezvec (o, pt_scale);
+            Set_Slope_of_Bezvec (o, pt_scale);
 
           when others => null;
         end case;
@@ -189,7 +189,7 @@ package body TC.Morphing is
             o.P1.x := 2.0 * x - o.P1.x;
             o.PE.x := 2.0 * x - o.PE.x;
             o.PC.x := 2.0 * x - o.PC.x;
-            Set_slope_of_bezvec (o, pt_scale);
+            Set_Slope_of_Bezvec (o, pt_scale);
           when others => null;
         end case;
 
@@ -227,7 +227,7 @@ package body TC.Morphing is
             Sym4P (o.P1);
             Sym4P (o.PE);
             Sym4P (o.PC);
-            Set_slope_of_bezvec (o, pt_scale);
+            Set_Slope_of_Bezvec (o, pt_scale);
 
           when others => null;
         end case;
@@ -240,7 +240,7 @@ package body TC.Morphing is
   --   1   3
   --     2
 
-  procedure Rotate (o : in out Obj_type; M : Point; subcmd : Natural; pt_scale : Real) is
+  procedure Rotate (o : in out Obj_Type; M : Point; subcmd : Natural; pt_scale : Real) is
     hr, x, y : Real; hi : Integer;
 
     function Rotate_oval (scheme : Integer; ov : Ovop) return Ovop is
@@ -321,7 +321,7 @@ package body TC.Morphing is
              hr := o.PC.x;
              o.PC.x := x + (y - o.PC.y);
              o.PC.y := y + (hr - x);
-             Set_slope_of_bezvec (o, pt_scale);
+             Set_Slope_of_Bezvec (o, pt_scale);
           when others => null;
         end case;
 
@@ -349,7 +349,7 @@ package body TC.Morphing is
              o.P1 := 2.0 * M - o.P1;
              o.PE := 2.0 * M - o.PE;
              o.PC := 2.0 * M - o.PC;
-             Set_slope_of_bezvec (o, pt_scale);
+             Set_Slope_of_Bezvec (o, pt_scale);
           when others => null;
         end case;
 
@@ -404,7 +404,7 @@ package body TC.Morphing is
              hr := o.PC.x;
              o.PC.x := x + (o.PC.y - y);
              o.PC.y := y - (hr - x);
-             Set_slope_of_bezvec (o, pt_scale);
+             Set_Slope_of_Bezvec (o, pt_scale);
           when others => null;
         end case;
       when others => null;  --  include 0 (no rotation!)
@@ -412,7 +412,7 @@ package body TC.Morphing is
   end Rotate;
 
   --  28-May-2003 -- Affine transformation where Diag.x and Diag.y are >= 0
-  procedure Affine_positive (o : in out Obj_type; Center, Diag : Point; pt_scale : Real) is
+  procedure Affine_positive (o : in out Obj_Type; Center, Diag : Point; pt_scale : Real) is
     D1 : constant Point := (1.0, 1.0) - Diag;
     is_an_homothethy : constant Boolean := Almost_Zero (Diag.y - Diag.x);
 
@@ -448,13 +448,13 @@ package body TC.Morphing is
       when bezier =>
         Move (o.PE);
         Move (o.PC);
-        Set_slope_of_bezvec (o, pt_scale);
+        Set_Slope_of_Bezvec (o, pt_scale);
       when others => null;
     end case;
   end Affine_positive;
 
   --  28-May-2003  --  Affine transformation with factors Diag.x, Diag.y
-  procedure Affine (o : in out Obj_type; Center, Diag : Point; pt_scale : Real) is
+  procedure Affine (o : in out Obj_Type; Center, Diag : Point; pt_scale : Real) is
     Dabs : constant Point := (abs Diag.x, abs Diag.y);
   begin
     Affine_positive (o, Center, Dabs, pt_scale);
@@ -475,14 +475,14 @@ package body TC.Morphing is
      subcmd :        Positive)
   is
     need_copied_model : constant Boolean := iter > 1 and not keep;
-    o, n, model : ptr_Obj_type;
+    o, n, model : ptr_Obj_Type;
     f : Real;
     bilan : Integer;
 
     procedure Copy_of_model_after_o is
-      c : ptr_Obj_type := new Obj_type'(model.all);
+      c : ptr_Obj_Type := new Obj_Type'(model.all);
     begin
-      c := new Obj_type'(model.all);  --  c.all is a new object, a copy of model.all
+      c := new Obj_Type'(model.all);  --  c.all is a new object, a copy of model.all
       o.next  := c;  --  We insert just after o (no need to change root).
       c.picked := True;
       c.next  := n;
@@ -501,7 +501,7 @@ package body TC.Morphing is
       n := o.next;
       if o.picked then
         if need_copied_model then  --  We need a model that is a copy of the original
-          model := new Obj_type'(o.all);
+          model := new Obj_Type'(o.all);
         else
           model := o;
         end if;

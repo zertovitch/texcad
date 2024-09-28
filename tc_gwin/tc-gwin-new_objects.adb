@@ -7,10 +7,10 @@ package body TC.GWin.New_objects is
      parent : in out GWindows.Base.Base_Window_Type'Class;
      main   : in out MDI_Main.MDI_Main_Type;
      P1     :        Point;
-     art    :        Obj_art_type;
+     art    :        Obj_Art_Type;
      ls     :        Line_Settings)
   is
-    t : constant ptr_Obj_type := new Obj_type (art);
+    t : constant ptr_Obj_Type := new Obj_Type (art);
     modif : Boolean;
   begin
     t.P1 := P1;
@@ -33,17 +33,17 @@ package body TC.GWin.New_objects is
      ls          : in out Line_Settings;  --  Possible current dot/dash change
      cmd         :        Drawing_cmd)
   is
-    t : ptr_Obj_type;
+    t : ptr_Obj_Type;
     modif : Boolean;
   begin
     if cmd = oval then
-      t := new Obj_type (oval);
+      t := new Obj_Type (oval);
       t.P1 := 0.5 * (P1 + P2);
       t.LL := P1;
       t.part := entire;
       t.osize := P2 - P1;
     else
-      t := new Obj_type (box);
+      t := new Obj_Type (box);
       t.P1 := P1;
       t.inhalt := Null_Unbounded_String;
       t.adjust_len := 0;
@@ -72,14 +72,14 @@ package body TC.GWin.New_objects is
      P2 : in out Point;        --  Moved by setting limited \line slope
      ls :        Line_Settings)
   is
-    t : constant ptr_Obj_type := new Obj_type (line);
+    t : constant ptr_Obj_Type := new Obj_Type (line);
   begin
     t.P1 := P1;
     t.P2 := P2;
     t.ls := ls;
     t.any_slope := p.opt.steigung or t.ls.pattern /= plain;
-    Set_slope_of_linvec (t.all);
-    Improve_linvec (t.all, p.ul_in_pt); -- 30-Apr-2004
+    Set_Slope_of_Linvec (t.all);
+    Improve_Linvec (t.all, p.ul_in_pt); -- 30-Apr-2004
     Insert (p, t, at_end);
     P2 := t.P2;
   end New_linvec;
@@ -89,17 +89,17 @@ package body TC.GWin.New_objects is
      P1, PE, PG :        Point;
      ls         :        Line_Settings)
   is
-    t : constant ptr_Obj_type := new Obj_type (bezier);
+    t : constant ptr_Obj_Type := new Obj_Type (bezier);
   begin
     t.P1 := P1;
     t.PE := PE;
     t.ls := ls;
-    Set_control_point (t.all, PG);
+    Set_Control_Point (t.all, PG);
     case gen_opt.solid_bez is
       when auto    => t.num := 0;
-      when suggest => t.num := Good_num_of_bezier_points (t.all, p.ul_in_pt);
+      when suggest => t.num := Good_Num_of_Bezier_Points (t.all, p.ul_in_pt);
     end case;
-    Set_slope_of_bezvec (t.all, p.ul_in_pt);
+    Set_Slope_of_Bezvec (t.all, p.ul_in_pt);
     Insert (p, t, at_end);
   end New_bezier;
 
@@ -109,16 +109,16 @@ package body TC.GWin.New_objects is
      cmd    :        Drawing_cmd;
      ls     :        Line_Settings)
   is
-    t : ptr_Obj_type;
+    t : ptr_Obj_Type;
   begin
     case cmd is
-      when circle        => t := new Obj_type (circ);
-      when filled_circle => t := new Obj_type (disc);
+      when circle        => t := new Obj_Type (circ);
+      when filled_circle => t := new Obj_Type (disc);
       when others        => null;
     end case;
     t.ls := ls;
     t.P1 := P1;
-    Set_radius (t.all, df => P2 - P1);
+    Set_Radius (t.all, df => P2 - P1);
     Insert (p, t, at_end);
   end New_circdisc;
 
@@ -129,7 +129,7 @@ package body TC.GWin.New_objects is
      orig   :        Point;
      ls     : in out Line_Settings)
   is
-    t : constant ptr_Obj_type := new Obj_type (paramcurve2d);
+    t : constant ptr_Obj_Type := new Obj_Type (paramcurve2d);
     modif : Boolean;
   begin
     t.P1 := orig;

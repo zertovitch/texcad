@@ -94,7 +94,7 @@ package body TC.Display is
     sy := TransY (P.y);
   end Trans;
 
-  procedure Draw_unknown_put (o : Obj_type) is
+  procedure Draw_unknown_put (o : Obj_Type) is
     sx, sy : Integer;
   begin
     Trans (o.P1, sx, sy);
@@ -102,13 +102,13 @@ package body TC.Display is
     OutTextXY (sx, sy, Abbr (o.inhalt));
   end Draw_unknown_put;
 
-  procedure Draw_text (o : Obj_type) is
+  procedure Draw_text (o : Obj_Type) is
     h_just : H_Justify;
     v_just : V_Justify;
     sx, sy : Integer;
   begin
     if Length (o.inhalt) > 0 then
-      Trans (Position_of_text (o), sx, sy);
+      Trans (Position_of_Text (o), sx, sy);
       Values (o.adjust (1 .. o.adjust_len), h_just, v_just);
       SetTextJustify (h_just, v_just);
       OutTextXY (sx, sy, Abbr (o.inhalt));
@@ -127,7 +127,7 @@ package body TC.Display is
   sin_angle_vect : constant Real := Sin (angle_vect);
 
   --  Draws an arrow pointing to (a,b), in direction of (u,v)
-  procedure Arrow (a, b, u, v : Integer; thickness : Line_thickness) is
+  procedure Arrow (a, b, u, v : Integer; thickness : Line_Thickness) is
     --  GM
     un, vn, luv, iv_luv, absc, ordo : Real;
     p : constant Real := h_mag * arrow_length_pt / ulpt;
@@ -173,14 +173,14 @@ package body TC.Display is
         Line (x1, y1, x2, y2, ls.thickness);
       when dot =>
         D := P2 - P1;
-        ns := TC.epic_calc.Num_segments (D, ls.dot_gap);
+        ns := TC.Epic_Calc.Num_Segments (D, ls.dot_gap);
         D := 1.0 / Real (ns) * D;
         for i in 0 .. ns loop
           PlotPoint (P1 + Real (i) * D);
         end loop;
       when dash =>
         D := P2 - P1;
-        ns := TC.epic_calc.Num_segments (D, ls.dash_length);
+        ns := TC.Epic_Calc.Num_Segments (D, ls.dash_length);
         D := 1.0 / Real (ns) * D;
         Pa := P1;
         for i in 1 .. ns loop
@@ -211,7 +211,7 @@ package body TC.Display is
     end case;
   end Draw_line;
 
-  procedure Draw_box (o : Obj_type) is  --  GH
+  procedure Draw_box (o : Obj_Type) is  --  GH
     sx1, sx2, sy1, sy2 : Integer;
     P2 : Point;
   begin
@@ -230,12 +230,12 @@ package body TC.Display is
      end if;
   end Draw_box;
 
-  procedure Draw_line (o : Obj_type) is  --  GH
+  procedure Draw_line (o : Obj_Type) is  --  GH
   begin
     Draw_line (o.P1, o.P2, o.ls);
   end Draw_line;
 
-  procedure Draw_circ (o : Obj_type) is  --  GH
+  procedure Draw_circ (o : Obj_Type) is  --  GH
     sx, sy : Integer;
   begin
     Trans (o.P1, sx, sy);
@@ -248,7 +248,7 @@ package body TC.Display is
        thickness => o.ls.thickness);
   end Draw_circ;
 
-  procedure Draw_oval (o : Obj_type) is  --  GH
+  procedure Draw_oval (o : Obj_Type) is  --  GH
     x1, x2, x3, x4, y1, y2, y3, y4, xp, yp, arc_rad : Integer;
     arc_rad_f : Real;
     arc_arc : Point;
@@ -360,13 +360,13 @@ package body TC.Display is
     end if;
   end Draw_grid;
 
-  procedure Draw_Bezier is new Bezier_curve (PlotPoint);
+  procedure Draw_Bezier is new Bezier_Curve (PlotPoint);
 
   procedure Do_Nothing is null;
 
-  procedure Draw_Param_Curve is new Parametric_curve_2D (PlotPoint, Do_Nothing);
+  procedure Draw_Param_Curve is new Parametric_Curve_2D (PlotPoint, Do_Nothing);
 
-  procedure Bezier_and_arrows (o : Obj_type) is
+  procedure Bezier_and_arrows (o : Obj_Type) is
     x, y : Integer;
   begin
     Draw_Bezier (o, ulpt);
@@ -387,7 +387,7 @@ package body TC.Display is
     end case;
   end Bezier_and_arrows;
 
-  procedure Shadow (o : Obj_type) is
+  procedure Shadow (o : Obj_Type) is
     x, y, x1, y1 : Integer;
     procedure Cross (P : Point; size : Natural) is
     begin
@@ -403,7 +403,7 @@ package body TC.Display is
       when txt | putaux | box =>
         --  We show the anchor to text
         if Length (o.inhalt) > 0 then
-          Cross (Position_of_text (o), 12);
+          Cross (Position_of_Text (o), 12);
         end if;
       when line => null;
       when circ | disc =>  --  (also disc: + 14-Oct-2005)
@@ -456,7 +456,7 @@ package body TC.Display is
   pick_to_zone : constant array (Boolean) of Color_Zone :=
     (False => normal, True => picked);
 
-  procedure Draw (o : Obj_type) is
+  procedure Draw (o : Obj_Type) is
   begin
     SetColor (pick_to_zone (o.picked));
     case o.art is
@@ -473,7 +473,7 @@ package body TC.Display is
   end Draw;
 
   procedure Draw (p : in out Picture) is
-    o : ptr_Obj_type;
+    o : ptr_Obj_Type;
   begin
     if p.refresh = no then
       return;

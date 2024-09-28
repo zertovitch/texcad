@@ -50,7 +50,7 @@ package TC.GWin.MDI_Picture_Child is
         current_cmd    : Permanent_cmd;
         current_ls     : Line_Settings;
         capture        : Capture_mode;
-        phantomart     : Obj_art_type;
+        phantomart     : Obj_Art_Type;
         phantom_ls     : Line_Settings;  --  sometimes /= current_ls (e.g. translation vector)
       end record;
 

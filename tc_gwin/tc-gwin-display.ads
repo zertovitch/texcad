@@ -7,7 +7,7 @@ package TC.GWin.Display is
   procedure Draw
     (Canvas : in out GWindows.Drawing.Canvas_Type'Class;
      p      : in out TC.Picture;       --  in out: p.refresh is changed
-     an_obj :        TC.ptr_Obj_type;  --  null for whole picture redraw
+     an_obj :        TC.ptr_Obj_Type;  --  null for whole picture redraw
      width  :        Integer;
      height :        Integer);
 

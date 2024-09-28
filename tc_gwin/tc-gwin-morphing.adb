@@ -173,7 +173,7 @@ package body TC.GWin.Morphing is
            iter,
            subcmd);
         --  Refresh Bezier midpoints:
-        Refresh_size_dependent_parameters (w.Picture, objects => True);
+        Refresh_Size_Dependent_Parameters (w.Picture, objects => True);
         if keep_o then -- 14-Oct-2003
           w.Picture.refresh := shadows_and_objects;  --  Only added objects
         else

@@ -37,15 +37,15 @@ package body TC is
     return (P.y, -P.x);
   end Ortho;
 
-  function Pic_suffix return String is
+  function Pic_Suffix return String is
   begin
     return To_String (gen_opt.tex_suff);
-  end Pic_suffix;
+  end Pic_Suffix;
 
-  function Mac_suffix return String is
+  function Mac_Suffix return String is
   begin
     return To_String (gen_opt.mac_suff);
-  end Mac_suffix;
+  end Mac_Suffix;
 
   package body Graphics is
 
@@ -74,7 +74,7 @@ package body TC is
       end loop;
     end Values;
 
-    function Position_of_text (o : Obj_type) return Point is
+    function Position_of_Text (o : Obj_Type) return Point is
       h_just : H_Justify;
       v_just : V_Justify;
       sz, P  : Point;
@@ -99,18 +99,18 @@ package body TC is
         when bottomtext => P.y := o.P1.y;
       end case;
       return P;
-    end Position_of_text;
+    end Position_of_Text;
 
   end Graphics;
 
-  procedure Bezier_curve (o : Obj_type; pt_scale : Real) is
+  procedure Bezier_Curve (o : Obj_Type; pt_scale : Real) is
     sc, scp, nt : Natural;
     isc, tr : Real;
     PA, PB : Point;
   begin
     sc := o.num;
     if sc < 1 then  --  \qbezier - autom
-      sc := Good_num_of_bezier_points (o, pt_scale);
+      sc := Good_Num_of_Bezier_Points (o, pt_scale);
     end if;
     isc := 1.0 / Real (sc);
     scp := sc + 1;
@@ -122,26 +122,26 @@ package body TC is
       Action (isc * tr * (tr * PA + PB) + o.P1);
       nt := nt + 2;
     end loop;
-  end Bezier_curve;
+  end Bezier_Curve;
 
-  function Evaluate_variable (name : String; t : Real) return Real is
+  function Evaluate_Variable (name : String; t : Real) return Real is
   begin
     if name'Length = 1 and then (name (name'First) = 't' or name (name'First) = 'T') then
       return t;
     end if;
     return 0.0;
-  end Evaluate_variable;
+  end Evaluate_Variable;
 
-  function Evaluate_param_curve_2D (o : Obj_type; t : Real) return Point is
+  function Evaluate_Param_Curve_2D (o : Obj_Type; t : Real) return Point is
     x : constant Real := TC_Formulas.Evaluate (o.parsed_2d_x, t);
     y : constant Real := TC_Formulas.Evaluate (o.parsed_2d_y, t);
   begin
     --  RIO.Put(x); RIO.Put(16.0 * sin(t)**3); Ada.Text_IO.New_Line;
     --  RIO.Put(y); RIO.Put(13.0 * cos(t) - 5.0 * cos(2.0 * t) - 2.0 * cos(3.0 * t) - cos(4.0 * t)); Ada.Text_IO.New_Line;
     return o.P1 + o.data_2d.scale * (x, y);
-  end Evaluate_param_curve_2D;
+  end Evaluate_Param_Curve_2D;
 
-  procedure Parametric_curve_2D (o : Obj_type; pt_scale : Real) is
+  procedure Parametric_Curve_2D (o : Obj_Type; pt_scale : Real) is
     sc, nt : Natural;
     isc, t : Real;
     len : constant Real := o.data_2d.max_t - o.data_2d.min_t;
@@ -157,9 +157,9 @@ package body TC is
     if sc = 0 then  --  Automatically compute number of segments
       density := 16.0 * Real'Max (1.0, pt_scale);
       --  We pick 3 points, and hope there is no singularity there
-      P1 := Evaluate_param_curve_2D (o, Convert_0_1_to_min_t_max_t (0.01));
-      P2 := Evaluate_param_curve_2D (o, Convert_0_1_to_min_t_max_t (0.49));
-      P3 := Evaluate_param_curve_2D (o, Convert_0_1_to_min_t_max_t (0.99));
+      P1 := Evaluate_Param_Curve_2D (o, Convert_0_1_to_min_t_max_t (0.01));
+      P2 := Evaluate_Param_Curve_2D (o, Convert_0_1_to_min_t_max_t (0.49));
+      P3 := Evaluate_Param_Curve_2D (o, Convert_0_1_to_min_t_max_t (0.99));
       sc := 1 + Integer (density * (Norm (P1 - P2) + Norm (P2 - P3)));
     end if;
     isc := 1.0 / Real (sc);
@@ -167,7 +167,7 @@ package body TC is
     while nt <= sc loop
       t := (Real (nt) * isc) * len + o.data_2d.min_t;  --  t in [o.min_t, o.max_t]
       begin
-        P := Evaluate_param_curve_2D (o, t);
+        P := Evaluate_Param_Curve_2D (o, t);
         sing := False;
       exception
         when others =>
@@ -180,14 +180,14 @@ package body TC is
       end if;
       nt := nt + 1;
     end loop;
-  end Parametric_curve_2D;
+  end Parametric_Curve_2D;
 
   --  For Get_Slope
 
   rad2deg : constant := 57.295779513082320877;
 
   type angle_table is record
-    x, y  : Slope_value;
+    x, y  : Slope_Value;
     angle : Real;
   end record;
 
@@ -233,7 +233,7 @@ package body TC is
        (x => 4, y => 1, angle => 14.036243467926478588),
        (x => 4, y => 3, angle => 36.869897645844021297));
 
-  procedure Get_slope (df : Point; sl : out LaTeX_slope; vector : Boolean) is
+  procedure Get_Slope (df : Point; sl : out LaTeX_Slope; vector : Boolean) is
     --  JW,GH
     d, d1, angle : Real;
     s : Positive;
@@ -287,12 +287,12 @@ package body TC is
          end if;
       end if;
     end if;
-  end Get_slope;
+  end Get_Slope;
 
-  procedure Set_slope_of_bezvec (o : in out Obj_type; pt_scale : Real) is
+  procedure Set_Slope_of_Bezvec (o : in out Obj_Type; pt_scale : Real) is
 
     procedure Find_good_slope
-      (s                    : in out LaTeX_slope;
+      (s                    : in out LaTeX_Slope;
        inf, start, top, sup :        Real;
        emergency_vector     :        Point)
     is
@@ -340,9 +340,9 @@ package body TC is
       end loop;
       if ko then
         --  Not convergent or solution outside -> set vector along tangent
-        Get_slope (emergency_vector, s, vector => True);
+        Get_Slope (emergency_vector, s, vector => True);
       else
-        Get_slope (-PV, s, vector => True);
+        Get_Slope (-PV, s, vector => True);
       end if;
     end Find_good_slope;
 
@@ -356,13 +356,13 @@ package body TC is
         when middle   => Find_good_slope (o.bez_slope (1), 0.0, 0.27, 0.5, 0.5, o.PE - o.P1);
       end case;
     end if;
-  end Set_slope_of_bezvec;
+  end Set_Slope_of_Bezvec;
 
-  procedure Set_slope_of_linvec (o : in out Obj_type) is
-    s : LaTeX_slope;
+  procedure Set_Slope_of_Linvec (o : in out Obj_Type) is
+    s : LaTeX_Slope;
   begin
     if not o.any_slope then
-      Get_slope (o.P2 - o.P1, s, o.ls.arrows /= no_arrow);
+      Get_Slope (o.P2 - o.P1, s, o.ls.arrows /= no_arrow);
       o.line_slope := s;
       if  abs s (h) >= abs s (v) then
         if  s (h) = 0 then
@@ -374,9 +374,9 @@ package body TC is
         o.P2.x := o.P1.x + (o.P2.y - o.P1.y) * (Real (s (h)) / Real (s (v)));
       end if;
     end if;
-  end Set_slope_of_linvec;
+  end Set_Slope_of_Linvec;
 
-  procedure Set_radius (o : in out Obj_type; df : Point)
+  procedure Set_Radius (o : in out Obj_Type; df : Point)
   is
     --  art: constant array(Boolean) of Obj_art_type:= (False=>circ, True=>disc);
     --  max_rad: constant Real:= Max_radius(art(filled),ul_in_pt); -- was 7.0
@@ -386,15 +386,15 @@ package body TC is
     --     o.rad:= max_rad;
     --   end if;
     --  ^(no more limit!)
-  end Set_radius;
+  end Set_Radius;
 
-  function Good_num_of_bezier_points (o : Obj_type; pt_scale : Real) return Positive is
+  function Good_Num_of_Bezier_Points (o : Obj_Type; pt_scale : Real) return Positive is
     density : constant Real := 8.0 * Real'Max (1.0, pt_scale);
   begin
     return 1 + Integer (density * (Norm (o.P1 - o.PC) + Norm (o.PC - o.PE)));
-  end Good_num_of_bezier_points;
+  end Good_Num_of_Bezier_Points;
 
-  procedure Set_control_point (o : in out Obj_type; TG : Point) is
+  procedure Set_Control_Point (o : in out Obj_Type; TG : Point) is
     M : Point;
   begin
     --  M = midpoint
@@ -402,17 +402,17 @@ package body TC is
     --  Set control point such that TG is on the middle
     --  of the parametric curve: P(1/2)=TG
     o.PC := M + 2.0 * (TG - M);
-  end Set_control_point;
+  end Set_Control_Point;
 
-  procedure Delete_object_list (root : in out ptr_Obj_type) is  --  JW
-    mem : ptr_Obj_type;
+  procedure Delete_Object_List (root : in out ptr_Obj_Type) is  --  JW
+    mem : ptr_Obj_Type;
   begin
     while root /= null loop
       mem := root.next;
       Dispose (root);
       root := mem;
     end loop;
-  end Delete_object_list;
+  end Delete_Object_List;
 
   --  Same algo as read_real
   function TeX_Number (s : String) return Real is
@@ -578,7 +578,7 @@ package body TC is
     return  abs X <= Real'Base'Model_Small;
   end Almost_Zero;
 
-  procedure Improve_linvec (o : in out Obj_type; ul_pt : Real) is
+  procedure Improve_Linvec (o : in out Obj_Type; ul_pt : Real) is
     dx, dy : Real;
     threshold : constant := 14.142136;
     --  ^ Above Sqrt(2) * 10pt, LaTeX dares to display
@@ -599,11 +599,11 @@ package body TC is
       if o.any_slope then                     -- 1/ Current is an "anyline"
         if LaTeX_displays then -- A too short \line will not be displayed!
           declare
-            olatex : Obj_type := o;
+            olatex : Obj_Type := o;
             dpt : Real;
           begin
             olatex.any_slope := False;
-            Set_slope_of_linvec (olatex);
+            Set_Slope_of_Linvec (olatex);
             dpt := Norm (olatex.P2 - o.P2) * ul_pt;
             --  Distance between end points
             if Almost_Zero (dpt) then
@@ -619,10 +619,10 @@ package body TC is
         end if;
       end if;
     end if;
-  end Improve_linvec;
+  end Improve_Linvec;
 
-  procedure Insert (p : in out Picture; t : ptr_Obj_type; where : Insert_location) is
-    a : ptr_Obj_type;
+  procedure Insert (p : in out Picture; t : ptr_Obj_Type; where : Insert_Location) is
+    a : ptr_Obj_Type;
   begin
     case where is
       when at_begin =>
@@ -652,36 +652,36 @@ package body TC is
     end case;
   end Insert;
 
-  procedure Refresh_size_dependent_parameters (p : in out Picture; objects : Boolean) is
+  procedure Refresh_Size_Dependent_Parameters (p : in out Picture; objects : Boolean) is
     ul : constant String := To_String (p.opt.unitlength);
     lw : constant String := To_String (p.opt.linewidth);
-    o : ptr_Obj_type := p.root;
+    o : ptr_Obj_Type := p.root;
   begin
     p.ul_in_pt := Units.Convert (ul, Units.pt);
     p.lw_in_pt := Units.Convert (lw, Units.pt);
     if objects then -- Correct now size-dependent features of objects:
       while o /= null loop
-        Set_slope_of_bezvec (o.all, p.ul_in_pt);
-        Improve_linvec (o.all, p.ul_in_pt);
+        Set_Slope_of_Bezvec (o.all, p.ul_in_pt);
+        Improve_Linvec (o.all, p.ul_in_pt);
         o := o.next;
       end loop;
     end if;
-  end Refresh_size_dependent_parameters;
+  end Refresh_Size_Dependent_Parameters;
 
   --  10-Jun-2003: maximal radius for LaTeX
   max_radius_pt : constant array (circ .. disc) of Real := (20.0, 7.5);
-  function Max_radius (a : Obj_art_type; ul_in_pt : Real) return Real is
+  function Max_Radius (a : Obj_Art_Type; ul_in_pt : Real) return Real is
   begin
     if Almost_Zero (ul_in_pt) then
       return max_radius_pt (a);
     else
       return max_radius_pt (a) / ul_in_pt;
     end if;
-  end Max_radius;
+  end Max_Radius;
 
-  package body epic_calc is
+  package body Epic_Calc is
 
-    function Num_segments (D_lta : Point; dotgap : Real) return Positive is
+    function Num_Segments (D_lta : Point; dotgap : Real) return Positive is
       done : Boolean;
       nx, ny, ns, tmp : Integer;
       gap : Real;
@@ -728,17 +728,17 @@ package body TC is
         --   2/ it's charming!
       end if;
       return ns;
-    end Num_segments;
+    end Num_Segments;
 
-  end epic_calc;
+  end Epic_Calc;
 
-  function Sty_title (s : Supposing_sty) return String is
+  function Sty_Title (s : Supposing_Sty) return String is
   begin
     case s is
       when bezier  => return "bezier (\in LaTeX > 2.09)";
       when emlines => return "emlines (EmTeX, DOS)";
       when epic    => return "epic";
     end case;
-  end Sty_title;
+  end Sty_Title;
 
 end TC;

@@ -21,7 +21,7 @@ package body TC.GWin.Object_Editing is
   procedure Change_Text
     (parent   : in out GWindows.Base.Base_Window_Type'Class;
      main     : in out MDI_Main.MDI_Main_Type;
-     t        : in out Obj_type;
+     t        : in out Obj_Type;
      modified :    out Boolean)
   is
     pan                     : GWindows.Windows.Window_Type;
@@ -36,7 +36,7 @@ package body TC.GWin.Object_Editing is
 
     h_just : H_Justify;
     v_just : V_Justify;
-    candidate : Obj_type (t.art);
+    candidate : Obj_Type (t.art);
     dum_str : String (1 .. 20);
 
     h_adj_groups : constant := 95;
@@ -52,7 +52,7 @@ package body TC.GWin.Object_Editing is
             when dot   => return "%\dottedbox(){...}";
             when dash  => return "\dashbox(){...}";
           end case;
-        when others => return Obj_art_type'Image (t.art);  --  Should not happen!
+        when others => return Obj_Art_Type'Image (t.art);  --  Should not happen!
       end case;
     end Panel_title;
 
@@ -174,7 +174,7 @@ package body TC.GWin.Object_Editing is
   procedure Change_Oval
     (parent   : in out GWindows.Base.Base_Window_Type'Class;
      main     : in out MDI_Main.MDI_Main_Type;
-     t        : in out Obj_type;
+     t        : in out Obj_Type;
      modified :    out Boolean)
   is
     pan       : GWindows.Windows.Window_Type;
@@ -222,7 +222,7 @@ package body TC.GWin.Object_Editing is
     (parent   : in out GWindows.Base.Base_Window_Type'Class;
      main     : in out MDI_Main.MDI_Main_Type;
      ul_in_pt :        Real;
-     t        : in out Obj_type;
+     t        : in out Obj_Type;
      modified :    out Boolean)
   is
     pan           : GWindows.Windows.Window_Type;
@@ -263,7 +263,7 @@ package body TC.GWin.Object_Editing is
 
     candidate := t.num;
     if candidate = 0 then
-      i0 := Good_num_of_bezier_points (t, ul_in_pt);
+      i0 := Good_Num_of_Bezier_Points (t, ul_in_pt);
     else
       i0 := candidate;
     end if;
@@ -300,12 +300,12 @@ package body TC.GWin.Object_Editing is
   procedure Change_Param_2D
     (parent   : in out GWindows.Base.Base_Window_Type'Class;
      main     : in out MDI_Main.MDI_Main_Type;
-     t        : in out Obj_type;
+     t        : in out Obj_Type;
      modified :    out Boolean)
   is
     pan       : TeXCAD_Resource_GUI.Param_Curve_2D_Dialog_Type;
     Result    : Integer;
-    candidate : Param_curve_2D_data := t.data_2d;
+    candidate : Param_Curve_2D_Data := t.data_2d;
     valid     : Boolean := False;
     px, py    : TC_Formulas.Formula;
     err       : Unbounded_String;

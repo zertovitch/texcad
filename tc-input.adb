@@ -9,7 +9,7 @@ package body TC.Input is
 
   procedure Which_command
     (com     : in     String;
-     art     :    out Obj_art_type;
+     art     :    out Obj_Art_Type;
      options : in     Boolean;
      k       :    out Kom_type)
   is  --  JW
@@ -56,10 +56,10 @@ package body TC.Input is
     stop                  : Boolean;  -- succ
     end_of_parsing        : Boolean := False;
     Pdum                  : Point;
-    cur_obj, o, obj_ptr2  : ptr_Obj_type;
+    cur_obj, o, obj_ptr2  : ptr_Obj_Type;
     kommando              : Kom_type;
     TC_option,
-    ziart                 : Obj_art_type;
+    ziart                 : Obj_Art_Type;
     current_line_settings : Line_Settings := normal_line_settings;
     type mode_int is range 0 .. 2;
     input_mode : mode_int;
@@ -254,7 +254,7 @@ package body TC.Input is
       end if;
     end Read_coords_and_adjust;
 
-    procedure Read_slope (s : out Slope_value) is --  JW,GH
+    procedure Read_slope (s : out Slope_Value) is --  JW,GH
       si, i : Integer;
     begin
       --  read_ch;
@@ -269,7 +269,7 @@ package body TC.Input is
           si := 1;
         end if;
         i := si * (Character'Pos (ch) - Character'Pos ('0'));
-        if i not in Slope_value then
+        if i not in Slope_Value then
           Error ("Wrong slope value");
         end if;
         Read_ch;
@@ -396,7 +396,7 @@ package body TC.Input is
           pic.opt.unitlength := pic.opt.unitlength & ch;
           Read_ch;
         end loop;
-        Refresh_size_dependent_parameters (pic, objects => False);
+        Refresh_Size_Dependent_Parameters (pic, objects => False);
         --  corrects ul_in_pt
       end;
     end Read_unitlength;
@@ -438,7 +438,7 @@ package body TC.Input is
     begin
       if ch = '*' then
         Read_ch;
-        obj_ptr2 := new Obj_type (disc);
+        obj_ptr2 := new Obj_Type (disc);
         obj_ptr2.P1 := o.P1;
         obj_ptr2.picked := o.picked;
         obj_ptr2.ls := o.ls;
@@ -488,7 +488,7 @@ package body TC.Input is
       Read_real_arg (ls.dot_gap, optional => True);
     end Read_dottedline_options;
 
-    procedure Read_line_vector_parameters (o : in out Obj_type) is
+    procedure Read_line_vector_parameters (o : in out Obj_Type) is
       o_len : Real;
     begin
       Seek_ch ('('); Read_slope (o.line_slope (h));
@@ -511,19 +511,19 @@ package body TC.Input is
       end if;
     end Read_line_vector_parameters;
 
-    procedure Points_3_to_N (append_to : in out Obj_type) is
+    procedure Points_3_to_N (append_to : in out Obj_Type) is
       --  Support for epic's chained lines (24-Jan-2007)
       --  \drawline[stretch](x1,y1)(x2,y2)...(xn,yn)
       --  \dashline[stretch]{dash-length}[inter-dot-gap for dash](x1,y1)(x2,y2)...(xn,yn)
       --  \dottedline[optional dotcharacter]{dotgap in units}(x1,y1)(x2,y2)...(xn,yn)
-      clone : ptr_Obj_type;
+      clone : ptr_Obj_Type;
     begin
       Skip_blanks;
       if ch /= '(' or end_of_parsing then
         return;
       end if;
       --  We have a '(' here, then an additional point
-      clone := new Obj_type'(append_to);
+      clone := new Obj_Type'(append_to);
       append_to.next := clone;
       clone.P1 := append_to.P2;
       Read_coords_and_adjust (clone.P2);
@@ -588,7 +588,7 @@ package body TC.Input is
 
     procedure Read_new_object is
     begin
-      o := new Obj_type (ziart);
+      o := new Obj_Type (ziart);
       o.ls := current_line_settings;
       case  kommando  is
         when cemline1 =>
@@ -682,7 +682,7 @@ package body TC.Input is
             Read_coords_and_adjust (o.P1);
             Read_coords_and_adjust (o.PC);
             Read_coords_and_adjust (o.PE);
-            Set_slope_of_bezvec (o.all, pic.ul_in_pt);
+            Set_Slope_of_Bezvec (o.all, pic.ul_in_pt);
             Skip_until_end_of_emulation;
 
         when ccircle2 =>
@@ -727,7 +727,7 @@ package body TC.Input is
             input_mode := 1;
             read_com;
             Which_command (com (1 .. com_len), ziart, False, kommando);
-            obj_ptr2 := new Obj_type (ziart);
+            obj_ptr2 := new Obj_Type (ziart);
             obj_ptr2.P1 := o.P1;
             obj_ptr2.picked := o.picked;
             obj_ptr2.ls := o.ls;
@@ -794,7 +794,7 @@ package body TC.Input is
                     end;
              when caux =>
                     kommando := cputaux;
-                    obj_ptr2 := new Obj_type (putaux);
+                    obj_ptr2 := new Obj_Type (putaux);
                     obj_ptr2.P1 := o.P1;
                     obj_ptr2.picked := o.picked;
                     obj_ptr2.ls := o.ls;
@@ -838,7 +838,7 @@ package body TC.Input is
       end case;
 
       if stop then
-        Delete_object_list (o);
+        Delete_Object_List (o);
       else
         o.picked := macro;  --  we pick all, even the hidden (aux)
         if pic.root = null then
@@ -878,7 +878,7 @@ package body TC.Input is
       end if;
       --  Now: either pic.root is null, or cur_obj.all is the last object.
     else
-      Delete_object_list (pic.root);
+      Delete_Object_List (pic.root);
       pic.opt.pv_insert := Null_Unbounded_String;
     end if;
 
@@ -886,7 +886,7 @@ package body TC.Input is
     line_len := 0;
     p := 1;
     q := 1;
-    Refresh_size_dependent_parameters (pic, objects => False);
+    Refresh_Size_Dependent_Parameters (pic, objects => False);
     --  at least, the default values. (ul_in_pt)
 
     Read_ch;
@@ -990,7 +990,7 @@ package body TC.Input is
 
     Ada.Text_IO.Close (tf);
     pic.saved := not macro;
-    Refresh_size_dependent_parameters (pic, objects => True);
+    Refresh_Size_Dependent_Parameters (pic, objects => True);
   end Load;
 
 end TC.Input;

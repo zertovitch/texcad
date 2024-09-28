@@ -167,7 +167,7 @@ package body TC.GWin.MDI_Main is
       Window.Close_Initial_Document;
       user_maximize_restore := False;
       New_Window.Draw_Control.Picture := Candidate;
-      Refresh_size_dependent_parameters
+      Refresh_Size_Dependent_Parameters
         (New_Window.Draw_Control.Picture,
          objects => True);
       New_Window.Create_TeXCAD_MDI_Child (Window, (file_name => File_Name, short_name => File_Title));
@@ -348,7 +348,7 @@ package body TC.GWin.MDI_Main is
 
     --  Transfer user-defined default options:
     New_Window.Draw_Control.Picture.opt := gen_opt.options_for_new;
-    Refresh_size_dependent_parameters
+    Refresh_Size_Dependent_Parameters
       (New_Window.Draw_Control.Picture,
        objects => True);
 
@@ -375,11 +375,11 @@ package body TC.GWin.MDI_Main is
     GWindows.Common_Dialogs.Open_File
       (Window, Msg (open),
        File_Name,
-       ((G2GU (Msg (ltx_pic) & " (*." & S2G (Pic_suffix) & ")"),
-           G2GU ("*." & S2G (Pic_suffix))),
+       ((G2GU (Msg (ltx_pic) & " (*." & S2G (Pic_Suffix) & ")"),
+           G2GU ("*." & S2G (Pic_Suffix))),
          (G2GU (Msg (all_files) & " (*.*)"),
            G2GU ("*.*"))),
-       '.' & S2G (Pic_suffix),
+       '.' & S2G (Pic_Suffix),
        File_Title,
        Success);
 

@@ -9,7 +9,7 @@ package TC.GWin.New_objects is
      parent : in out GWindows.Base.Base_Window_Type'Class;
      main   : in out MDI_Main.MDI_Main_Type;
      P1     :        Point;
-     art    :        Obj_art_type;
+     art    :        Obj_Art_Type;
      ls     :        Line_Settings);  --  Useless, just avoid thickness swapping
 
   procedure New_boxoval

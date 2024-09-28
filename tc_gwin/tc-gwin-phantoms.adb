@@ -30,12 +30,12 @@ package body TC.GWin.Phantoms is
   end Invert_Rubber_Box;
 
   procedure Invert_Phantom (w : in out MDI_Picture_Child.TC_Picture_Panel) is
-    procedure Draw_one (p : ptr_Obj_type) is
+    procedure Draw_one (p : ptr_Obj_Type) is
     begin
       Display.Draw (w.Drawing_Area, w.Picture, p, w.Width, w.Height);
     end Draw_one;
 
-    o, l : ptr_Obj_type;
+    o, l : ptr_Obj_Type;
 
     procedure Ortholine (P, D : Point) is
       V  : Point;
@@ -100,9 +100,9 @@ package body TC.GWin.Phantoms is
   begin
     case w.phantomart is
       when txt | putaux | disc =>
-        o := new Obj_type (circ);
+        o := new Obj_Type (circ);
       when others =>
-        o := new Obj_type (w.phantomart);
+        o := new Obj_Type (w.phantomart);
     end case;
     o.next := null;
     o.P1 := w.PS;
@@ -124,9 +124,9 @@ package body TC.GWin.Phantoms is
           w.current_cmd in Deformation_cmd or
           --  dot & dash lines are always unlimited
           w.current_ls.pattern /= plain;
-        Set_slope_of_linvec (o.all);
+        Set_Slope_of_Linvec (o.all);
       when circ | disc =>
-        Set_radius (o.all, df => o.P1 - w.PU);
+        Set_Radius (o.all, df => o.P1 - w.PU);
       when oval =>
         size := w.PU - w.PS;
         o.osize := (abs (size.x), abs (size.y));
@@ -136,10 +136,10 @@ package body TC.GWin.Phantoms is
         o.part := entire;
       when bezier =>
         o.PE := w.PE;
-        Set_control_point (o.all, w.PU);
+        Set_Control_Point (o.all, w.PU);
         o.num := 0;
-        Set_slope_of_bezvec (o.all, w.Picture.ul_in_pt);
-        o.num := Good_num_of_bezier_points (o.all, w.Picture.ul_in_pt) / 9;
+        Set_Slope_of_Bezvec (o.all, w.Picture.ul_in_pt);
+        o.num := Good_Num_of_Bezier_Points (o.all, w.Picture.ul_in_pt) / 9;
       when others => null;
     end case;
     w.Drawing_Area.Set_Mix_Mode (GWindows.Drawing.R2_NOTXORPEN);
@@ -147,13 +147,13 @@ package body TC.GWin.Phantoms is
     Draw_one (o);
     case w.phantomart is
       when circ | oval =>
-        l := new Obj_type (line);
+        l := new Obj_Type (line);
         l.ls := normal_line_settings;
         Circle_or_Oval_frame_and_cross;  --  14-Oct-2005, show frame
         Dispose (l);
       when disc =>
         --  14-Oct-2005, a diagonal cross for showing difference with circle:
-        l := new Obj_type (line);
+        l := new Obj_Type (line);
         l.ls := normal_line_settings;
         declare
           x : constant Real := o.rad / 1.4142135624;
@@ -169,7 +169,7 @@ package body TC.GWin.Phantoms is
         Dispose (l);
       when bezier =>
         w.Drawing_Area.Select_Object (phantom_pen (Dash_Dot_Dot));
-        l := new Obj_type (line);
+        l := new Obj_Type (line);
         l.ls := normal_line_settings;
         l.P1 := o.PC;
         l.P2 := o.P1 + more * (o.P1 - o.PC);
@@ -180,7 +180,7 @@ package body TC.GWin.Phantoms is
         Ortholine (o.P1, o.P1 - o.PC);
         Ortholine (o.PE, o.PE - o.PC);
         Dispose (l);
-        l := new Obj_type (circ);
+        l := new Obj_Type (circ);
         l.P1 := o.P1;
         l.rad := rbd;
         Draw_one (l);

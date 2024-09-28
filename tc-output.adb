@@ -187,7 +187,7 @@ package body TC.Output is
   is
     --  JW,GH (Save)
     tf : Ada.Text_IO.File_Type renames file;
-    o : ptr_Obj_type;
+    o : ptr_Obj_Type;
     s1, s2, Pmin, Pmax : Point;
     pointnum : Natural;
 
@@ -334,7 +334,7 @@ package body TC.Output is
       Q := PP;
     end Write_reduced_any_Lines;
 
-    procedure Write_emulated_Bezier (o : Obj_type) is
+    procedure Write_emulated_Bezier (o : Obj_Type) is
       --  JW , GM
       M, Q : Point;
       no_start : Boolean := False;
@@ -345,7 +345,7 @@ package body TC.Output is
         no_start := True;
       end PlotPoint;
 
-      procedure Draw_Bezier is new Bezier_curve (PlotPoint);
+      procedure Draw_Bezier is new Bezier_Curve (PlotPoint);
 
     begin
       M := o.P1;
@@ -356,7 +356,7 @@ package body TC.Output is
       Write_Line_any_Slope (M, o.PE, 0);
     end Write_emulated_Bezier;
 
-    procedure Write_emulated_Paramcurve2d (o : Obj_type) is
+    procedure Write_emulated_Paramcurve2d (o : Obj_Type) is
       M, Q, PE : Point;
       no_start, restart : Boolean := False;
 
@@ -377,17 +377,17 @@ package body TC.Output is
         restart := True;
       end Singularity;
 
-      procedure Draw_Paramcurve is new Parametric_curve_2D (PlotPoint, Singularity);
+      procedure Draw_Paramcurve is new Parametric_Curve_2D (PlotPoint, Singularity);
 
     begin
-      M := Evaluate_param_curve_2D (o, o.data_2d.min_t);
+      M := Evaluate_Param_Curve_2D (o, o.data_2d.min_t);
       Q := (0.0, 0.0);
       Draw_Paramcurve (o, pic.ul_in_pt);
-      PE := Evaluate_param_curve_2D (o, o.data_2d.max_t);
+      PE := Evaluate_Param_Curve_2D (o, o.data_2d.max_t);
       Write_Line_any_Slope (M, PE, 0);
     end Write_emulated_Paramcurve2d;
 
-    procedure Write_Kreis (o : Obj_type) is
+    procedure Write_Kreis (o : Obj_Type) is
 
       use Ada.Numerics;
 
@@ -496,7 +496,7 @@ package body TC.Output is
       end Write_disc_with_boxes;
 
     begin
-      if o.rad <= Max_radius (o.art, pic.ul_in_pt) then  --  was: 7.0
+      if o.rad <= Max_Radius (o.art, pic.ul_in_pt) then  --  was: 7.0
         Put (tf, Img_track (cput) & Pt (o.P1 - Pmin) & "{\circle");
         if o.art = disc then
           Put (tf, '*');
@@ -520,7 +520,7 @@ package body TC.Output is
     end Arrows_Option_Image;
 
     --  24-Apr-2003
-    procedure Write_Bezier_Command (o : Obj_type; force_no_vec : Boolean := False) is
+    procedure Write_Bezier_Command (o : Obj_Type; force_no_vec : Boolean := False) is
       bez_choice : constant array (Boolean, Boolean) of Kom_type :=
         (True =>   (True => cqbezvec, False => cqbezier1),
          False => (True => cbezvec,  False => cbezier1));
@@ -538,7 +538,7 @@ package body TC.Output is
       Put_Line (tf, Pt (o.P1 - Pmin) & Pt (o.PC - Pmin) & Pt (o.PE - Pmin));
     end Write_Bezier_Command;
 
-    procedure Write_Arrow (P : Point; s : LaTeX_slope) is
+    procedure Write_Arrow (P : Point; s : LaTeX_Slope) is
       minipt : constant := 0.2;
       al : Real;  --  4-Jun-2003: minimal length to obtain an arrow, was {0.2}
     begin
@@ -550,7 +550,7 @@ package body TC.Output is
       Put (tf, Img_track (cput) & Pt (P) & "{\vector" & Pt (s (h), s (v)) & Br (al) & '}');
     end Write_Arrow;
 
-    procedure Write_Bezier (o : Obj_type) is  --  24-Feb-2004
+    procedure Write_Bezier (o : Obj_Type) is  --  24-Feb-2004
     begin
       if o.ls.arrows = no_arrow then  --  \bezier or %\bezier
         if pic.opt.sty (bezier) then
@@ -563,7 +563,7 @@ package body TC.Output is
         end if;
       else                           --  %\bezvec or %\qbezvec
         Write_Bezier_Command (o);
-        case With_arrows (o.ls.arrows) is  --  no_arrow treated above
+        case With_Arrows (o.ls.arrows) is  --  no_arrow treated above
           when head     => Write_Arrow (o.PE - Pmin, o.bez_slope (1));
           when both     => Write_Arrow (o.PE - Pmin, o.bez_slope (1));
                            Write_Arrow (o.P1 - Pmin, o.bez_slope (2));
@@ -578,7 +578,7 @@ package body TC.Output is
       end if;
     end Write_Bezier;
 
-    procedure Write_Paramcurve2d (o : Obj_type) is
+    procedure Write_Paramcurve2d (o : Obj_Type) is
       long : constant Boolean := Length (o.data_2d.form_x) + Length (o.data_2d.form_y) > 40;
       procedure Spacing is
       begin
@@ -603,11 +603,11 @@ package body TC.Output is
       End_of_emulation;
     end Write_Paramcurve2d;
 
-    procedure Write_Vector_Arrows (P1, P2 : Point; arrows : Line_arrows) is
-      s : LaTeX_slope;
+    procedure Write_Vector_Arrows (P1, P2 : Point; arrows : Line_Arrows) is
+      s : LaTeX_Slope;
     begin
-      Get_slope (P2 - P1, s, True);
-      case With_arrows (arrows) is
+      Get_Slope (P2 - P1, s, True);
+      case With_Arrows (arrows) is
         when head   => Write_Arrow (P2, s);
         when both   => Write_Arrow (P2, s);
                        Write_Arrow (P1, (-s (h), -s (v)));
@@ -615,7 +615,7 @@ package body TC.Output is
       end case;
     end Write_Vector_Arrows;
 
-    procedure Write_Plain_Line_any_Slope (o : Obj_type) is
+    procedure Write_Plain_Line_any_Slope (o : Obj_Type) is
       pls1, pls2 : Point;
       needs_emulation : constant Boolean :=
         not (pic.opt.sty (emlines) or pic.opt.sty (epic));
@@ -628,7 +628,7 @@ package body TC.Output is
             --  line, but no emlines.sty or epic.sty
             Put_Line (tf, Img_track (cemline2) & Pt (pls1) & Pt (pls2));
           end if;
-        when With_arrows =>
+        when With_Arrows =>
           Put_Line (tf,
              Img_track (cvector2) &          --  %\vector
              Arrows_Option_Image (o.ls) &    --  [m]
@@ -642,7 +642,7 @@ package body TC.Output is
           if needs_emulation then
             End_of_emulation;
           end if;
-        when With_arrows =>
+        when With_Arrows =>
           End_of_emulation;
       end case;
     end Write_Plain_Line_any_Slope;
@@ -696,7 +696,7 @@ package body TC.Output is
           Put_options_and_parameters;
         end if;
       else  --  emulation of epic.sty
-        np := TC.epic_calc.Num_segments (D_lta, gap);
+        np := TC.Epic_Calc.Num_Segments (D_lta, gap);
         prec := current_precision + 1 + Integer'Max (0, Integer (Log (Real (np), 10.0)));
         cgap := 1.0 / Real (np);  --  the corrected gap s.t. the last point is at end
         E1p := E1 - pic.lw_in_pt / pic.ul_in_pt * (0.5, 0.5);
@@ -717,7 +717,7 @@ package body TC.Output is
     end Write_Dotted_Line;
 
     --  23-Feb-2004: %\dottedbox
-    procedure Write_Dotted_Box (o : Obj_type) is
+    procedure Write_Dotted_Box (o : Obj_Type) is
       C1, C2 : Point;  --  corners
       gap : constant Real := o.ls.dot_gap;
       sym : constant String := To_String (o.ls.dot_symbol);
@@ -815,7 +815,7 @@ package body TC.Output is
         end if;
       else  --  emulation of epic.sty
         --  !! emulate gap, stretch !!
-        ns := TC.epic_calc.Num_segments (D, line_length);
+        ns := TC.Epic_Calc.Num_Segments (D, line_length);
         --  prec:= precision + 1 + Integer'Max(0, Integer(log(Real(ns),10.0)));
         E1p := E1 - pic.lw_in_pt / pic.ul_in_pt * (0.5, 0.5);
         D := 1.0 / Real (ns) * D;
@@ -833,7 +833,7 @@ package body TC.Output is
 
     --  20-Jan-2004: epic's \dottedline, 24-Feb-2004: epic's \dashline
 
-    procedure Write_Dot_Dash_Line_Command (o : Obj_type) is
+    procedure Write_Dot_Dash_Line_Command (o : Obj_Type) is
 
       procedure Spit (as_epic_line, put_cmd, can_chain : Boolean) is
       begin
@@ -895,7 +895,7 @@ package body TC.Output is
       end case;
     end Write_Dot_Dash_Line_Command;
 
-    procedure Write_LaTeX_put_figure (o : Obj_type) is
+    procedure Write_LaTeX_put_figure (o : Obj_Type) is
       o_len : Real;
       special_arrows_limited_slope : constant Boolean :=
         o.art = line and o.ls.arrows in both .. middle;

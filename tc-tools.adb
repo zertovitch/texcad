@@ -2,7 +2,7 @@ with TC.Picking;
 
 package body TC.Tools is
 
-  procedure Analyse (o : Obj_type; possible : out Cleanup_action) is
+  procedure Analyse (o : Obj_Type; possible : out Cleanup_action) is
   begin
     possible := (others => False);
     case o.art is
@@ -42,7 +42,7 @@ package body TC.Tools is
   end Analyse;
 
   procedure Detect (pic : Picture; stat : out Detection_stat) is
-    o : ptr_Obj_type := pic.root;
+    o : ptr_Obj_Type := pic.root;
     possible : Cleanup_action;
     obj_pos : Natural := 0;
   begin
@@ -63,7 +63,7 @@ package body TC.Tools is
   end Detect;
 
   procedure Clean (pic : in out Picture; action : Cleanup_action) is
-    o : ptr_Obj_type := pic.root;
+    o : ptr_Obj_Type := pic.root;
     possible : Cleanup_action;
     use TC.Picking;
   begin

@@ -12,7 +12,6 @@ Improvements
 - Tabs
 - "Snap on / off" button
 - Undo's (Ctrl-Z), Redo's (Ctrl-Y)
-- show thick lines as thick
 - Big cross cursor (optional)
 - See size of pasted object when pointing left-bottom corner
 - Rulers

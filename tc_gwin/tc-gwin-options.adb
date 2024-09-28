@@ -126,7 +126,7 @@ package body TC.GWin.Options is
             when grid => o.grid := TC.Grid_Display'Value (s);
             when bez  => o.solid_bez := TC.Solid_Bezier_Points_Mode'Value (s);
             when preview_latex_version =>
-              o.preview_mode := LaTeX_version'Value (s);
+              o.preview_mode := LaTeX_Version'Value (s);
             when preview_insert =>
               if s /= "" then
                 --  ^ Don't erase the default value when this key is missing
@@ -134,7 +134,7 @@ package body TC.GWin.Options is
                 p.pv_insert := To_Unbounded_String (s);
               end if;
             when preview_directory =>
-              o.preview_directory := Preview_directory_choice'Value (s);
+              o.preview_directory := Preview_Directory_Choice'Value (s);
             when snapping => p.snapping := Boolean'Value (s);
             when snap_asp => p.snap_asp := Integer'Value (s);
             when zoom_fac => p.zoom_fac := Real'Value (s);
@@ -156,7 +156,7 @@ package body TC.GWin.Options is
               end if;
             when Style_Switch_Key =>
               p.sty
-                (Supposing_sty'Value
+                (Supposing_Sty'Value
                   (GWindows.GStrings.To_String
                     (ks (ks'First + style_switch_offset .. ks'Last)))) :=
                 Boolean'Value (s);
@@ -246,7 +246,7 @@ package body TC.GWin.Options is
           when lw       => R (To_String (p.linewidth));
           when Style_Switch_Key =>
             R (Boolean'Image
-              (p.sty (Supposing_sty'Value
+              (p.sty (Supposing_Sty'Value
                 (ks (ks'First + style_switch_offset .. ks'Last)))));
           when kleft    => R (wleft'Image);
           when ktop     => R (wtop'Image);

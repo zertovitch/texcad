@@ -44,7 +44,7 @@ package TC.IO_Commands is
 
   subtype K_option is Kom_type range cunit .. cthickness;
 
-  kommando_art : constant array (Kom_type) of Obj_art_type :=
+  kommando_art : constant array (Kom_type) of Obj_Art_Type :=
      (cmakebox             => txt,
       cframebox .. crule   => box,
       cemline1 .. cvector2 => line,

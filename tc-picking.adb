@@ -15,7 +15,7 @@ package body TC.Picking is
      M1, M2 :        Point := (0.0, 0.0))
   is
     dist_max, dist_max_2, txt_dist2 : Real;
-    a : ptr_Obj_type := p.root;
+    a : ptr_Obj_Type := p.root;
 
     last_near_dist : Real;  --  2007
 
@@ -66,7 +66,7 @@ package body TC.Picking is
               return True;
             end if;
           end if;
-          return a.art = box and then Near_Text (Position_of_text (a.all));
+          return a.art = box and then Near_Text (Position_of_Text (a.all));
         end if;
         --  Distance to full box:
         dist := Real'Max (P1.x - M1.x, M1.x - P2.x);
@@ -136,11 +136,11 @@ package body TC.Picking is
       end if;
     end Near_to_target_Point;
 
-    procedure Scout_Bezier is new Bezier_curve (Near_to_target_Point);
+    procedure Scout_Bezier is new Bezier_Curve (Near_to_target_Point);
 
     procedure Do_Nothing is null;
 
-    procedure Scout_Param_2D is new Parametric_curve_2D (Near_to_target_Point, Do_Nothing);
+    procedure Scout_Param_2D is new Parametric_Curve_2D (Near_to_target_Point, Do_Nothing);
 
     begin -- Near_Point
       case a.art  is
@@ -220,7 +220,7 @@ package body TC.Picking is
 
     found : Boolean;
 
-    has_modifiable_info : constant array (Obj_art_type) of Boolean :=
+    has_modifiable_info : constant array (Obj_Art_Type) of Boolean :=
       (txt | putaux | box | oval | bezier | paramcurve2d => True,
        others => False);
 
@@ -319,7 +319,7 @@ package body TC.Picking is
   end PicPic;
 
   procedure Del_picked (p : in out Picture) is
-    procedure Stat_and_del (o : in out ptr_Obj_type) is
+    procedure Stat_and_del (o : in out ptr_Obj_Type) is
     begin
       p.saved  := False;
       p.picked := p.picked - 1;
@@ -330,7 +330,7 @@ package body TC.Picking is
       end if;
       Dispose (o);
     end Stat_and_del;
-    a, b : ptr_Obj_type;
+    a, b : ptr_Obj_Type;
   begin
     while p.root /= null and then p.root.picked loop
       a := p.root;

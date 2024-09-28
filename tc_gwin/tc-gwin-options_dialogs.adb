@@ -80,12 +80,12 @@ package body TC.GWin.Options_Dialogs is
     q_radio    : array (Solid_Bezier_Points_Mode) of Radio_Button_Type;
 
     preview_group : Group_Box_Type;
-    preview_radio : array (LaTeX_version) of Radio_Button_Type;
-    latver : constant array (LaTeX_version) of GString (1 .. 5) :=
+    preview_radio : array (LaTeX_Version) of Radio_Button_Type;
+    latver : constant array (LaTeX_Version) of GString (1 .. 5) :=
       (v209 => "2.09 ", v2e => ">= 2e");
     preview_dir_group : Group_Box_Type;
-    preview_dir_radio : array (Preview_directory_choice) of Radio_Button_Type;
-    preview_dir_msg : constant array (Preview_directory_choice) of Message :=
+    preview_dir_radio : array (Preview_Directory_Choice) of Radio_Button_Type;
+    preview_dir_msg : constant array (Preview_Directory_Choice) of Message :=
        (current   => mcurrent,
         temporary => mtemporary);
 
@@ -128,12 +128,12 @@ package body TC.GWin.Options_Dialogs is
           candidate.solid_bez := q;
         end if;
       end loop;
-      for l in LaTeX_version loop
+      for l in LaTeX_Version loop
         if State (preview_radio (l)) = Checked then
           candidate.preview_mode := l;
         end if;
       end loop;
-      for d in Preview_directory_choice loop
+      for d in Preview_Directory_Choice loop
         if State (preview_dir_radio (d)) = Checked then
           candidate.preview_directory := d;
         end if;
@@ -219,8 +219,8 @@ package body TC.GWin.Options_Dialogs is
     y := y + 35;
     Create (preview_dir_group, Tabbing.tab (gen_opt_tab_miscellaneous), Msg (preview_directory),
       5,   y, wmax - 5, 65);
-    for d in Preview_directory_choice loop
-      x := 10 + 180 * Preview_directory_choice'Pos (d);
+    for d in Preview_Directory_Choice loop
+      x := 10 + 180 * Preview_Directory_Choice'Pos (d);
       Create_Label (Tabbing.tab (gen_opt_tab_miscellaneous), Msg (preview_dir_msg (d)),
         x,  y + 40, 175, 22);
       Create (preview_dir_radio (d), Tabbing.tab (gen_opt_tab_miscellaneous), "",  x,  y + 20,  60, 15);
@@ -289,8 +289,8 @@ package body TC.GWin.Options_Dialogs is
     --  LaTeX tab / Preview LaTeX version group
     y := y + yy + 8;
     Create (preview_group, Tabbing.tab (gen_opt_tab_latex), Msg (preview_latex_mode), 5, y, wmax - 5, yy);
-    for l in LaTeX_version loop
-      x := 10 + 180 * LaTeX_version'Pos (l);
+    for l in LaTeX_Version loop
+      x := 10 + 180 * LaTeX_Version'Pos (l);
       Create_Label (Tabbing.tab (gen_opt_tab_latex), "LaTeX " & latver (l),
         x,  y + 40, 175, 22);
       Create (preview_radio (l), Tabbing.tab (gen_opt_tab_latex), "",  x,  y + 20,  60, 15);
@@ -363,7 +363,7 @@ package body TC.GWin.Options_Dialogs is
      ul, lw : Edit_Box_Type;
      --  Compatibility group  --
      compat_group : Group_Box_Type;
-     sty_box : array (Supposing_sty) of Check_Box_Type;
+     sty_box : array (Supposing_Sty) of Check_Box_Type;
      compat_x : constant := 5;
      compat_y : constant := 10;
      --  Preview insertions  --
@@ -498,10 +498,10 @@ package body TC.GWin.Options_Dialogs is
       compat_x,  compat_y, 200, 25 + 20 * sty_box'Length);
 
     for s in sty_box'Range loop
-      y := compat_y + 20 + 20 * Supposing_sty'Pos (s);
+      y := compat_y + 20 + 20 * Supposing_Sty'Pos (s);
       Create_Label
         (Tabbing.tab (pic_opt_tab_latex),
-         S2G (Sty_title (s)),
+         S2G (Sty_Title (s)),
          compat_x +  15,  y, 160, 20);
       Create
         (sty_box (s),

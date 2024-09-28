@@ -383,10 +383,10 @@ package body TC.GWin.MDI_Picture_Child is
          Line_thickness_cmd'Last,
          Custom_cmd'Val
            (Custom_cmd'Pos (Line_thickness_cmd'First) +
-            Line_thickness'Pos (Window.Draw_Control.current_ls.thickness)));
+            Line_Thickness'Pos (Window.Draw_Control.current_ls.thickness)));
       c := Custom_cmd'Val
             (Custom_cmd'Pos (Line_pattern_cmd'First) +
-             Line_pattern'Pos (Window.Draw_Control.current_ls.pattern));
+             Line_Pattern'Pos (Window.Draw_Control.current_ls.pattern));
       if c = dot_param then
         c := dash;
       end if;
@@ -399,7 +399,7 @@ package body TC.GWin.MDI_Picture_Child is
          Line_arrows_cmd'Last,
          Custom_cmd'Val
            (Custom_cmd'Pos (Line_arrows_cmd'First) +
-            Line_arrows'Pos (Window.Draw_Control.current_ls.arrows)));
+            Line_Arrows'Pos (Window.Draw_Control.current_ls.arrows)));
     end Update_ls;
 
     use MDI_Main, Mousing;
@@ -554,7 +554,7 @@ package body TC.GWin.MDI_Picture_Child is
       Window.Draw_Control.Saved_Area.Select_Object
         (Window.Draw_Control.Saved_Bitmap);
 
-      Refresh_size_dependent_parameters
+      Refresh_Size_Dependent_Parameters
         (Window.Draw_Control.Picture,
          objects => True);
       --  ^default pt, not yet from options.
@@ -722,11 +722,11 @@ package body TC.GWin.MDI_Picture_Child is
     GWindows.Common_Dialogs.Open_File
       (Window, Msg (open),
        File_Name,
-       ((G2GU (Msg (tcd_mac) & " (*." & S2G (Mac_suffix) & ")"),
-           G2GU ("*." & S2G (Mac_suffix))),
+       ((G2GU (Msg (tcd_mac) & " (*." & S2G (Mac_Suffix) & ")"),
+           G2GU ("*." & S2G (Mac_Suffix))),
          (G2GU (Msg (all_files) & " (*.*)"),
            G2GU ("*.*"))),
-       '.' & S2G (Mac_suffix),
+       '.' & S2G (Mac_Suffix),
        File_Title,
        Success);
     if Success then
@@ -756,7 +756,7 @@ package body TC.GWin.MDI_Picture_Child is
            Icon => Exclamation_Icon);
     end;
     pw.opt := mo;  --  restore options
-    Refresh_size_dependent_parameters (pw, objects => True);
+    Refresh_Size_Dependent_Parameters (pw, objects => True);
     --  ^ was missing ! Fixed 14-Jan-2004
     pw.refresh := shadows_and_objects;
   end Load_Macro;
@@ -765,7 +765,7 @@ package body TC.GWin.MDI_Picture_Child is
 
   procedure Change_Pattern_Params
     (Window      : in out MDI_Picture_Child_Type;
-     new_pattern :        Line_pattern)
+     new_pattern :        Line_Pattern)
   is
     pan             : Window_Type;
     sym_eb, len_eb  : GWindows.Edit_Boxes.Edit_Box_Type;
@@ -879,7 +879,7 @@ package body TC.GWin.MDI_Picture_Child is
           Window.Draw_Control.Picture.saved :=
             Window.Draw_Control.Picture.saved and not modified;
           if modified then
-            Refresh_size_dependent_parameters
+            Refresh_Size_Dependent_Parameters
               (Window.Draw_Control.Picture,
                objects => True);
             Window.Draw_Control.Picture.refresh := full;  --  14-Oct-2003
@@ -1023,9 +1023,9 @@ package body TC.GWin.MDI_Picture_Child is
     function Suffix return String is
     begin
       if macro then
-        return Mac_suffix;
+        return Mac_Suffix;
       else
-        return Pic_suffix;
+        return Pic_Suffix;
       end if;
     end Suffix;
     --
