@@ -800,7 +800,7 @@ package body TC.GWin.MDI_Picture_Child is
        Filter_amp (Msg (vtogltb)),
        Width => 300, Height => 140 + y);
 
-    Center (pan);
+    pan.Center (Window);
     Small_Icon (pan, "Options_Icon");
     On_Destroy_Handler (pan, Get_Box_Data'Unrestricted_Access);
 

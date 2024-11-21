@@ -408,7 +408,7 @@ package body TC.GWin.MDI_Main is
     use GWindows.Static_Controls, GWindows.Static_Controls.Web, Lang;
   begin
     About.Create_As_Dialog (Window, "TeXCAD", Width => wmax + 50, Height => 350);
-    About.Center;
+    About.Center (Window);
     About.Small_Icon ("Grid_Icon");
     GWin_Util.Use_GUI_Font (About);
     w := About.Client_Area_Width - 32 - left_margin;

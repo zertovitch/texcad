@@ -96,7 +96,7 @@ package body TC.GWin.Object_Editing is
 
     pan.Create_As_Dialog (parent, S2G (Panel_title), Width => 630, Height => 110 + y);
 
-    pan.Center;
+    pan.Center (parent);
     pan.Small_Icon ("Options_Icon");
     pan.On_Destroy_Handler (Get_Box_Data'Unrestricted_Access);
 
@@ -185,7 +185,7 @@ package body TC.GWin.Object_Editing is
 
   begin
     pan.Create_As_Dialog (parent, "\oval", Width => 460, Height => 225);
-    pan.Center;
+    pan.Center (parent);
     pan.Small_Icon ("Options_Icon");
     GWin_Util.Use_GUI_Font (pan);
 
@@ -256,7 +256,7 @@ package body TC.GWin.Object_Editing is
 
   begin
     pan.Create_As_Dialog (parent, "\qbezier, \bezier", Width => 320, Height => 140);
-    pan.Center;
+    pan.Center (parent);
     pan.Small_Icon ("Options_Icon");
     pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     GWin_Util.Use_GUI_Font (pan);
@@ -347,7 +347,7 @@ package body TC.GWin.Object_Editing is
   begin
     loop
       pan.Create_Full_Dialog (parent, Msg (param2d_title));
-      pan.Center;
+      pan.Center (parent);
       pan.Small_Icon ("Options_Icon");
       pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
       Set_Data;

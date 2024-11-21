@@ -35,7 +35,7 @@ package body TC.GWin.Tools is
     TeXCAD_Resource_GUI.Create_Full_Dialog (d, Window, Msg (cleanup));
     d.IDOK.Text (Msg (cleanup_selected));
     d.IDCANCEL.Text (Msg (mcancel));
-    d.Center;
+    d.Center (Window);
     d.Small_Icon ("Tools_Icon");
     d.On_Destroy_Handler (Get_Data'Unrestricted_Access);
     Detect (Window.Draw_Control.Picture, stat);

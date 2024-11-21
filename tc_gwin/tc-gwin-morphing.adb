@@ -77,7 +77,7 @@ package body TC.GWin.Morphing is
     use GWindows.Constants, GWindows.Edit_Boxes, GWindows.Static_Controls, Lang;
   begin
     pan.Create_As_Dialog (parent, "", Width => 450, Height => max_sub (m) * 30 + 130);
-    pan.Center;
+    pan.Center (parent);
     pan.Small_Icon ("Options_Icon");
     GWin_Util.Use_GUI_Font (pan);
 

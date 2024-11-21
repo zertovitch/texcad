@@ -178,7 +178,7 @@ package body TC.GWin.Options_Dialogs is
   begin
     pan.Create_As_Dialog
       (Window, Msg (ogenopt), Width => wmax + 30, Height => 400);
-    pan.Center;
+    pan.Center (Window);
     pan.Small_Icon ("Options_Icon");
     pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
 
@@ -411,7 +411,7 @@ package body TC.GWin.Options_Dialogs is
     pan.Create_As_Dialog (window, S2G (title), Width => wmax + 50, Height => 330);
     --  Fix_Dialog(pan); -- 2007. No effect, alas...
     --  [Rem. 2020: Fix_Dialog was setting WS_EX_DLGMODALFRAME, no idea what the problem was.]
-    pan.Center;
+    pan.Center (window);
     pan.Small_Icon ("Options_Icon");
     pan.On_Destroy_Handler (Get_Data'Unrestricted_Access);
 
