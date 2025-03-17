@@ -11,10 +11,11 @@ project TeXCAD_Root is
 
    for Source_Dirs use
      (".",
+      "test_io",
       "extras");  --  Sources that may belong to other open-source projects.
 
    for Exec_Dir use ".";
-   for Main use ("test_tc_io.adb");
+   for Main use ("test_tc_io.adb", "test_tc_input.adb");
    type TeXCAD_Build_Mode_Type is ("Optimize", "Debug");
    TeXCAD_Build_Mode : TeXCAD_Build_Mode_Type := external ("TeXCAD_Build_Mode", "Debug");
    
