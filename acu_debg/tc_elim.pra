@@ -163,7 +163,6 @@ pragma Eliminate (GWindows.Application, End_Loop, Source_Location => "gwindows-a
 pragma Eliminate (GWindows.Application, Show_Modal, Source_Location => "gwindows-application.ads:78");
 pragma Eliminate (GWindows.Application, Display_Dialog, Source_Location => "gwindows-application.ads:86");
 pragma Eliminate (GWindows.Application, Display_Dialog, Source_Location => "gwindows-application.ads:90");
-pragma Eliminate (GWindows.Application, Display_Dialog, Source_Location => "gwindows-application.ads:96");
 pragma Eliminate (GWindows.Application, Display_Dialog, Source_Location => "gwindows-application.ads:100");
 pragma Eliminate (GWindows.Application, Show_Dialog, Source_Location => "gwindows-application.ads:105");
 pragma Eliminate (GWindows.Application, Show_Dialog, Source_Location => "gwindows-application.ads:107");
