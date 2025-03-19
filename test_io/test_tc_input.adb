@@ -8,5 +8,5 @@ procedure Test_TC_Input is
   end Test;
 
 begin
-  Test ("test_io/LineThrs");
+  Test ("test_io/test_makebox");
 end Test_TC_Input;

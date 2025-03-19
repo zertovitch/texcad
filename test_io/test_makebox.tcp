@@ -1,0 +1,3 @@
+\begin{picture}(60.875,48.5)(-40,0)
+\put(10,30){\makebox(0,0)[lcc]{Some text}}  %  We put an extra, wrong, character as adjustment in [...]
+\end{picture}

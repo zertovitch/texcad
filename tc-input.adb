@@ -113,6 +113,8 @@ package body TC.Input is
       end loop;
     end Read_line;
 
+    stopper : constant Character := Character'Val (255);
+
     procedure Read_ch is --  JW,GH
     begin
       if input_mode = 0 or input_mode = 2 then
@@ -126,7 +128,7 @@ package body TC.Input is
           p := p + 1;
         end if;
       elsif q > arg_len then
-        ch := Character'Val (255);
+        ch := stopper;
       else
         ch := arg (q);
         q := q + 1;
@@ -159,7 +161,7 @@ package body TC.Input is
         com (com_len) := '\';
         Read_ch;
       end if;
-      if ch /= Character'Val (255) then
+      if ch /= stopper then
         loop
           com_len := com_len + 1;
           com (com_len) := ch;
@@ -284,7 +286,7 @@ package body TC.Input is
     is
       --  JW, GH
       nesting_count : Integer;
-      a2 : String (arg_1'Range);
+      a2 : String (1 .. arg_1'Length);
       l2 : Natural;
     begin
       --  Added 6-Jul-2012: there may be blanks before arguments!
@@ -306,11 +308,17 @@ package body TC.Input is
           nesting_count := nesting_count - 1;
         end if;
         if nesting_count > 0 then
-          l2 := l2 + 1;
-          a2 (l2) := ch;
+          if l2 >= a2'Last then
+            --  Ignore characters that don't fit the string's capacity, notably
+            --  the o.adjust string of length 2 (for "[cc]" in \makebox).
+            null;
+          else
+            l2 := l2 + 1;
+            a2 (l2) := ch;
+          end if;
         end if;
         Read_ch;
-        exit when nesting_count = 0 or ch = Character'Val (255) or end_of_parsing;
+        exit when nesting_count = 0 or ch = stopper or end_of_parsing;
       end loop;
       if nesting_count /= 0 then
         Error (''' & cl & "' expected");
