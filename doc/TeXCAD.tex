@@ -976,21 +976,58 @@ only question of time! So, thanks to:
 \section{How to build the program yourself}
 %
 
-To build the sources, you need an Ada compiler, for instance the
+To build {\TC} from the sources, you have two ways:
+  \begin{itemize}
+    \item Using Alire (\hrefid{https://alire.ada.dev/}), commands: alr get texcad, cd texcad*, alr build \\
+          You can ignore the rest of this section if you go with Alire.
+    \item The manual way. \\
+First, you need an Ada compiler, for instance the
 GNU Ada compiler (GNAT) that can be found there:
-  \hrefid{http://libre.adacore.com/} \\
-Alternatively you can use the MinGW version: \hrefid{http://mingw.org/}.
-In case there is an implementation for Linux, GNAT is available with
-the standard packages.
+  \hrefid{https://www.adacore.com/download} \\
+Alternatively you can use the "Free Software Foundation (FSF)" version, via Alire: \hrefid{https://alire.ada.dev/}.
+For the case there would be an implementation of TeXCAD for Linux, GNAT is available with
+the standard Linux packages.
   
-The project uses extensively Ada's modularity.
+For building {\TC} for Windows you need a few things:
+
+\begin{enumerate}
+  \item First, install 
+        a binary distribution of the {\bf GNAT Ada compiler} for Windows platforms
+        (see links above).
+  \item Then you need the GNAVI/GWindows framework that you'll find at one of the following places:\\
+        \hrefid{http://sourceforge.net/projects/gnavi/} or\\
+        \hrefid{https://github.com/zertovitch/gwindows}.
+        Installation of the latter is optional.
+        It is sufficient to unpack or get the sources via git or svn or
+        extract them from a zip file.
+  \item Third step is getting the Mathpaqs repository\\
+        \hrefid{http://sourceforge.net/projects/mathpaqs/} or \\
+        \hrefid{https://github.com/zertovitch/mathpaqs}.
+        Installation of the latter is optional.
+        It is sufficient to unpack or get the sources via git or svn or
+        extract them from a zip file.
+  \item Fourth step is to set an environment variable as explained in {\tt texcad\_gwin.gpr}
+        (a project file in text format), located in the {\tt TC\_GWin} directory:\\
+        {\tt set GNAT\_SOURCE\_PATH=C:\bs Ada\bs gnavi\bs gwindows\bs framework;\\
+         C:\bs Ada\bs gnavi\bs gwindows\bs contrib;\\
+         C:\bs Ada\bs gnavi\bs gnatcom\bs framework;C:\bs Ada\bs mathpaqs} \\
+        You can add the {\tt set GNAT\_SOURCE\_PATH} variable permanently via system settings or add the above command to a script that does the next step as well.
+  \item Final step: go to the {\tt TC\_GWin} directory and run {\tt "build\_debug.cmd"},
+        or open {\tt texcad\_gwin.gpr} with the GNAT Studio and press F4.
+\end{enumerate}
+
+  \end{itemize}
+%
+\section{Architecture}
+%
+The project uses extensively Ada's modularity and object-orientation.
 The platform-dependent parts are confined to their minimum and
 the core of {\TC} is totally portable across platforms and
-compilers, without conditional compilation -- which doesn't exist in Ada
-by the way! The core includes:
+compilers, without any preprocessing or conditional compilation -- which
+doesn't exist in Ada by the way! The core of {\TC} includes:
 %
 \begin{itemize}
-  \item the memory storage of pictures
+  \item the storage of pictures in memory
   \item transformations
   \item input / output
   \item object picking rules
@@ -998,28 +1035,10 @@ by the way! The core includes:
         way through the magic of Ada's {\em generic programming}
 \end{itemize}
 %
-As a test I build and run regularily the core with GNAT, on both Windows
+As a test I build and run regularily the core of {\TC} with GNAT, on both Windows
 and Linux, as well as with another development system, ObjectAda.\\
 
 The Windows ``skin'' uses the open-source framework GWindows for the user interface.\\
-
-For building {\TC} for Windows you need a few things:
-
-\begin{enumerate}
-  \item First, install 
-a binary distribution of the {\bf GNAT Ada compiler} for Windows platforms
-(from AdaCore or MinGW, links above).
-  \item Then you need the GWindows framework that you'll find at one of the following places:
-  \hrefid{http://sourceforge.net/projects/gnavi/} or
-  \hrefid{https://github.com/zertovitch/gwindows}.
-Installation of the latter is optional, unpacking or getting sources via git or svn or
-extracted from a zip file is sufficient.
-  \item Third step is to set environment variables as explained in {\tt texcad\_gwin.gpr}
-(a project file in text format), located
-in the {\tt TC\_GWin} directory.
-  \item Then, go to the {\tt TC\_GWin} directory and run {\tt "build\_debug.cmd"},
-or open {\tt texcad\_gwin.gpr} with the GNAT Studio and press F4.
-\end{enumerate}
 
 %
 $$ $$
